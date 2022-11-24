@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+:root {
+	--text: #212529;
+	--textGrey: #6c757d;
+	--textGreyLight: #b6b6b6;
+	--textLink: #002bff;
+	--clusterBlock: #00156a;
+	--clusterKern: #d9d9d9;
+	--clusterSaum: #f3f3f3;
+	--clusterZentrum: #e6e6e6;
+	--colorBlue: #002bff;
+	--colorBlueLight: #31C0FF;
+	--colorCyan: #1580ab;
+	--colorGreen: #080;
+	--colorRed: #d00;
+	--colorYellow: #f7d500;
+	--bgBlue: #0000a9;
+	--bgGrey: #b6b6b6;
+	--bgGreyDark: #212529;
+	--bgGreyLight: #f3f3f3;
+	--bgHover: #e1eaed;
+	--bgSelection: #000098;
+	--line: #ccc;
+	--outline: #002bff;
+
+	/* root font size */
+	font-size: 20px;
+}

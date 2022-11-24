@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://github.com/WortgeschichteDigital/QS/">
+
+		<title>QS</title>
+
+		<link rel="stylesheet" href="css/shared/global.css">
+		<link rel="stylesheet" href="css/shared/overlay.css">
+		<link rel="stylesheet" href="css/shared/variables.css">
+
+		<link rel="stylesheet" href="css/app/app.css">
+
+		<script src="js/shared/overlay.js"></script>
+		<script src="js/shared/shared.js"></script>
+
+		<script src="js/app/app.js"></script>
+		<script src="js/app/git.js"></script>
+		<script src="js/app/init.js"></script>
+	</head>
+	<body>
+		<!-- LOADING -->
+		<div id="loading" class="overlay"
+			><img src="img/icon/icon.svg" width="96" height="96" alt=""
+		></div>
+
+		<!-- OVERLAY: GIT CONFIGURATION -->
+		<div id="git" class="overlay hide off">
+			<div>
+				<h1>Git-Konfiguration</h1>
+				<p>TODO</p>
+			</div>
+		</div>
+
+		<!-- OVERLAY: PREFERENCES -->
+		<div id="prefs" class="overlay hide off">
+			<div>
+				<h1>Einstellungen<a href="#" class="overlay-close"><img src="img/app/window-close-white.svg" width="24" height="24" alt="x"></a></h1>
+				<p>TODO</p>
+			</div>
+		</div>
+	</body>
+</html>
