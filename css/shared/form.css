@@ -1,0 +1,65 @@
+@charset "utf-8";
+
+input[type="text"],
+input[type="password"] {
+	border: 1px solid var(--line);
+	border-radius: 5px;
+	padding: 2px 10px;
+	color: var(--text);
+	font-family: "Noto Sans", sans-serif;
+	font-size: .8rem;
+	line-height: calc(1.5rem - 4px - 2px);
+}
+
+input[type="password"] {
+	width: calc(100% - 22px);
+}
+
+input[type="button"] {
+	border: 1px solid var(--line);
+	border-radius: 5px;
+	padding: 0 10px 0 35px;
+	width: auto;
+	background-color: var(--bgGreyLight);
+	background-image: url(../../img/app/button-yes.svg);
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+	color: var(--text);
+	font-family: "Noto Sans", sans-serif;
+	font-size: 1rem;
+	line-height: calc(1.5rem - 2px);
+}
+
+input[type="button"]:disabled {
+	color: var(--textGrey);
+	background-image: url(../../img/app/button-yes-grey.svg);
+	pointer-events: none;
+}
+
+input[type="button"][value="Nein"] {
+	background-image: url(../../img/app/button-no.svg);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="button"]:focus {
+	outline: 1px solid var(--outline);
+	outline-offset: 0;
+	border-color: var(--outline);
+}
+
+input[type="button"]:active {
+	position: relative;
+	top: 1px;
+	left: 1px;
+}
+
+label {
+	display: inline-block;
+	font-style: italic;
+}
+
+label + input[type="text"],
+input[type="text"] + label {
+	margin-left: 10px;
+}

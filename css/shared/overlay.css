@@ -18,26 +18,23 @@
 
 .overlay > div {
 	position: absolute;
-	top: 2rem;
+	top: 40px;
 	left: 50%;
 	transform: translateX(-50%);
-}
-
-.overlay > div {
 	border-right: 1px solid var(--line);
 	border-bottom: 1px solid var(--line);
 	border-left: 1px solid var(--line);
-	border-bottom-right-radius: .5rem;
-	border-bottom-left-radius: .5rem;
-	min-width: 400px;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	min-width: 500px;
 	background-color: #fff;
 }
 
 .overlay h1 {
 	position: relative;
 	margin: 0 -1px;
-	padding: .25rem .5rem;
-	background-color: var(--bgBlue);
+	padding: 5px 10px;
+	background: var(--gradient);
 	color: #fff;
 	font-family: "Noto Serif", serif;
 	font-size: .75rem;
@@ -48,13 +45,70 @@
 
 .overlay h1 a {
 	position: absolute;
-	top: 50%;
-	right: .5rem;
-	width: 24px;
-	height: 24px;
-	transform: translateY(-50%);
+	top: 0;
+	right: 10px;
+	width: 30px;
+	height: 30px;
 }
 
-.overlay p {
-	margin: .5rem;
+
+/* GIT CONFIGURATION ---------------------------- */
+
+#git p {
+	white-space: nowrap;
+}
+
+#git label {
+	width: 130px;
+}
+
+#git input[type="text"] {
+	width: 350px;
+}
+
+#git .icon {
+	margin-left: 10px;
+}
+
+
+/* DIALOG --------------------------------------- */
+
+#dialog.overlay > div {
+	top: 80px;
+	border-radius: 10px;
+	padding-left: 82px;
+	background-image: url(../../img/app/dialog-alert.svg);
+	background-position: 5px 5px;
+	background-repeat: no-repeat;
+	background-size: 72px 72px;
+}
+
+#dialog[data-type="confirm"].overlay > div {
+	background-image: url(../../img/app/dialog-confirm.svg);
+}
+
+#dialog > div > a {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 30px;
+	height: 30px;
+}
+
+#dialog[data-type="alert"] #dialog-confirm,
+#dialog[data-type="pass"] #dialog-confirm,
+#dialog[data-type="confirm"] #dialog-alert {
+	display: none;
+}
+
+#dialog-confirm input {
+	width: 95px;
+}
+
+#dialog-confirm input:first-child {
+	margin-right: 15px;
+}
+
+#dialog-text p:first-child {
+	margin-right: 30px;
 }

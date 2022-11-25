@@ -1,2 +1,154 @@
 @charset "utf-8";
 
+/* HEADER --------------------------------------- */
+
+header {
+	padding: 15px 10px;
+	background: var(--gradient);
+	color: #fff;
+}
+
+header > div {
+	margin: 0 auto;
+	width: max-content;
+}
+
+header div div:first-child {
+	margin-bottom: 10px;
+}
+
+header a {
+	color: #fff;
+	outline: none;
+}
+
+header a.view-button {
+	display: inline-block;
+	margin: 0 5px;
+	border-radius: 10px;
+	padding: 0 10px 0 40px;
+	background-image: url(../../img/app/xml-white.svg);
+	background-position: 5px 0;
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+	text-decoration: none;
+}
+
+header span.label + a.view-button {
+	width: 50px;
+}
+
+header a.view-button.active {
+	background-color: #fff;
+	background-image: url(../../img/app/xml.svg);
+	color: var(--text);
+}
+
+header a#view-hints.view-button {
+	background-image: url(../../img/app/info-white.svg);
+}
+
+header a#view-hints.view-button.active {
+	background-image: url(../../img/app/info.svg);
+}
+
+header a#view-clusters.view-button {
+	background-image: url(../../img/app/clusters-white.svg);
+}
+
+header a#view-clusters.view-button.active {
+	background-image: url(../../img/app/clusters.svg);
+}
+
+header a#view-search.view-button {
+	background-image: url(../../img/app/search-white.svg);
+}
+
+header a#view-search.view-button.active {
+	background-image: url(../../img/app/search.svg);
+}
+
+header a#fun-filters.view-button {
+	background-image: url(../../img/app/fun-filter-white.svg);
+}
+
+header a#fun-filters.view-button.active {
+	background-image: url(../../img/app/fun-filter.svg);
+}
+
+header a.view-button:focus {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+}
+
+header .label {
+	display: inline-block;
+	margin-right: 5px;
+	vertical-align: top;
+	width: 80px;
+	font-size: .75rem;
+	font-style: italic;
+}
+
+#fun-git {
+	display: inline-block;
+	margin-left: 10px
+}
+
+#fun-git .label {
+	margin-right: 15px;
+	width: auto;
+}
+
+#fun-git .spacer {
+	display: inline-block;
+	width: 30px;
+	text-align: center;
+}
+
+#fun-git a:hover,
+#fun-git a:focus {
+	text-decoration: none;
+}
+
+
+/* SECTIONS ------------------------------------- */
+
+section {
+	position: relative;
+	left: 0;
+	margin: 0 auto;
+	max-width: 1200px;
+	transition: left .6s ease-out;
+}
+
+
+/* FILTERS -------------------------------------- */
+
+#filters {
+	position: fixed;
+	top: 100px;
+	left: -320px;
+	overflow-y: hidden;
+	border-top: 3px solid #fff;
+	padding: 0 10px;
+	width: 300px;
+	height: calc(100vh - 100px - 3px);
+	background-color: var(--bgBlue);
+	color: #fff;
+	transition: left .3s ease-out;
+}
+
+#filters.visible {
+	left: 0;
+}
+
+#filters h1 {
+	border-bottom: 1px solid #fff;
+	padding: 0 10px;
+	font-family: "Noto Serif", serif;
+	font-size: 1rem;
+	font-style: italic;
+	font-weight: normal;
+	line-height: 1.5rem;
+}

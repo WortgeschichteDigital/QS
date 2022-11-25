@@ -64,9 +64,11 @@
 /* ELEMENTS ------------------------------------- */
 
 body {
-	margin: .5rem;
-	overflow: hidden;
+	margin: 0;
+	overflow-x: hidden;
+	overflow-y: hidden;
 	background-color: #fff;
+	color: var(--text);
 	font-family: "Noto Sans", sans-serif;
 	font-size: 1rem;
 	line-height: 1.5rem;
@@ -74,11 +76,40 @@ body {
 }
 
 body.scrollable {
-	overflow: unset;
+	overflow-y: unset;
 }
 
 a {
+	color: var(--textLink);
 	cursor: default;
+}
+
+a.icon {
+	display: inline-block;
+	vertical-align: top;
+	width: 30px;
+	height: 30px;
+}
+
+a.icon:focus {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+	border-radius: 5px;
+}
+
+a.overlay-close:focus {
+	outline: 2px solid var(--outline);
+	outline-offset: -5px;
+	border-radius: 10px;
+}
+
+p {
+	margin: 10px;
+}
+
+p.buttons {
+	margin-top: 20px;
+	text-align: center;
 }
 
 
@@ -99,3 +130,16 @@ a {
 	display: none !important;
 }
 
+.warn {
+	color: var(--colorRed);
+}
+
+::placeholder {
+  color: var(--textGreyLight);
+	font-style: italic;
+}
+
+::selection {
+	background-color: var(--selection);
+	color: #fff;
+}

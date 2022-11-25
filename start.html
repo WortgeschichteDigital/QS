@@ -6,21 +6,78 @@
 
 		<title>QS</title>
 
+		<link rel="stylesheet" href="css/shared/form.css">
 		<link rel="stylesheet" href="css/shared/global.css">
 		<link rel="stylesheet" href="css/shared/overlay.css">
 		<link rel="stylesheet" href="css/shared/variables.css">
 
 		<link rel="stylesheet" href="css/app/app.css">
 
+		<script src="js/shared/dialog.js"></script>
 		<script src="js/shared/overlay.js"></script>
 		<script src="js/shared/shared.js"></script>
 
 		<script src="js/app/app.js"></script>
 		<script src="js/app/git.js"></script>
+		<script src="js/app/keyboard.js"></script>
 		<script src="js/app/init.js"></script>
 	</head>
 	<body>
-		<!-- LOADING -->
+		<!-- HEADER -->
+		<header>
+			<div>
+				<div id="view"
+					><span class="label">Ansichten:</span
+					><a href="#" id="view-xml" class="view-button active">XML</a
+					><a href="#" id="view-hints" class="view-button">Hinweise</a
+					><a href="#" id="view-clusters" class="view-button">Clusterei</a
+					><a href="#" id="view-search" class="view-button">Suche</a
+				></div>
+				<div id="fun"
+					><span class="label">Funktionen:</span
+					><a href="#" id="fun-filters" class="view-button">Filter</a
+					><span id="fun-git"
+						><span class="label">Git:</span
+						><a href="#" id="fun-git-branch" title="aktuellen Branch wechseln"></a
+						><span class="spacer">·</span
+						><a href="#" id="fun-git-pull" title="alle Branches pullen">pull</a
+						><span class="spacer">·</span
+						><a href="#" id="fun-git-restore" title="aktuellen Branch zurücksetzen">restore</a
+					></span
+				></div>
+			</div>
+		</header>
+
+		<!-- VIEW: XML -->
+		<section id="xml">
+		</section>
+
+		<!-- VIEW: HINWEISE -->
+		<section id="hints" class="off">
+		</section>
+
+		<!-- VIEW: CLUSTEREI -->
+		<section id="clusters" class="off">
+		</section>
+
+		<!-- VIEW: SUCHE -->
+		<section id="search" class="off">
+		</section>
+
+		<!-- FILTERS -->
+		<div id="filters">
+			<h1>Autor*in</h1>
+			<h1>Themenfeld</h1>
+			<div id="filters-status">
+				<h1>Status</h1>
+			</div>
+			<div id="filters-hints">
+				<h1>Markierungen</h1>
+				<h1>Hinweise</h1>
+			</div>
+		</div>
+
+		<!-- OVERLAY: LOADING -->
 		<div id="loading" class="overlay"
 			><img src="img/icon/icon.svg" width="96" height="96" alt=""
 		></div>
@@ -29,15 +86,41 @@
 		<div id="git" class="overlay hide off">
 			<div>
 				<h1>Git-Konfiguration</h1>
-				<p>TODO</p>
+				<p
+					><label for="git-user">Benutzername</label
+					><input type="text" value="" placeholder="Benutzername git.zdl.org" id="git-user"
+				></p>
+				<p
+					><label for="git-dir">Repository</label
+					><input type="text" value="" placeholder="Pfad zum Wortgeschichten-Repository" id="git-dir" readonly tabindex="-1"
+					><a href="#" id="git-dir-open" class="icon"><img src="img/app/file-open.svg" width="30" height="30" alt=""></a
+				></p>
+				<p class="buttons"
+					><input type="button" value="Okay" id="git-okay"
+				></p>
 			</div>
 		</div>
 
 		<!-- OVERLAY: PREFERENCES -->
 		<div id="prefs" class="overlay hide off">
 			<div>
-				<h1>Einstellungen<a href="#" class="overlay-close"><img src="img/app/window-close-white.svg" width="24" height="24" alt="x"></a></h1>
+				<h1>Einstellungen<a href="#" class="overlay-close"><img src="img/app/close-white.svg" width="30" height="30" alt="x"></a></h1>
 				<p>TODO</p>
+			</div>
+		</div>
+
+		<!-- OVERLAY: DIALOG -->
+		<div id="dialog" class="overlay hide off">
+			<div>
+				<a href="#" class="overlay-close"><img src="img/app/close.svg" width="30" height="30" alt="x"></a>
+				<div id="dialog-text"></div>
+				<p class="buttons" id="dialog-alert"
+					><input type="button" value="Okay" data-response="true" id="dialog-okay"
+				></p>
+				<p class="buttons" id="dialog-confirm"
+					><input type="button" value="Ja" data-response="true" id="dialog-yes"
+					><input type="button" value="Nein" data-response="false" id="dialog-no"
+				></p>
 			</div>
 		</div>
 	</body>

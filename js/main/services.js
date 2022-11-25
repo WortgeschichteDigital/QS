@@ -1,6 +1,6 @@
 "use strict";
 
-const { BrowserWindow, dialog } = require("electron"),
+const { dialog } = require("electron"),
 	fsp = require("fs").promises,
 	path = require("path");
 
@@ -32,12 +32,11 @@ module.exports = {
 		});
 	},
 	// show file dialog
+	//   bw = object (browser window)
 	//   open = boolean (true: showOpenDialog(), false: showSaveDailog())
-	//   id = integer (window ID)
 	//   options = object
-	fileDialog ({open, id, options}) {
+	fileDialog ({bw, open, options}) {
 		return new Promise(resolve => {
-			const bw = BrowserWindow.fromId(id);
 			if (open) {
 				dialog.showOpenDialog(bw, options)
 					.then(result => resolve(result))

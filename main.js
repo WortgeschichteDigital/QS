@@ -29,16 +29,44 @@ let menuApp = [
 		label: "&QS",
 		submenu: [
 			{
+				label: "Auffrischen",
+				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
+				// click: () => win.bw.webContents.send("hist-bar"),
+				accelerator: "F5",
+			},
+			{ type: "separator" },
+			{
 				label: "Einstellungen",
-				icon: path.join(__dirname, "img", "main", "configure.png"),
-				// click: () => win.bw.webContents.send("load-language"),
+				icon: path.join(__dirname, "img", "main", "preferences.png"),
+				click: () => winMenu.execute("preferences"),
 			},
 			{ type: "separator" },
 			{
 				label: "Beenden",
-				icon: path.join(__dirname, "img", "main", "application-exit.png"),
+				icon: path.join(__dirname, "img", "main", "exit.png"),
 				// click: () => win.bw.webContents.send("hist-bar"),
 				accelerator: "CommandOrControl+Q",
+			},
+		],
+	},
+];
+
+let menuPv = [
+	{
+		label: "&QS",
+		submenu: [
+			{
+				label: "Auffrischen",
+				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
+				// click: () => win.bw.webContents.send("hist-bar"),
+				accelerator: "F5",
+			},
+			{ type: "separator" },
+			{
+				label: "Schließen",
+				icon: path.join(__dirname, "img", "main", "close.png"),
+				// click: () => win.bw.webContents.send("hist-bar"),
+				accelerator: "CommandOrControl+W",
 			},
 		],
 	},
@@ -50,7 +78,7 @@ let menuWin = [
 		submenu: [
 			{
 				label: "Schließen",
-				icon: path.join(__dirname, "img", "main", "window-close.png"),
+				icon: path.join(__dirname, "img", "main", "close.png"),
 				// click: () => win.bw.webContents.send("hist-bar"),
 				accelerator: "CommandOrControl+W",
 			},
@@ -131,25 +159,23 @@ let menuHelp = [
 		submenu: [
 			{
 				label: "Handbuch",
-				icon: path.join(__dirname, "img", "main", "emblem-question.png"),
+				icon: path.join(__dirname, "img", "main", "question.png"),
 				// click: () => win.bw.webContents.send("show-handbook"),
 				accelerator: "F1",
 			},
 			{ type: "separator" },
 			{
 				label: "Updates",
-				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
 				// click: () => win.bw.webContents.send("show-handbook"),
 			},
 			{
 				label: "Fehlerlog",
-				icon: path.join(__dirname, "img", "main", "dialog-error.png"),
 				// click: () => win.bw.webContents.send("show-handbook"),
 			},
 			{ type: "separator" },
 			{
 				label: "Über QS",
-				icon: path.join(__dirname, "img", "main", "help-about.png"),
+				icon: path.join(__dirname, "img", "main", "info.png"),
 				// click: () => win.bw.webContents.send("show-handbook"),
 			},
 		],
@@ -162,7 +188,6 @@ let menuDev = [
 		submenu: [
 			{
 				role: "reload",
-				accelerator: "F5",
 			},
 			{
 				role: "forceReload",
@@ -185,6 +210,10 @@ let winMenu = {
 			for (const i of [menuApp, menuAll, menuHelp]) {
 				menu = menu.concat(i);
 			}
+		} else if (type === "pv") {
+			for (const i of [menuPv, menuAll]) {
+				menu = menu.concat(i);
+			}
 		} else {
 			for (const i of [menuWin, menuAll]) {
 				menu = menu.concat(i);
@@ -203,6 +232,12 @@ let winMenu = {
 		const m = Menu.buildFromTemplate(menu);
 		bw.setMenu(m);
 	},
+	// execute a command from the app menu
+	//   command = string
+	execute (command) {
+		const bw = BrowserWindow.getFocusedWindow();
+		bw.webContents.send("menu-" + command);
+	},
 };
 
 
@@ -211,7 +246,7 @@ let winMenu = {
 let prefs = {
 	data: {
 		git: {
-			dir: [],
+			dir: "",
 			user: "",
 		},
 		options: {},
@@ -272,7 +307,7 @@ let win = {
 		const data = prefs.data.win[type],
 			x = data.x >= 0 ? data.x : null,
 			y = data.y >= 0 ? data.y : null,
-			width = data.width ? data.width : 800,
+			width = data.width ? data.width : 1000,
 			height = data.height ? data.height : display.getPrimaryDisplay().workArea.height;
 		// win title
 		const title = {
@@ -291,7 +326,7 @@ let win = {
 			width,
 			minWidth: 600,
 			height,
-			minHeight: 400,
+			minHeight: 600,
 			show: false,
 			webPreferences: {
 				contextIsolation: false,
@@ -421,4 +456,22 @@ app.on("activate", () => {
 
 /***** RENDERER REQUESTS *****/
 
-ipcMain.handle("get-git-config", () => prefs.data.git);
+ipcMain.handle("app-info", () => {
+	return {
+		documents: app.getPath("documents"),
+		temp: app.getPath("temp"),
+		userData: app.getPath("userData"),
+	};
+});
+
+ipcMain.handle("file-dialog", async (evt, open, options) => {
+	const bw = BrowserWindow.fromWebContents(evt.sender);
+	return await services.fileDialog({ bw, open, options });
+});
+
+ipcMain.handle("git-config", () => prefs.data.git);
+
+ipcMain.handle("git-save", (evt, config) => {
+	prefs.data.git = config;
+	prefs.write();
+});

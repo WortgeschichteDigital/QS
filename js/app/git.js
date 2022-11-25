@@ -1,22 +1,335 @@
 "use strict";
 
 let git = {
+	// URI to remote repository
+	remote: "git.zdl.org/zdl/wortgeschichten.git",
 	// Git config
 	config: {},
-	// initialize git config
-	async init () {
+	// configuration is valid
+	configOkay: true,
+	// password for Git repository
+	// (only valid for current app session)
+	configPass: "",
+	// check Git config
+	async configCheck () {
 		// get config data
-		git.config = await app.ir.invoke("get-git-config");
+		git.config = await app.ir.invoke("git-config");
 		// check config
-		if (!git.config.dir.length ||
-				!git.config.user) {
-			await git.showConfig();
+		const dirOkay = await git.dirCheck(git.config.dir);
+		if (!dirOkay[0] || !git.config.user) {
+			// open config form
+			git.configOkay = false;
+			git.configFormShow();
+			// show message if the directory wasn't found anymore
+			if (git.config.dir && !dirOkay[0]) {
+				await git.dirError(dirOkay[1]);
+			}
+			// wait until the configuration is okay
+			await new Promise(resolve => {
+				const checkConfig = setInterval(() => {
+					if (git.configOkay) {
+						clearInterval(checkConfig);
+						resolve(true);
+					}
+				}, 25);
+			});
+			// close config form
+			overlay.hide("git");
+			await shared.wait(500);
 		}
-		// check repository structure TODO
 	},
 	// show config overlay
-	async showConfig () {
+	configFormShow () {
+		// show window
 		overlay.show("git");
-		// TODO
+		// fill in
+		const dir = document.querySelector("#git-dir");
+		dir.value = git.config.dir;
+		const user = document.querySelector("#git-user");
+		user.value = git.config.user;
+		user.select();
+	},
+	// check inputs in config overlay
+	async configFormCheck () {
+		const user = document.querySelector("#git-user").value.trim(),
+			dir = document.querySelector("#git-dir").value.trim();
+		if (!user || !dir) {
+			let text = "Sie müssen noch …\n",
+				missing = [];
+			if (!user) {
+				missing.push("• den Benutzernamen angeben");
+			}
+			if (!dir) {
+				missing.push("• den Pfad zum Repository auswählen");
+			}
+			text += missing.join("<br>");
+			await dialog.open({
+				type: "alert",
+				text,
+			});
+			if (!user) {
+				document.querySelector("#git-user").select();
+			} else if (!dir) {
+				document.querySelector("#git-dir-open").focus();
+			}
+			return;
+		} else if (/\s/.test(user)) {
+			await dialog.open({
+				type: "alert",
+				text: "Der Benutzername darf keine Leerzeichen enthalten.",
+			});
+			document.querySelector("#git-user").select();
+			return;
+		}
+		// check directory
+		const dirOkay = await git.dirCheck(dir);
+		if (!dirOkay[0]) {
+			git.config.dir = "";
+			git.dirError(dirOkay[1]);
+			return;
+		}
+		// save config data in prefs file
+		git.config.user = user;
+		git.config.dir = dir;
+		git.configOkay = true;
+		app.ir.invoke("git-save", git.config);
+	},
+	// select repository directory
+	async dirSelect () {
+		const options = {
+			title: "Repository auswählen",
+			defaultPath: app.info.documents,
+			properties: [
+				"openDirectory",
+			],
+		};
+		const result = await app.ir.invoke("file-dialog", true, options);
+		if (result.canceld || !result?.filePaths?.length) {
+			return;
+		}
+		document.querySelector("#git-dir").value = result.filePaths[0];
+		document.querySelector("#git-okay").focus();
+	},
+	// check directory with presumed Git repository
+	//   dir = string
+	async dirCheck (dir) {
+		if (!dir) {
+			return [false, "empty"];
+		}
+		const structure = {
+			".git": false,
+			articles: false,
+			ignore: false,
+		};
+		try {
+			const files = await app.fsp.readdir(dir);
+			for (const f of files) {
+				structure[f] = true;
+			}
+		} catch {
+			return [false, "not found"];
+		}
+		if (Object.values(structure).some(i => !i)) {
+			let missing = [];
+			for (const [k, v] of Object.entries(structure)) {
+				if (!v) {
+					missing.push(k);
+				}
+			}
+			return [false, missing.join(" ")];
+		}
+		return [true, ""];
+	},
+	// display appropriate error message
+	//   error = string (empty | not found | missing folders, separated by spaces)
+	async dirError (error) {
+		let text = "";
+		if (error === "empty") {
+			text = "Sie haben noch keinen Repository-Pfad ausgewählt.";
+		} else if (error === "not found") {
+			text = "Das ausgewählte Repository existiert nicht mehr.";
+		} else {
+			const missing = error.split(" ");
+			if (missing.includes(".git")) {
+				text = "Der ausgewählte Ordner enthält kein Git-Repository.";
+			} else {
+				let notFound = [];
+				for (const i of missing) {
+					notFound.push("• " + i);
+				}
+				text = `Folgende Unterordner im Repository wurden nicht gefunden:\n${notFound.join("<br>")}`;
+			}
+		}
+		await dialog.open({
+			type: "alert",
+			text,
+		});
+		document.querySelector("#git-dir-open").focus();
+	},
+	// return current branch
+	async branchCurrent () {
+		return await git.commandExec("git branch --show-current");
+	},
+	// print current branch
+	async branchCurrentPrint () {
+		const branchCurrent = await git.branchCurrent();
+		document.querySelector("#fun-git-branch").textContent = branchCurrent || "???";
+	},
+	// check whether the current branch is clean or not
+	//   feedback = false | undefined
+	async branchClean (feedback = true) {
+		const notClean = await git.commandExec("git diff --stat");
+		if (notClean || notClean === false) {
+			if (notClean && feedback) {
+				await dialog.open({
+					type: "alert",
+					text: 'Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Der Branch ist nicht sauber. Änderungen an Dateien wurden noch nicht committet.'
+				});
+			}
+			return false;
+		}
+		return true;
+	},
+	// execute a basic git command
+	//   a = element
+	command (a) {
+		let command = a.id.replace("fun-git-", "");
+		command = command.substring(0, 1).toUpperCase() + command.substring(1);
+		git["command" + command]();
+	},
+	// change branch
+	async commandBranch () {
+		let current = await git.branchCurrent(),
+			dest = "";
+		switch (current) {
+			case "master":
+				dest = "preprint";
+				break;
+			case "preprint":
+				dest = "master";
+				break;
+		}
+		// Is the working tree clean?
+		const clean = await git.branchClean();
+		if (!clean) {
+			document.querySelector("#fun-git-branch").focus();
+			return;
+		}
+		// checkout branch
+		const checkout = await git.commandExec(`git checkout ${dest}`);
+		if (checkout === false) {
+			document.querySelector("#fun-git-branch").focus();
+			return;
+		}
+		git.branchCurrentPrint();
+		// TODO passive Feedback
+	},
+	// pull on current branch
+	async commandPull () {
+		// Is the working tree clean?
+		const clean = await git.branchClean();
+		if (!clean) {
+			document.querySelector("#fun-git-pull").focus();
+			return;
+		}
+		// Do I know the user's password?
+		let pass = git.configPass;
+		if (!pass) {
+			const result = await dialog.open({
+				type: "pass",
+				text: "Ihr Passwort für git.zdl.org:",
+			});
+			if (!result) {
+				return;
+			}
+			// Passwort auslesen
+			pass = document.querySelector("#dialog input").value.trim();
+			if (!pass) {
+				await shared.wait(325);
+				dialog.open({
+					type: "alert",
+					text: 'Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Sie haben kein Passwort eingegeben.',
+				});
+				return;
+			}
+		}
+		// Okay, let's pull it!
+		let branches = [await git.branchCurrent()];
+		branches.unshift(branches[0] === "master" ? "preprint" : "master");
+		for (const branch of branches) {
+			const checkout = await git.commandExec(`git checkout ${branch}`);
+			if (checkout === false) {
+				document.querySelector("#fun-git-pull").focus();
+				return;
+			}
+			const pull = await git.commandExec(`git pull https://${git.config.user}:${pass}@${git.remote}`);
+			if (pull === false) {
+				document.querySelector("#fun-git-pull").focus();
+				return;
+			}
+		}
+		git.configPass = pass;
+		// TODO passive Feedback
+	},
+	// restore changed files
+	async commandRestore () {
+		// Is the working tree clean?
+		const clean = await git.branchClean(false);
+		if (clean) {
+			dialog.open({
+				type: "alert",
+				text: "Der Branch ist sauber.\nEs können keine Dateien zurückgesetzt werden.",
+			});
+			return;
+		}
+		// Are you really going to do this?
+		const confirm = await dialog.open({
+			type: "confirm",
+			text: '<b class="warn">ACHTUNG!</b>\nBeim Zurücksetzen der Dateien werden nicht committete Änderungen im Repository unwiederbringlich gelöscht!\n(Dateien im Unterordner <i>ignore</i> sind davon nicht betroffen.)\nWollen Sie die geänderten Dateien wirklich zurücksetzen?',
+			wait: true,
+		});
+		if (!confirm) {
+			return;
+		}
+		// restore known folders and files
+		const folders = [
+			"articles",
+			"resources",
+			"share",
+			"README.md",
+		];
+		const restore = await git.commandExec(`git restore ${folders.join(" ")}`);
+		if (restore === false) {
+			document.querySelector("#fun-git-restore").focus();
+			return;
+		}
+		// TODO passive Feedback
+	},
+	// execute a Git command
+	//   command = string
+	async commandExec (command) {
+		const result = await new Promise(resolve => {
+			command = `cd "${git.config.dir}" && ${command}`;
+			const options = {
+				windowsHide: true,
+			};
+			app.exec(command, options, (err, stdout, stderr) => {
+				if (err) {
+					resolve([err.code, stderr.trim()]);
+				} else {
+					resolve(stdout.trim());
+				}
+			});
+		});
+		// handle errors
+		if (Array.isArray(result)) {
+			await dialog.open({
+				type: "alert",
+				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlercode:</i> ${result[0]}\n<i>Fehlermeldung:</i><br>${shared.errorString(result[1])}`,
+			});
+			return false;
+		}
+		// return result
+		return result;
 	},
 };
