@@ -1,6 +1,7 @@
 @charset "utf-8";
 
 :root {
+	/* colors */
 	--text: #212529;
 	--textGrey: #6c757d;
 	--textGreyLight: #b6b6b6;
@@ -21,12 +22,16 @@
 	--bgGrey: #b6b6b6;
 	--bgGreyDark: #212529;
 	--bgGreyLight: #f3f3f3;
+	--bgHighlight: #31C0FF;
 	--bgHover: #e1eaed;
 	--bgSelection: #000098;
-	--gradient: linear-gradient(90deg, var(--bgBlue) 40%, var(--bgBlueLight) 90%);
 	--line: #ccc;
 	--outline: #31C0FF;
 	--selection: #0000a9;
+
+	/* special styles */
+	--gradient: linear-gradient(90deg, var(--bgBlue) 40%, var(--bgBlueLight) 90%);
+	--shadow: 5px 5px 15px rgba(33, 37, 41, .3);
 
 	/* root font size */
 	font-size: 20px;

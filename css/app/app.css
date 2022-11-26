@@ -13,8 +13,10 @@ header > div {
 	width: max-content;
 }
 
-header div div:first-child {
+header #view {
 	margin-bottom: 10px;
+	border-bottom: 1px solid #fff;
+	padding-bottom: 10px;
 }
 
 header a {
@@ -36,6 +38,10 @@ header a.view-button {
 
 header span.label + a.view-button {
 	width: 50px;
+}
+
+header #view a.view-button:nth-child(3) {
+	width: 86px;
 }
 
 header a.view-button.active {
@@ -69,11 +75,22 @@ header a#view-search.view-button.active {
 }
 
 header a#fun-filters.view-button {
-	background-image: url(../../img/app/fun-filter-white.svg);
+	background-image: url(../../img/app/filter-white.svg);
 }
 
 header a#fun-filters.view-button.active {
-	background-image: url(../../img/app/fun-filter.svg);
+	background-image: url(../../img/app/filter.svg);
+}
+
+header a#fun-update {
+	padding: 0 10px 0 0;
+	width: 126px;
+	background-image: none;
+}
+
+header a#fun-update img {
+	vertical-align: top;
+	margin: 0 5px;
 }
 
 header a.view-button:focus {
@@ -92,7 +109,13 @@ header .label {
 
 #fun-git {
 	display: inline-block;
-	margin-left: 10px
+	margin-left: 15px
+}
+
+#fun-git-branch {
+	display: inline-block;
+	width: 80px;
+	text-align: right;
 }
 
 #fun-git .label {
@@ -127,13 +150,13 @@ section {
 
 #filters {
 	position: fixed;
-	top: 100px;
+	top: 111px;
 	left: -320px;
 	overflow-y: hidden;
 	border-top: 3px solid #fff;
 	padding: 0 10px;
 	width: 300px;
-	height: calc(100vh - 100px - 3px);
+	height: calc(100vh - 111px - 3px);
 	background-color: var(--bgBlue);
 	color: #fff;
 	transition: left .3s ease-out;

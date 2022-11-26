@@ -1,7 +1,11 @@
 "use strict";
 
 let dialog = {
-	// user response to the currently shown dialog (undefined | null | true | false)
+	// user response to the currently shown dialog
+	//   undefined = initial state
+	//   null = dialog was canceled (close icon or Escape key)
+	//   true = button with value true pressed
+	//   false = button with value false pressed
 	response: undefined,
 	// show dialog
 	//   type = string (alert | confirm | pass)
@@ -26,7 +30,7 @@ let dialog = {
 			t.appendChild(p);
 			p.innerHTML = i;
 		}
-		// print password field
+		// print password field if requested
 		if (type === "pass") {
 			let p = document.createElement("p");
 			t.appendChild(p);

@@ -5,8 +5,6 @@ let git = {
 	remote: "git.zdl.org/zdl/wortgeschichten.git",
 	// Git config
 	config: {},
-	// configuration is valid
-	configOkay: true,
 	// password for Git repository
 	// (only valid for current app session)
 	configPass: "",
@@ -18,24 +16,25 @@ let git = {
 		const dirOkay = await git.dirCheck(git.config.dir);
 		if (!dirOkay[0] || !git.config.user) {
 			// open config form
-			git.configOkay = false;
 			git.configFormShow();
 			// show message if the directory wasn't found anymore
 			if (git.config.dir && !dirOkay[0]) {
 				await git.dirError(dirOkay[1]);
 			}
 			// wait until the configuration is okay
+			const gitWin = document.querySelector("#git");
 			await new Promise(resolve => {
 				const checkConfig = setInterval(() => {
-					if (git.configOkay) {
+					if (gitWin.classList.contains("hide")) {
 						clearInterval(checkConfig);
 						resolve(true);
 					}
 				}, 25);
 			});
 			// close config form
-			overlay.hide("git");
 			await shared.wait(500);
+		} else {
+			git.fillPrefs();
 		}
 	},
 	// show config overlay
@@ -91,8 +90,11 @@ let git = {
 		// save config data in prefs file
 		git.config.user = user;
 		git.config.dir = dir;
-		git.configOkay = true;
 		app.ir.invoke("git-save", git.config);
+		// fill in preferences
+		git.fillPrefs();
+		// close window
+		overlay.hide("git");
 	},
 	// select repository directory
 	async dirSelect () {
@@ -222,7 +224,7 @@ let git = {
 			return;
 		}
 		git.branchCurrentPrint();
-		// TODO passive Feedback
+		shared.feedback("okay");
 	},
 	// pull on current branch
 	async commandPull () {
@@ -269,7 +271,7 @@ let git = {
 			}
 		}
 		git.configPass = pass;
-		// TODO passive Feedback
+		shared.feedback("okay");
 	},
 	// restore changed files
 	async commandRestore () {
@@ -303,7 +305,7 @@ let git = {
 			document.querySelector("#fun-git-restore").focus();
 			return;
 		}
-		// TODO passive Feedback
+		shared.feedback("okay");
 	},
 	// execute a Git command
 	//   command = string
@@ -331,5 +333,12 @@ let git = {
 		}
 		// return result
 		return result;
+	},
+	// fill in preferences
+	fillPrefs () {
+		for (const [k, v] of Object.entries(git.config)) {
+			const text = v.replace(/[/\\]/g, m => m + "<wbr>");
+			document.querySelector(`#prefs-git-${k}`).innerHTML = text;
+		}
 	},
 };

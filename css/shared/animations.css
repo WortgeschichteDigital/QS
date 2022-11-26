@@ -1,0 +1,52 @@
+@charset "utf-8";
+
+/* PASSIVE FEEDBACK ----------------------------- */
+
+.feedback {
+	position: fixed;
+	top: 25%;
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0;
+	border-radius: 20px;
+	width: 96px;
+	height: 96px;
+	background-color: rgba(255, 255, 255, .7);
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 96px 96px;
+	transition: opacity .3s ease-out;
+}
+
+.feedback.visible {
+	opacity: 1;
+}
+
+.feedback.type-okay {
+	background-image: url(../../img/app/button-yes.svg);
+}
+
+
+/* ROTATION ------------------------------------- */
+
+@keyframes rotation {
+	25% {
+		transform: rotate(90deg);
+	}
+	50% {
+		transform: rotate(180deg);
+	}
+	75% {
+		transform: rotate(270deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.rotate {
+	animation-name: rotation;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}

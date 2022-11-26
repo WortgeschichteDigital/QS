@@ -1,21 +1,6 @@
 "use strict";
 
 let shared = {
-	// execute a menu command
-	menuCommand (command) {
-		if (!app.ready) {
-			dialog.open({
-				type: "alert",
-				text: "Die App ist noch nicht bereit.",
-			});
-			return;
-		}
-		switch (command) {
-			case "preferences":
-				overlay.show("prefs");
-				break;
-		}
-	},
 	// detect pressed modifiers
 	//   evt = object (keydown event)
 	detectKeyboardModifiers (evt) {
@@ -34,7 +19,8 @@ let shared = {
 		}
 		if (evt.metaKey) {
 			if (process.platform === "darwin") {
-				// in macOS, it is more convenient when the meta key acts the same as control
+				// in macOS, it is more convenient when the meta key acts
+				// the same as the control key
 				m.push("Ctrl");
 			} else {
 				m.push("Meta");
@@ -45,16 +31,53 @@ let shared = {
 		}
 		return m.join("+");
 	},
-	// wait for the given milliseconds
-	//   ms = integer
-	async wait (ms) {
-		return new Promise(resolve => setTimeout(() => resolve(true), ms));
+	// change titles with keyboard shortcuts if on macOS
+	keyboardMacOS () {
+		if (process.platform !== "darwin") {
+			return;
+		}
+		const sc = {
+			Alt: "⌥",
+			Strg: "⌘",
+		};
+		// <kbd>
+		document.querySelectorAll("kbd").forEach(i => {
+			const text = i.textContent;
+			if (!/^(Alt|Strg)$/.test(text)) {
+				return;
+			}
+			i.textContent = sc[text];
+		});
+		// @title
+		document.querySelectorAll("[title]").forEach(i => {
+			i.title = i.title.replace(/Alt\s\+/, sc.Alt + "\u00A0+");
+			i.title = i.title.replace(/Strg\s\+/, sc.Strg + "\u00A0+");
+		});
 	},
-	// prepare error strings
+	// prepare error strings for better readability
 	//   err = string
 	errorString (err) {
 		err = err.replace(/\n/g, "<br>");
-		err = err.replace(/(?<!<)\//g, "/<wbr>");
+		err = err.replace(/(?<!<)[/\\]/g, m => `${m}<wbr>`);
 		return err;
+	},
+	// show passive feedback
+	//   type = string
+	async feedback (type) {
+		let fb = document.createElement("div");
+		fb.classList.add("feedback", "type-" + type);
+		document.body.appendChild(fb);
+		void fb.offsetWidth;
+		fb.classList.add("visible");
+		await shared.wait(1300);
+		fb.addEventListener("transitionend", function() {
+			this.parentNode.removeChild(this);
+		}, { once: true });
+		fb.classList.remove("visible");
+	},
+	// wait for the given milliseconds
+	//   ms = integer
+	wait (ms) {
+		return new Promise(resolve => setTimeout(() => resolve(true), ms));
 	},
 };

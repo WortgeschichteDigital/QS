@@ -30,20 +30,7 @@ let overlay = {
 		}
 		overlay.hide(id);
 	},
-	// decide whether the body should be scrollable
-	bodyScrollable () {
-		let scrollable = true;
-		for (const i of document.querySelectorAll(".overlay")) {
-			if (!i.classList.contains("off")) {
-				scrollable = false;
-				break;
-			}
-		}
-		if (scrollable) {
-			document.body.classList.add("scrollable");
-		}
-	},
-	// detect top most overlay window
+	// detect topmost overlay window
 	top () {
 		let top = {
 			zIndex: 0,
@@ -60,5 +47,12 @@ let overlay = {
 			}
 		}
 		return top.id;
+	},
+	// decide whether the body should be scrollable
+	bodyScrollable () {
+		const scrollable = overlay.top() ? true : false;
+		if (scrollable) {
+			document.body.classList.add("scrollable");
+		}
 	},
 };

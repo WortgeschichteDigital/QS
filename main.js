@@ -11,7 +11,8 @@ const fsp = require("fs").promises,
 	path = require("path");
 
 // costum modules
-const services = require("./js/main/services");
+const services = require("./js/main/services"),
+	xml = require("./js/main/xml");
 
 
 /***** SINGLE INSTANCE LOCK *****/
@@ -29,9 +30,21 @@ let menuApp = [
 		label: "&QS",
 		submenu: [
 			{
-				label: "Auffrischen",
+				label: "Suche",
+				icon: path.join(__dirname, "img", "main", "search.png"),
+				click: () => winMenu.execute("search"),
+				accelerator: "CommandOrControl+F",
+			},
+			{
+				label: "Filter",
+				icon: path.join(__dirname, "img", "main", "filter.png"),
+				click: () => winMenu.execute("filters"),
+				accelerator: "CommandOrControl+Shift+F",
+			},
+			{
+				label: "Update",
 				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
-				// click: () => win.bw.webContents.send("hist-bar"),
+				click: () => winMenu.execute("update"),
 				accelerator: "F5",
 			},
 			{ type: "separator" },
@@ -44,7 +57,7 @@ let menuApp = [
 			{
 				label: "Beenden",
 				icon: path.join(__dirname, "img", "main", "exit.png"),
-				// click: () => win.bw.webContents.send("hist-bar"),
+				click: () => winMenu.quitApp(),
 				accelerator: "CommandOrControl+Q",
 			},
 		],
@@ -56,7 +69,7 @@ let menuPv = [
 		label: "&QS",
 		submenu: [
 			{
-				label: "Auffrischen",
+				label: "Update",
 				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
 				// click: () => win.bw.webContents.send("hist-bar"),
 				accelerator: "F5",
@@ -238,6 +251,18 @@ let winMenu = {
 		const bw = BrowserWindow.getFocusedWindow();
 		bw.webContents.send("menu-" + command);
 	},
+	// close all windows and quit the app
+	async quitApp () {
+		for (const w of win.open) {
+			if (w.type === "app") {
+				// the main window should remain until last
+				continue;
+			}
+			w.bw.close();
+			await new Promise(resolve => setTimeout(() => resolve(true), 50));
+		}
+		win.open[0].bw.close();
+	},
 };
 
 
@@ -260,7 +285,7 @@ let prefs = {
 		if (!exists) {
 			return false;
 		}
-		const content = await fsp.readFile(prefs.file, {encoding: "utf8"});
+		const content = await fsp.readFile(prefs.file, { encoding: "utf8" });
 		try {
 			prefs.data = JSON.parse(content);
 			return true;
@@ -271,7 +296,7 @@ let prefs = {
 		}
 	},
 	// write preferences
-	async write () {
+	write () {
 		return new Promise(resolve => {
 			fsp.writeFile(prefs.file, JSON.stringify(prefs.data))
 				.then(() => resolve(true))
@@ -294,14 +319,14 @@ for (const i of ["about", "app", "help", "pv"]) {
 /***** APP WINDOWS *****/
 
 let win = {
-	// currently open windows; contains objects:
+	// currently open windows; filled with objects:
 	//   bw = object (browser window)
 	//   id = integer (window ID)
 	//   type = string (about | app | help | pv)
 	open: [],
 	// create window
 	//   type = string (about | app | help | pv)
-	//   xmlFile = string | undefined (title of xmlFile shown in pv window)
+	//   xmlFile = string | undefined (name of XML file shown in pv window)
 	create (type, xmlFile = "") {
 		// define window dimensions
 		const data = prefs.data.win[type],
@@ -324,9 +349,9 @@ let win = {
 			x,
 			y,
 			width,
-			minWidth: 600,
+			minWidth: 700,
 			height,
-			minHeight: 600,
+			minHeight: 700,
 			show: false,
 			webPreferences: {
 				contextIsolation: false,
@@ -381,7 +406,7 @@ let win = {
 			data.width = bounds.width;
 			data.height = bounds.height;
 			data.maximized = win.open[idx].bw.isMaximized();
-			// drop window
+			// dereference window
 			win.open.splice(idx, 1);
 		});
 	},
@@ -437,10 +462,10 @@ app.on("window-all-closed", async () => {
 	}
 });
 
-// reactive app
+// reactivate app
 app.on("activate", () => {
 	// on macOS the window object might already exist;
-	// in tis case, we don't need to create the app window
+	// in this case, we don't need to create the app window
 	let appWinExists = false;
 	for (const i of win.open) {
 		if (i.type === "app") {
@@ -475,3 +500,7 @@ ipcMain.handle("git-save", (evt, config) => {
 	prefs.data.git = config;
 	prefs.write();
 });
+
+ipcMain.handle("list-of-images", async () => await services.svg());
+
+ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));

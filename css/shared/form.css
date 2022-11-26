@@ -36,6 +36,10 @@ input[type="button"]:disabled {
 	pointer-events: none;
 }
 
+input[type="button"][value="Konfiguration"] {
+	background-image: url(../../img/app/preferences.svg);
+}
+
 input[type="button"][value="Nein"] {
 	background-image: url(../../img/app/button-no.svg);
 }

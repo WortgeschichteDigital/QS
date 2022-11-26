@@ -113,6 +113,27 @@ p.buttons {
 }
 
 
+/* TOOLTIP -------------------------------------- */
+
+#tooltip {
+	position: fixed;
+	opacity: 0;
+	box-shadow: var(--shadow);
+	border-radius: 5px;
+	padding: 5px 10px;
+	max-width: 250px;
+	background-color: var(--bgGreyDark);
+	color: #fff;
+	font-size: .75rem;
+	line-height: 1rem;
+	transition: opacity .1s linear;
+}
+
+#tooltip.visible {
+	opacity: 1;
+}
+
+
 /* MISCELLANEOUS -------------------------------- */
 
 #loading {
