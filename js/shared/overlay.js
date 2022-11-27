@@ -5,7 +5,6 @@ let overlay = {
 	zIndex: 1000,
 	// show overlay window
 	show (id) {
-		document.body.classList.remove("scrollable");
 		const over = document.getElementById(id);
 		over.classList.remove("off");
 		void over.offsetWidth;
@@ -14,12 +13,14 @@ let overlay = {
 	},
 	// hide overlay window
 	hide (id) {
-		const over = document.getElementById(id);
-		over.addEventListener("transitionend", () => {
-			over.classList.add("off");
-			overlay.bodyScrollable();
-		}, { once: true });
-		over.classList.add("hide");
+		return new Promise(resolve => {
+			const over = document.getElementById(id);
+			over.addEventListener("transitionend", () => {
+				over.classList.add("off");
+				resolve(true);
+			}, { once: true });
+			over.classList.add("hide");
+		});
 	},
 	// react to close icon
 	//   icon = element
@@ -47,12 +48,5 @@ let overlay = {
 			}
 		}
 		return top.id;
-	},
-	// decide whether the body should be scrollable
-	bodyScrollable () {
-		const scrollable = overlay.top() ? true : false;
-		if (scrollable) {
-			document.body.classList.add("scrollable");
-		}
 	},
 };

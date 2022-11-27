@@ -67,22 +67,16 @@ let dialog = {
 		}
 		// wait for response
 		return await new Promise(resolve => {
-			const interval = setInterval(() => {
+			const interval = setInterval(async () => {
 				if (typeof dialog.response === "undefined") {
 					return;
 				}
 				clearInterval(interval);
 				if (dialog.response !== null) {
-					overlay.hide("dialog");
+					await overlay.hide("dialog");
 				}
 				resolve(dialog.response);
 			}, 25);
 		});
-	},
-	// react to click event
-	//   button = element
-	button (button) {
-		dialog.response = button.dataset.response === "true" ? true : false;
-		overlay.hide("dialog");
 	},
 };

@@ -60,9 +60,17 @@ window.addEventListener("load", async () => {
 		});
 	});
 	document.querySelector("#prefs-git-config").addEventListener("click", () => git.configFormShow());
+	document.querySelector("#prefs-zeitstrahl-open").addEventListener("click", evt => {
+		evt.preventDefault();
+		prefs.zeitstrahlOpen();
+	});
+	document.querySelector("#prefs-zeitstrahl-remove").addEventListener("click", evt => {
+		evt.preventDefault();
+		prefs.zeitstrahlRemove();
+	});
 	document.querySelectorAll("#dialog input").forEach(i => {
 		i.addEventListener("click", function() {
-			dialog.button(this);
+			dialog.response = this.dataset.response === "true" ? true : false;
 		});
 	});
 
@@ -71,6 +79,7 @@ window.addEventListener("load", async () => {
 	app.ir.on("menu-preferences", () => app.menuCommand("preferences"));
 	app.ir.on("menu-search", () => app.menuCommand("search"));
 	app.ir.on("menu-update", () => app.menuCommand("update"));
+	app.ir.on("save-prefs", () => prefs.save());
 
 	// GET APP INFO
 	app.info = await app.ir.invoke("app-info");
@@ -85,11 +94,12 @@ window.addEventListener("load", async () => {
 	}
 
 	// INITIALIZE APP
-	await shared.wait(500);
-	await git.configCheck();
-	await git.branchCurrentPrint();
 	shared.keyboardMacOS();
 	tooltip.init();
+	await prefs.init();
+	await git.configCheck();
+	await xml.update();
+	document.body.classList.add("scrollable");
 	overlay.hide("loading");
 	app.ready = true;
 });

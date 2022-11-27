@@ -8,11 +8,9 @@ let app = {
 	info: {},
 	// app is ready for interaction
 	ready: false,
-	// active view
-	// (value is the same as the ID of the corresponding <section>)
-	view: "xml",
 	// Electron modules
 	ir: require("electron").ipcRenderer,
+	shell: require("electron").shell,
 	// Node.js modules
 	exec: require("child_process").exec,
 	fsp: require("fs").promises,
@@ -48,6 +46,9 @@ let app = {
 				break;
 		}
 	},
+	// active view
+	// (value is the same as the ID of the corresponding <section>)
+	view: "xml",
 	// toggle view
 	//   button = element
 	toggleView (button) {
@@ -75,6 +76,23 @@ let app = {
 		}
 		app.view = activeView;
 		app.prepareFilters();
+	},
+	// popuplate the current view
+	populateView () {
+		switch (app.view) {
+			case "xml":
+				viewXml.populate();
+				break;
+			case "hints":
+				viewHints.populate();
+				break;
+			case "clusters":
+				viewClusters.populate();
+				break;
+			case "search":
+				viewSearch.populate();
+				break;
+		}
 	},
 	// toggle filter bar
 	toggleFilters () {

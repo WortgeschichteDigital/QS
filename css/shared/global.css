@@ -103,6 +103,17 @@ a.overlay-close:focus {
 	border-radius: 10px;
 }
 
+code {
+	display: block;
+	margin: 10px;
+	border-radius: 10px;
+	padding: 10px;
+	background-color: var(--bgGreyLight);
+	font-family: "Noto Sans Mono", monospace;
+	font-size: .8rem;
+	line-height: 1.2rem;
+}
+
 p {
 	margin: 10px;
 }
@@ -137,6 +148,7 @@ p.buttons {
 /* MISCELLANEOUS -------------------------------- */
 
 #loading {
+	z-index: 1000;
 	background-color: var(--bgGreyDark);
 }
 

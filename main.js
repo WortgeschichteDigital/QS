@@ -323,6 +323,7 @@ let win = {
 	//   bw = object (browser window)
 	//   id = integer (window ID)
 	//   type = string (about | app | help | pv)
+	//   xml = string (name of XML file shown in pv window, otherwise empty string)
 	open: [],
 	// create window
 	//   type = string (about | app | help | pv)
@@ -371,6 +372,7 @@ let win = {
 			bw,
 			id: bw.id,
 			type,
+			xml: "",
 		});
 		// set menu
 		winMenu.set(bw, type);
@@ -387,7 +389,7 @@ let win = {
 		// show window (this prevents flickering on startup)
 		bw.once("ready-to-show", () => bw.show());
 		// window is going to be closed
-		bw.on("close", function() {
+		bw.on("close", async function(evt) {
 			// search window
 			let idx = -1,
 				type = "";
@@ -397,6 +399,22 @@ let win = {
 					type = win.open[i].type;
 					break;
 				}
+			}
+			// save preferences if type main window is about to be closed
+			if (type === "app" && typeof prefs.saved === "undefined") {
+				evt.preventDefault();
+				prefs.saved = false;
+				this.webContents.send("save-prefs");
+				await new Promise(resolve => {
+					const interval = setInterval(() => {
+						if (prefs.saved) {
+							clearInterval(interval);
+							resolve(true);
+						}
+					}, 25);
+				});
+				this.close();
+				return;
 			}
 			// save window size and state
 			const data = prefs.data.win[type],
@@ -502,5 +520,15 @@ ipcMain.handle("git-save", (evt, config) => {
 });
 
 ipcMain.handle("list-of-images", async () => await services.svg());
+
+ipcMain.handle("prefs", () => prefs.data.options);
+
+ipcMain.handle("prefs-save", async (evt, options) => {
+	prefs.data.options = options;
+	await prefs.write();
+	if (typeof prefs.saved !== "undefined") {
+		prefs.saved = true;
+	}
+});
 
 ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));

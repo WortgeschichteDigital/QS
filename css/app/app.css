@@ -3,7 +3,12 @@
 /* HEADER --------------------------------------- */
 
 header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
 	padding: 15px 10px;
+	width: calc(100% - 20px);
 	background: var(--gradient);
 	color: #fff;
 }
@@ -140,7 +145,8 @@ header .label {
 section {
 	position: relative;
 	left: 0;
-	margin: 0 auto;
+	margin: 111px auto 0 auto;
+	padding: 15px 10px;
 	max-width: 1200px;
 	transition: left .6s ease-out;
 }

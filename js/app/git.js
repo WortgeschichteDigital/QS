@@ -176,6 +176,7 @@ let git = {
 	async branchCurrentPrint () {
 		const branchCurrent = await git.branchCurrent();
 		document.querySelector("#fun-git-branch").textContent = branchCurrent || "???";
+		return branchCurrent;
 	},
 	// check whether the current branch is clean or not
 	//   feedback = false | undefined
@@ -225,6 +226,7 @@ let git = {
 		}
 		git.branchCurrentPrint();
 		shared.feedback("okay");
+		xml.update();
 	},
 	// pull on current branch
 	async commandPull () {
@@ -247,7 +249,6 @@ let git = {
 			// Passwort auslesen
 			pass = document.querySelector("#dialog input").value.trim();
 			if (!pass) {
-				await shared.wait(325);
 				dialog.open({
 					type: "alert",
 					text: 'Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Sie haben kein Passwort eingegeben.',
@@ -272,6 +273,7 @@ let git = {
 		}
 		git.configPass = pass;
 		shared.feedback("okay");
+		xml.update();
 	},
 	// restore changed files
 	async commandRestore () {
@@ -306,6 +308,7 @@ let git = {
 			return;
 		}
 		shared.feedback("okay");
+		xml.update();
 	},
 	// execute a Git command
 	//   command = string

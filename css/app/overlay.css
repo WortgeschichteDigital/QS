@@ -1,0 +1,109 @@
+@charset "utf-8";
+
+/* GIT CONFIGURATION ---------------------------- */
+
+#git > div {
+	width: 550px;
+}
+
+#git p {
+	white-space: nowrap;
+}
+
+#git label {
+	width: 130px;
+}
+
+#git input[type="text"] {
+	width: calc(100% - 130px - 32px - 40px);
+}
+
+#git .icon {
+	margin-left: 10px;
+}
+
+
+/* PREFERENCES ---------------------------------- */
+
+#prefs > div {
+	width: 700px;
+}
+
+#prefs > div > div {
+	display: grid;
+	grid-template-columns: 160px 1fr;
+	column-gap: 20px;
+}
+
+#prefs ul {
+	margin: 0 0 0 -1px;
+	padding: 0;
+	list-style-type: none;
+}
+
+#prefs li {
+	margin: 10px 0;
+}
+
+#prefs li a {
+	display: block;
+	padding: 0 10px;
+	background-color: var(--bgBlue);
+	color: #fff;
+	font-size: 1rem;
+	text-decoration: none;
+}
+
+#prefs li a.active {
+	background-color: var(--bgHighlight);
+}
+
+#prefs p {
+	font-size: .8rem;
+	line-height: 1.2rem;
+}
+
+.prefs-section {
+	margin: 10px 10px 10px 0;
+}
+
+.prefs-git {
+	padding-left: 115px;
+	text-indent: -115px;
+}
+
+.prefs-git i {
+	display: inline-block;
+	width: 115px;
+	text-indent: 0;
+}
+
+#prefs-zeitstrahl {
+	width: calc(100% - 22px - 75px);
+}
+
+#prefs-zeitstrahl + .icon {
+	margin-left: 10px;
+}
+
+#prefs .icon + .icon {
+	margin-left: 5px;
+}
+
+
+/* SUMMARY -------------------------------------- */
+
+#summary > div {
+	width: 750px;
+}
+
+#summary p {
+	font-size: .9rem;
+	line-height: 1.35rem;
+	user-select: text;
+}
+
+.wgd-ez,
+.wgd-stichwort {
+	font-style: italic;
+}

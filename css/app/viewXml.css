@@ -1,0 +1,72 @@
+@charset "utf-8";
+
+#xml-tab table {
+	margin: 0 auto;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: .9rem;
+	line-height: 1.35rem;
+}
+
+#xml-tab td {
+	padding: 5px 10px 5px 0;
+}
+
+#xml-tab td:first-child {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	padding-left: 10px;
+}
+
+#xml-tab td:last-child {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#xml-tab tr:nth-child(odd) {
+	background-color: var(--bgGreyLight);
+}
+
+#xml-tab tr:hover {
+	background-color: var(--bgHover);
+}
+
+#xml-tab td:first-child img {
+	vertical-align: top;
+}
+
+#xml-tab a {
+	color: var(--text);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+#xml-tab a[data-event="pv"] {
+	outline: none;
+}
+
+#xml-tab a span {
+	vertical-align: top;
+	color: var(--textGreyLight);
+}
+
+#xml-tab a:hover,
+#xml-tab a:hover span,
+#xml-tab a:focus,
+#xml-tab a:focus span {
+	color: var(--textLink);
+}
+
+#xml-tab tr[data-status="0"] td:first-child img,
+#xml-tab tr td:nth-last-child(2) a,
+#xml-tab tr td:last-child a {
+	opacity: 0;
+}
+
+#xml-tab tr[data-status="0"]:hover td:first-child img,
+#xml-tab tr:hover td:nth-last-child(2) a,
+#xml-tab tr td:nth-last-child(2) a:focus,
+#xml-tab tr:hover td:last-child a,
+#xml-tab tr td:last-child a:focus {
+	opacity: 1;
+}
