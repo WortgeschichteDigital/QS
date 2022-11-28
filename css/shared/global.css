@@ -76,7 +76,7 @@ body {
 }
 
 body.scrollable {
-	overflow-y: unset;
+	overflow-y: auto;
 }
 
 a {

@@ -42,8 +42,16 @@ window.addEventListener("load", async () => {
 	});
 
 	// CLICK EVENTS: OVERLAYS
-	document.querySelectorAll(".overlay-close").forEach(a => {
-		a.addEventListener("click", function(evt) {
+	document.querySelectorAll(".overlay").forEach(i => {
+		i.addEventListener("click", function() {
+			this.querySelector(".overlay-close")?.click();
+		});
+	});
+	document.querySelectorAll(".overlay > div").forEach(i => {
+		i.addEventListener("click", evt => evt.stopPropagation());
+	});
+	document.querySelectorAll(".overlay-close").forEach(i => {
+		i.addEventListener("click", function(evt) {
 			evt.preventDefault();
 			overlay.close(this);
 		});
@@ -56,10 +64,10 @@ window.addEventListener("load", async () => {
 	document.querySelectorAll("#prefs li a").forEach(i => {
 		i.addEventListener("click", function(evt) {
 			evt.preventDefault();
-			app.changePrefsSection(this);
+			prefs.changeSection(this);
 		});
 	});
-	document.querySelector("#prefs-git-config").addEventListener("click", () => git.configFormShow());
+	document.querySelector("#prefs-cache-leeren").addEventListener("click", () => xml.resetCache(true));
 	document.querySelector("#prefs-zeitstrahl-open").addEventListener("click", evt => {
 		evt.preventDefault();
 		prefs.zeitstrahlOpen();
@@ -68,6 +76,7 @@ window.addEventListener("load", async () => {
 		evt.preventDefault();
 		prefs.zeitstrahlRemove();
 	});
+	document.querySelector("#prefs-git-config").addEventListener("click", () => git.configFormShow());
 	document.querySelectorAll("#dialog input").forEach(i => {
 		i.addEventListener("click", function() {
 			dialog.response = this.dataset.response === "true" ? true : false;

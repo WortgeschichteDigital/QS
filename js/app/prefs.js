@@ -44,6 +44,30 @@ let prefs = {
 		// save preferences
 		app.ir.invoke("prefs-save", prefs.data);
 	},
+	// change section
+	//   a = element (toc item)
+	changeSection (a) {
+		if (a.classList.contains("active")) {
+			return;
+		}
+		const toc = document.querySelectorAll("li a");
+		for (const i of toc) {
+			if (i === a) {
+				i.classList.add("active");
+			} else {
+				i.classList.remove("active");
+			}
+		}
+		const sections = document.querySelectorAll(".prefs-section"),
+			show = "prefs-" + a.getAttribute("href").substring(1);
+		for (const i of sections) {
+			if (i.id === show) {
+				i.classList.remove("off");
+			} else {
+				i.classList.add("off");
+			}
+		}
+	},
 	// choose data.json for Zeitstrahl
 	async zeitstrahlOpen () {
 		const options = {
@@ -105,7 +129,7 @@ let prefs = {
 		}
 		xml.zeitstrahl = zsData;
 		if (!passive) {
-			prefs.zeitstrahlUpdateXML();
+			xml.resetCache();
 		}
 		return true;
 	},
@@ -117,13 +141,6 @@ let prefs = {
 		delete prefs.data.zeitstrahl;
 		prefs.save();
 		xml.zeitstrahl = {};
-		prefs.zeitstrahlUpdateXML();
-	},
-	// update the
-	zeitstrahlUpdateXML () {
-		for (const v of Object.values(xml.data.files)) {
-			v.hash = "";
-		}
-		xml.update();
+		xml.resetCache();
 	},
 };

@@ -2,9 +2,9 @@
 
 let app = {
 	// app info
-	//   documents = path to user documents dir
-	//   temp = path to temp dir
-	//   userData = path to config dir
+	//   documents = string (path to user documents dir)
+	//   temp = string (path to temp dir)
+	//   userData = string (path to config dir)
 	info: {},
 	// app is ready for interaction
 	ready: false,
@@ -115,30 +115,6 @@ let app = {
 		} else {
 			status.classList.add("off");
 			hints.classList.add("off");
-		}
-	},
-	// change section in preferences overlay
-	//   a = element (toc item)
-	changePrefsSection (a) {
-		if (a.classList.contains("active")) {
-			return;
-		}
-		const toc = document.querySelectorAll("li a");
-		for (const i of toc) {
-			if (i === a) {
-				i.classList.add("active");
-			} else {
-				i.classList.remove("active");
-			}
-		}
-		const sections = document.querySelectorAll(".prefs-section"),
-			show = "prefs-" + a.getAttribute("href").substring(1);
-		for (const i of sections) {
-			if (i.id === show) {
-				i.classList.remove("off");
-			} else {
-				i.classList.add("off");
-			}
 		}
 	},
 };

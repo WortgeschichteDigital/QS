@@ -195,7 +195,8 @@ let git = {
 	},
 	// execute a basic git command
 	//   a = element
-	command (a) {
+	async command (a) {
+		await xml.updateWait();
 		let command = a.id.replace("fun-git-", "");
 		command = command.substring(0, 1).toUpperCase() + command.substring(1);
 		git["command" + command]();

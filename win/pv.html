@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://github.com/WortgeschichteDigital/QS/">
+
+		<title>QS</title>
+
+		<link rel="stylesheet" href="../css/shared/animations.css">
+		<link rel="stylesheet" href="../css/shared/global.css">
+		<link rel="stylesheet" href="../css/shared/overlay.css">
+		<link rel="stylesheet" href="../css/shared/variables.css">
+
+		<link rel="stylesheet" href="../css/win/pv.css">
+
+		<script src="../js/shared/overlay.js"></script>
+		<script src="../js/shared/shared.js"></script>
+		<script src="../js/shared/tooltip.js"></script>
+
+		<script src="../js/win/pv.js"></script>
+		<script src="../js/win/pv-init.js"></script>
+	</head>
+	<body>
+		<!-- HEADER -->
+		<header>
+			<div
+				><a href="#" id="back" title="Navigation zurück&lt;br&gt;(&lt;i&gt;Tastatur:&lt;/i&gt; Alt + ←)"
+					><img src="../img/app/nav-back-white.svg" width="48" height="48" alt=""
+				></a
+				><a href="#" id="xml" title="XML-Vorschau laden&lt;br&gt;(&lt;i&gt;Tastatur:&lt;/i&gt; Alt + Home)"
+					><img src="../img/app/xml-white.svg" width="48" height="48" alt=""
+				></a
+				><a href="#" id="forward" title="Navigation vorwärts&lt;br&gt;(&lt;i&gt;Tastatur:&lt;/i&gt; Alt + →)"
+					><img src="../img/app/nav-forward-white.svg" width="48" height="48" alt=""
+				></a
+				><a href="#" id="update" title="XML-Update&lt;br&gt;(&lt;i&gt;Tastatur:&lt;/i&gt; F5)"
+					><img src="../img/app/view-refresh-white.svg" width="48" height="48" alt=""
+				></a
+			></div>
+		</header>
+
+		<!-- WEBVIEW -->
+		<webview src="blank.html"></webview>
+
+		<!-- OVERLAY: LOADING -->
+		<div id="loading" class="overlay"
+			><img src="../img/icon/icon.svg" width="96" height="96" alt=""
+		></div>
+	</body>
+</html>

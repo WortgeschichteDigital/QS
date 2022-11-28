@@ -69,17 +69,41 @@ let menuPv = [
 		label: "&QS",
 		submenu: [
 			{
-				label: "Update",
-				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
-				// click: () => win.bw.webContents.send("hist-bar"),
-				accelerator: "F5",
+				label: "Schließen",
+				icon: path.join(__dirname, "img", "main", "close.png"),
+				click: () => winMenu.closeWin(),
+				accelerator: "CommandOrControl+W",
+			},
+		],
+	},
+	{
+		label: "&Navigation",
+		submenu: [
+			{
+				label: "Zurück",
+				icon: path.join(__dirname, "img", "main", "nav-back.png"),
+				click: () => winMenu.execute("nav-back"),
+				accelerator: "Alt+Left",
+			},
+			{
+				label: "Vorwärts",
+				icon: path.join(__dirname, "img", "main", "nav-forward.png"),
+				click: () => winMenu.execute("nav-forward"),
+				accelerator: "Alt+Right",
 			},
 			{ type: "separator" },
 			{
-				label: "Schließen",
-				icon: path.join(__dirname, "img", "main", "close.png"),
-				// click: () => win.bw.webContents.send("hist-bar"),
-				accelerator: "CommandOrControl+W",
+				label: "XML-Vorschau",
+				icon: path.join(__dirname, "img", "main", "xml.png"),
+				click: () => winMenu.execute("nav-xml"),
+				accelerator: "Alt+Home",
+			},
+			{ type: "separator" },
+			{
+				label: "Update",
+				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
+				click: () => winMenu.execute("nav-update"),
+				accelerator: "F5",
 			},
 		],
 	},
@@ -251,6 +275,11 @@ let winMenu = {
 		const bw = BrowserWindow.getFocusedWindow();
 		bw.webContents.send("menu-" + command);
 	},
+	// close the focused window
+	closeWin () {
+		const bw = BrowserWindow.getFocusedWindow();
+		bw.close();
+	},
 	// close all windows and quit the app
 	async quitApp () {
 		for (const w of win.open) {
@@ -327,23 +356,37 @@ let win = {
 	open: [],
 	// create window
 	//   type = string (about | app | help | pv)
-	//   xmlFile = string | undefined (name of XML file shown in pv window)
-	create (type, xmlFile = "") {
+	//   xml = object | undefined (see win.pv())
+	create (type, xml = {}) {
 		// define window dimensions
-		const data = prefs.data.win[type],
+		const workArea = display.getPrimaryDisplay().workArea,
+			data = prefs.data.win[type],
 			x = data.x >= 0 ? data.x : null,
 			y = data.y >= 0 ? data.y : null,
-			width = data.width ? data.width : 1000,
-			height = data.height ? data.height : display.getPrimaryDisplay().workArea.height;
+			width = data.width ? data.width : defaults().width,
+			height = data.height ? data.height : defaults().height;
+		function defaults () {
+			if (type === "about") {
+				return {
+					width: 700,
+					height: 250,
+				};
+			} else {
+				return {
+					width: 1000,
+					height: workArea.height,
+				};
+			}
+		}
 		// win title
 		const title = {
 			about: "QS / Über",
 			app: "QS",
 			help: "QS / Hilfe",
-			pv: "QS / " + xmlFile,
+			pv: "QS / " + xml.file,
 		};
 		// open window
-		const bw = new BrowserWindow({
+		let bwOptions = {
 			title: title[type],
 			icon: win.icon(),
 			backgroundColor: "#fff",
@@ -362,7 +405,11 @@ let win = {
 				defaultEncoding: "utf-8",
 				spellcheck: false,
 			},
-		});
+		};
+		if (type === "pv") {
+			bwOptions.webPreferences.webviewTag = true;
+		}
+		const bw = new BrowserWindow(bwOptions);
 		// maximize window?
 		if (data.maximized) {
 			bw.maximize();
@@ -372,7 +419,7 @@ let win = {
 			bw,
 			id: bw.id,
 			type,
-			xml: "",
+			xml: xml.file || "",
 		});
 		// set menu
 		winMenu.set(bw, type);
@@ -388,6 +435,13 @@ let win = {
 		win.focus(bw);
 		// show window (this prevents flickering on startup)
 		bw.once("ready-to-show", () => bw.show());
+		// send XML data if necessary
+		if (type === "pv") {
+			bw.webContents.once("did-finish-load", function() {
+				const bw = BrowserWindow.fromWebContents(this);
+				win.pvSend(bw, xml);
+			});
+		}
 		// window is going to be closed
 		bw.on("close", async function(evt) {
 			// search window
@@ -445,6 +499,39 @@ let win = {
 			bw.restore();
 		}
 		setTimeout(() => bw.focus(), 25);
+	},
+	// open or focus preview window
+	//   args = object
+	//     dir = string (articles | ignore)
+	//     file = string (XML file name)
+	//     git = string (path to git directory)
+	pv (args) {
+		for (const i of win.open) {
+			if (i.xml === args.file) {
+				win.pvSend(i.bw, args);
+				return;
+			}
+		}
+		win.create("pv", args);
+	},
+	// send data to preview window
+	async pvSend (bw, args) {
+		// get XML file
+		const xmlPath = path.join(args.git, args.dir, args.file),
+			exists = await services.exists(xmlPath);
+		if (!exists) {
+			return;
+		}
+		const contents = await xml.getFile(xmlPath);
+		if (!contents) {
+			return;
+		}
+		// send data
+		args.xml = contents;
+		bw.webContents.send("update", args);
+		// focus window
+		// (this is important in case the window already exists)
+		bw.focus();
 	},
 };
 
@@ -507,6 +594,8 @@ ipcMain.handle("app-info", () => {
 	};
 });
 
+ipcMain.handle("exists", async (evt, path) => await services.exists(path));
+
 ipcMain.handle("file-dialog", async (evt, open, options) => {
 	const bw = BrowserWindow.fromWebContents(evt.sender);
 	return await services.fileDialog({ bw, open, options });
@@ -530,5 +619,7 @@ ipcMain.handle("prefs-save", async (evt, options) => {
 		prefs.saved = true;
 	}
 });
+
+ipcMain.handle("pv", (evt, args) => win.pv(args));
 
 ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));

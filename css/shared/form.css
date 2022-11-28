@@ -44,6 +44,10 @@ input[type="button"][value="Nein"] {
 	background-image: url(../../img/app/button-no.svg);
 }
 
+input[type="button"][value="Zurücksetzen"] {
+	background-image: url(../../img/app/cleanup.svg);
+}
+
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="button"]:focus {

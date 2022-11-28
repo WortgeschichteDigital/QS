@@ -52,6 +52,18 @@
 	height: 30px;
 }
 
+.overlay h2 {
+	margin: 20px 10px 10px 10px;
+	color: var(--textColor);
+	font-size: .9rem;
+	font-weight: bold;
+	line-height: 1.35rem;
+}
+
+.overlay h2:first-child {
+	margin-top: 0;
+}
+
 
 /* DIALOG --------------------------------------- */
 

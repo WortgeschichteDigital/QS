@@ -120,12 +120,31 @@
 				<div>
 					<ul>
 						<li><a href="#allgemeines" class="active">Allgemeines</a></li>
+						<li><a href="#hints">Hinweise</a></li>
+						<li><a href="#data">Datendateien</a></li>
 						<li><a href="#git">Git</a></li>
-						<li><a href="#externe">Externe Daten</a></li>
 					</ul>
 					<div>
 						<!-- Allgemeines -->
 						<div id="prefs-allgemeines" class="prefs-section">
+						</div>
+
+						<!-- Hinweise -->
+						<div id="prefs-hints" class="prefs-section off">
+						</div>
+
+						<!-- Externe Daten -->
+						<div id="prefs-data" class="prefs-section off">
+							<h2>Analyse-Cache</h2>
+							<p
+								><input type="button" value="Zurücksetzen" id="prefs-cache-leeren"
+							></p>
+							<h2>Zeitstrahldaten</h2>
+							<p
+								><input type="text" value="" placeholder="Pfad zur data.json" id="prefs-zeitstrahl" readonly tabindex="-1"
+								><a href="#" id="prefs-zeitstrahl-open" class="icon" title="Datei auswählen"><img src="img/app/open-file.svg" width="30" height="30" alt=""></a
+								><a href="#" id="prefs-zeitstrahl-remove" class="icon" title="Datei entkoppeln"><img src="img/app/delete.svg" width="30" height="30" alt=""></a
+							></p>
 						</div>
 
 						<!-- Git -->
@@ -136,18 +155,8 @@
 							<p class="prefs-git"
 								><i>Repository:</i><span id="prefs-git-dir"></span
 							></p>
-							<p class="buttons"
-								><input type="button" value="Konfiguration" id="prefs-git-config"
-							></p>
-						</div>
-
-						<!-- Externe Daten -->
-						<div id="prefs-externe" class="prefs-section off">
-							<p><label for="prefs-zeitstrahl">Zeitstrahldaten</label></p>
 							<p
-								><input type="text" value="" placeholder="Pfad zur data.json" id="prefs-zeitstrahl" readonly tabindex="-1"
-								><a href="#" id="prefs-zeitstrahl-open" class="icon" title="Datei auswählen"><img src="img/app/open-file.svg" width="30" height="30" alt=""></a
-								><a href="#" id="prefs-zeitstrahl-remove" class="icon" title="Datei entkoppeln"><img src="img/app/delete.svg" width="30" height="30" alt=""></a
+								><input type="button" value="Konfiguration" id="prefs-git-config"
 							></p>
 						</div>
 					</div>

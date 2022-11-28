@@ -26,7 +26,7 @@ let xml = {
 	//         linkCount    = 1   link count, > 0 means: 'there are already links to the proposed destination';
 	//                              the analysis is limited to the current block (i.e. <Wortgeschichte> etc.)
 	//         line         = 1   line number
-	//         scope        = ""  Artikel | Bedeutungsgerüst | Verweise | Wortgeschichte | Kurz gefasst
+	//         scope        = ""  Artikel | Bedeutungsgerüst | Kurz gefasst | Verweise | Wortgeschichte
 	//         to           = []  proposition into which "from" should be changed TODO no array!
 	//         type         = ""  hint type TODO documentation!
 	//       hl             = []  //Artikel/Lemma[@Typ = "Hauptlemma"]/Schreibung;
@@ -34,12 +34,12 @@ let xml = {
 	//       hlJoined       = []  same as "hl", but Schreibung is joined with a slash as separator
 	//       id             = ""  //Artikel/@xml:id
 	//       links          = []  //Verweis
-	//         inVerweise   = |   //Verweis is within //Verweise
 	//         lemma        = {}  lemma the link points to
 	//           file       = ""  FILENAME.xml
 	//           spelling   = ""  spelling of the lemma as in "hl" or "nl"
 	//         line         = 1   line number
 	//         points       = 1   cluster points for this link
+	//         scope        = ""  Kurz gefasst | Verweise | Wortgeschichte
 	//         type         = []  semantic types attached to this link
 	//         verweisziel  = ""  original content of //Verweis/Verweisziel
 	//       name           = ""  article name with all lemmas and the attached " (Wortfeld)" if applicable
@@ -63,8 +63,7 @@ let xml = {
 	// XML file content
 	//   [FILENAME.xml] = string (complete XML file)
 	files: {},
-	// contents of data.json with Zeitstrahl data (see preferences "Externe Daten");
-	// important keys:
+	// contents of data.json with Zeitstrahl data (see preferences "Externe Daten"); important keys:
 	//   zeitstrahl.lemmas
 	//     [LEMMA|XML-ID] = {}
 	//       spelling     = ""  spelling of the lemma
@@ -178,12 +177,13 @@ let xml = {
 				// collect all links
 				d.links = [];
 				doc.querySelectorAll("Verweis").forEach(i => {
-					const verweisziel = i.querySelector("Verweisziel").textContent;
+					const verweisziel = i.querySelector("Verweisziel").textContent,
+						scopePoints = xml.getScopePoints(i, d.fa);
 					d.links.push({
-						inVerweise: i.closest("Verweise") ? true : false,
 						lemma: {},
 						line: xml.getLineNumber(i, doc, xml.files[file]),
-						points: xml.getClusterPoints(i, d.fa),
+						points: scopePoints.points,
+						scope: scopePoints.scope,
 						type: i?.getAttribute("Typ")?.split(" ") || [],
 						verweisziel,
 					});
@@ -232,26 +232,49 @@ let xml = {
 			});
 		}
 	},
-	// determine cluster points for the given link
+	// determine scope and cluster points of the given link
 	//   link = element
 	//   fa = boolean (article is a field article)
-	getClusterPoints (link, fa) {
-		if (link.closest("Anmerkung")) {
-			return 1; // footnote
-		} else if (link.closest("Abschnitt") &&
+	getScopePoints (link, fa) {
+		if (link.closest("Anmerkung") ||
+				link.closest("Abschnitt") &&
 				link.closest("Abschnitt").getAttribute("Relevanz") === "niedrig") {
-			return 1; // learn more (Mehr erfahren)
+			// footnote or learn more (Mehr erfahren)
+			return {
+				points: 1,
+				scope: "Wortgeschichte",
+			};
 		} else if (link.closest("Wortgeschichte")) {
-			return 2; // continuous text (base value)
+			// continuous text (base value)
+			return {
+				points: 2,
+				scope: "Wortgeschichte",
+			};
 		} else if (link.closest("Wortgeschichte_kompakt")) {
-			return 3; // abstract (Kurz gefasst)
+			// summary (Kurz gefasst)
+			return {
+				points: 3,
+				scope: "Kurz gefasst",
+			};
 		} else if (link.closest("Verweise")) {
 			if (fa) {
-				return 10; // field article
+				// field article
+				return {
+					points: 10,
+					scope: "Verweise",
+				};
 			}
-			return 3; // structured reference list
+			// structured reference list
+			return {
+				points: 3,
+				scope: "Verweise",
+			};
 		}
-		return 0; // this should never happen
+		// this should never happen
+		return {
+			points: 0,
+			scope: "",
+		};
 	},
 	// get the actual lemma a <Verweisziel> points to
 	//   vz = string (contents of <Verweisziel>)
@@ -341,8 +364,37 @@ let xml = {
 			});
 		}
 	},
+	// remove cache files and rebuild xml data
+	//   active = true | undefined (clear was initiated by user)
+	async resetCache (active = false) {
+		await xml.updateWait();
+		xml.updating = true;
+		// remove cache files
+		for (const branch of ["master", "preprint"]) {
+			const path = app.path.join(app.info.userData, `xml-cache-${branch}.json`),
+				exists = await app.ir.invoke("exists", path);
+			if (!exists) {
+				continue;
+			}
+			try {
+				await app.fsp.unlink(path);
+			} catch {}
+		}
+		// reset variables
+		xml.data.files = {};
+		xml.files = {};
+		// start update operation
+		await xml.update();
+		if (active) {
+			dialog.open({
+				type: "alert",
+				text: "Der Cache wurde geleert und für den aktuellen Branch neu aufgebaut.",
+			});
+		}
+	},
 	// execute update operation
 	async update () {
+		xml.updating = true;
 		const update = document.querySelector("#fun-update");
 		if (update.classList.contains("active")) {
 			return;
@@ -425,6 +477,23 @@ let xml = {
 			update.classList.remove("active");
 			img.src = "img/app/view-refresh-white.svg";
 			img.classList.remove("rotate");
+			xml.updating = false;
 		}
+	},
+	// update procedure is running
+	updating: false,
+	// assisting function to stall operations while the update procdure is still running
+	async updateWait () {
+		if (!xml.updating) {
+			return;
+		}
+		await new Promise(resolve => {
+			const interval = setInterval(() => {
+				if (!xml.updating) {
+					clearInterval(interval);
+					resolve(true);
+				}
+			}, 25);
+		});
 	},
 };

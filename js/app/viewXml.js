@@ -96,8 +96,9 @@ let viewXml = {
 		tooltip.init(tab);
 		// append events
 		tab.querySelectorAll("tr a").forEach(i => {
-			i.addEventListener("click", function(evt) {
+			i.addEventListener("click", async function(evt) {
 				evt.preventDefault();
+				await xml.updateWait();
 				viewXml[this.dataset.event](this);
 			});
 		});
@@ -108,7 +109,12 @@ let viewXml = {
 	// open file in preview window
 	//   a = element (clicked link)
 	pv (a) {
-		// TODO
+		const tr = a.closest("tr");
+		app.ir.invoke("pv", {
+			dir: tr.dataset.dir,
+			file: tr.dataset.file,
+			git: git.config.dir,
+		});
 	},
 	// resources/wortgeschichten-teaser.xsl
 	teaserXSL: "",

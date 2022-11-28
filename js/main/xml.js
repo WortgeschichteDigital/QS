@@ -47,4 +47,13 @@ module.exports = {
 		}
 		return xmlFiles;
 	},
+	// get contents of a specific xml file
+	//   path = string
+	async getFile (path) {
+		return await new Promise(resolve => {
+			fsp.readFile(path)
+				.then(buffer => resolve( buffer.toString() ) )
+				.catch(() => resolve(false) );
+		});
+	},
 };
