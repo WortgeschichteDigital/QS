@@ -2,22 +2,62 @@
 
 let viewXml = {
 	// populate the view
-	populate () {
+	async populate () {
+		await xml.updateWait();
+		window.scrollTo(0, 0);
 		// glean data
 		let data = [];
 		for (const [file, values] of Object.entries(xml.data.files)) {
 			data.push({
+				authors: values.authors,
 				dir: values.dir,
+				domains: values.domains,
 				file,
+				path: values.dir + "/" + file,
 				published: values.published,
-				search: values.dir + "/" + file,
-				status: values.status,
+				status: "" + values.status,
 			});
 		}
-		// filter data TODO quick filter + filter bar
+		// filter data
+		const dataF = filters.getData(),
+			dataS = app.getSortingData(), // ascending = boolean, ignore = boolean, type = alpha | time
+			regPath = new RegExp(shared.escapeRegExp(dataS.filter), "i");
+		for (let i = data.length - 1; i >= 0; i--) {
+			if (dataF["select-authors"] && !data[i].authors.includes(dataF["select-authors"]) ||
+					dataF["select-domains"] && !data[i].domains.includes(dataF["select-domains"]) ||
+					dataF["select-status"] && data[i].status !== dataF["select-status"] ||
+					!regPath.test(data[i].path)) {
+				data.splice(i, 1);
+			}
+		}
 		// sort data
-		// TODO sort direction + sort by time
-		data.sort((a, b) => shared.sort(a.file, b.file));
+		const sortingDir = dataS.ascending ? [-1, 1] : [1, -1];
+		data.sort((a, b) => {
+			// folder "ignore" first
+			if (dataS.ignore) {
+				if (a.dir === "ignore" && b.dir === "articles") {
+					return -1;
+				} else if (a.dir === "articles" && b.dir === "ignore") {
+					return 1;
+				}
+			}
+			// alpha-numeric
+			let x = a.file,
+				y = b.file;
+			if (dataS.type === "time" &&
+					a.published !== b.published) {
+				x = a.published;
+				y = b.published;
+			}
+			const result = shared.sort(x, y);
+			if (result !== 0) {
+				if (result === -1) {
+					return sortingDir[0];
+				}
+				return sortingDir[1];
+			}
+			return result;
+		});
 		// make table
 		const statusIcons = [
 			{
@@ -35,12 +75,12 @@ let viewXml = {
 		];
 		const teaserOpen = [
 			{
-				event: "teaser",
+				event: "Teaser",
 				icon: "preview.svg",
 				title: "Teaser anzeigen",
 			},
 			{
-				event: "open",
+				event: "Open",
 				icon: "open-file.svg",
 				title: "Datei im Editor öffnen",
 			},
@@ -67,13 +107,21 @@ let viewXml = {
 			tr.appendChild(file);
 			let pv = document.createElement("a");
 			file.appendChild(pv);
-			pv.dataset.event = "pv";
+			pv.dataset.event = "Pv";
 			pv.href = "#";
 			pv.title = "Datei in der Vorschau öffnen";
 			let pvDir = document.createElement("span");
 			pv.appendChild(pvDir);
 			pvDir.textContent = i.dir + "/";
 			pv.appendChild(document.createTextNode(i.file));
+			// time
+			if (dataS.type === "time") {
+				let td = document.createElement("td");
+				tr.appendChild(td);
+				td.classList.add("time");
+				const published = i.published.split("-");
+				td.textContent = `${published[2]}.\u00A0${published[1]}.\u00A0${published[0]}`;
+			}
 			// teaser & open
 			for (let j = 0; j < 2; j++) {
 				let td = document.createElement("td");
@@ -99,16 +147,20 @@ let viewXml = {
 			i.addEventListener("click", async function(evt) {
 				evt.preventDefault();
 				await xml.updateWait();
-				viewXml[this.dataset.event](this);
+				viewXml["fun" + this.dataset.event](this);
 			});
 		});
+		// print placeholder in case no XML file made it through
+		if (!data.length) {
+			tab = app.nothingToShow();
+		}
 		// insert table
-		const xmlTab = document.querySelector("#xml-tab");
-		xmlTab.replaceChild(tab, xmlTab.firstChild);
+		const xmlSec = document.querySelector("#xml");
+		xmlSec.replaceChild(tab, xmlSec.firstChild);
 	},
 	// open file in preview window
 	//   a = element (clicked link)
-	pv (a) {
+	funPv (a) {
 		const tr = a.closest("tr");
 		app.ir.invoke("pv", {
 			dir: tr.dataset.dir,
@@ -117,12 +169,12 @@ let viewXml = {
 		});
 	},
 	// resources/wortgeschichten-teaser.xsl
-	teaserXSL: "",
+	funTeaserXsl: "",
 	// show teaser
 	//   a = element (clicked link)
-	async teaser (a) {
+	async funTeaser (a) {
 		// do I need to load the XSL?
-		if (!viewXml.teaserXSL) {
+		if (!viewXml.funTeaserXsl) {
 			let resources = process.resourcesPath;
 			if (/node_modules/.test(resources)) {
 				// app is not packaged => process.resourcesPath is the path to the Electron resources
@@ -130,7 +182,7 @@ let viewXml = {
 			}
 			try {
 				const path = app.path.join(resources, "wortgeschichten-teaser.xsl");
-				viewXml.teaserXSL = await app.fsp.readFile(path, { encoding: "utf8" });
+				viewXml.funTeaserXsl = await app.fsp.readFile(path, { encoding: "utf8" });
 			} catch (err) {
 				open.dialog({
 					type: "alert",
@@ -142,7 +194,7 @@ let viewXml = {
 		// extract summary (Kurz gefasst)
 		const tr = a.closest("tr"),
 			doc = new DOMParser().parseFromString(xml.files[tr.dataset.file], "text/xml"),
-			xslt = new DOMParser().parseFromString(viewXml.teaserXSL, "application/xml"),
+			xslt = new DOMParser().parseFromString(viewXml.funTeaserXsl, "application/xml"),
 			processor = new XSLTProcessor();
 		processor.importStylesheet(xslt);
 		const processedDoc = processor.transformToDocument(doc);
@@ -170,7 +222,7 @@ let viewXml = {
 	},
 	// open file in default editor
 	//   a = element (clicked link)
-	async open (a) {
+	async funOpen (a) {
 		const tr = a.closest("tr"),
 			path = app.path.join(git.config.dir, tr.dataset.dir, tr.dataset.file),
 			result = await app.shell.openPath(path);

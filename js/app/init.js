@@ -3,6 +3,11 @@
 window.addEventListener("load", async () => {
 	// KEYBOARD EVENTS
 	document.addEventListener("keydown", keyboard.shortcuts);
+	let sortingFilterTimeout = null;
+	document.querySelector("#sorting-filter").addEventListener("input", evt => {
+		clearTimeout(sortingFilterTimeout);
+		sortingFilterTimeout = setTimeout(() => app.populateView(), 250);
+	});
 
 	// WINDOW EVENTS
 	let winEventsTimeout = null;
@@ -19,6 +24,34 @@ window.addEventListener("load", async () => {
 		}, 25);
 	});
 
+	// CLICK EVENTS
+	document.querySelectorAll("#sorting a").forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			app.toggleSortingIcons(this);
+		});
+	});
+	document.querySelectorAll(".select-filter").forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			if (this.parentNode.querySelector(".select-popup")) {
+				filters.closeselectPopup(this, false);
+			} else {
+				filters.selectPopup(this);
+			}
+		});
+		i.addEventListener("blur", function() {
+			const activeSelect = this.closest(".select-cont:focus-within");
+			if (!activeSelect) {
+				filters.closeselectPopup(this, true);
+			}
+		});
+	});
+	document.querySelector("#filters-reset").addEventListener("click", evt => {
+		evt.preventDefault();
+		filters.reset();
+	});
+
 	// CLICK EVENTS: HEADER
 	document.querySelectorAll("#view a").forEach(a => {
 		a.addEventListener("click", function(evt) {
@@ -28,7 +61,7 @@ window.addEventListener("load", async () => {
 	});
 	document.querySelector("#fun-filters").addEventListener("click", evt => {
 		evt.preventDefault();
-		app.toggleFilters();
+		filters.toggleBar();
 	});
 	document.querySelector("#fun-update").addEventListener("click", evt => {
 		evt.preventDefault();
@@ -76,7 +109,7 @@ window.addEventListener("load", async () => {
 		evt.preventDefault();
 		prefs.zeitstrahlRemove();
 	});
-	document.querySelector("#prefs-git-config").addEventListener("click", () => git.configFormShow());
+	document.querySelector("#prefs-git-config").addEventListener("click", () => prefs.gitConfig());
 	document.querySelectorAll("#dialog input").forEach(i => {
 		i.addEventListener("click", function() {
 			dialog.response = this.dataset.response === "true" ? true : false;
@@ -84,10 +117,13 @@ window.addEventListener("load", async () => {
 	});
 
 	// LISTEN TO IPC MESSAGES
+	app.ir.on("menu-clusters", () => app.menuCommand("clusters"));
 	app.ir.on("menu-filters", () => app.menuCommand("filters"));
+	app.ir.on("menu-hints", () => app.menuCommand("hints"));
 	app.ir.on("menu-preferences", () => app.menuCommand("preferences"));
 	app.ir.on("menu-search", () => app.menuCommand("search"));
 	app.ir.on("menu-update", () => app.menuCommand("update"));
+	app.ir.on("menu-xml", () => app.menuCommand("xml"));
 	app.ir.on("save-prefs", () => prefs.save());
 
 	// GET APP INFO
@@ -108,6 +144,8 @@ window.addEventListener("load", async () => {
 	await prefs.init();
 	await git.configCheck();
 	await xml.update();
+	document.querySelectorAll(".select-filter").forEach(i => filters.fillSelect(i));
+	filters.active();
 	document.body.classList.add("scrollable");
 	overlay.hide("loading");
 	app.ready = true;

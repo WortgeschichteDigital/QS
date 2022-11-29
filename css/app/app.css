@@ -92,6 +92,13 @@ header a#fun-filters.view-button.active {
 	background-image: url(../../img/app/filter.svg);
 }
 
+header a#fun-filters.active-filters.view-button,
+header a#fun-filters.active-filters.view-button.active {
+	background-color: #fff;
+	background-image: url(../../img/app/filter-red.svg);
+	color: var(--colorRed);
+}
+
 header a#fun-update {
 	padding: 0 10px 0 0;
 	width: 126px;
@@ -157,32 +164,54 @@ section {
 }
 
 
-/* FILTERS -------------------------------------- */
+/* SORTING AND QUICK FILTER --------------------- */
 
-#filters {
+#sorting {
 	position: fixed;
 	top: 111px;
-	left: -320px;
-	overflow-y: hidden;
-	border-top: 3px solid #fff;
-	padding: 0 10px;
-	width: 300px;
-	height: calc(100vh - 111px - 3px);
-	background-color: var(--bgBlue);
-	color: #fff;
-	transition: left .3s ease-out;
-}
-
-#filters.visible {
 	left: 0;
+	width: 100%;
+	height: 60px;
+	background-color: #fff;
 }
 
-#filters h1 {
-	border-bottom: 1px solid #fff;
-	padding: 0 10px;
-	font-family: "Noto Serif", serif;
-	font-size: 1rem;
-	font-style: italic;
-	font-weight: normal;
-	line-height: 1.5rem;
+#sorting > div {
+	margin: 0 auto;
+	padding: 10px 0;
+	width: max-content;
+}
+
+#sorting a {
+	margin-left: 15px;
+	padding: 5px;
+}
+
+#sorting .active {
+	border-radius: 5px;
+	background-color: var(--bgActive);
+}
+
+#sorting-filter {
+	position: relative;
+	top: 5px;
+	vertical-align: top;
+	margin-left: 105px;
+	width: 200px;
+}
+
+
+/* MISCELLANEOUS -------------------------------- */
+
+#nothing {
+	text-align: center;
+}
+
+#nothing p:first-child {
+	color: var(--colorRed);
+	font-weight: bold;
+}
+
+#nothing p:last-child {
+	font-size: .8rem;
+	line-height: 1.2rem;
 }

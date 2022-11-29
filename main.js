@@ -30,11 +30,27 @@ let menuApp = [
 		label: "&QS",
 		submenu: [
 			{
-				label: "Suche",
+				label: "XML",
+				icon: path.join(__dirname, "img", "main", "xml.png"),
+				click: () => winMenu.execute("xml"),
+			},
+			{
+				label: "Hinweise",
+				icon: path.join(__dirname, "img", "main", "info.png"),
+				click: () => winMenu.execute("hints"),
+			},
+			{
+				label: "Clusterei",
+				icon: path.join(__dirname, "img", "main", "clusters.png"),
+				click: () => winMenu.execute("clusters"),
+			},
+			{
+				label: "Search",
 				icon: path.join(__dirname, "img", "main", "search.png"),
 				click: () => winMenu.execute("search"),
 				accelerator: "CommandOrControl+F",
 			},
+			{ type: "separator" },
 			{
 				label: "Filter",
 				icon: path.join(__dirname, "img", "main", "filter.png"),
@@ -57,7 +73,7 @@ let menuApp = [
 			{
 				label: "Beenden",
 				icon: path.join(__dirname, "img", "main", "exit.png"),
-				click: () => winMenu.quitApp(),
+				click: () => win.closeAll(),
 				accelerator: "CommandOrControl+Q",
 			},
 		],
@@ -69,9 +85,9 @@ let menuPv = [
 		label: "&QS",
 		submenu: [
 			{
-				label: "Schließen",
+				label: "Fenster schließen",
 				icon: path.join(__dirname, "img", "main", "close.png"),
-				click: () => winMenu.closeWin(),
+				click: () => win.close(),
 				accelerator: "CommandOrControl+W",
 			},
 		],
@@ -98,12 +114,22 @@ let menuPv = [
 				click: () => winMenu.execute("nav-xml"),
 				accelerator: "Alt+Home",
 			},
-			{ type: "separator" },
+		],
+	},
+	{
+		label: "&Funktionen",
+		submenu: [
 			{
 				label: "Update",
 				icon: path.join(__dirname, "img", "main", "view-refresh.png"),
-				click: () => winMenu.execute("nav-update"),
+				click: () => winMenu.execute("update"),
 				accelerator: "F5",
+			},
+			{
+				label: "Neues Fenster",
+				icon: path.join(__dirname, "img", "main", "window-new.png"),
+				click: () => winMenu.execute("new"),
+				accelerator: "CommandOrControl+N",
 			},
 		],
 	},
@@ -114,9 +140,9 @@ let menuWin = [
 		label: "&QS",
 		submenu: [
 			{
-				label: "Schließen",
+				label: "Fenster schließen",
 				icon: path.join(__dirname, "img", "main", "close.png"),
-				// click: () => win.bw.webContents.send("hist-bar"),
+				click: () => win.close(),
 				accelerator: "CommandOrControl+W",
 			},
 		],
@@ -275,23 +301,6 @@ let winMenu = {
 		const bw = BrowserWindow.getFocusedWindow();
 		bw.webContents.send("menu-" + command);
 	},
-	// close the focused window
-	closeWin () {
-		const bw = BrowserWindow.getFocusedWindow();
-		bw.close();
-	},
-	// close all windows and quit the app
-	async quitApp () {
-		for (const w of win.open) {
-			if (w.type === "app") {
-				// the main window should remain until last
-				continue;
-			}
-			w.bw.close();
-			await new Promise(resolve => setTimeout(() => resolve(true), 50));
-		}
-		win.open[0].bw.close();
-	},
 };
 
 
@@ -356,7 +365,7 @@ let win = {
 	open: [],
 	// create window
 	//   type = string (about | app | help | pv)
-	//   xml = object | undefined (see win.pv())
+	//   xml = object | undefined (see win.pvOpen())
 	create (type, xml = {}) {
 		// define window dimensions
 		const workArea = display.getPrimaryDisplay().workArea,
@@ -407,6 +416,13 @@ let win = {
 			},
 		};
 		if (type === "pv") {
+			// if this is the n-th preview window => let the system decide how to place it
+			const pvWin = win.open.filter(i => i.type === "pv");
+			if (pvWin.length > 0) {
+				bwOptions.x = null;
+				bwOptions.y = null;
+			}
+			// preview windows have <webview>
 			bwOptions.webPreferences.webviewTag = true;
 		}
 		const bw = new BrowserWindow(bwOptions);
@@ -454,9 +470,13 @@ let win = {
 					break;
 				}
 			}
-			// save preferences if type main window is about to be closed
+			// close every other window and
+			// save preferences when the main window is about to be closed
 			if (type === "app" && typeof prefs.saved === "undefined") {
 				evt.preventDefault();
+				// close every other window
+				await win.closeAll(["app"]);
+				// save preferences
 				prefs.saved = false;
 				this.webContents.send("save-prefs");
 				await new Promise(resolve => {
@@ -482,6 +502,27 @@ let win = {
 			win.open.splice(idx, 1);
 		});
 	},
+	// close the currently active (i.e. focused) window
+	close () {
+		const bw = BrowserWindow.getFocusedWindow();
+		bw.close();
+	},
+	// close all windows
+	//   exclude = array (exclude windows the given window types from closing)
+	async closeAll (exclude) {
+		for (let i = win.open.length - 1; i >= 0; i--) {
+			const w = win.open[i];
+			if (w.type === "app" || // the main window should remain open until last
+					exclude.includes(w.type)) { // exclude this window type from closing
+				continue;
+			}
+			w.bw.close();
+			await new Promise(resolve => setTimeout(() => resolve(true), 50));
+		}
+		if (!exclude.includes("app")) {
+			win.open[0].bw.close();
+		}
+	},
 	// make app icon
 	icon () {
 		if (process.platform === "win32") {
@@ -505,14 +546,26 @@ let win = {
 	//     dir = string (articles | ignore)
 	//     file = string (XML file name)
 	//     git = string (path to git directory)
-	pv (args) {
+	//     winId = integer (window ID)
+	pvOpen (args) {
 		for (const i of win.open) {
-			if (i.xml === args.file) {
+			if (!args.winId && i.xml === args.file ||
+					args.winId && i.id === args.winId) {
 				win.pvSend(i.bw, args);
 				return;
 			}
 		}
 		win.create("pv", args);
+	},
+	// close all preview windows
+	pvCloseAll () {
+		let exclude = [];
+		for (const w of win.open) {
+			if (w.type !== "pv") {
+				exclude.push(w.type);
+			}
+		}
+		win.closeAll(exclude);
 	},
 	// send data to preview window
 	async pvSend (bw, args) {
@@ -586,11 +639,13 @@ app.on("activate", () => {
 
 /***** RENDERER REQUESTS *****/
 
-ipcMain.handle("app-info", () => {
+ipcMain.handle("app-info", evt => {
+	const bw = BrowserWindow.fromWebContents(evt.sender);
 	return {
 		documents: app.getPath("documents"),
 		temp: app.getPath("temp"),
 		userData: app.getPath("userData"),
+		winId: bw.id,
 	};
 });
 
@@ -620,6 +675,10 @@ ipcMain.handle("prefs-save", async (evt, options) => {
 	}
 });
 
-ipcMain.handle("pv", (evt, args) => win.pv(args));
+ipcMain.handle("pv", (evt, args) => win.pvOpen(args));
+
+ipcMain.handle("pv-close-all", () => win.pvCloseAll());
+
+ipcMain.handle("pv-new", (evt, args) => win.create("pv", args));
 
 ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));

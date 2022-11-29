@@ -13,7 +13,8 @@ module.exports = {
 			const dir = path.join(repoDir, sub),
 				files = await fsp.readdir(dir);
 			for (const f of files) {
-				if (/^!/.test(f)) {
+				if (/^!/.test(f) || // test files
+						!/\.xml$/.test(f)) { // no XML file
 					continue;
 				}
 				// status 0 = known and unchanged
@@ -31,6 +32,10 @@ module.exports = {
 				});
 				if (!xml) {
 					// only in case an error occures
+					continue;
+				}
+				if (!/<WGD xmlns="http:\/\/www\.zdl\.org\/ns\/1\.0">/.test(xml)) {
+					// no WGd-XML file
 					continue;
 				}
 				const hash = crypto.createHash("sha1").update(xml).digest("hex");

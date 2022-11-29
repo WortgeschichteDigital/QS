@@ -5,9 +5,13 @@ let app = {
 	//   documents = string (path to user documents dir)
 	//   temp = string (path to temp dir)
 	//   userData = string (path to config dir)
+	//   winId = integer (window ID)
 	info: {},
 	// app is ready for interaction
 	ready: false,
+	// active view
+	// (value is the same as the ID of the corresponding <section>)
+	view: "xml",
 	// Electron modules
 	ir: require("electron").ipcRenderer,
 	shell: require("electron").shell,
@@ -32,8 +36,14 @@ let app = {
 			return;
 		}
 		switch (command) {
+			case "clusters":
+				document.querySelector("#view-clusters").click();
+				break;
 			case "filters":
 				document.querySelector("#fun-filters").click();
+				break;
+			case "hints":
+				document.querySelector("#view-hints").click();
 				break;
 			case "preferences":
 				overlay.show("prefs");
@@ -44,11 +54,60 @@ let app = {
 			case "update":
 				xml.update();
 				break;
+			case "xml":
+				document.querySelector("#view-xml").click();
+				break;
 		}
 	},
-	// active view
-	// (value is the same as the ID of the corresponding <section>)
-	view: "xml",
+	// print placeholder message in case there's nothing to show
+	// (which usually happens when the filters are to tight)
+	nothingToShow () {
+		let div = document.createElement("div");
+		div.id = "nothing";
+		let warn = document.createElement("p");
+		div.appendChild(warn);
+		warn.textContent = "Nichts gefunden!";
+		let hint = document.createElement("p");
+		div.appendChild(hint);
+		hint.textContent = "Verwenden Sie weniger oder weniger strikte Filter.";
+		return div;
+	},
+	// toggle sorting icons
+	//  a = element (icon link)
+	toggleSortingIcons (a) {
+		if (a.id === "sorting-dir") {
+			const img = a.querySelector("img");
+			if (/ascending/.test( img.getAttribute("src") ) ) {
+				img.src = "img/app/sort-descending.svg";
+				a.dataset.tooltip = "<i>Sortierung:</i> absteigend";
+			} else {
+				img.src = "img/app/sort-ascending.svg";
+				a.dataset.tooltip = "<i>Sortierung:</i> aufsteigend";
+			}
+			tooltip.noTimeout = true;
+			a.dispatchEvent(new Event("mouseover"));
+		} else if (/sorting-(alpha|time)/.test(a.id)) {
+			if (!a.classList.contains("active")) {
+				for (const i of ["alpha", "time"]) {
+					document.querySelector(`#sorting-${i}`).classList.toggle("active");
+				}
+			} else {
+				return;
+			}
+		} else {
+			a.classList.toggle("active");
+		}
+		app.populateView();
+	},
+	// get current sorting data
+	getSortingData () {
+		return {
+			ascending: /ascending/.test(document.querySelector("#sorting-dir img").getAttribute("src")) ? true : false,
+			filter: document.querySelector("#sorting-filter").value.trim(),
+			ignore: document.querySelector("#sorting-ignore.active") ? true : false,
+			type: document.querySelector("#sorting-alpha.active") ? "alpha" : "time",
+		};
+	},
 	// toggle view
 	//   button = element
 	toggleView (button) {
@@ -75,7 +134,14 @@ let app = {
 			}
 		}
 		app.view = activeView;
-		app.prepareFilters();
+		const sorting = document.querySelector("#sorting");
+		if (/xml|hints/.test(activeView)) {
+			sorting.classList.remove("off");
+		} else {
+			sorting.classList.add("off");
+		}
+		filters.toggleCategories();
+		app.populateView();
 	},
 	// popuplate the current view
 	populateView () {
@@ -92,29 +158,6 @@ let app = {
 			case "search":
 				viewSearch.populate();
 				break;
-		}
-	},
-	// toggle filter bar
-	toggleFilters () {
-		document.querySelector("#fun-filters").classList.toggle("active");
-		document.querySelector("#filters").classList.toggle("visible");
-	},
-	// show or hide filters appropriate to the current view
-	prepareFilters () {
-		const status = document.querySelector("#filters-status"),
-			hints = document.querySelector("#filters-hints");
-		if (app.view === "xml") {
-			status.classList.remove("off");
-			hints.classList.add("off");
-		} else if (app.view === "hints") {
-			status.classList.remove("off");
-			hints.classList.remove("off");
-		} else if (app.view === "search") {
-			status.classList.remove("off");
-			hints.classList.add("off");
-		} else {
-			status.classList.add("off");
-			hints.classList.add("off");
 		}
 	},
 };

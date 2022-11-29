@@ -13,6 +13,7 @@
 		<link rel="stylesheet" href="css/shared/variables.css">
 
 		<link rel="stylesheet" href="css/app/app.css">
+		<link rel="stylesheet" href="css/app/filters.css">
 		<link rel="stylesheet" href="css/app/overlay.css">
 		<link rel="stylesheet" href="css/app/viewXml.css">
 
@@ -22,6 +23,7 @@
 		<script src="js/shared/tooltip.js"></script>
 
 		<script src="js/app/app.js"></script>
+		<script src="js/app/filters.js"></script>
 		<script src="js/app/git.js"></script>
 		<script src="js/app/keyboard.js"></script>
 		<script src="js/app/prefs.js"></script>
@@ -51,6 +53,8 @@
 						><span class="label">Git:</span
 						><a href="#" id="fun-git-branch" title="aktuellen Branch wechseln"></a
 						><span class="spacer">·</span
+						><a href="#" id="fun-git-status" title="Status des aktuellen Branchs anzeigen">status</a
+						><span class="spacer">·</span
 						><a href="#" id="fun-git-pull" title="alle Branches pullen">pull</a
 						><span class="spacer">·</span
 						><a href="#" id="fun-git-restore" title="aktuellen Branch zurücksetzen">restore</a
@@ -61,7 +65,6 @@
 
 		<!-- VIEW: XML -->
 		<section id="xml">
-			<div id="xml-tab"> </div>
 		</section>
 
 		<!-- VIEW: HINWEISE -->
@@ -76,15 +79,51 @@
 		<section id="search" class="off">
 		</section>
 
+		<!-- SORTING AND QUICK FILTER -->
+		<div id="sorting">
+			<div
+				><a href="#" id="sorting-dir" class="icon active" title="&lt;i&gt;Sortierung:&lt;/i&gt; aufsteigend"
+					><img src="img/app/sort-ascending.svg" width="30" height="30" alt=""
+				></a
+				><a href="#" id="sorting-ignore" class="icon active" title="&lt;i&gt;Sortierung:&lt;/i&gt; Ordner „ignore“ zuerst"
+					><img src="img/app/open-dir.svg" width="30" height="30" alt=""
+				></a
+				><a href="#" id="sorting-alpha" class="icon active" title="&lt;i&gt;Sortierung:&lt;/i&gt; nach Alphabet"
+					><img src="img/app/alpha.svg" width="30" height="30" alt=""
+				></a
+				><a href="#" id="sorting-time" class="icon" title="&lt;i&gt;Sortierung:&lt;/i&gt; nach Publikationsdatum"
+					><img src="img/app/time.svg" width="30" height="30" alt=""
+				></a
+				><input type="text" value="" placeholder="nach Dateipfad filtern" id="sorting-filter"
+			></div>
+		</div>
+
 		<!-- FILTERS -->
 		<div id="filters">
-			<h1>Autor*in</h1>
-			<h1>Themenfeld</h1>
+			<a href="#" id="filters-reset"
+				><img src="img/app/cleanup-white.svg" width="30" height="30" alt=""
+			>Filter zurücksetzen</a>
+
+			<h1>Autor*innen</h1>
+			<div class="select-cont"
+				><a href="#" id="select-authors" class="select-filter" data-value="">alle</a
+			></div>
+
+			<h1>Themenfelder</h1>
+			<div class="select-cont"
+				><a href="#" id="select-domains" class="select-filter" data-value="">alle</a
+			></div>
+
 			<div id="filters-status">
-				<h1>Status</h1>
+				<h1>Dateistatus</h1>
+				<div class="select-cont"
+					><a href="#" id="select-status" class="select-filter" data-value="">alle</a
+				></div>
 			</div>
+
 			<div id="filters-hints" class="off">
 				<h1>Markierungen</h1>
+
 				<h1>Hinweise</h1>
 			</div>
 		</div>
@@ -119,22 +158,12 @@
 				<h1>Einstellungen<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/app/close-white.svg" width="30" height="30" alt="x"></a></h1>
 				<div>
 					<ul>
-						<li><a href="#allgemeines" class="active">Allgemeines</a></li>
-						<li><a href="#hints">Hinweise</a></li>
-						<li><a href="#data">Datendateien</a></li>
+						<li><a href="#data" class="active">Datendateien</a></li>
 						<li><a href="#git">Git</a></li>
 					</ul>
 					<div>
-						<!-- Allgemeines -->
-						<div id="prefs-allgemeines" class="prefs-section">
-						</div>
-
-						<!-- Hinweise -->
-						<div id="prefs-hints" class="prefs-section off">
-						</div>
-
-						<!-- Externe Daten -->
-						<div id="prefs-data" class="prefs-section off">
+						<!-- Datendateien -->
+						<div id="prefs-data" class="prefs-section">
 							<h2>Analyse-Cache</h2>
 							<p
 								><input type="button" value="Zurücksetzen" id="prefs-cache-leeren"

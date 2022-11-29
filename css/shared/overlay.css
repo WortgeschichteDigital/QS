@@ -106,3 +106,18 @@
 #dialog-text p:first-child {
 	margin-right: 30px;
 }
+
+#dialog.code > div {
+	width: 700px;
+}
+
+#dialog.code #dialog-text p {
+	margin-right: 30px;
+	border-radius: 10px;
+	padding: 10px;
+	background-color: var(--bgGreyLight);
+	font-family: "Noto Sans Mono", monospace;
+	font-size: .7rem;
+	line-height: 1rem;
+	user-select: text;
+}

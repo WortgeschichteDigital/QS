@@ -19,7 +19,7 @@ header a {
 	height: 48px;
 }
 
-header a:last-child {
+header a:nth-last-child(2) {
 	margin-left: 40px;
 }
 

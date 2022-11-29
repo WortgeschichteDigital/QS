@@ -213,6 +213,10 @@ let xml = {
 		}
 		// fill "lemma" in all links
 		for (const values of Object.values(xml.data.files)) {
+			if (!values.links) {
+				// in case an XML file could not be read due to a "not well-formed" error
+				continue;
+			}
 			for (const link of values.links) {
 				const lemma = xml.getLemma(link.verweisziel);
 				link.lemma = lemma;
@@ -457,7 +461,10 @@ let xml = {
 				continue;
 			}
 			const name = file.split("/")[1].trim();
-			xml.data.files[name].status = changed.includes(file) ? 1 : 2;
+			if (xml.data.files[name]) {
+				// deleted files appear as changed
+				xml.data.files[name].status = changed.includes(file) ? 1 : 2;
+			}
 		}
 		// analyze new files
 		if (updated.length) {
@@ -469,6 +476,8 @@ let xml = {
 			xml.data.date = new Date().toISOString();
 			await xml.writeCache();
 		}
+		// update list of possible filter values
+		filters.update();
 		// update current view
 		app.populateView();
 		// reset button

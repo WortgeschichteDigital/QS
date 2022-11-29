@@ -87,6 +87,10 @@ let git = {
 			git.dirError(dirOkay[1]);
 			return;
 		}
+		// close all preview windows if dir is about to be changed
+		if (git.config.dir !== dir) {
+			app.ir.invoke("pv-close-all");
+		}
 		// save config data in prefs file
 		git.config.user = user;
 		git.config.dir = dir;
@@ -201,6 +205,23 @@ let git = {
 		command = command.substring(0, 1).toUpperCase() + command.substring(1);
 		git["command" + command]();
 	},
+	// show status
+	async commandStatus () {
+		let status = await git.commandExec(`git status`);
+		if (status === false) {
+			document.querySelector("#fun-git-status").focus();
+			return;
+		}
+		status = shared.errorString(status);
+		status = status.replace(/\t/g, "  ");
+		const win = document.querySelector("#dialog");
+		win.classList.add("code");
+		await dialog.open({
+			type: "alert",
+			text: status,
+		});
+		win.classList.remove("code");
+	},
 	// change branch
 	async commandBranch () {
 		let current = await git.branchCurrent(),
@@ -242,7 +263,7 @@ let git = {
 		if (!pass) {
 			const result = await dialog.open({
 				type: "pass",
-				text: "Ihr Passwort für git.zdl.org:",
+				text: `Passwort für <b>${git.config.user}@git.zdl.org</b>`,
 			});
 			if (!result) {
 				return;

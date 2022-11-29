@@ -45,6 +45,10 @@ let shared = {
 		err = err.replace(/(?<!<)[/\\]/g, m => `${m}<wbr>`);
 		return err;
 	},
+	// escape special RegExp tokens
+	escapeRegExp (text) {
+		return text.replace(/\/|\(|\)|\[|\]|\{|\}|\.|\?|\\|\+|\*|\^|\$|\|/g, m => `\\${m}`);
+	},
 	// show passive feedback
 	//   type = string
 	async feedback (type) {

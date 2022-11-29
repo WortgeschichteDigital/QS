@@ -5,17 +5,25 @@ let keyboard = {
 	//   evt = obejct
 	async shortcuts (evt) {
 		const m = shared.detectKeyboardModifiers(evt),
-			active = document.activeElement,
-			olTop = overlay.top(); // string (ID of topmost overlay window, empty if all .off)
+			active = document.activeElement;
 		// Key "Escape"
-		if (!m && evt.key === "Escape" && olTop) {
-			const close = document.querySelector(`#${olTop} a.overlay-close`);
-			if (close) { // Git configuration has no close icon
-				close.click();
+		if (!m && evt.key === "Escape") {
+			const olTop = overlay.top();
+			if (olTop) {
+				const close = document.querySelector(`#${olTop} a.overlay-close`);
+				if (close) { // Git configuration has no close icon
+					close.click();
+				}
+				return;
+			}
+			const select = document.querySelector(".select-popup");
+			if (select) {
+				filters.closeselectPopup(select, false);
 			}
 		}
 		// Key "Enter"
 		else if (!m && evt.key === "Enter") {
+			const olTop = overlay.top();
 			if (olTop === "git" && /^git-(user|dir)$/.test(active.id)) {
 				await shared.wait(25);
 				document.querySelector("#git-okay").click();

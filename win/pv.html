@@ -2,7 +2,7 @@
 <html lang="de">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://github.com/WortgeschichteDigital/QS/">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
 
 		<title>QS</title>
 
@@ -36,11 +36,14 @@
 				><a href="#" id="update" title="XML-Update&lt;br&gt;(&lt;i&gt;Tastatur:&lt;/i&gt; F5)"
 					><img src="../img/app/view-refresh-white.svg" width="48" height="48" alt=""
 				></a
+				><a href="#" id="new" title="Neues Fenster&lt;br&gt;(&lt;i&gt;Tastatur:&lt;/i&gt; Strg + N)"
+					><img src="../img/app/window-new-white.svg" width="48" height="48" alt=""
+				></a
 			></div>
 		</header>
 
 		<!-- WEBVIEW -->
-		<webview src="blank.html"></webview>
+		<webview src="pv-loading.html"></webview>
 
 		<!-- OVERLAY: LOADING -->
 		<div id="loading" class="overlay"

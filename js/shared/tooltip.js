@@ -2,6 +2,8 @@
 
 let tooltip = {
 	timeout: null,
+	// skip timeout, show tooltip immediately
+	noTimeout: false,
 	// initialize tooltip
 	//   basis = element | undefined
 	init (basis = document) {
@@ -10,7 +12,11 @@ let tooltip = {
 			i.removeAttribute("title");
 			i.addEventListener("mouseover", function() {
 				clearTimeout(tooltip.timeout);
-				tooltip.timeout = setTimeout(() => tooltip.on(this), 500);
+				const timeout = tooltip.noTimeout ? 0 : 500;
+				tooltip.timeout = setTimeout(() => {
+					tooltip.noTimeout = false;
+					tooltip.on(this);
+				}, timeout);
 			});
 			i.addEventListener("mouseout", () => tooltip.off());
 		});

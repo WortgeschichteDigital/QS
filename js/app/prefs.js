@@ -11,6 +11,9 @@ let prefs = {
 			if (k === "filters") {
 				prefs.initFilters();
 				continue;
+			} else if (k === "sorting") {
+				prefs.initSorting();
+				continue;
 			}
 			// option within the preferences overlay
 			const ele = document.querySelector(`#prefs-${k}`);
@@ -32,15 +35,34 @@ let prefs = {
 		for (const [k, v] of Object.entries(prefs.data.filters)) {
 			if (k === "barVisible" && v) {
 				document.querySelector("#fun-filters").click();
+			} else if (/^select-/.test(k)) {
+				document.getElementById(k).dataset.value = v;
+			}
+		}
+	},
+	// initialize sorting options
+	initSorting () {
+		for (const [k, v] of Object.entries(prefs.data.sorting)) {
+			if (k === "ascending" && !v) {
+				document.querySelector("#sorting-dir img").src = "img/app/sort-descending.svg";
+				document.querySelector("#sorting-dir").dataset.tooltip = "<i>Sortierung:</i> absteigend";
+			} else if (k === "filter") {
+				document.querySelector("#sorting-filter").value = v;
+			} else if (k === "ignore" && !v) {
+				document.querySelector("#sorting-ignore").classList.remove("active");
+			} else if (k === "type") {
+				document.querySelector(`#sorting-${v}`).classList.add("active");
+				document.querySelector(`#sorting-${v === "alpha" ? "time" : "alpha"}`).classList.remove("active");
 			}
 		}
 	},
 	// save preferences data
 	save () {
 		// fill in filter data
-		prefs.data.filters = {
-			barVisible: document.querySelector("#fun-filters").classList.contains("active"),
-		};
+		prefs.data.filters = filters.getData();
+		prefs.data.filters.barVisible = document.querySelector("#fun-filters").classList.contains("active");
+		// fill in sorting data
+		prefs.data.sorting = app.getSortingData();
 		// save preferences
 		app.ir.invoke("prefs-save", prefs.data);
 	},
@@ -67,6 +89,21 @@ let prefs = {
 				i.classList.add("off");
 			}
 		}
+	},
+	// reconfigure Git
+	gitConfig () {
+		git.configFormShow();
+		// update if dir was changed (wait for config to be closed)
+		const dir = git.config.dir,
+			win = document.querySelector("#git");
+		const interval = setInterval(() => {
+			if (win.classList.contains("hide")) {
+				clearInterval(interval);
+				if (dir !== git.config.dir) {
+					xml.update();
+				}
+			}
+		}, 50);
 	},
 	// choose data.json for Zeitstrahl
 	async zeitstrahlOpen () {
@@ -133,6 +170,7 @@ let prefs = {
 		}
 		return true;
 	},
+	// remove link to data file
 	zeitstrahlRemove () {
 		if (!prefs.data.zeitstrahl) {
 			return;

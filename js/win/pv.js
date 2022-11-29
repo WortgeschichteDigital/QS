@@ -1,6 +1,12 @@
 "use strict";
 
 let pv = {
+	// app info
+	//   documents = string (path to user documents dir)
+	//   temp = string (path to temp dir)
+	//   userData = string (path to config dir)
+	//   winId = integer (window ID)
+	info: {},
 	// Electron modules
 	ir: require("electron").ipcRenderer,
 	// received XML data
@@ -25,13 +31,36 @@ let pv = {
 				pv.updateIcons();
 			});
 	},
+	// update the navigation icons
+	updateIcons () {
+		const wv = document.querySelector("webview");
+		for (const i of ["back", "forward"]) {
+			const icon = document.querySelector(`#${i} img`);
+			if (i === "back" && wv.canGoBack() ||
+					i === "forward" && wv.canGoForward()) {
+				icon.src = `../img/app/nav-${i}-white.svg`;
+			} else {
+				icon.src = `../img/app/nav-${i}-grey.svg`;
+			}
+		}
+	},
 	// request an updated XML file
-	update () {
+	updateXml () {
 		document.querySelector("#update img").classList.add("rotate");
 		pv.ir.invoke("pv", {
 			dir: pv.data.dir,
 			file: pv.data.file,
 			git: pv.data.git,
+			winId: pv.info.winId,
+		});
+	},
+	// open the same article in another window
+	newWin () {
+		pv.ir.invoke("pv-new", {
+			dir: pv.data.dir,
+			file: pv.data.file,
+			git: pv.data.git,
+			winId: pv.info.winId,
 		});
 	},
 	// navigation
@@ -45,25 +74,15 @@ let pv = {
 			case "forward":
 				wv.goForward();
 				break;
+			case "new":
+				pv.newWin();
+				break;
+			case "update":
+				pv.updateXml();
+				break;
 			case "xml":
 				pv.xml();
 				break;
-			case "update":
-				pv.update();
-				break;
-		}
-	},
-	// update the navigation icons
-	updateIcons () {
-		const wv = document.querySelector("webview");
-		for (const i of ["back", "forward"]) {
-			const icon = document.querySelector(`#${i} img`);
-			if (i === "back" && wv.canGoBack() ||
-					i === "forward" && wv.canGoForward()) {
-				icon.src = `../img/app/nav-${i}-white.svg`;
-			} else {
-				icon.src = `../img/app/nav-${i}-grey.svg`;
-			}
 		}
 	},
 };

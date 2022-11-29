@@ -62,6 +62,10 @@
 	margin: 20px 0 10px 0;
 }
 
+#prefs h2:first-child {
+	margin-top: 0;
+}
+
 #prefs p {
 	margin: 10px 0;
 	font-size: .8rem;

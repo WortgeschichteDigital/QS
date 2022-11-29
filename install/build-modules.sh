@@ -75,7 +75,7 @@ installModules() {
 	cd "$dir"
 }
 
-# Starter
+# starter
 if [ "$1" = "inc" ]; then
 	installModules
 else

@@ -1,6 +1,10 @@
 @charset "utf-8";
 
-#xml-tab table {
+#xml {
+	padding-top: 75px;
+}
+
+#xml table {
 	margin: 0 auto;
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -8,65 +12,73 @@
 	line-height: 1.35rem;
 }
 
-#xml-tab td {
+#xml td {
 	padding: 5px 10px 5px 0;
 }
 
-#xml-tab td:first-child {
+#xml td:first-child {
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
 	padding-left: 10px;
 }
 
-#xml-tab td:last-child {
+#xml td:last-child {
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
 
-#xml-tab tr:nth-child(odd) {
+#xml tr:nth-child(odd) {
 	background-color: var(--bgGreyLight);
 }
 
-#xml-tab tr:hover {
+#xml tr:hover {
 	background-color: var(--bgHover);
 }
 
-#xml-tab td:first-child img {
+#xml td.time {
+	color: var(--textGreyLight);
+}
+
+#xml tr:hover td.time {
+	color: var(--text);
+}
+
+#xml td:first-child img {
 	vertical-align: top;
 }
 
-#xml-tab a {
+#xml a {
 	color: var(--text);
 	text-decoration: none;
 	white-space: nowrap;
 }
 
-#xml-tab a[data-event="pv"] {
+#xml a[data-event="pv"] {
 	outline: none;
 }
 
-#xml-tab a span {
+#xml a span {
 	vertical-align: top;
 	color: var(--textGreyLight);
 }
 
-#xml-tab a:hover,
-#xml-tab a:hover span,
-#xml-tab a:focus,
-#xml-tab a:focus span {
+#xml a:hover,
+#xml a:hover span,
+#xml a:focus,
+#xml a:focus span {
 	color: var(--textLink);
 }
 
-#xml-tab tr[data-status="0"] td:first-child img,
-#xml-tab tr td:nth-last-child(2) a,
-#xml-tab tr td:last-child a {
+#xml tr[data-status="0"] td:first-child img,
+#xml tr td:nth-last-child(2) a,
+#xml tr td:last-child a {
 	opacity: 0;
 }
 
-#xml-tab tr[data-status="0"]:hover td:first-child img,
-#xml-tab tr:hover td:nth-last-child(2) a,
-#xml-tab tr td:nth-last-child(2) a:focus,
-#xml-tab tr:hover td:last-child a,
-#xml-tab tr td:last-child a:focus {
+#xml tr[data-status="0"]:hover td:first-child img,
+#xml tr:hover td:nth-last-child(2) a,
+#xml tr td:nth-last-child(2) a:focus,
+#xml tr:hover td:last-child a,
+#xml tr td:last-child a:focus {
 	opacity: 1;
 }

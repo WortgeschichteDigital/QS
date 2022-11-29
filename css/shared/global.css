@@ -82,6 +82,8 @@ body.scrollable {
 a {
 	color: var(--textLink);
 	cursor: default;
+	-webkit-user-drag: none;
+	user-drag: none;
 }
 
 a.icon {
@@ -112,6 +114,11 @@ code {
 	font-family: "Noto Sans Mono", monospace;
 	font-size: .8rem;
 	line-height: 1.2rem;
+}
+
+img {
+	-webkit-user-drag: none;
+	user-drag: none;
 }
 
 p {

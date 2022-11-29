@@ -39,12 +39,16 @@ window.addEventListener("load", async () => {
 	pv.ir.on("menu-nav-back", () => pv.nav("back"));
 	pv.ir.on("menu-nav-forward", () => pv.nav("forward"));
 	pv.ir.on("menu-nav-xml", () => pv.nav("xml"));
-	pv.ir.on("menu-nav-update", () => pv.nav("update"));
+	pv.ir.on("menu-new", () => pv.nav("new"));
+	pv.ir.on("menu-update", () => pv.nav("update"));
 	pv.ir.on("update", (evt, args) => {
 		pv.data = args;
 		document.title = `QS / ${pv.data.file}`;
 		pv.xml();
 	});
+
+	// GET APP INFO
+	pv.info = await pv.ir.invoke("app-info");
 
 	// INITIALIZE WINDOW
 	shared.keyboardMacOS();
