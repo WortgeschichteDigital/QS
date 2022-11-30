@@ -32,6 +32,12 @@ let tooltip = {
 			tip = div;
 			document.body.appendChild(div);
 		}
+		// Wide tooltip?
+		if (ele.dataset.tooltip.length > 150) {
+			tip.classList.add("wide");
+		} else {
+			tip.classList.remove("wide");
+		}
 		// fill tooltip
 		tip.innerHTML = ele.dataset.tooltip;
 		// position tooltip
@@ -67,5 +73,14 @@ let tooltip = {
 			this.parentNode.removeChild(this);
 		}, { once: true });
 		tip.classList.remove("visible");
+	},
+	// insert titel for search help
+	searchHelp () {
+		const title = `<p>Das <b>Leerzeichen</b> trennt Suchwörter. Beim Suchen werden die einzelnen Wörter durch ein <b>logisches Und</b> miteinander verknüpft:<span class="example">alternative Fakten<br>= Suche nach „alternative“ UND „Fakten“.</span></p>
+		<p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird bei der Suche für dieses Wort zwischen Groß- und Kleinschreibung unterschieden.</p>
+		<p>Taucht im Suchausdruck eine <b>Spitzklammer</b> auf (&lt; oder &gt;), werden neben dem Text auch die Tags durchsucht.</p>
+		<p>Als <b>Phrase</b> können mehrere Wörter mithilfe von nicht-typo\u00ADgraphi\u00ADschen Anführungs\u00ADzeichen gesucht werden:<span class="example">"alternative Fakten"<br>= Suche nach der Phrase „alternative Fakten“.</span></p>
+		<p>Man kann auch mit <b>regulären Ausdrücken</b> suchen:<span class="example">/alternativen? fakt(en)?/i<br>= Phrasensuche, „alternativen“ mit oder ohne „n“, „fakt“ oder „fakten“, Groß- und Kleinschreibung irrelevant (wegen des optionalen i-Schalters hinter dem schließenden /).</span></p>`;
+		document.querySelector("#search-help").title = title;
 	},
 };

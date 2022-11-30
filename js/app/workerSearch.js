@@ -1,0 +1,158 @@
+"use strict";
+
+importScripts("../shared/shared.js");
+
+let search = {
+	// all data necessary to the analysis
+	//   filters = object (filter bar filters)
+	//   regExp = array (search expressions)
+	//   scope = array (scope to which the search shall be limited)
+	//   stripTags = boolean (don't search within tags)
+	//   xmlData = object (same as xml.data.files)
+	//   xmlFiles = object (same as xml.files)
+	data: {},
+	// perform search in XML files
+	start () {
+		let d = search.data,
+			nResults = 0;
+		x: for (const [file, values] of Object.entries(d.xmlData)) {
+			// ignore files that don't match the filters
+			if (d.filters["select-authors"] && !values.authors.includes(d.filters["select-authors"]) ||
+					d.filters["select-domains"] && !values.domains.includes(d.filters["select-domains"]) ||
+					d.filters["select-status"] && values.status !== d.filters["select-status"]) {
+				continue;
+			}
+			// get lines within the scope
+			let text = d.xmlFiles[file],
+				linesScope = [];
+			for (const s of d.scope) {
+				let lines = [];
+				for (const m of text.matchAll(new RegExp("<" + s, "g"))) {
+					lines.push({
+						start: text.substring(0, m.index).split("\n").length,
+						end: 0,
+					});
+				}
+				let n = 0;
+				for (const m of text.matchAll(new RegExp("<\/" + s, "g"))) {
+					lines[n].end = text.substring(0, m.index).split("\n").length;
+					n++;
+				}
+				if (!lines.length) {
+					// fill with placeholder if the element is missing in the current XML file
+					linesScope.push(0);
+				} else {
+					for (const l of lines) {
+						for (let i = l.start; i <= l.end; i++) {
+							linesScope.push(i);
+						}
+					}
+				}
+			}
+			// strip text of tags if needed
+			if (d.stripTags) {
+				text = text.replace(/<.+?>/g, "");
+			}
+			// search file
+			let hits = Array(d.regExp.length).fill(false),
+				points = 0,
+				lines = [];
+			for (let i = 0, len = d.regExp.length; i < len; i++) {
+				for (const m of text.matchAll(d.regExp[i])) {
+					const line = text.substring(0, m.index).split("\n").length;
+					if (linesScope.length && !linesScope.includes(line)) {
+						continue;
+					}
+					hits[i] = true;
+					points++;
+					if (!lines.includes(line)) {
+						lines.push(line);
+					}
+				}
+				d.regExp[i].lastIndex = -1;
+			}
+			if (hits.some(i => !i)) {
+				continue;
+			}
+			// extract text
+			lines.sort((a, b) => a - b);
+			const textLines = text.split("\n"),
+				textLinesLen = textLines.length;
+			for (const l of lines) {
+				let text = textLines[l - 1].trim(),
+					textBefore = "",
+					textAfter = "";
+				if (text.length < 200) {
+					// text before
+					let lineNo = l - 1,
+						line = "";
+					while (!line && lineNo > 0) {
+						lineNo--;
+						line = textLines[lineNo].trim();
+					}
+					if (!lines.includes(lineNo + 1)) {
+						let lineLen = line.length,
+							boundary = lineLen > 200 ? lineLen - 200 : 0;
+						while (boundary > 0) {
+							if (/^\b/.test(line.substring(boundary, boundary + 1))) {
+								boundary += 2;
+								break;
+							}
+							boundary--;
+						}
+						textBefore = line.substring(boundary, lineLen);
+					}
+					// text after
+					lineNo = l - 1;
+					line = "";
+					while (!line && lineNo < textLinesLen - 1) {
+						lineNo++;
+						line = textLines[lineNo].trim();
+					}
+					if (!lines.includes(lineNo + 1)) {
+						let lineLen = line.length,
+							boundary = lineLen > 200 ? 200 : lineLen;
+						while (boundary < lineLen - 1) {
+							if (/\b$/.test(line.substring(boundary - 1, boundary))) {
+								boundary -= 2;
+								break;
+							}
+							boundary++;
+						}
+						textAfter = line.substring(0, boundary);
+					}
+				}
+				d.results.push({
+					file,
+					points,
+					line: l,
+					text,
+					textBefore,
+					textAfter,
+				});
+				// stop search if there are to many results
+				nResults++;
+				if (nResults > 1e4) {
+					break x;
+				}
+			}
+		}
+		// sort results
+		d.results.sort((a, b) => {
+			if (a.points === b.points) {
+				if (a.file === b.file) {
+					return a.line - b.line;
+				}
+				return shared.sort(a.file, b.file);
+			}
+			return b.points - a.points;
+		});
+	},
+};
+
+self.addEventListener("message", evt => {
+	search.data = evt.data;
+	search.data.results = [];
+	search.start();
+	postMessage(search.data.results);
+});

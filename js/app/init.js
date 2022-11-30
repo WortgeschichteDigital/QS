@@ -24,8 +24,31 @@ window.addEventListener("load", async () => {
 		}, 25);
 	});
 
+	// SEARCH
+	const searchHelp = document.querySelector("#search-help");
+	searchHelp.addEventListener("click", evt => evt.preventDefault());
+	searchHelp.addEventListener("focus", function() {
+		tooltip.noTimeout = true;
+		this.dispatchEvent(new Event("mouseover"));
+	});
+	searchHelp.addEventListener("blur", function() {
+		this.dispatchEvent(new Event("mouseout"));
+	});
+	document.querySelector("#search-start").addEventListener("click", () => viewSearch.start());
+	document.querySelectorAll("#search-scope input").forEach(i => {
+		i.addEventListener("change", function() {
+			viewSearch.toggleCheckboxes(this);
+		});
+	});
+
 	// CLICK EVENTS
-	document.querySelectorAll("#sorting a").forEach(i => {
+	document.querySelectorAll(".clear-text-field").forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			app.clearTextField(this);
+		});
+	});
+	document.querySelectorAll("#sorting a.icon").forEach(i => {
 		i.addEventListener("click", function(evt) {
 			evt.preventDefault();
 			app.toggleSortingIcons(this);
@@ -140,6 +163,7 @@ window.addEventListener("load", async () => {
 
 	// INITIALIZE APP
 	shared.keyboardMacOS();
+	tooltip.searchHelp();
 	tooltip.init();
 	await prefs.init();
 	await git.configCheck();

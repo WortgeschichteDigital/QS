@@ -7,6 +7,7 @@
 	position: fixed;
 	top: 111px;
 	left: -320px;
+	z-index: 1;
 	overflow-y: hidden;
 	border-top: 3px solid #fff;
 	padding: 0 10px;

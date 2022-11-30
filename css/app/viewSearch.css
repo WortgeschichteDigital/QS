@@ -1,0 +1,125 @@
+@charset "utf-8";
+
+/* cf. app.css: Sorting and Search Form */
+
+/* SCOPE ---------------------------------------- */
+
+#search {
+	padding-top: 60px;
+}
+
+#search-scope {
+	margin: 0 auto;
+	padding: 0 10px 15px 10px;
+	border-bottom: 1px solid var(--line);
+	width: min-content;
+}
+
+#search-scope div {
+	columns: 3;
+}
+
+#search-scope p {
+	margin: 0 0 5px 0;
+	width: max-content;
+	font-size: .8rem;
+	line-height: 1.2rem;
+	white-space: nowrap;
+}
+
+#search-scope > p {
+	margin-bottom: 5px;
+}
+
+#search-scope label {
+	font-style: normal;
+}
+
+
+/* RESULTS -------------------------------------- */
+
+#search-results {
+	margin-top: 15px;
+}
+
+#search-results h1 {
+	position: sticky;
+	top: 171px;
+	z-index: 1;
+	margin: 40px auto 0 auto;
+	padding: 0 0 10px 0;
+	width: 700px;
+	max-width: 90%;
+	background-color: #fff;
+	font-size: 1.2rem;
+	font-weight: normal;
+	line-height: 1.8rem;
+}
+
+#search-results h1 a {
+	position: relative;
+	top: 3px;
+	margin-left: 10px;
+	vertical-align: top;
+}
+
+.search-result {
+	position: relative;
+	margin: 0 auto;
+	width: 700px;
+	max-width: 90%;
+	font-size: .9rem;
+	line-height: 1.35rem;
+}
+
+.search-result > span {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	color: var(--textColor);
+	font-size: .75rem;
+	line-height: 1rem;
+}
+
+.search-result p,
+.search-result code {
+	margin: 0 0 10px 90px;
+}
+
+.search-result code {
+	font-size: .7rem;
+	line-height: 1.1rem;
+}
+
+mark {
+	border-radius: 5px;
+	background-color: var(--colorYellow);
+	color: var(--text);
+	font-weight: bold;
+}
+
+mark.color2 {
+	background-color: var(--colorGreen);
+	color: #fff;
+}
+
+mark.color3 {
+	background-color: var(--colorBlueDark);
+	color: #fff;
+}
+
+mark.color4 {
+	background-color: var(--colorRed);
+	color: #fff;
+}
+
+mark.color5 {
+	background-color: var(--colorBlueLight);
+	color: #fff;
+}
+
+mark.color6 {
+	background-color: var(--colorCyan);
+	color: #fff;
+}
+

@@ -14,6 +14,9 @@ let prefs = {
 			} else if (k === "sorting") {
 				prefs.initSorting();
 				continue;
+			} else if (k === "search") {
+				prefs.initSearch();
+				continue;
 			}
 			// option within the preferences overlay
 			const ele = document.querySelector(`#prefs-${k}`);
@@ -56,6 +59,12 @@ let prefs = {
 			}
 		}
 	},
+	// initialize searching options
+	initSearch () {
+		document.querySelectorAll("#search-scope input").forEach((i, n) => {
+			i.checked = prefs.data.search[n];
+		});
+	},
 	// save preferences data
 	save () {
 		// fill in filter data
@@ -63,6 +72,8 @@ let prefs = {
 		prefs.data.filters.barVisible = document.querySelector("#fun-filters").classList.contains("active");
 		// fill in sorting data
 		prefs.data.sorting = app.getSortingData();
+		// fill in search data
+		prefs.data.search = viewSearch.getScopeData();
 		// save preferences
 		app.ir.invoke("prefs-save", prefs.data);
 	},

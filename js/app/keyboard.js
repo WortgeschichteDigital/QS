@@ -27,6 +27,8 @@ let keyboard = {
 			if (olTop === "git" && /^git-(user|dir)$/.test(active.id)) {
 				await shared.wait(25);
 				document.querySelector("#git-okay").click();
+			} else if (active.id === "search-text") {
+				viewSearch.start();
 			}
 		}
 		// Arrows

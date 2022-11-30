@@ -222,7 +222,7 @@ let menuHelp = [
 		submenu: [
 			{
 				label: "Handbuch",
-				icon: path.join(__dirname, "img", "main", "question.png"),
+				icon: path.join(__dirname, "img", "main", "help.png"),
 				// click: () => win.bw.webContents.send("show-handbook"),
 				accelerator: "F1",
 			},
@@ -642,6 +642,7 @@ app.on("activate", () => {
 ipcMain.handle("app-info", evt => {
 	const bw = BrowserWindow.fromWebContents(evt.sender);
 	return {
+		appPath: app.getAppPath(),
 		documents: app.getPath("documents"),
 		temp: app.getPath("temp"),
 		userData: app.getPath("userData"),

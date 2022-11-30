@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="css/app/app.css">
 		<link rel="stylesheet" href="css/app/filters.css">
 		<link rel="stylesheet" href="css/app/overlay.css">
+		<link rel="stylesheet" href="css/app/viewSearch.css">
 		<link rel="stylesheet" href="css/app/viewXml.css">
 
 		<script src="js/shared/dialog.js"></script>
@@ -77,6 +78,46 @@
 
 		<!-- VIEW: SUCHE -->
 		<section id="search" class="off">
+			<div id="search-form">
+				<div
+					><input type="text" value="" placeholder="Suchausdruck" id="search-text"
+					><a href="#" class="clear-text-field"
+						><img src="img/app/clear-text.svg" width="24" height="24" alt=""
+					></a
+					><a href="#" id="search-help"
+						><img src="img/app/help.svg" width="24" height="24" alt=""
+					></a
+					><input type="button" value="Suchen" id="search-start"
+				></div>
+			</div>
+
+			<div id="search-scope">
+				<p><i>Suchbereich</i></p>
+				<div>
+					<p
+						><input type="checkbox" value="0" id="search-scope-0" checked
+						><label for="search-scope-0">alles</label
+					></p>
+					<p
+						><input type="checkbox" value="1" id="search-scope-1"
+						><label for="search-scope-1">Wortgeschichte</label
+					></p>
+					<p
+						><input type="checkbox" value="2" id="search-scope-2"
+						><label for="search-scope-2">Belege</label
+					></p>
+					<p
+						><input type="checkbox" value="3" id="search-scope-3"
+						><label for="search-scope-3">Bedeutungsgerüste</label
+					></p>
+					<p
+						><input type="checkbox" value="4" id="search-scope-4"
+						><label for="search-scope-4">Wortinformationen</label
+					></p>
+				</div>
+			</div>
+
+			<div id="search-results"></div>
 		</section>
 
 		<!-- SORTING AND QUICK FILTER -->
@@ -94,7 +135,10 @@
 				><a href="#" id="sorting-time" class="icon" title="&lt;i&gt;Sortierung:&lt;/i&gt; nach Publikationsdatum"
 					><img src="img/app/time.svg" width="30" height="30" alt=""
 				></a
-				><input type="text" value="" placeholder="nach Dateipfad filtern" id="sorting-filter"
+				><input type="text" value="" placeholder="Dateipfad-Filter" id="sorting-filter"
+				><a href="#" class="clear-text-field"
+					><img src="img/app/clear-text.svg" width="24" height="24" alt=""
+				></a
 			></div>
 		</div>
 
@@ -102,7 +146,7 @@
 		<div id="filters">
 			<a href="#" id="filters-reset"
 				><img src="img/app/cleanup-white.svg" width="30" height="30" alt=""
-			>Filter zurücksetzen</a>
+			>zurücksetzen</a>
 
 			<h1>Autor*innen</h1>
 			<div class="select-cont"

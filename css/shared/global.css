@@ -151,6 +151,23 @@ p.buttons {
 	opacity: 1;
 }
 
+#tooltip.wide {
+	max-width: 450px;
+}
+
+#tooltip p {
+	margin: 0 0 10px 0;
+}
+
+#tooltip p:last-child {
+	margin: 0;
+}
+
+#tooltip .example {
+	display: block;
+	margin-left: 20px;
+}
+
 
 /* MISCELLANEOUS -------------------------------- */
 

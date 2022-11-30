@@ -89,7 +89,6 @@ let viewXml = {
 		for (const i of data) {
 			let tr = document.createElement("tr");
 			tab.appendChild(tr);
-			tr.dataset.dir = i.dir;
 			tr.dataset.file = i.file;
 			tr.dataset.status = i.status;
 			// status
@@ -162,11 +161,7 @@ let viewXml = {
 	//   a = element (clicked link)
 	funPv (a) {
 		const tr = a.closest("tr");
-		app.ir.invoke("pv", {
-			dir: tr.dataset.dir,
-			file: tr.dataset.file,
-			git: git.config.dir,
-		});
+		app.openPv(tr.dataset.file);
 	},
 	// resources/wortgeschichten-teaser.xsl
 	funTeaserXsl: "",
@@ -223,14 +218,7 @@ let viewXml = {
 	// open file in default editor
 	//   a = element (clicked link)
 	async funOpen (a) {
-		const tr = a.closest("tr"),
-			path = app.path.join(git.config.dir, tr.dataset.dir, tr.dataset.file),
-			result = await app.shell.openPath(path);
-		if (result) {
-			dialog.open({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${result}`,
-			});
-		}
+		const tr = a.closest("tr");
+		app.openEditor(tr.dataset.file);
 	},
 };

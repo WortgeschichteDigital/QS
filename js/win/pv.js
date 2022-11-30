@@ -2,6 +2,7 @@
 
 let pv = {
 	// app info
+	//   appPath = string (path to app root folder)
 	//   documents = string (path to user documents dir)
 	//   temp = string (path to temp dir)
 	//   userData = string (path to config dir)
@@ -9,6 +10,8 @@ let pv = {
 	info: {},
 	// Electron modules
 	ir: require("electron").ipcRenderer,
+	// Node.js modules
+	path: require("path"),
 	// received XML data
 	//   dir = string (articles | ignore)
 	//   file = string (XML file name)
@@ -25,11 +28,32 @@ let pv = {
 			}],
 			extraHeaders: "Content-Type: application/x-www-form-urlencoded; charset=UTF-8",
 		})
-			.then(() => {
-				document.querySelector("#update img").classList.remove("rotate");
-				wv.clearHistory();
-				pv.updateIcons();
+			.then(() => loadingDone())
+			.catch(err => {
+				wv.stop();
+				wv.loadURL("file://" + pv.path.join(pv.info.appPath, "win", "pv-error.html"))
+					.then(() => {
+						loadingDone();
+						wv.executeJavaScript(`
+							let label = document.createElement("p");
+							label.classList.add("label");
+							label.textContent = "Fehlermeldung";
+							document.body.appendChild(label);
+							let err = document.createElement("p");
+							err.innerHTML = "${shared.errorString(err.message)}";
+							document.body.appendChild(err);
+						`);
+					})
+					.catch(() => {
+						wv.stop();
+						loadingDone();
+					});
 			});
+		function loadingDone () {
+			document.querySelector("#update img").classList.remove("rotate");
+			wv.clearHistory();
+			pv.updateIcons();
+		}
 	},
 	// update the navigation icons
 	updateIcons () {
