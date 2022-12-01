@@ -34,10 +34,17 @@ window.addEventListener("load", async () => {
 	searchHelp.addEventListener("blur", function() {
 		this.dispatchEvent(new Event("mouseout"));
 	});
+	document.querySelector("#search-advanced-toggle").addEventListener("click", evt => {
+		evt.preventDefault();
+		viewSearch.toggleAdvanced();
+	});
+	document.querySelectorAll("#search-advanced input").forEach(i => {
+		i.addEventListener("change", () => viewSearch.toggleAdvancedIcon());
+	});
 	document.querySelector("#search-start").addEventListener("click", () => viewSearch.start());
 	document.querySelectorAll("#search-scope input").forEach(i => {
 		i.addEventListener("change", function() {
-			viewSearch.toggleCheckboxes(this);
+			viewSearch.toggleScope(this);
 		});
 	});
 
@@ -58,21 +65,21 @@ window.addEventListener("load", async () => {
 		i.addEventListener("click", function(evt) {
 			evt.preventDefault();
 			if (this.parentNode.querySelector(".select-popup")) {
-				filters.closeselectPopup(this, false);
+				bars.closeSelectPopup(this, false);
 			} else {
-				filters.selectPopup(this);
+				bars.selectPopup(this);
 			}
 		});
 		i.addEventListener("blur", function() {
 			const activeSelect = this.closest(".select-cont:focus-within");
 			if (!activeSelect) {
-				filters.closeselectPopup(this, true);
+				bars.closeSelectPopup(this, true);
 			}
 		});
 	});
 	document.querySelector("#filters-reset").addEventListener("click", evt => {
 		evt.preventDefault();
-		filters.reset();
+		bars.filtersReset();
 	});
 
 	// CLICK EVENTS: HEADER
@@ -84,7 +91,7 @@ window.addEventListener("load", async () => {
 	});
 	document.querySelector("#fun-filters").addEventListener("click", evt => {
 		evt.preventDefault();
-		filters.toggleBar();
+		bars.toggle("filters");
 	});
 	document.querySelector("#fun-update").addEventListener("click", evt => {
 		evt.preventDefault();
@@ -165,11 +172,13 @@ window.addEventListener("load", async () => {
 	shared.keyboardMacOS();
 	tooltip.searchHelp();
 	tooltip.init();
+	document.querySelector("#bar").style.height = "60px";
 	await prefs.init();
+	viewSearch.toggleAdvancedIcon();
 	await git.configCheck();
 	await xml.update();
-	document.querySelectorAll(".select-filter").forEach(i => filters.fillSelect(i));
-	filters.active();
+	document.querySelectorAll(".select-filter").forEach(i => bars.fillSelect(i));
+	bars.filtersActive();
 	document.body.classList.add("scrollable");
 	overlay.hide("loading");
 	app.ready = true;

@@ -19,7 +19,7 @@ let viewXml = {
 			});
 		}
 		// filter data
-		const dataF = filters.getData(),
+		const dataF = bars.getFiltersData(),
 			dataS = app.getSortingData(), // ascending = boolean, ignore = boolean, type = alpha | time
 			regPath = new RegExp(shared.escapeRegExp(dataS.filter), "i");
 		for (let i = data.length - 1; i >= 0; i--) {

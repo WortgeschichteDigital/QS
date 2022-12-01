@@ -1,18 +1,19 @@
 @charset "utf-8";
 
 
-/* BAR ------------------------------------------ */
+/* BARS ----------------------------------------- */
 
-#filters {
+#filters,
+#results {
 	position: fixed;
 	top: 111px;
-	left: -320px;
+	left: -285px; /* 320px bar width + 15px blur-radius of shadow */
 	z-index: 1;
-	overflow-y: hidden;
+	box-shadow: var(--shadowRight);
 	border-top: 3px solid #fff;
-	padding: 0 10px;
-	width: 300px;
-	height: calc(100vh - 111px - 3px);
+	padding: 10px;
+	width: 250px;
+	height: calc(100vh - 111px - 20px - 3px);
 	background-color: var(--bgBlue);
 	color: #fff;
 	font-size: .8rem;
@@ -23,6 +24,32 @@
 #filters.visible {
 	left: 0;
 }
+
+#results {
+	right: -285px; /* 270px bar width + 15px blur-radius of shadow */
+	left: unset;
+	box-shadow: var(--shadowLeft);
+	transition: right .3s ease-out;
+}
+
+#results.visible {
+	right: 0;
+}
+
+#filters > div,
+#results > div {
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#filters p,
+#results p {
+	margin: 0;
+}
+
+
+/* FILTERS -------------------------------------- */
 
 #filters h1 {
 	position: relative;
@@ -37,11 +64,7 @@
 }
 
 #filters-reset {
-	display: block;
-	margin-top: 10px;
-	width: max-content;
 	color: #fff;
-	line-height: 1.5rem;
 	text-decoration: underline;
 }
 
@@ -53,6 +76,88 @@
 
 #filters-reset img {
 	vertical-align: top;
+}
+
+
+/* RESULTS -------------------------------------- */
+
+#results p {
+	margin-bottom: -4px;
+	line-height: 1rem;
+}
+
+#results p b {
+	font-size: 1rem;
+}
+
+#results .nothing {
+	font-style: italic;
+	text-align: center;
+}
+
+#results-queries,
+#results-files {
+	margin-top: 20px;
+	border-radius: 5px;
+	padding: 5px;
+	background-color: #fff;
+}
+
+#results-queries {
+	display: flex;
+	flex-wrap: wrap;
+	padding-bottom: 0;
+}
+
+#results a {
+	display: block;
+	overflow-x: hidden;
+	white-space: nowrap;
+	font-size: .9rem;
+	line-height: 1.35rem;
+	text-overflow: ellipsis;
+}
+
+#results a:first-child {
+	margin-top: 0;
+}
+
+#results-queries a {
+	margin: 0 5px 5px 0;
+	border-radius: 5px;
+	text-decoration: none;
+}
+
+#results-queries a:focus {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+}
+
+#results-queries mark {
+	display: block;
+	overflow-x: hidden;
+	padding: 2px 5px;
+	text-overflow: ellipsis;
+}
+
+#results-files a {
+	position: relative;
+	padding-left: 15px;
+	width: calc(100% - 15px);
+}
+
+#results-files a::before {
+	content: "•";
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: var(--text);
+}
+
+#results-files a:focus,
+#results-files a:hover {
+	outline: none;
+	text-decoration: none;
 }
 
 

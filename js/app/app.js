@@ -10,6 +10,8 @@ let app = {
 	info: {},
 	// app is ready for interaction
 	ready: false,
+	// app is about to switch the view
+	switching: false,
 	// active view
 	// (value is the same as the ID of the corresponding <section>)
 	view: "xml",
@@ -60,6 +62,7 @@ let app = {
 				overlay.show("prefs");
 				break;
 			case "search":
+				viewSearch.toggleAdvanced("on");
 				document.querySelector("#view-search").click();
 				break;
 			case "update":
@@ -82,14 +85,16 @@ let app = {
 		div.appendChild(hint);
 		let tipp = textTipp || "";
 		if (!tipp && app.view === "search") {
-			let dataF = filters.getData(),
-				dataS = viewSearch.getScopeData(),
+			let dataF = bars.getFiltersData(),
+				dataA = viewSearch.getAdvancedData(),
 				tipps = [];
 			if (Object.values(dataF).some(i => i)) {
 				tipps.push("verwenden Sie weniger Filter");
 			}
-			if (!dataS[0]) {
+			if (dataA["search-scope-0"].checked) {
 				tipps.push("erweitern Sie den Suchbereich");
+			} else if (Object.values(dataA).filter(i => i).length > 1) {
+				tipps.push("schalten Sie erweiterte Suchoptionen aus");
 			}
 			tipp = "Ändern Sie den Suchausdruck";
 			if (tipps.length) {
@@ -191,43 +196,115 @@ let app = {
 			type: document.querySelector("#sorting-alpha.active") ? "alpha" : "time",
 		};
 	},
+	// determine the next view after pressing the keyboard shortcut
+	toggleViewShortcut (toRight) {
+		let views = document.querySelectorAll("#view a"),
+			idx = -1;
+		for (let i = 0, len = views.length; i < len; i++)  {
+		 if (views[i].classList.contains("active")) {
+			idx = i;
+			break;
+		 }
+		}
+		if (toRight) {
+			idx++;
+		} else {
+			idx--;
+		}
+		if (idx < 0 || idx === views.length) {
+			return;
+		}
+		views[idx].click();
+	},
 	// toggle view
 	//   button = element
-	toggleView (button) {
+	async toggleView (button) {
+		// view is already active
 		if (button.classList.contains("active")) {
 			if (app.view === "search") {
 				document.querySelector("#search-text").select();
 			}
 			return;
 		}
-		let activeView = "";
-		for (const b of document.querySelectorAll("#view a")) {
+		// block switching until the current switch was finished
+		if (app.switching) {
+			return;
+		}
+		app.switching = true;
+		// determine next view
+		let nextView = button.id.replace("view-", "");
+		// determine next bar content
+		let activeBarContent = "";
+		for (const i of document.querySelectorAll("#bar > div")) {
+			if (!i.classList.contains("off")) {
+				activeBarContent = i.id;
+				break;
+			}
+		}
+		let nextBarContent = "";
+		switch (nextView) {
+			case "xml":
+				nextBarContent = "sorting";
+				break;
+			case "hints":
+				nextBarContent = "sorting";
+				break;
+			case "clusters":
+				nextBarContent = "clusters-nav";
+				break;
+			case "search":
+				nextBarContent = "search-form";
+				break;
+		}
+		// left or right
+		const views = ["xml", "hints", "clusters", "search"];
+		let direction = [1, -1];
+		if (views.indexOf(nextView) > views.indexOf(app.view)) {
+			direction = [-1, 1];
+		}
+		// reduce advanced options if necessary
+		await viewSearch.toggleAdvanced("off");
+		// slide active bar content and <section>
+		await new Promise(resolve => {
+			const bc = document.getElementById(activeBarContent),
+				sect = document.getElementById(app.view);
+			sect.addEventListener("transitionend", () => {
+				for (const i of [bc, sect]) {
+					i.classList.add("off");
+					i.classList.remove("trans-linear");
+				}
+				resolve(true);
+			}, { once: true });
+			for (const i of [bc, sect]) {
+				i.classList.add("trans-linear");
+				i.style.left = "0px";
+				void i.offsetWidth;
+				i.style.left = direction[0] * window.innerWidth + "px";
+			}
+		});
+		await shared.wait(25);
+		// switch to next bar content and <section>
+		const bc = document.getElementById(nextBarContent),
+			sect = document.getElementById(nextView);
+		for (const i of [bc, sect]) {
+			i.style.left = direction[1] * window.innerWidth + "px";
+			i.classList.remove("off");
+			void i.offsetWidth;
+			i.style.left = "0px";
+		}
+		// switch buttons
+		document.querySelectorAll("#view a").forEach(b => {
 			if (b === button) {
 				b.classList.add("active");
-				activeView = b.id.replace("view-", "");
 			} else {
 				b.classList.remove("active");
 			}
-		}
-		for (const v of document.querySelectorAll("section")) {
-			if (v.id === activeView) {
-				v.style.left = window.innerWidth + "px";
-				v.classList.remove("off");
-				void v.offsetWidth;
-				v.style.left = "0px";
-			} else {
-				v.classList.add("off");
-			}
-		}
-		app.view = activeView;
-		const sorting = document.querySelector("#sorting");
-		if (/xml|hints/.test(activeView)) {
-			sorting.classList.remove("off");
-		} else {
-			sorting.classList.add("off");
-		}
-		filters.toggleCategories();
+		});
+		// finish up
+		app.view = nextView;
+		bars.toggleFiltersCat();
 		app.populateView();
+		app.switching = false;
 	},
 	// popuplate the current view
 	populateView () {
@@ -242,6 +319,7 @@ let app = {
 				viewClusters.populate();
 				break;
 			case "search":
+				viewSearch.toggleAdvanced("on");
 				document.querySelector("#search-text").select();
 				break;
 		}

@@ -158,37 +158,55 @@ section {
 	position: relative;
 	left: 0;
 	margin: 111px auto 0 auto;
-	padding: 15px 10px;
+	padding: 95px 10px 15px 10px;
 	max-width: 1200px;
-	transition: left .6s ease-out;
+	transition: left .3s ease-out;
+}
+
+section.trans-linear {
+	transition: left .3s linear;
 }
 
 
-/* SORTING AND SEARCH FORM ---------------------- */
+/* TOP BAR  ------------------------------------- */
 
-#sorting,
-#search-form {
+#bar {
 	position: fixed;
 	top: 111px;
 	left: 0;
 	z-index: 1;
+	box-shadow: var(--shadowDown);
+	overflow: hidden;
 	width: 100%;
-	height: 60px;
+	min-height: 60px;
 	background-color: #fff;
+	transition: height .3s ease-out;
 }
 
-#sorting > div,
-#search-form > div {
+#bar > div {
+	position: relative;
+	left: 0;
 	margin: 0 auto;
 	padding: 10px 0;
 	height: 40px;
-	width: max-content;
+	width: 650px;
 	white-space: nowrap;
+	transition: left .3s ease-out;
 }
+
+#bar > div.trans-linear {
+	transition: left .3s linear;
+}
+
+/* Sorting */
 
 #sorting a.icon {
 	margin-left: 15px;
 	padding: 5px;
+}
+
+#sorting a.icon:first-child {
+	margin-left: 0;
 }
 
 #sorting .active {
@@ -196,19 +214,27 @@ section {
 	background-color: var(--bgActive);
 }
 
+#sorting span {
+	position: absolute;
+	top: 14px;
+	right: 0;
+	padding: 1px;
+	width: 296px;
+	height: 30px;
+	overflow: hidden;
+}
+
 #sorting-filter {
-	position: relative;
-	top: 5px;
 	vertical-align: top;
-	margin-left: 100px;
 	padding-right: 34px;
-	width: 200px;
+	width: 250px;
 }
 
 .clear-text-field,
+#search-advanced-toggle,
 #search-help {
 	position: relative;
-	top: 8px;
+	top: 3px;
 	display: inline-block;
 	margin-left: -30px;
 	border-radius: 5px;
@@ -217,30 +243,72 @@ section {
 }
 
 .clear-text-field:focus,
+#search-advanced-toggle:focus,
 #search-help:focus {
 	outline: 2px solid var(--outline);
 	outline-offset: -2px;
 }
 
-#search-form .clear-text-field {
-	margin-left: -59px;
+/* Search Form */
+
+#bar > div#search-form {
+	padding-left: 1px; /* BUG: sonst wird der outline links um 1px abgeschnitten */
+	height: auto;
 }
 
-#search-help {
+#search-form .clear-text-field {
+	top: 8px;
+	margin-left: -88px;
+}
+
+#search-help,
+#search-advanced-toggle {
+	top: 8px;
 	margin-left: 5px;
 }
 
 #search-form input[type="text"] {
 	position: relative;
 	top: 2px;
-	padding-right: 63px;
-	width: 400px;
+	padding-right: 92px;
+	width: calc(100% - 141px - 104px); /* 141px = button, 104px = paddings and borders */
 }
 
 #search-form input[type="button"] {
 	position: relative;
 	top: 3px;
 	margin-left: 21px;
+	width: 120px;
+}
+
+#search-advanced {
+	margin: 0 auto;
+	padding: 20px 10px 0 10px;
+	width: min-content;
+}
+
+#search-advanced h2 {
+	margin: 15px 0 5px 0;
+	font-size: .8rem;
+	line-height: 1.2rem;
+	font-style: italic;
+	font-weight: normal;
+}
+
+#search-advanced label {
+	font-style: normal;
+}
+
+#search-advanced p {
+	margin: 0 0 5px 0;
+	width: max-content;
+	font-size: .8rem;
+	line-height: 1.2rem;
+	white-space: nowrap;
+}
+
+#search-scope {
+	columns: 3;
 }
 
 
@@ -261,6 +329,7 @@ section {
 }
 
 .wait {
+	margin-top: 15px;
 	text-align: center;
 }
 

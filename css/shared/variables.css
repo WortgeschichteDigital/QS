@@ -23,7 +23,7 @@
 	--bgBlueLight: #002bff;
 	--bgGrey: #b6b6b6;
 	--bgGreyDark: #212529;
-	--bgGreyLight: #f6f6f6;
+	--bgGreyLight: #f8f8f8;
 	--bgHighlight: #31C0FF;
 	--bgHover: #e1eaed;
 	--bgSelection: #000098;
@@ -34,6 +34,9 @@
 	/* special styles */
 	--gradient: linear-gradient(90deg, var(--bgBlue) 40%, var(--bgBlueLight) 90%);
 	--shadow: 5px 5px 15px rgba(33, 37, 41, .3);
+	--shadowDown: 0 5px 15px rgba(33, 37, 41, .3);
+	--shadowLeft: -5px 0 15px rgba(33, 37, 41, .3);
+	--shadowRight: 5px 0 15px rgba(33, 37, 41, .3);
 
 	/* root font size */
 	font-size: 20px;

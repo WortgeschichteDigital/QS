@@ -477,7 +477,7 @@ let xml = {
 			await xml.writeCache();
 		}
 		// update list of possible filter values
-		filters.update();
+		bars.filtersUpdate();
 		// update current view
 		app.populateView();
 		// reset button

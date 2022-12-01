@@ -15,10 +15,13 @@ let keyboard = {
 					close.click();
 				}
 				return;
+			} else if (active.id === "search-text") {
+				viewSearch.toggleAdvanced("off");
+				return;
 			}
 			const select = document.querySelector(".select-popup");
 			if (select) {
-				filters.closeselectPopup(select, false);
+				bars.closeSelectPopup(select, false);
 			}
 		}
 		// Key "Enter"
@@ -53,6 +56,8 @@ let keyboard = {
 				idx = buttons.length - 1;
 			}
 			buttons[idx].focus();
+		} else if (m === "Alt" && /^Arrow(Left|Right)$/.test(evt.key)) {
+			app.toggleViewShortcut(evt.key === "ArrowRight");
 		}
 	},
 };

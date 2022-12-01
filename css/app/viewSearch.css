@@ -1,62 +1,31 @@
 @charset "utf-8";
 
-/* cf. app.css: Sorting and Search Form */
-
-/* SCOPE ---------------------------------------- */
-
 #search {
-	padding-top: 60px;
+	padding-top: 80px;
 }
-
-#search-scope {
-	margin: 0 auto;
-	padding: 0 10px 15px 10px;
-	border-bottom: 1px solid var(--line);
-	width: min-content;
-}
-
-#search-scope div {
-	columns: 3;
-}
-
-#search-scope p {
-	margin: 0 0 5px 0;
-	width: max-content;
-	font-size: .8rem;
-	line-height: 1.2rem;
-	white-space: nowrap;
-}
-
-#search-scope > p {
-	margin-bottom: 5px;
-}
-
-#search-scope label {
-	font-style: normal;
-}
-
 
 /* RESULTS -------------------------------------- */
 
-#search-results {
-	margin-top: 15px;
-}
-
-#search-results h1 {
+#search h1 {
 	position: sticky;
 	top: 171px;
 	z-index: 1;
 	margin: 40px auto 0 auto;
-	padding: 0 0 10px 0;
+	overflow: hidden; /* otherwise some letters (like J) overflow to the left and hence remain visible */
+	padding: 15px 0 25px 0;
 	width: 700px;
 	max-width: 90%;
-	background-color: #fff;
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 60px, rgba(255, 255, 255, 0));
 	font-size: 1.2rem;
 	font-weight: normal;
 	line-height: 1.8rem;
 }
 
-#search-results h1 a {
+#search h1:first-child {
+	margin-top: 0;
+}
+
+#search h1 a {
 	position: relative;
 	top: 3px;
 	margin-left: 10px;

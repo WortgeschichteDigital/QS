@@ -61,19 +61,22 @@ let prefs = {
 	},
 	// initialize searching options
 	initSearch () {
-		document.querySelectorAll("#search-scope input").forEach((i, n) => {
-			i.checked = prefs.data.search[n];
-		});
+		for (const [id, checked] of Object.entries(prefs.data.search)) {
+			const opt = document.getElementById(id);
+			if (opt) {
+				opt.checked = checked;
+			}
+		}
 	},
 	// save preferences data
 	save () {
 		// fill in filter data
-		prefs.data.filters = filters.getData();
+		prefs.data.filters = bars.getFiltersData();
 		prefs.data.filters.barVisible = document.querySelector("#fun-filters").classList.contains("active");
 		// fill in sorting data
 		prefs.data.sorting = app.getSortingData();
 		// fill in search data
-		prefs.data.search = viewSearch.getScopeData();
+		prefs.data.search = viewSearch.getAdvancedData();
 		// save preferences
 		app.ir.invoke("prefs-save", prefs.data);
 	},

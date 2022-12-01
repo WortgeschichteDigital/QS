@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="css/shared/variables.css">
 
 		<link rel="stylesheet" href="css/app/app.css">
-		<link rel="stylesheet" href="css/app/filters.css">
+		<link rel="stylesheet" href="css/app/bars.css">
 		<link rel="stylesheet" href="css/app/overlay.css">
 		<link rel="stylesheet" href="css/app/viewSearch.css">
 		<link rel="stylesheet" href="css/app/viewXml.css">
@@ -24,7 +24,7 @@
 		<script src="js/shared/tooltip.js"></script>
 
 		<script src="js/app/app.js"></script>
-		<script src="js/app/filters.js"></script>
+		<script src="js/app/bars.js"></script>
 		<script src="js/app/git.js"></script>
 		<script src="js/app/keyboard.js"></script>
 		<script src="js/app/prefs.js"></script>
@@ -77,52 +77,12 @@
 		</section>
 
 		<!-- VIEW: SUCHE -->
-		<section id="search" class="off">
-			<div id="search-form">
-				<div
-					><input type="text" value="" placeholder="Suchausdruck" id="search-text"
-					><a href="#" class="clear-text-field"
-						><img src="img/app/clear-text.svg" width="24" height="24" alt=""
-					></a
-					><a href="#" id="search-help"
-						><img src="img/app/help.svg" width="24" height="24" alt=""
-					></a
-					><input type="button" value="Suchen" id="search-start"
-				></div>
-			</div>
+		<section id="search" class="off"></section>
 
-			<div id="search-scope">
-				<p><i>Suchbereich</i></p>
-				<div>
-					<p
-						><input type="checkbox" value="0" id="search-scope-0" checked
-						><label for="search-scope-0">alles</label
-					></p>
-					<p
-						><input type="checkbox" value="1" id="search-scope-1"
-						><label for="search-scope-1">Wortgeschichte</label
-					></p>
-					<p
-						><input type="checkbox" value="2" id="search-scope-2"
-						><label for="search-scope-2">Belege</label
-					></p>
-					<p
-						><input type="checkbox" value="3" id="search-scope-3"
-						><label for="search-scope-3">Bedeutungsgerüste</label
-					></p>
-					<p
-						><input type="checkbox" value="4" id="search-scope-4"
-						><label for="search-scope-4">Wortinformationen</label
-					></p>
-				</div>
-			</div>
-
-			<div id="search-results"></div>
-		</section>
-
-		<!-- SORTING AND QUICK FILTER -->
-		<div id="sorting">
-			<div
+		<!-- TOP BAR -->
+		<div id="bar">
+			<!-- SORTING AND QUICK FILTER -->
+			<div id="sorting"
 				><a href="#" id="sorting-dir" class="icon active" title="&lt;i&gt;Sortierung:&lt;/i&gt; aufsteigend"
 					><img src="img/app/sort-ascending.svg" width="30" height="30" alt=""
 				></a
@@ -135,40 +95,110 @@
 				><a href="#" id="sorting-time" class="icon" title="&lt;i&gt;Sortierung:&lt;/i&gt; nach Publikationsdatum"
 					><img src="img/app/time.svg" width="30" height="30" alt=""
 				></a
-				><input type="text" value="" placeholder="Dateipfad-Filter" id="sorting-filter"
+				><span
+					><input type="text" value="" placeholder="Dateipfad-Filter" id="sorting-filter"
+					><a href="#" class="clear-text-field"
+						><img src="img/app/clear-text.svg" width="24" height="24" alt=""
+					></a
+				></span
+			></div>
+
+			<!-- CLUSTER NAVIGATION -->
+			<div id="clusters-nav" class="off"></div>
+
+			<!-- SEARCH FORM -->
+			<div id="search-form" class="off"
+				><input type="text" value="" placeholder="Suchwörter" id="search-text"
 				><a href="#" class="clear-text-field"
 					><img src="img/app/clear-text.svg" width="24" height="24" alt=""
 				></a
-			></div>
+				><a href="#" id="search-advanced-toggle"
+					><img src="img/app/preferences.svg" width="24" height="24" alt=""
+				></a
+				><a href="#" id="search-help"
+					><img src="img/app/help.svg" width="24" height="24" alt=""
+				></a
+				><input type="button" value="Suchen" id="search-start"
+				><div id="search-advanced">
+					<p
+						><input type="checkbox" id="search-same-line"
+						><label for="search-same-line">alle Suchwörter in derselben Zeile</label
+					></p>
+					<p
+						><input type="checkbox" id="search-always-xml"
+						><label for="search-always-xml">Suche immer auch im XML-Code</label
+					></p>
+					<p
+						><input type="checkbox" id="search-narrow"
+						><label for="search-narrow">nächste Suche nur in zuletzt gefundenen Dateien</label
+					></p>
+					<h2>Suchbereich</h2>
+					<div id="search-scope">
+						<p
+							><input type="checkbox" value="0" id="search-scope-0" checked
+							><label for="search-scope-0">alles</label
+						></p>
+						<p
+							><input type="checkbox" value="1" id="search-scope-1"
+							><label for="search-scope-1">Wortgeschichte</label
+						></p>
+						<p
+							><input type="checkbox" value="2" id="search-scope-2"
+							><label for="search-scope-2">Belege</label
+						></p>
+						<p
+							><input type="checkbox" value="3" id="search-scope-3"
+							><label for="search-scope-3">Bedeutungsgerüste</label
+						></p>
+						<p
+							><input type="checkbox" value="4" id="search-scope-4"
+							><label for="search-scope-4">Wortinformationen</label
+						></p>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<!-- FILTERS -->
+		<!-- BAR: FILTERS -->
 		<div id="filters">
-			<a href="#" id="filters-reset"
-				><img src="img/app/cleanup-white.svg" width="30" height="30" alt=""
-			>zurücksetzen</a>
+			<div>
+				<p
+					><a href="#" id="filters-reset"
+						><img src="img/app/cleanup-white.svg" width="30" height="30" alt=""
+					>zurücksetzen</a>
+				</p>
 
-			<h1>Autor*innen</h1>
-			<div class="select-cont"
-				><a href="#" id="select-authors" class="select-filter" data-value="">alle</a
-			></div>
-
-			<h1>Themenfelder</h1>
-			<div class="select-cont"
-				><a href="#" id="select-domains" class="select-filter" data-value="">alle</a
-			></div>
-
-			<div id="filters-status">
-				<h1>Dateistatus</h1>
+				<h1>Autor*innen</h1>
 				<div class="select-cont"
-					><a href="#" id="select-status" class="select-filter" data-value="">alle</a
+					><a href="#" id="select-authors" class="select-filter" data-value="">alle</a
 				></div>
+
+				<h1>Themenfelder</h1>
+				<div class="select-cont"
+					><a href="#" id="select-domains" class="select-filter" data-value="">alle</a
+				></div>
+
+				<div id="filters-status">
+					<h1>Dateistatus</h1>
+					<div class="select-cont"
+						><a href="#" id="select-status" class="select-filter" data-value="">alle</a
+					></div>
+				</div>
+
+				<div id="filters-hints" class="off">
+					<h1>Markierungen</h1>
+
+					<h1>Hinweise</h1>
+				</div>
 			</div>
+		</div>
 
-			<div id="filters-hints" class="off">
-				<h1>Markierungen</h1>
-
-				<h1>Hinweise</h1>
+		<!-- BAR: RESULTS -->
+		<div id="results">
+			<div>
+				<p id="results-summary"></p>
+				<div id="results-queries"></div>
+				<div id="results-files"></div>
 			</div>
 		</div>
 

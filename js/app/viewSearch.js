@@ -1,28 +1,44 @@
 "use strict";
 
 let viewSearch = {
+	// intersection observer for search results
+	observer: new IntersectionObserver(entries => {
+		entries.forEach(entry => {
+			if (!entry.isIntersecting) {
+				return;
+			}
+			viewSearch.printMoreResults();
+		});
+	}),
 	// as the search can be pretty expensive, let's have a worker
 	worker: null,
 	// regular expressions for the current search
 	data: {
 		regExp: [],
-		regExpTags: [], // expression for highlighting printed tags (< or > turn to &lt; and &gt; respectively)
+		regExpTags: [], // expression for highlighting printed tags (< or > replaced to &lt; and &gt; respectively)
 		results: [],
+		resultsFiles: new Set(),
+		resultsFilesPrinted: new Set(),
 		running: false, // start of a new search is blocked
 		searching: false, // determines whether the worker has finished or not
 		stripTags: false,
+		terms: [], // search terms as they were typed
 	},
 	// start search
 	async start () {
+		const searchText = document.querySelector("#search-text");
 		if (viewSearch.data.running) {
+			await dialog.open({
+				type: "alert",
+				text: "Die vorherige Suche läuft noch.",
+			});
+			searchText.select();
 			return;
 		}
 		viewSearch.data.running = true;
 		await xml.updateWait();
-		window.scrollTo(0, 0);
 		// split up search term
-		let searchText = document.querySelector("#search-text"),
-			text = searchText.value.trim();
+		let text = searchText.value.trim();
 		if (!text) {
 			await shared.wait(25);
 			await dialog.open({
@@ -32,8 +48,13 @@ let viewSearch = {
 			finishUp();
 			return;
 		}
+		if (document.querySelector("#search-always-xml").checked) {
+			viewSearch.data.stripTags = false;
+		} else {
+			viewSearch.data.stripTags = !/[<>]/.test(text);
+		}
+		viewSearch.data.terms.length = 0;
 		let search = [];
-		viewSearch.data.stripTags = !/[<>]/.test(text);
 		const matchesRegExp = text.matchAll(/\/(.+?)\/(i)?/g);
 		for (const i of matchesRegExp) {
 			search.push({
@@ -41,6 +62,7 @@ let viewSearch = {
 				isRegExp: true,
 				text: i[1].replace(/\((?!\?)/g, () => "(?:"),
 			});
+			viewSearch.data.terms.push(i[0]);
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
@@ -51,6 +73,7 @@ let viewSearch = {
 				isRegExp: false,
 				text: i[1],
 			});
+			viewSearch.data.terms.push(i[0]);
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
@@ -59,6 +82,7 @@ let viewSearch = {
 			if (!i) {
 				continue;
 			}
+			viewSearch.data.terms.push(i);
 			search.push({
 				isInsensitive: !/[A-ZÄÖÜ]/.test(i),
 				isRegExp: false,
@@ -92,10 +116,15 @@ let viewSearch = {
 			viewSearch.data.regExpTags.push(regTags);
 		}
 		// search XML files
-		viewSearch.data.results.length = 0;
+		window.scrollTo(0, 0);
+		await viewSearch.toggleAdvanced("off");
 		await viewSearch.searchXml();
+		viewSearch.data.results.forEach(i => viewSearch.data.resultsFiles.add(i.file));
+		viewSearch.data.resultsFilesPrinted.clear();
 		// print results
 		viewSearch.printResults();
+		// handle results bar
+		bars.resultsSearch();
 		// refocus search field
 		finishUp();
 		function finishUp () {
@@ -107,7 +136,7 @@ let viewSearch = {
 	searchXml () {
 		viewSearch.data.searching = true;
 		// please hold the line
-		const res = document.querySelector("#search-results");
+		const res = document.querySelector("#search");
 		shared.clear(res);
 		res.appendChild(app.pleaseWait());
 		// load worker
@@ -119,34 +148,39 @@ let viewSearch = {
 			});
 		}
 		// get filters and determine search scope
-		const dataF = filters.getData();
+		const dataF = bars.getFiltersData();
 		dataF["select-status"] = parseInt(dataF["select-status"], 10);
-		const dataS = viewSearch.getScopeData();
-		const scopes = [
-			[],
-			["Wortgeschichte_kompakt", "Wortgeschichte(?!_)"],
-			["Belegreihe"],
-			["Lesarten"],
-			["Verweise"],
-		];
+		const dataA = viewSearch.getAdvancedData();
+		const scopes = {
+			"search-scope-1": ["Wortgeschichte_kompakt", "Wortgeschichte(?!_)"],
+			"search-scope-2": ["Belegreihe"],
+			"search-scope-3": ["Lesarten"],
+			"search-scope-4": ["Verweise"],
+		};
 		let scope = [];
-		if (!dataS[0]) {
-			for (let i = 1, len = dataS.length; i < len; i++) {
-				if (!dataS[i]) {
-					continue;
-				}
-				scopes[i].forEach(s => scope.push(s));
+		for (const [id, checked] of Object.entries(dataA)) {
+			if (!scopes[id] || !checked) {
+				continue;
 			}
+			scopes[id].forEach(s => scope.push(s));
 		}
 		// post data to worker
+		const narrowSearch = document.querySelector("#search-narrow");
 		viewSearch.worker.postMessage({
 			filters: dataF,
+			narrowSearch: narrowSearch.checked ? viewSearch.data.resultsFiles : new Set(),
 			regExp: viewSearch.data.regExp,
+			sameLine: document.querySelector("#search-same-line").checked,
 			scope,
 			stripTags: viewSearch.data.stripTags,
 			xmlData: xml.data.files,
 			xmlFiles: xml.files,
 		});
+		narrowSearch.checked = false;
+		viewSearch.toggleAdvancedIcon();
+		// reset results objects
+		viewSearch.data.results.length = 0;
+		viewSearch.data.resultsFiles.clear();
 		// wait until the worker has finished
 		return new Promise(resolve => {
 			const interval = setInterval(() => {
@@ -157,9 +191,9 @@ let viewSearch = {
 			}, 250);
 		});
 	},
-	// print results
+	// prepare printing of results
 	printResults () {
-		const res = document.querySelector("#search-results");
+		const res = document.querySelector("#search");
 		shared.clear(res);
 		// no results
 		if (!viewSearch.data.results.length) {
@@ -167,12 +201,23 @@ let viewSearch = {
 			return;
 		}
 		// too much results
-		else if (viewSearch.data.results.length > 9999) {
+		else if (viewSearch.data.results.length > 5e3) {
+			viewSearch.data.results.length = 0;
 			const div = app.nothingToShow("Zu viele Treffer!", "Tipp: Schränken Sie Ihre Suche weiter ein.");
 			res.appendChild(div);
 			return;
 		}
 		// print results
+		viewSearch.printMoreResults();
+	},
+	// print the next chunk of results
+	printMoreResults () {
+		let res = document.querySelector("#search");
+		// remove last result from intersection observer entries
+		if (res.lastChild) {
+			viewSearch.observer.unobserve(res.lastChild);
+		}
+		// prepare printing
 		const icons = [
 			{
 				fun: "openPv",
@@ -185,11 +230,27 @@ let viewSearch = {
 				title: "Datei im Editor öffnen",
 			},
 		];
+		let printed = viewSearch.data.resultsFilesPrinted,
+			start = 0;
+		for (let i = 0, len = viewSearch.data.results.length; i < len; i++) {
+			if (!printed.has(viewSearch.data.results[i].file)) {
+				start = i;
+				break;
+			}
+		}
 		let lastFile = "",
-			xmlFiles = [];
-		for (const i of viewSearch.data.results) {
+			n = 0;
+		// print next 50 results
+		for (let f = start, len = viewSearch.data.results.length; f < len; f++) {
+			const i = viewSearch.data.results[f];
+			n++;
 			// heading
 			if (i.file !== lastFile) {
+				if (n >= 50) {
+					break;
+				}
+				printed.add(i.file);
+				// create heading
 				let h1 = document.createElement("h1");
 				res.appendChild(h1);
 				h1.id = i.file;
@@ -216,7 +277,6 @@ let viewSearch = {
 				}
 				// update variables
 				lastFile = i.file;
-				xmlFiles.push(i.file);
 			}
 			// result item
 			let div = document.createElement("div");
@@ -235,21 +295,27 @@ let viewSearch = {
 				text += " " + i.textAfter;
 			}
 			text = viewSearch.textMaskChars(text);
-			let ele;
+			let ele, highlight;
 			if (viewSearch.data.stripTags) {
 				ele = document.createElement("p");
-				text = viewSearch.textHighlight(text, viewSearch.data.regExp);
+				highlight = viewSearch.textHighlight(text, viewSearch.data.regExp);
 			} else {
 				ele = document.createElement("code");
 				text = viewSearch.textColorCode(text);
-				text = viewSearch.textHighlight(text, viewSearch.data.regExpTags);
+				highlight = viewSearch.textHighlight(text, viewSearch.data.regExpTags);
 			}
+			div.dataset.matched = highlight.matched.join(",");
+			text = highlight.text;
 			text = viewSearch.textWbr(text);
 			ele.innerHTML = text;
 			div.appendChild(ele);
 		}
+		// initialize tooltips
 		tooltip.init(res);
-		// build side bar TODO
+		// let's have some doomscrolling
+		if (printed.size !== viewSearch.data.resultsFiles.size) {
+			viewSearch.observer.observe(res.lastChild);
+		}
 	},
 	// mask special characters
 	//   text = string
@@ -298,13 +364,23 @@ let viewSearch = {
 	//   text = string
 	//   reg = array (with expressions)
 	textHighlight (text, reg) {
+		let matched = new Set();
 		for (let i = 0, len = reg.length; i < len; i++) {
 			const r = reg[i],
 				color = i % 6 + 1;
-			text = text.replace(r, m => `<mark class="color${color}">${m}</mark>`);
+			text = text.replace(r, m => {
+				matched.add(i);
+				return `<mark class="color${color}">${m}</mark>`;
+			});
 		}
-		return text;
-		// TODO <mark> innerhalb von Tags erkennen
+		const clean = new RegExp(`(<[^>]*?)<mark class="color[0-9]">(.+?)<\/mark>`, "g");
+		while (clean.test(text)) {
+			text = text.replace(clean, (m, p1, p2) => p1 + p2);
+		}
+		return {
+			matched: [...matched].sort((a, b) => a - b),
+			text,
+		};
 	},
 	// insert <wbr> at certain positions
 	//   text = string
@@ -314,15 +390,50 @@ let viewSearch = {
 		text = text.replace(/(?<!&amp;|<)\//g, "/<wbr>");
 		return text;
 	},
-	// read the checkboxes that determine the search scope
-	getScopeData () {
-		let scope = [];
-		document.querySelectorAll("#search-scope input").forEach((i, n) => scope[n] = i.checked);
-		return scope;
+	// read the checkboxes within advanced options
+	getAdvancedData () {
+		let advanced = {};
+		document.querySelectorAll("#search-advanced input").forEach(i => advanced[i.id] = i.checked);
+		return advanced;
+	},
+	// toggle advanced search options
+	//   force = on | off | undefined
+	toggleAdvanced (force = "") {
+		return new Promise(async resolve => {
+			const a = document.querySelector("#search-advanced"),
+				maxHeight = a.offsetTop + a.offsetHeight + 10; // 10px padding-top #search-form
+			const bar = document.querySelector("#bar"),
+				barHeight = bar.offsetHeight;
+			if ((!force || force === "on") && barHeight < maxHeight) {
+				// toggle on
+				bar.style.height = "60px";
+				void bar.offsetHeight;
+				bar.style.height = maxHeight + "px";
+				await new Promise(end => bar.addEventListener("transitionend", () => end(true), { once: true }));
+			} else if ((!force || force === "off") && barHeight === maxHeight) {
+				// toggle off
+				bar.style.height = maxHeight + "px";
+				void bar.offsetHeight;
+				bar.style.height = "60px";
+				await new Promise(end => bar.addEventListener("transitionend", () => end(true), { once: true }));
+			}
+			resolve(true);
+		});
+	},
+	// toggle color of advanced icon
+	toggleAdvancedIcon () {
+		const dataA = viewSearch.getAdvancedData(),
+			checked = Object.values(dataA).filter(i => i).length,
+			icon = document.querySelector("#search-advanced-toggle img");
+		if (!dataA["search-scope-0"] || checked > 1) {
+			icon.src = "img/app/preferences-red.svg";
+		} else {
+			icon.src = "img/app/preferences.svg";
+		}
 	},
 	// toggle checkboxes
 	//   cb = element (changed checkbox)
-	toggleCheckboxes (cb) {
+	toggleScope (cb) {
 		const scope0 = document.querySelector("#search-scope-0");
 		if (cb.checked && cb.value !== "0") {
 			scope0.checked = false;
@@ -335,5 +446,5 @@ let viewSearch = {
 		if (!document.querySelector("#search-scope input:checked")) {
 			scope0.checked = true;
 		}
-	}
+	},
 };

@@ -16,6 +16,9 @@ let search = {
 		let d = search.data,
 			nResults = 0;
 		x: for (const [file, values] of Object.entries(d.xmlData)) {
+			if (d.narrowSearch.size && !d.narrowSearch.has(file)) {
+				continue;
+			}
 			// ignore files that don't match the filters
 			if (d.filters["select-authors"] && !values.authors.includes(d.filters["select-authors"]) ||
 					d.filters["select-domains"] && !values.domains.includes(d.filters["select-domains"]) ||
@@ -35,8 +38,20 @@ let search = {
 				}
 				let n = 0;
 				for (const m of text.matchAll(new RegExp("<\/" + s, "g"))) {
-					lines[n].end = text.substring(0, m.index).split("\n").length;
+					try {
+						// the number of start and end tags can differ
+						// when some are enclosed in comments
+						lines[n].end = text.substring(0, m.index).split("\n").length;
+					} catch {}
 					n++;
+				}
+				for (let i = lines.length - 1; i >= 0; i--) {
+					// remove all lines for which no end tag was found
+					// (this may happen if the number of start and end tag differs
+					// due to comments; see above)
+					if (!lines[i].end) {
+						lines.splice(i, 1);
+					}
 				}
 				if (!lines.length) {
 					// fill with placeholder if the element is missing in the current XML file
@@ -55,23 +70,39 @@ let search = {
 			}
 			// search file
 			let hits = Array(d.regExp.length).fill(false),
-				points = 0,
-				lines = [];
+				hitLines = {},
+				points = 0;
 			for (let i = 0, len = d.regExp.length; i < len; i++) {
 				for (const m of text.matchAll(d.regExp[i])) {
 					const line = text.substring(0, m.index).split("\n").length;
 					if (linesScope.length && !linesScope.includes(line)) {
 						continue;
 					}
+					// all expressions must produce a hit
 					hits[i] = true;
-					points++;
-					if (!lines.includes(line)) {
-						lines.push(line);
+					// in case the user only wants to see hits in the same line
+					if (!hitLines[line]) {
+						hitLines[line] = Array(hits.length).fill(false);
 					}
+					hitLines[line][i] = true;
+					// points for weighing the results
+					points++;
 				}
 				d.regExp[i].lastIndex = -1;
 			}
 			if (hits.some(i => !i)) {
+				continue;
+			}
+			// fill lines
+			let lines = [];
+			for (const [k, v] of Object.entries(hitLines)) {
+				if (!d.sameLine ||
+						d.sameLine && !v.some(i => !i)) {
+					lines.push(parseInt(k, 10));
+				}
+			}
+			if (!lines.length) {
+				// this might happen if the user only wants to see hits in the same line
 				continue;
 			}
 			// extract text
@@ -132,7 +163,7 @@ let search = {
 				});
 				// stop search if there are to many results
 				nResults++;
-				if (nResults > 1e4) {
+				if (nResults > 5e3) {
 					break x;
 				}
 			}
