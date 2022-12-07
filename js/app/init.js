@@ -38,6 +38,10 @@ window.addEventListener("load", async () => {
 		evt.preventDefault();
 		viewSearch.toggleAdvanced();
 	});
+	document.querySelector("#search-bar").addEventListener("click", evt => {
+		evt.preventDefault();
+		bars.toggle("results");
+	});
 	document.querySelectorAll("#search-advanced input").forEach(i => {
 		i.addEventListener("change", () => viewSearch.toggleAdvancedIcon());
 	});
@@ -145,6 +149,12 @@ window.addEventListener("load", async () => {
 			dialog.response = this.dataset.response === "true" ? true : false;
 		});
 	});
+	document.querySelectorAll("#tags-nav a").forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			tags.showSummaryNav(this.dataset.forward === "true" ? true : false);
+		});
+	});
 
 	// LISTEN TO IPC MESSAGES
 	app.ir.on("menu-clusters", () => app.menuCommand("clusters"));
@@ -152,6 +162,7 @@ window.addEventListener("load", async () => {
 	app.ir.on("menu-hints", () => app.menuCommand("hints"));
 	app.ir.on("menu-preferences", () => app.menuCommand("preferences"));
 	app.ir.on("menu-search", () => app.menuCommand("search"));
+	app.ir.on("menu-teaser-tags", () => app.menuCommand("teaser-tags"));
 	app.ir.on("menu-update", () => app.menuCommand("update"));
 	app.ir.on("menu-xml", () => app.menuCommand("xml"));
 	app.ir.on("save-prefs", () => prefs.save());

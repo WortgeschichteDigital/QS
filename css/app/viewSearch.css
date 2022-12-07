@@ -35,10 +35,14 @@
 .search-result {
 	position: relative;
 	margin: 0 auto;
+	outline: 2px solid transparent;
+	outline-offset: 5px;
+	border-radius: 10px;
 	width: 700px;
 	max-width: 90%;
 	font-size: .9rem;
 	line-height: 1.35rem;
+	transition: outline-color .3s linear;
 }
 
 .search-result > span {
@@ -58,6 +62,24 @@
 .search-result code {
 	font-size: .7rem;
 	line-height: 1.1rem;
+}
+
+@keyframes highlight {
+	25% {
+		outline-color: var(--outline);
+	}
+	75% {
+		outline-color: var(--outline);
+	}
+	100% {
+		outline-color: transparent;
+	}
+}
+
+.search-result.highlight {
+	animation-name: highlight;
+	animation-duration: 2s;
+	animation-timing-function: linear;
 }
 
 mark {
@@ -90,5 +112,15 @@ mark.color5 {
 mark.color6 {
 	background-color: var(--colorCyan);
 	color: #fff;
+}
+
+mark.no-start {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+mark.no-end {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 

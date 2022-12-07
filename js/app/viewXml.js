@@ -168,23 +168,14 @@ let viewXml = {
 	// show teaser
 	//   a = element (clicked link)
 	async funTeaser (a) {
-		// do I need to load the XSL?
-		if (!viewXml.funTeaserXsl) {
-			let resources = process.resourcesPath;
-			if (/node_modules/.test(resources)) {
-				// app is not packaged => process.resourcesPath is the path to the Electron resources
-				resources = resources.replace(/node_modules.+/, "") + "resources";
-			}
-			try {
-				const path = app.path.join(resources, "wortgeschichten-teaser.xsl");
-				viewXml.funTeaserXsl = await app.fsp.readFile(path, { encoding: "utf8" });
-			} catch (err) {
-				open.dialog({
-					type: "alert",
-					text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err.message}`,
-				});
-				return;
-			}
+		// load XSL (if needed)
+		const result = await app.loadXsl({
+			obj: viewXml,
+			key: "funTeaserXsl",
+			xsl: "wortgeschichten-teaser.xsl",
+		});
+		if (!result) {
+			return;
 		}
 		// extract summary (Kurz gefasst)
 		const tr = a.closest("tr"),

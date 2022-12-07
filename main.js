@@ -52,6 +52,23 @@ let menuApp = [
 			},
 			{ type: "separator" },
 			{
+				label: "Einstellungen",
+				icon: path.join(__dirname, "img", "main", "preferences.png"),
+				click: () => winMenu.execute("preferences"),
+			},
+			{ type: "separator" },
+			{
+				label: "Beenden",
+				icon: path.join(__dirname, "img", "main", "exit.png"),
+				click: () => win.closeAll(),
+				accelerator: "CommandOrControl+Q",
+			},
+		],
+	},
+	{
+		label: "&Funktionen",
+		submenu: [
+			{
 				label: "Filter",
 				icon: path.join(__dirname, "img", "main", "filter.png"),
 				click: () => winMenu.execute("filters"),
@@ -65,16 +82,9 @@ let menuApp = [
 			},
 			{ type: "separator" },
 			{
-				label: "Einstellungen",
-				icon: path.join(__dirname, "img", "main", "preferences.png"),
-				click: () => winMenu.execute("preferences"),
-			},
-			{ type: "separator" },
-			{
-				label: "Beenden",
-				icon: path.join(__dirname, "img", "main", "exit.png"),
-				click: () => win.closeAll(),
-				accelerator: "CommandOrControl+Q",
+				label: "Teaser-Tags",
+				icon: path.join(__dirname, "img", "main", "xml.png"),
+				click: () => winMenu.execute("teaser-tags"),
 			},
 		],
 	},

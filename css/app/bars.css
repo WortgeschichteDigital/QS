@@ -76,6 +76,7 @@
 
 #filters-reset img {
 	vertical-align: top;
+	margin-right: 5px;
 }
 
 
@@ -183,6 +184,10 @@
 	text-decoration: none;
 }
 
+.select-filter {
+	margin-left: 2px; /* otherwise, in the filters bar, the left outline would be cut off */
+}
+
 .select-filter[data-value=""] {
 	font-style: italic;
 }
@@ -201,7 +206,7 @@
 .select-popup {
 	position: absolute;
 	top: 36px;
-	left: 0;
+	left: 2px; /* see .select-filter */
 	z-index: 1;
 	opacity: 1;
 	border: 1px solid var(--line);

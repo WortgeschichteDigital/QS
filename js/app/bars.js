@@ -158,8 +158,11 @@ let bars = {
 				bars.resultsSearchNextFile(this);
 			});
 		}
+		// reset navigation
+		bars.resultsSearchNextQueryData.query = "";
 		// show bar
-		if (!document.querySelector("#results.visible")) {
+		if (window.innerWidth >= 1250 &&
+				!document.querySelector("#results.visible")) {
 			bars.toggle("results");
 		}
 		// scroll top
@@ -176,13 +179,67 @@ let bars = {
 			bars.toggle("results");
 		}
 	},
+	// results: navigational data for queries
+	resultsSearchNextQueryData: {
+		query: "",
+		idx: -1,
+	},
 	// results: navigate to next query of type
 	//   a = element (clicked query)
-	resultsSearchNextQuery (a) {
+	async resultsSearchNextQuery (a) {
 		if (viewSearch.data.running) {
 			return;
 		}
-		// TODO a.getAttribute("href").substring(1);
+		// detect next match
+		const data = bars.resultsSearchNextQueryData,
+			query = a.getAttribute("href").substring(1);
+		let matches = bars.resultsSearchNextQueryMatches(query);
+		if (data.query !== query) {
+			data.query = query;
+			data.idx = 0;
+		} else {
+			data.idx++;
+			if (data.idx === matches.length) {
+				let idx = 0;
+				while (viewSearch.data.resultsFiles.size !== viewSearch.data.resultsFilesPrinted.size) {
+					// reload more results
+					viewSearch.printMoreResults();
+					matches = bars.resultsSearchNextQueryMatches(query);
+					if (data.idx < matches.length) {
+						idx = data.idx;
+						break;
+					}
+				}
+				data.idx = idx;
+			}
+		}
+		// scroll to next match
+		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom,
+			headingHeight = document.querySelector("#search h1").offsetHeight,
+			nextMatch = matches[data.idx];
+		window.scrollTo({
+			top: nextMatch.getBoundingClientRect().top + window.scrollY - topBarsHeight - headingHeight,
+			left: 0,
+			behavior: "smooth",
+		});
+		// highlight the result
+		await shared.scrollEnd();
+		nextMatch.addEventListener("animationend", function() {
+			this.classList.remove("highlight");
+		}, { once: true });
+		nextMatch.classList.add("highlight");
+	},
+	// search matches for the given query
+	//   query = string (zero-based number of the query)
+	resultsSearchNextQueryMatches (query) {
+		let reg = new RegExp(`(^|,)${query}(,|$)`),
+			matches = [];
+		document.querySelectorAll(".search-result").forEach(i => {
+			if (reg.test(i.dataset.matched)) {
+				matches.push(i);
+			}
+		});
+		return matches;
 	},
 	// results: navigate to next file
 	//   a = element (clicked file)
@@ -190,7 +247,23 @@ let bars = {
 		if (viewSearch.data.running) {
 			return;
 		}
-		// TODO a.getAttribute("href").substring(1);
+		// find heading
+		let id = a.getAttribute("href").substring(1),
+			h1 = document.getElementById(id);
+		while (!h1) {
+			// reload more results
+			viewSearch.printMoreResults();
+			h1 = document.getElementById(id);
+		}
+		// scroll to heading
+		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom,
+			headingHeight = document.querySelector("#search h1").offsetHeight,
+			firstResult = h1.nextSibling.getBoundingClientRect().top;
+		window.scrollTo({
+			top: firstResult + window.scrollY - topBarsHeight - headingHeight,
+			left: 0,
+			behavior: "smooth",
+		});
 	},
 	// select: fill the given select according to its value
 	//   select = element
@@ -250,6 +323,7 @@ let bars = {
 				select.dataset.value = i.value;
 				bars.fillSelect(select);
 				bars.closeSelectPopup(this, false);
+				select.focus();
 				bars.filtersActive();
 				if (/xml|hints/.test(app.view)) {
 					app.populateView();

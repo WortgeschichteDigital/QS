@@ -28,6 +28,7 @@
 		<script src="js/app/git.js"></script>
 		<script src="js/app/keyboard.js"></script>
 		<script src="js/app/prefs.js"></script>
+		<script src="js/app/tags.js"></script>
 		<script src="js/app/viewClusters.js"></script>
 		<script src="js/app/viewHints.js"></script>
 		<script src="js/app/viewSearch.js"></script>
@@ -115,6 +116,9 @@
 				><a href="#" id="search-advanced-toggle"
 					><img src="img/app/preferences.svg" width="24" height="24" alt=""
 				></a
+				><a href="#" id="search-bar"
+					><img src="img/app/sidebar.svg" width="24" height="24" alt=""
+				></a
 				><a href="#" id="search-help"
 					><img src="img/app/help.svg" width="24" height="24" alt=""
 				></a
@@ -164,7 +168,7 @@
 			<div>
 				<p
 					><a href="#" id="filters-reset"
-						><img src="img/app/cleanup-white.svg" width="30" height="30" alt=""
+						><img src="img/app/cleanup-white.svg" width="24" height="24" alt=""
 					>zurücksetzen</a>
 				</p>
 
@@ -197,8 +201,8 @@
 		<div id="results">
 			<div>
 				<p id="results-summary"></p>
-				<div id="results-queries"></div>
-				<div id="results-files"></div>
+				<div id="results-queries" class="off"></div>
+				<div id="results-files" class="off"></div>
 			</div>
 		</div>
 
@@ -273,6 +277,22 @@
 				<h1>Kurz gefasst / <span></span><a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/app/close-white.svg" width="30" height="30" alt="x"></a></h1>
 				<p></p>
 				<code></code>
+			</div>
+		</div>
+
+		<!-- OVERLAY: TEASER-TAGS -->
+		<div id="tags" class="overlay hide off">
+			<div>
+				<h1>Teaser-Tags<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/app/close-white.svg" width="30" height="30" alt="x"></a></h1>
+				<code id="tags-tags"></code>
+				<code id="tags-attributes"></code>
+				<div id="tags-nav"
+					><a href="#" data-forward="false">&lt;</a
+					><span></span
+					><a href="#" data-forward="true">&gt;</a
+				></div>
+				<h2 id="tags-label"></h2>
+				<code id="tags-code"></code>
 			</div>
 		</div>
 

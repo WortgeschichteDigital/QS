@@ -58,6 +58,24 @@ let keyboard = {
 			buttons[idx].focus();
 		} else if (m === "Alt" && /^Arrow(Left|Right)$/.test(evt.key)) {
 			app.toggleViewShortcut(evt.key === "ArrowRight");
+		} else if (m === "Ctrl" && /^Arrow(Left|Right)$/.test(evt.key)) {
+			const olTop = overlay.top();
+			if (olTop === "tags") {
+				evt.preventDefault();
+				const nav = document.querySelectorAll("#tags-nav > a");
+				if (!nav[0].parentNode.classList.contains("off")) {
+					if (evt.key === "ArrowLeft") {
+						nav[0].click();
+					} else {
+						nav[1].click();
+					}
+				}
+			}
+		}
+		// PageDown + PageUp
+		else if (!m && /^Page(Down|Up)$/.test(evt.key)) {
+			evt.preventDefault();
+			app.scroll(evt.key === "PageDown");
 		}
 	},
 };

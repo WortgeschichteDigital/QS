@@ -232,6 +232,7 @@ section.trans-linear {
 
 .clear-text-field,
 #search-advanced-toggle,
+#search-bar,
 #search-help {
 	position: relative;
 	top: 3px;
@@ -244,6 +245,7 @@ section.trans-linear {
 
 .clear-text-field:focus,
 #search-advanced-toggle:focus,
+#search-bar:focus,
 #search-help:focus {
 	outline: 2px solid var(--outline);
 	outline-offset: -2px;
@@ -258,10 +260,11 @@ section.trans-linear {
 
 #search-form .clear-text-field {
 	top: 8px;
-	margin-left: -88px;
+	margin-left: -117px;
 }
 
 #search-help,
+#search-bar,
 #search-advanced-toggle {
 	top: 8px;
 	margin-left: 5px;
@@ -270,8 +273,8 @@ section.trans-linear {
 #search-form input[type="text"] {
 	position: relative;
 	top: 2px;
-	padding-right: 92px;
-	width: calc(100% - 141px - 104px); /* 141px = button, 104px = paddings and borders */
+	padding-right: 121px;
+	width: calc(100% - 141px - 133px); /* 141px = button, 104px = paddings and borders */
 }
 
 #search-form input[type="button"] {

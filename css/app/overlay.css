@@ -116,3 +116,74 @@
 .wgd-stichwort {
 	font-style: italic;
 }
+
+
+/* TEASER-TAGS ---------------------------------- */
+
+#tags > div {
+	width: 800px;
+}
+
+#tags a {
+	margin-right: 15px;
+	color: var(--text);
+	text-decoration: none;
+}
+
+#tags a.active {
+	font-weight: bold;
+}
+
+#tags-nav {
+	margin: 30px 10px 10px 10px;
+}
+
+#tags-nav a {
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 10px;
+	border-radius: 5px;
+	padding: 0 5px;
+	background-color: var(--bgGreyLight);
+}
+
+#tags-nav a:focus,
+#tags-nav a:hover {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+}
+
+#tags-nav > a {
+	margin-top: 2px;
+	padding: 0;
+	width: 35px;
+	text-align: center;
+}
+
+#tags-nav > a:last-child {
+	margin: 2px 0 0 10px;
+}
+
+#tags-nav span {
+	position: relative; /* this way, for the first child, .offsetLeft is 0 */
+	display: inline-block;
+	padding: 2px;
+	max-width: calc(100% - 90px - 4px);
+	white-space: nowrap;
+	overflow-x: hidden;
+}
+
+#tags-nav span a.active {
+	background-color: var(--bgHighlight);
+	color: #fff;
+}
+
+#tags-nav span a:last-child {
+	margin: 0;
+}
+
+#tags-code {
+	font-size: .7rem;
+	line-height: 1.1rem;
+	white-space: pre-wrap;
+}

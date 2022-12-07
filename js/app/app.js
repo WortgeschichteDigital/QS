@@ -65,12 +65,40 @@ let app = {
 				viewSearch.toggleAdvanced("on");
 				document.querySelector("#view-search").click();
 				break;
+			case "teaser-tags":
+				tags.show();
+				break;
 			case "update":
 				xml.update();
 				break;
 			case "xml":
 				document.querySelector("#view-xml").click();
 				break;
+		}
+	},
+	// load XSL to variable
+	//   obj = object
+	//   key = string
+	//   xsl = string
+	async loadXsl ({ obj, key, xsl }) {
+		if (obj[key]) {
+			return true;
+		}
+		let resources = process.resourcesPath;
+		if (/node_modules/.test(resources)) {
+			// app is not packaged => process.resourcesPath is the path to the Electron resources
+			resources = resources.replace(/node_modules.+/, "") + "resources";
+		}
+		try {
+			const path = app.path.join(resources, xsl);
+			obj[key] = await app.fsp.readFile(path, { encoding: "utf8" });
+			return true;
+		} catch (err) {
+			open.dialog({
+				type: "alert",
+				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err.message}`,
+			});
+			return false;
 		}
 	},
 	// print placeholder message in case there's nothing to show
@@ -153,12 +181,29 @@ let app = {
 		div.classList.add("wait");
 		let img = document.createElement("img");
 		div.appendChild(img);
-		img.src = "img/app/view-refresh.svg";
+		img.src = "img/app/loading.svg";
 		img.width = "96";
 		img.height = "96";
 		img.alg = "";
 		img.classList.add("rotate");
 		return div;
+	},
+	// scroll pagewise
+	//   down = boolean
+	scroll (down) {
+		const topBars = document.querySelector("#bar").getBoundingClientRect().bottom,
+			scroll = Math.round((window.innerHeight - topBars) * 0.85);
+		let top = window.scrollY;
+		if (down) {
+			top += scroll;
+		} else {
+			top -= scroll;
+		}
+		window.scrollTo({
+			top,
+			left: 0,
+			behavior: "smooth",
+		});
 	},
 	// toggle sorting icons
 	//  a = element (icon link)

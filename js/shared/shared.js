@@ -86,6 +86,29 @@ let shared = {
 			i.title = i.title.replace(/Strg\s\+/, sc.Strg + "\u00A0+");
 		});
 	},
+	// detect scroll end
+	//   obj = element (scrollable element)
+	async scrollEnd (obj = window) {
+		await new Promise(resolve => {
+			let scroll = false,
+				scrollTimer = null;
+			function scrollDetect () {
+				scroll = true;
+				clearTimeout(scrollTimer);
+				scrollTimer = setTimeout(() => scrollEnd(), 25);
+			}
+			function scrollEnd () {
+				obj.removeEventListener("scroll", scrollDetect);
+				resolve(true);
+			}
+			obj.addEventListener("scroll", scrollDetect);
+			setTimeout(() => {
+				if (!scroll) {
+					scrollEnd();
+				}
+			}, 50);
+		});
+	},
 	// sort alpha-numeric
 	sort (a, b) {
 		let x = shared.sortPrep(a),

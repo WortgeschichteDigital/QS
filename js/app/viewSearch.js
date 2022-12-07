@@ -14,8 +14,12 @@ let viewSearch = {
 	worker: null,
 	// regular expressions for the current search
 	data: {
+		// regExp is filled with objects:
+		//   high = regular expression for highlighting the results
+		//   search = regular expression for searching the text
+		//   termN = zero-based term number (in the order as they appear in the results bar)
+		//   text = search text (used for sorting the expressions by length)
 		regExp: [],
-		regExpTags: [], // expression for highlighting printed tags (< or > replaced to &lt; and &gt; respectively)
 		results: [],
 		resultsFiles: new Set(),
 		resultsFilesPrinted: new Set(),
@@ -66,12 +70,12 @@ let viewSearch = {
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
-		const matchesPhrase = text.matchAll(/"(.+?)"/g);
+		const matchesPhrase = text.matchAll(/'(.+?)'|"(.+?)"/g);
 		for (const i of matchesPhrase) {
 			search.push({
-				isInsensitive: !/[A-ZÄÖÜ]/.test(i[1]),
+				isInsensitive: !/[A-ZÄÖÜ]/.test(i[1] || i[2]),
 				isRegExp: false,
-				text: i[1],
+				text: i[1] || i[2],
 			});
 			viewSearch.data.terms.push(i[0]);
 			text = text.replace(i[0], "");
@@ -91,17 +95,25 @@ let viewSearch = {
 		}
 		// create regular expressions
 		viewSearch.data.regExp.length = 0;
-		viewSearch.data.regExpTags.length = 0;
-		for (const i of search) {
-			const text = i.isRegExp ? i.text : shared.escapeRegExp(i.text);
-			const flags = i.isInsensitive ? "gi" : "g";
-			let reg, regTags;
+		for (let i = 0, len = search.length; i < len; i++) {
+			const item = search[i],
+				text = item.isRegExp ? item.text : shared.escapeRegExp(item.text),
+				flags = item.isInsensitive ? "gi" : "g";
+			let reg, regHigh;
 			try {
-				reg = new RegExp(text, flags);
-				if (!viewSearch.data.stripTags && !i.isRegExp) {
-					regTags = new RegExp(text.replace(/</g, "&lt;").replace(/>/g, "&gt;"), flags);
+				reg = new RegExp(addVariants(text), flags);
+				if (!viewSearch.data.stripTags && !item.isRegExp) {
+					let textHigh = "";
+					for (let i = 0, len = text.length; i < len; i++) {
+						if (i > 0 && i < len - 1) {
+							textHigh += "(<[^>]+>)*";
+						}
+						textHigh += text[i];
+					}
+					textHigh = maskSpecialTokens(textHigh);
+					regHigh = new RegExp(addVariants(textHigh), flags);
 				} else {
-					regTags = reg;
+					regHigh = reg;
 				}
 			} catch (err) {
 				await shared.wait(25);
@@ -112,8 +124,38 @@ let viewSearch = {
 				searchText.select();
 				return;
 			}
-			viewSearch.data.regExp.push(reg);
-			viewSearch.data.regExpTags.push(regTags);
+			viewSearch.data.regExp.push({
+				high: regHigh,
+				search: reg,
+				termN: i,
+				text: item.text,
+			});
+		}
+		viewSearch.data.regExp.sort((a, b) => b.text.length - a.text.length);
+		function addVariants (text) {
+			const variants = new Map([
+				[/&(?!([gl]t|quot);)/g, "&amp;"], // no variant
+				[/s/g, "[sſ]"],
+				[/ß/g, "(ß|ss)"],
+				[/ä/g, "(ä|aͤ)"], // use round brackets!
+				[/ö/g, "(ö|oͤ)"],
+				[/ü/g, "(ü|uͤ)"],
+			]);
+			for (const [k, v] of variants) {
+				text = text.replace(k, v);
+			}
+			return text;
+		}
+		function maskSpecialTokens (text) {
+			const variants = new Map([
+				[/"/g, "&quot;"],
+				[/(?<!\()</g, "&lt;"],
+				[/>(?![\])])/g, "&gt;"],
+			]);
+			for (const [k, v] of variants) {
+				text = text.replace(k, v);
+			}
+			return text;
 		}
 		// search XML files
 		window.scrollTo(0, 0);
@@ -166,10 +208,14 @@ let viewSearch = {
 		}
 		// post data to worker
 		const narrowSearch = document.querySelector("#search-narrow");
+		let regExp = [];
+		for (const i of viewSearch.data.regExp) {
+			regExp.push(i.search);
+		}
 		viewSearch.worker.postMessage({
 			filters: dataF,
 			narrowSearch: narrowSearch.checked ? viewSearch.data.resultsFiles : new Set(),
-			regExp: viewSearch.data.regExp,
+			regExp,
 			sameLine: document.querySelector("#search-same-line").checked,
 			scope,
 			stripTags: viewSearch.data.stripTags,
@@ -298,11 +344,11 @@ let viewSearch = {
 			let ele, highlight;
 			if (viewSearch.data.stripTags) {
 				ele = document.createElement("p");
-				highlight = viewSearch.textHighlight(text, viewSearch.data.regExp);
+				highlight = viewSearch.textHighlight(text);
 			} else {
 				ele = document.createElement("code");
 				text = viewSearch.textColorCode(text);
-				highlight = viewSearch.textHighlight(text, viewSearch.data.regExpTags);
+				highlight = viewSearch.textHighlight(text);
 			}
 			div.dataset.matched = highlight.matched.join(",");
 			text = highlight.text;
@@ -350,7 +396,7 @@ let viewSearch = {
 		}
 		// comments
 		// (comments may be incomplete)
-		text = text.replace(/&lt;!--.+?--&gt;/g, m => `<span class="xml-comment">${m}</span>`);
+		text = text.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
 		text = text.replace(/&lt;.+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
 		text = text.replace(/<span class="xml-tag">(.+?)<\/span>/g, (m, p1) => {
 			p1 = p1.replace(/ (.+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
@@ -362,14 +408,46 @@ let viewSearch = {
 	},
 	// highlight search results
 	//   text = string
-	//   reg = array (with expressions)
-	textHighlight (text, reg) {
+	//   regExp = array
+	textHighlight (text, regExp = viewSearch.data.regExp) {
 		let matched = new Set();
-		for (let i = 0, len = reg.length; i < len; i++) {
-			const r = reg[i],
-				color = i % 6 + 1;
-			text = text.replace(r, m => {
-				matched.add(i);
+		for (let i = 0, len = regExp.length; i < len; i++) {
+			const item = regExp[i],
+				reg = viewSearch.data.stripTags ? item.search || item.high : item.high,
+				termN = item.termN,
+				color = termN % 6 + 1;
+			text = text.replace(reg, m => {
+				matched.add(termN);
+				// highlighing across tag boundaries
+				if (/[<>]/.test(m)) {
+					let n = 0;
+					m = m.replace(/<.+?>/g, m => {
+						// if (/^<\//.test(m)) {
+						// 	return `</mark>${m}`;
+						// }
+						n++;
+						return `</mark>${m}<mark class="color${color} ${n}">`;
+					});
+					m = `<mark class="color${color} 0">${m}</mark>`;
+					m = m.replace(/(<\/.+?>)(<\/.+?>)/g, (m, p1, p2) => {
+						if (p2 === "</mark>") {
+							return p1;
+						}
+						return m;
+					});
+					for (let i = 0; i <= n; i++) {
+						const reg = new RegExp(` ${i}"`);
+						if (i === 0) {
+							m = m.replace(reg, ' no-end"');
+						} else if (i === n) {
+							m = m.replace(reg, ' no-start"');
+						} else {
+							m = m.replace(reg, ' no-start no-end"');
+						}
+					}
+					return m;
+				}
+				// no tag boundaries
 				return `<mark class="color${color}">${m}</mark>`;
 			});
 		}
@@ -446,5 +524,6 @@ let viewSearch = {
 		if (!document.querySelector("#search-scope input:checked")) {
 			scope0.checked = true;
 		}
+		viewSearch.toggleAdvancedIcon();
 	},
 };
