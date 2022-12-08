@@ -1,13 +1,6 @@
 "use strict";
 
 let app = {
-	// app info
-	//   appPath = string (path to app root folder)
-	//   documents = string (path to user documents dir)
-	//   temp = string (path to temp dir)
-	//   userData = string (path to config dir)
-	//   winId = integer (window ID)
-	info: {},
 	// app is ready for interaction
 	ready: false,
 	// app is about to switch the view
@@ -15,13 +8,6 @@ let app = {
 	// active view
 	// (value is the same as the ID of the corresponding <section>)
 	view: "xml",
-	// Electron modules
-	ir: require("electron").ipcRenderer,
-	shell: require("electron").shell,
-	// Node.js modules
-	exec: require("child_process").exec,
-	fsp: require("fs").promises,
-	path: require("path"),
 	// clear a text field
 	//   clear = element (the clear icon)
 	clearTextField (clear) {
@@ -49,6 +35,9 @@ let app = {
 			return;
 		}
 		switch (command) {
+			case "app-updates":
+				updates.check(false);
+				break;
 			case "clusters":
 				document.querySelector("#view-clusters").click();
 				break;
@@ -90,8 +79,8 @@ let app = {
 			resources = resources.replace(/node_modules.+/, "") + "resources";
 		}
 		try {
-			const path = app.path.join(resources, xsl);
-			obj[key] = await app.fsp.readFile(path, { encoding: "utf8" });
+			const path = shared.path.join(resources, xsl);
+			obj[key] = await shared.fsp.readFile(path, { encoding: "utf8" });
 			return true;
 		} catch (err) {
 			open.dialog({
@@ -144,7 +133,7 @@ let app = {
 			app.openNotFound();
 			return;
 		}
-		app.ir.invoke("pv", {
+		shared.ir.invoke("pv", {
 			dir: data.dir,
 			file,
 			git: git.config.dir,
@@ -158,8 +147,8 @@ let app = {
 			app.openNotFound();
 			return;
 		}
-		const path = app.path.join(git.config.dir, data.dir, file),
-			result = await app.shell.openPath(path);
+		const path = shared.path.join(git.config.dir, data.dir, file),
+			result = await shared.shell.openPath(path);
 		if (result) {
 			dialog.open({
 				type: "alert",
@@ -184,7 +173,7 @@ let app = {
 		img.src = "img/app/loading.svg";
 		img.width = "96";
 		img.height = "96";
-		img.alg = "";
+		img.alt = "";
 		img.classList.add("rotate");
 		return div;
 	},

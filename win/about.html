@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+
+		<title>QS / Über</title>
+
+		<link rel="stylesheet" href="../css/shared/global.css">
+		<link rel="stylesheet" href="../css/shared/overlay.css">
+		<link rel="stylesheet" href="../css/shared/variables.css">
+
+		<link rel="stylesheet" href="../css/win/about.css">
+
+		<script src="../js/shared/overlay.js"></script>
+		<script src="../js/shared/popup.js"></script>
+		<script src="../js/shared/shared.js"></script>
+
+		<script src="../js/win/about.js"></script>
+		<script src="../js/win/about-init.js"></script>
+	</head>
+	<body>
+		<!-- ABOUT -->
+		<main>
+			<aside
+				><img src="../img/icon/icon.svg" width="144" height="144" alt=""
+			></aside>
+			<h1>Version <span id="version"></span></h1>
+			<p><i>QS</i> ist die Qualitätssicherungs-App von <i>Wortgeschichte digital</i> (<a href="https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/">WGd</a>), dem an der <i>Akademie der Wissenschaften zu Göttingen</i> (<a href="https://adw-goe.de/">AdWG</a>) angesiedelten Teilprojekt des <i>Zentrums für digitale Lexikographie der deutschen Sprache</i> (<a href="https://www.zdl.org/">ZDL</a>). WGd und das ZDL werden gefördert vom <i>Bundesministerium für Bildung und Forschung</i> (<a href="https://www.bmbf.de/">BMBF</a>).</p>
+		</main>
+
+		<!-- LICENSES AND ELECTRON INFO -->
+		<footer>
+			<table>
+				<tr>
+					<!-- #copyright is updated by install/build-release.sh -->
+					<td colspan="2"><i>© <span id="copyright">2022</span>, Akademie der Wissenschaften zu Göttingen</i></td>
+				</tr>
+				<tr class="license">
+					<th>Autor</th>
+					<td><a href="https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/mitarbeiterinnen-und-mitarbeiter/nico-dorn/">Nico Dorn</a> &lt;<a href="#" id="mail"></a>&gt;</td>
+				</tr>
+				<tr>
+					<th>Lizenz</th>
+					<td>GNU General Public License v3.0 (<a href="https://www.gnu.org/licenses/gpl-3.0.en.html">Lizenzbedingungen</a>)</td>
+				</tr>
+				<tr>
+					<th>Repository</th>
+					<td><a href="https://github.com/WortgeschichteDigital/QS">https://github.com/WortgeschichteDigital/QS</a></td>
+				</tr>
+				<tr class="license">
+					<th>Framework</th>
+					<td>Electron (<a href="https://electronjs.org/">Projektseite</a>)</td>
+				</tr>
+				<tr>
+					<th>Lizenz</th>
+					<td>MIT (<a href="https://github.com/electron/electron/blob/master/LICENSE">Lizenzbedingungen</a>)</td>
+				</tr>
+				<tr>
+					<th>Versionen</th>
+					<td
+						><span class="version">Electron</span><span id="version-electron"></span><br
+						><span class="version">Node.js</span><span id="version-node"></span><br
+						><span class="version">Chromium</span><span id="version-chrome"></span><br
+						><span class="version">V8</span><span id="version-v8"></span><br
+					></td>
+				</tr>
+				<tr class="license">
+					<th>Fonts</th>
+					<td>Noto Sans, Noto Sans Mono und Noto Serif (<a href="https://www.google.com/get/noto/">Projektseite</a>)</td>
+				</tr>
+				<tr>
+					<th>Lizenz</th>
+					<td>SIL Open Font License v1.1 (<a href="https://scripts.sil.org/cms/scripts/page.php?id=OFL">Lizenzbedingungen</a>)</td>
+				</tr>
+				<tr class="license">
+					<th>Icons</th>
+					<td>Papirus Icon Theme (<a href="https://github.com/PapirusDevelopmentTeam/papirus-icon-theme">Projektseite</a>)</td>
+				</tr>
+				<tr>
+					<th>Lizenz</th>
+					<td>GNU General Public License v3.0 (<a href="https://www.gnu.org/licenses/gpl-3.0.en.html">Lizenzbedingungen</a>)</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Die <i>Papirus</i>-Icons wurden alle leicht verändert. Daneben gibt es eigens für <i>QS</i> erstellte Icons, die ebenfalls unter der GNU General Public License v3.0 stehen.</td>
+				</tr>
+			</table>
+		</footer>
+
+		<!-- OVERLAY: LOADING -->
+		<div id="loading" class="overlay"
+			><img src="../img/icon/icon.svg" width="96" height="96" alt=""
+		></div>
+	</body>
+</html>

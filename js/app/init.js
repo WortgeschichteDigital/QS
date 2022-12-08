@@ -1,6 +1,9 @@
 "use strict";
 
 window.addEventListener("load", async () => {
+	// RIGHT CLICK
+	window.addEventListener("contextmenu", evt => popup.open(evt));
+
 	// KEYBOARD EVENTS
 	document.addEventListener("keydown", keyboard.shortcuts);
 	let sortingFilterTimeout = null;
@@ -157,22 +160,24 @@ window.addEventListener("load", async () => {
 	});
 
 	// LISTEN TO IPC MESSAGES
-	app.ir.on("menu-clusters", () => app.menuCommand("clusters"));
-	app.ir.on("menu-filters", () => app.menuCommand("filters"));
-	app.ir.on("menu-hints", () => app.menuCommand("hints"));
-	app.ir.on("menu-preferences", () => app.menuCommand("preferences"));
-	app.ir.on("menu-search", () => app.menuCommand("search"));
-	app.ir.on("menu-teaser-tags", () => app.menuCommand("teaser-tags"));
-	app.ir.on("menu-update", () => app.menuCommand("update"));
-	app.ir.on("menu-xml", () => app.menuCommand("xml"));
-	app.ir.on("save-prefs", () => prefs.save());
+	shared.ir.on("menu-app-updates", () => app.menuCommand("app-updates"));
+	shared.ir.on("menu-clusters", () => app.menuCommand("clusters"));
+	shared.ir.on("menu-filters", () => app.menuCommand("filters"));
+	shared.ir.on("menu-hints", () => app.menuCommand("hints"));
+	shared.ir.on("menu-preferences", () => app.menuCommand("preferences"));
+	shared.ir.on("menu-search", () => app.menuCommand("search"));
+	shared.ir.on("menu-teaser-tags", () => app.menuCommand("teaser-tags"));
+	shared.ir.on("menu-update", () => app.menuCommand("update"));
+	shared.ir.on("menu-xml", () => app.menuCommand("xml"));
+	shared.ir.on("save-prefs", () => prefs.save());
+	shared.ir.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
 
 	// GET APP INFO
-	app.info = await app.ir.invoke("app-info");
+	shared.info = await shared.ir.invoke("app-info");
 
 	// PRELOAD IMAGES
 	let imagesPreload = [],
-		images = await app.ir.invoke("list-of-images");
+		images = await shared.ir.invoke("list-of-images");
 	for (const i of images) {
 		let img = new Image();
 		img.src = "img/app/" + i;
@@ -193,4 +198,10 @@ window.addEventListener("load", async () => {
 	document.body.classList.add("scrollable");
 	overlay.hide("loading");
 	app.ready = true;
+
+	// SEARCH FOR UPDATES
+	const today = new Date().toISOString().split("T")[0];
+	if (today !== prefs.data.updateCheck) {
+		updates.timeout = setTimeout(() => updates.check(true), 15e3);
+	}
 });

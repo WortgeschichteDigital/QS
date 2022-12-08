@@ -1,0 +1,89 @@
+@charset "utf-8";
+
+/* MAIN ----------------------------------------- */
+
+main > *:not(aside) {
+	margin-left: 184px;
+}
+
+a {
+	color: var(--textLink);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a:focus,
+a:hover {
+	text-decoration: underline;
+}
+
+aside {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+h1 {
+	margin-top: 30px;
+	margin-bottom: 30px;
+	color: var(--textColor);
+	font-size: 1.5rem;
+	font-style: italic;
+	font-weight: normal;
+	line-height: 2.25rem;
+}
+
+p {
+	margin-bottom: 20px;
+}
+
+
+/* FOOTER --------------------------------------- */
+
+footer {
+	padding: 20px;
+	background-color: var(--bgBlue);
+	color: #fff;
+}
+
+footer a {
+	color: #fff;
+	text-decoration: underline;
+}
+
+footer a:focus,
+footer a:hover {
+	text-decoration: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.version {
+	display: inline-block;
+	width: 115px;
+	font-style: italic;
+}
+
+th {
+	vertical-align: top;
+	padding: 0 5px 0 0;
+	font-style: italic;
+	font-weight: normal;
+	text-align: left;
+}
+
+td {
+	padding: 0 0 0 5px;
+}
+
+tr:first-child td {
+	padding: 0;
+}
+
+tr.license th,
+tr.license td {
+	padding-top: 30px;
+}

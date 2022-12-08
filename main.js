@@ -11,7 +11,8 @@ const fsp = require("fs").promises,
 	path = require("path");
 
 // costum modules
-const services = require("./js/main/services"),
+const popup = require("./js/main/popup"),
+	services = require("./js/main/services"),
 	xml = require("./js/main/xml");
 
 
@@ -60,7 +61,7 @@ let menuApp = [
 			{
 				label: "Beenden",
 				icon: path.join(__dirname, "img", "main", "exit.png"),
-				click: () => win.closeAll(),
+				click: () => win.closeAll([]),
 				accelerator: "CommandOrControl+Q",
 			},
 		],
@@ -239,7 +240,7 @@ let menuHelp = [
 			{ type: "separator" },
 			{
 				label: "Updates",
-				// click: () => win.bw.webContents.send("show-handbook"),
+				click: () => winMenu.execute("app-updates"),
 			},
 			{
 				label: "Fehlerlog",
@@ -249,7 +250,7 @@ let menuHelp = [
 			{
 				label: "Über QS",
 				icon: path.join(__dirname, "img", "main", "info.png"),
-				// click: () => win.bw.webContents.send("show-handbook"),
+				click: () => win.about(),
 			},
 		],
 	},
@@ -279,7 +280,9 @@ let winMenu = {
 	set (bw, type) {
 		// build window specific app menu
 		let menu = [];
-		if (type === "app") {
+		if (type === "about") {
+			menu = menuWin;
+		} else if (type === "app") {
 			for (const i of [menuApp, menuAll, menuHelp]) {
 				menu = menu.concat(i);
 			}
@@ -387,8 +390,8 @@ let win = {
 		function defaults () {
 			if (type === "about") {
 				return {
-					width: 700,
-					height: 250,
+					width: 750,
+					height: 400,
 				};
 			} else {
 				return {
@@ -425,7 +428,19 @@ let win = {
 				spellcheck: false,
 			},
 		};
-		if (type === "pv") {
+		if (type === "about") {
+			bwOptions.parent = win.open.find(i => i.type === "app").bw;
+			bwOptions.modal = true;
+			bwOptions.center = true;
+			bwOptions.resizable = false;
+			bwOptions.minimizable = false;
+			bwOptions.maximizable = false;
+			// determine how the height of the window should be calculated
+			// (Linux works different in this respect)
+			if (/darwin|win32/.test(process.platform)) {
+				bwOptions.webPreferences.useContentSize = true;
+			}
+		} else if (type === "pv") {
 			// if this is the n-th preview window => let the system decide how to place it
 			const pvWin = win.open.filter(i => i.type === "pv");
 			if (pvWin.length > 0) {
@@ -501,13 +516,15 @@ let win = {
 				return;
 			}
 			// save window size and state
-			const data = prefs.data.win[type],
-				bounds = win.open[idx].bw.getBounds();
-			data.x = bounds.x;
-			data.y = bounds.y;
-			data.width = bounds.width;
-			data.height = bounds.height;
-			data.maximized = win.open[idx].bw.isMaximized();
+			if (type !== "about") {
+				const data = prefs.data.win[type],
+					bounds = win.open[idx].bw.getBounds();
+				data.x = bounds.x;
+				data.y = bounds.y;
+				data.width = bounds.width;
+				data.height = bounds.height;
+				data.maximized = win.open[idx].bw.isMaximized();
+			}
 			// dereference window
 			win.open.splice(idx, 1);
 		});
@@ -578,23 +595,36 @@ let win = {
 		win.closeAll(exclude);
 	},
 	// send data to preview window
+	//   bw = object (browser window)
+	//   args = object (see win.pvOpen())
 	async pvSend (bw, args) {
 		// get XML file
 		const xmlPath = path.join(args.git, args.dir, args.file),
 			exists = await services.exists(xmlPath);
-		if (!exists) {
-			return;
-		}
-		const contents = await xml.getFile(xmlPath);
-		if (!contents) {
-			return;
+		args.xml = "";
+		if (exists) {
+			const xmlFiles = await xml.getFile(args.git, args.dir, args.file);
+			if (xmlFiles[args.file]) {
+				args.xml = xmlFiles[args.file].xml;
+				// update file data in main window
+				const appWin = win.open.find(i => i.type === "app");
+				appWin.bw.webContents.send("update-file", xmlFiles);
+			}
 		}
 		// send data
-		args.xml = contents;
 		bw.webContents.send("update", args);
 		// focus window
 		// (this is important in case the window already exists)
 		bw.focus();
+	},
+	// open or focus about window
+	about () {
+		const about = win.open.find(i => i.type === "about");
+		if (about) {
+			about.bw.focus();
+		} else {
+			win.create("about");
+		}
 	},
 };
 
@@ -654,8 +684,10 @@ ipcMain.handle("app-info", evt => {
 	return {
 		appPath: app.getAppPath(),
 		documents: app.getPath("documents"),
+		packaged: app.isPackaged,
 		temp: app.getPath("temp"),
 		userData: app.getPath("userData"),
+		version: app.getVersion(),
 		winId: bw.id,
 	};
 });
@@ -675,6 +707,8 @@ ipcMain.handle("git-save", (evt, config) => {
 });
 
 ipcMain.handle("list-of-images", async () => await services.svg());
+
+ipcMain.handle("popup", (evt, items) => popup.make(evt.sender, items));
 
 ipcMain.handle("prefs", () => prefs.data.options);
 

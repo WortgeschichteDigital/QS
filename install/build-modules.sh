@@ -6,6 +6,10 @@ modules=(
 	"electron-packager"
 )
 
+if [ "$1" != "inc" ]; then
+	echo -e "\n\033[48;5;21;38;5;255m Q S   -   M o d u l e s \033[0m\n"
+fi
+
 # script directory
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 

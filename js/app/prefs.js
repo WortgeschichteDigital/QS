@@ -5,7 +5,7 @@ let prefs = {
 	data: {},
 	// initialize preferences
 	async init () {
-		prefs.data = await app.ir.invoke("prefs");
+		prefs.data = await shared.ir.invoke("prefs");
 		for (const [k, v] of Object.entries(prefs.data)) {
 			// option not within the preferences overlay
 			if (k === "filters") {
@@ -78,7 +78,7 @@ let prefs = {
 		// fill in search data
 		prefs.data.search = viewSearch.getAdvancedData();
 		// save preferences
-		app.ir.invoke("prefs-save", prefs.data);
+		shared.ir.invoke("prefs-save", prefs.data);
 	},
 	// change section
 	//   a = element (toc item)
@@ -123,7 +123,7 @@ let prefs = {
 	async zeitstrahlOpen () {
 		const options = {
 			title: "Zeitstrahldatei auswählen",
-			defaultPath: app.info.documents,
+			defaultPath: shared.info.documents,
 			filters: [
 				{
 					name: "JSON",
@@ -134,7 +134,7 @@ let prefs = {
 				"openFile",
 			],
 		};
-		const result = await app.ir.invoke("file-dialog", true, options);
+		const result = await shared.ir.invoke("file-dialog", true, options);
 		if (result.canceld || !result?.filePaths?.length) {
 			return;
 		}
@@ -153,7 +153,7 @@ let prefs = {
 	async zeitstrahlRead (path, passive = true) {
 		let content;
 		try {
-			content = await app.fsp.readFile(path, { encoding: "utf8" });
+			content = await shared.fsp.readFile(path, { encoding: "utf8" });
 		} catch {
 			return false;
 		}

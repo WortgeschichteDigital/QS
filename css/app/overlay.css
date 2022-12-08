@@ -130,6 +130,10 @@
 	text-decoration: none;
 }
 
+#tags h1 a {
+	margin-right: 0;
+}
+
 #tags a.active {
 	font-weight: bold;
 }

@@ -19,14 +19,14 @@ let viewSearch = {
 		//   search = regular expression for searching the text
 		//   termN = zero-based term number (in the order as they appear in the results bar)
 		//   text = search text (used for sorting the expressions by length)
+		//   textOri = search term as it was typed
 		regExp: [],
 		results: [],
 		resultsFiles: new Set(),
 		resultsFilesPrinted: new Set(),
-		running: false, // start of a new search is blocked
+		running: false, // starting of a new search is blocked
 		searching: false, // determines whether the worker has finished or not
 		stripTags: false,
-		terms: [], // search terms as they were typed
 	},
 	// start search
 	async start () {
@@ -42,7 +42,8 @@ let viewSearch = {
 		viewSearch.data.running = true;
 		await xml.updateWait();
 		// split up search term
-		let text = searchText.value.trim();
+		let textOri = searchText.value.trim(),
+			text = textOri;
 		if (!text) {
 			await shared.wait(25);
 			await dialog.open({
@@ -57,7 +58,6 @@ let viewSearch = {
 		} else {
 			viewSearch.data.stripTags = !/[<>]/.test(text);
 		}
-		viewSearch.data.terms.length = 0;
 		let search = [];
 		const matchesRegExp = text.matchAll(/\/(.+?)\/(i)?/g);
 		for (const i of matchesRegExp) {
@@ -65,8 +65,9 @@ let viewSearch = {
 				isInsensitive: i[2] ? true : false,
 				isRegExp: true,
 				text: i[1].replace(/\((?!\?)/g, () => "(?:"),
+				textOri: i[0],
+				textOriIdx: -1,
 			});
-			viewSearch.data.terms.push(i[0]);
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
@@ -76,8 +77,9 @@ let viewSearch = {
 				isInsensitive: !/[A-ZÄÖÜ]/.test(i[1] || i[2]),
 				isRegExp: false,
 				text: i[1] || i[2],
+				textOri: i[0],
+				textOriIdx: -1,
 			});
-			viewSearch.data.terms.push(i[0]);
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
@@ -86,13 +88,21 @@ let viewSearch = {
 			if (!i) {
 				continue;
 			}
-			viewSearch.data.terms.push(i);
 			search.push({
 				isInsensitive: !/[A-ZÄÖÜ]/.test(i),
 				isRegExp: false,
 				text: i,
+				textOri: i,
+				textOriIdx: -1,
 			});
 		}
+		// sort search terms by position in the search expression
+		for (const i of search) {
+			const reg = new RegExp(shared.escapeRegExp(i.textOri), "g"),
+				match = reg.exec(textOri);
+			i.textOriIdx = match.index;
+		}
+		search.sort((a, b) => a.textOriIdx - b.textOriIdx);
 		// create regular expressions
 		viewSearch.data.regExp.length = 0;
 		for (let i = 0, len = search.length; i < len; i++) {
@@ -129,6 +139,7 @@ let viewSearch = {
 				search: reg,
 				termN: i,
 				text: item.text,
+				textOri: item.textOri,
 			});
 		}
 		viewSearch.data.regExp.sort((a, b) => b.text.length - a.text.length);

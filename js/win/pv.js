@@ -1,17 +1,6 @@
 "use strict";
 
 let pv = {
-	// app info
-	//   appPath = string (path to app root folder)
-	//   documents = string (path to user documents dir)
-	//   temp = string (path to temp dir)
-	//   userData = string (path to config dir)
-	//   winId = integer (window ID)
-	info: {},
-	// Electron modules
-	ir: require("electron").ipcRenderer,
-	// Node.js modules
-	path: require("path"),
 	// received XML data
 	//   dir = string (articles | ignore)
 	//   file = string (XML file name)
@@ -20,6 +9,10 @@ let pv = {
 	data: {},
 	// show XML preview on zdl.org
 	xml () {
+		if (!pv.data.xml) {
+			pv.xmlNotFound();
+			return;
+		}
 		const wv = document.querySelector("webview");
 		wv.loadURL("https://www.zdl.org/wb/wortgeschichten/pv", {
 			postData: [{
@@ -28,12 +21,12 @@ let pv = {
 			}],
 			extraHeaders: "Content-Type: application/x-www-form-urlencoded; charset=UTF-8",
 		})
-			.then(() => loadingDone())
+			.then(() => pv.loadingDone(wv))
 			.catch(err => {
 				wv.stop();
-				wv.loadURL("file://" + pv.path.join(pv.info.appPath, "win", "pv-error.html"))
+				wv.loadURL("file://" + shared.path.join(shared.info.appPath, "win", "pv-error.html"))
 					.then(() => {
-						loadingDone();
+						pv.loadingDone(wv);
 						wv.executeJavaScript(`
 							let label = document.createElement("p");
 							label.classList.add("label");
@@ -46,14 +39,37 @@ let pv = {
 					})
 					.catch(() => {
 						wv.stop();
-						loadingDone();
+						pv.loadingDone(wv);
 					});
 			});
-		function loadingDone () {
-			document.querySelector("#update img").classList.remove("rotate");
-			wv.clearHistory();
-			pv.updateIcons();
-		}
+	},
+	// show error document if XML file was not found (anymore)
+	xmlNotFound () {
+		const wv = document.querySelector("webview");
+		wv.loadURL("file://" + shared.path.join(shared.info.appPath, "win", "pv-error.html"))
+			.then(() => {
+				pv.loadingDone(wv);
+				wv.executeJavaScript(`
+					let label = document.createElement("p");
+					label.classList.add("label");
+					label.textContent = "Fehlermeldung";
+					document.body.appendChild(label);
+					let err = document.createElement("p");
+					err.innerHTML = "Die Daten aus der Datei „${pv.data.file}“ konnten nicht geladen werden.";
+					document.body.appendChild(err);
+				`);
+			})
+			.catch(() => {
+				wv.stop();
+				pv.loadingDone(wv);
+			});
+	},
+	// finish up the loading procedure
+	//   wv = element (<webview>)
+	loadingDone (wv) {
+		document.querySelector("#update img").classList.remove("rotate");
+		wv.clearHistory();
+		pv.updateIcons();
 	},
 	// update the navigation icons
 	updateIcons () {
@@ -71,20 +87,20 @@ let pv = {
 	// request an updated XML file
 	updateXml () {
 		document.querySelector("#update img").classList.add("rotate");
-		pv.ir.invoke("pv", {
+		shared.ir.invoke("pv", {
 			dir: pv.data.dir,
 			file: pv.data.file,
 			git: pv.data.git,
-			winId: pv.info.winId,
+			winId: shared.info.winId,
 		});
 	},
 	// open the same article in another window
 	newWin () {
-		pv.ir.invoke("pv-new", {
+		shared.ir.invoke("pv-new", {
 			dir: pv.data.dir,
 			file: pv.data.file,
 			git: pv.data.git,
-			winId: pv.info.winId,
+			winId: shared.info.winId,
 		});
 	},
 	// navigation

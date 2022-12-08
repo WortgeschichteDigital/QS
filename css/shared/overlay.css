@@ -107,6 +107,12 @@
 	margin-right: 30px;
 }
 
+#dialog-text .update {
+	display: inline-block;
+	width: 95px;
+	font-style: italic;
+}
+
 #dialog.code > div {
 	width: 700px;
 }

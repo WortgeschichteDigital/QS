@@ -11,7 +11,7 @@ let git = {
 	// check Git config
 	async configCheck () {
 		// get config data
-		git.config = await app.ir.invoke("git-config");
+		git.config = await shared.ir.invoke("git-config");
 		// check config
 		const dirOkay = await git.dirCheck(git.config.dir);
 		if (!dirOkay[0] || !git.config.user) {
@@ -89,12 +89,12 @@ let git = {
 		}
 		// close all preview windows if dir is about to be changed
 		if (git.config.dir !== dir) {
-			app.ir.invoke("pv-close-all");
+			shared.ir.invoke("pv-close-all");
 		}
 		// save config data in prefs file
 		git.config.user = user;
 		git.config.dir = dir;
-		app.ir.invoke("git-save", git.config);
+		shared.ir.invoke("git-save", git.config);
 		// fill in preferences
 		git.fillPrefs();
 		// close window
@@ -104,12 +104,12 @@ let git = {
 	async dirSelect () {
 		const options = {
 			title: "Repository auswählen",
-			defaultPath: app.info.documents,
+			defaultPath: shared.info.documents,
 			properties: [
 				"openDirectory",
 			],
 		};
-		const result = await app.ir.invoke("file-dialog", true, options);
+		const result = await shared.ir.invoke("file-dialog", true, options);
 		if (result.canceld || !result?.filePaths?.length) {
 			return;
 		}
@@ -128,7 +128,7 @@ let git = {
 			ignore: false,
 		};
 		try {
-			const files = await app.fsp.readdir(dir);
+			const files = await shared.fsp.readdir(dir);
 			for (const f of files) {
 				structure[f] = true;
 			}
@@ -340,7 +340,7 @@ let git = {
 			const options = {
 				windowsHide: true,
 			};
-			app.exec(command, options, (err, stdout, stderr) => {
+			shared.exec(command, options, (err, stdout, stderr) => {
 				if (err) {
 					resolve([err.code, stderr.trim()]);
 				} else {

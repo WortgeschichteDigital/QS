@@ -1,6 +1,25 @@
 "use strict";
 
 let shared = {
+	// app info
+	//   appPath = string (path to app root folder)
+	//   documents = string (path to user documents dir)
+	//   packaged = boolean (app is packaged)
+	//   temp = string (path to temp dir)
+	//   userData = string (path to config dir)
+	//   version = string (app version)
+	//   winId = integer (window ID)
+	info: {},
+	// Electron modules
+	// (this file is also included in workers, but in that context,
+	// require() isn't available => test whether window exists)
+	clipboard: typeof window !== "undefined" ? require("electron").clipboard : null,
+	ir: typeof window !== "undefined" ? require("electron").ipcRenderer : null,
+	shell: typeof window !== "undefined" ? require("electron").shell : null,
+	// Node.js modules
+	exec: typeof window !== "undefined" ? require("child_process").exec : null,
+	fsp: typeof window !== "undefined" ? require("fs").promises : null,
+	path: typeof window !== "undefined" ? require("path") : null,
 	// erase all children within the given element
 	//   ele = element
 	clear (ele) {
@@ -48,6 +67,18 @@ let shared = {
 	// escape special RegExp tokens
 	escapeRegExp (text) {
 		return text.replace(/\/|\(|\)|\[|\]|\{|\}|\.|\?|\\|\+|\*|\^|\$|\|/g, m => `\\${m}`);
+	},
+	// open links in external program
+	externalLinks () {
+		document.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
+			i.addEventListener("click", function(evt) {
+				evt.preventDefault();
+				if (evt.detail > 1) { // no double-clicks
+					return;
+				}
+				shared.shell.openExternal(this.getAttribute("href"));
+			});
+		});
 	},
 	// show passive feedback
 	//   type = string

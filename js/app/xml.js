@@ -348,8 +348,8 @@ let xml = {
 	async loadCache () {
 		let json;
 		try {
-			const path = app.path.join(app.info.userData, `xml-cache-${xml.data.branch}.json`);
-			json = JSON.parse(await app.fsp.readFile(path, { encoding: "utf8" }));
+			const path = shared.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
+			json = JSON.parse(await shared.fsp.readFile(path, { encoding: "utf8" }));
 		} catch {
 			// the cache file might not exist yet
 			return;
@@ -358,9 +358,9 @@ let xml = {
 	},
 	// write cache file
 	async writeCache () {
-		const path = app.path.join(app.info.userData, `xml-cache-${xml.data.branch}.json`);
+		const path = shared.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
 		try {
-			await app.fsp.writeFile(path, JSON.stringify(xml.data));
+			await shared.fsp.writeFile(path, JSON.stringify(xml.data));
 		} catch (err) {
 			dialog.open({
 				type: "alert",
@@ -375,13 +375,13 @@ let xml = {
 		xml.updating = true;
 		// remove cache files
 		for (const branch of ["master", "preprint"]) {
-			const path = app.path.join(app.info.userData, `xml-cache-${branch}.json`),
-				exists = await app.ir.invoke("exists", path);
+			const path = shared.path.join(shared.info.userData, `xml-cache-${branch}.json`),
+				exists = await shared.ir.invoke("exists", path);
 			if (!exists) {
 				continue;
 			}
 			try {
-				await app.fsp.unlink(path);
+				await shared.fsp.unlink(path);
 			} catch {}
 		}
 		// reset variables
@@ -397,7 +397,8 @@ let xml = {
 		}
 	},
 	// execute update operation
-	async update () {
+	//   xmlFiles = object | undefined (filled in case a file is requested by a preview window)
+	async update (xmlFiles = null) {
 		xml.updating = true;
 		const update = document.querySelector("#fun-update");
 		if (update.classList.contains("active")) {
@@ -415,7 +416,7 @@ let xml = {
 			await xml.loadCache();
 		}
 		// get XML files
-		let files = await app.ir.invoke("xml-files", git.config.dir),
+		let files = xmlFiles || await shared.ir.invoke("xml-files", git.config.dir),
 			updated = [];
 		for (const [k, v] of Object.entries(files)) {
 			// save file content
@@ -434,12 +435,14 @@ let xml = {
 		}
 		// remove files that don't exist anymore from data objects
 		let removedFiles = false; // some files were removed => update all hints
-		for (const file of Object.keys(xml.data.files)) {
-			if (!files[file]) {
-				removedFiles = true;
-				delete xml.data.files[file];
-				if (xml.files[file]) {
-					delete xml.files[file];
+		if (!xmlFiles) { // don't remove any file in case only some files were received
+			for (const file of Object.keys(xml.data.files)) {
+				if (!files[file]) {
+					removedFiles = true;
+					delete xml.data.files[file];
+					if (xml.files[file]) {
+						delete xml.files[file];
+					}
 				}
 			}
 		}

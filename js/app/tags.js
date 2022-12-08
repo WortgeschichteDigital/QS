@@ -124,7 +124,7 @@ let tags = {
 		navCont.firstChild.click();
 	},
 	// resources/wortgeschichten-teaser-xml.xsl
-	showSummaryXslt: "",
+	showSummaryXsl: "",
 	// display a summary (Kurz gefasst)
 	//   ele = element
 	async showSummary (ele) {
@@ -153,7 +153,7 @@ let tags = {
 		// load XSL (if needed)
 		const result = await app.loadXsl({
 			obj: tags,
-			key: "showSummaryXslt",
+			key: "showSummaryXsl",
 			xsl: "wortgeschichten-teaser-xml.xsl",
 		});
 		if (!result) {
@@ -162,7 +162,7 @@ let tags = {
 		// extract summary (Kurz gefasst)
 		const file = ele.getAttribute("href").substring(1),
 			doc = new DOMParser().parseFromString(xml.files[file], "text/xml"),
-			xslt = new DOMParser().parseFromString(tags.showSummaryXslt, "application/xml"),
+			xslt = new DOMParser().parseFromString(tags.showSummaryXsl, "application/xml"),
 			processor = new XSLTProcessor();
 		processor.importStylesheet(xslt);
 		const processedDoc = processor.transformToDocument(doc);

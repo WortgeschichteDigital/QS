@@ -126,19 +126,19 @@ let bars = {
 		let queries = document.querySelector("#results-queries");
 		queries.classList.remove("off");
 		shared.clear(queries);
-		viewSearch.data.terms.forEach((i, n) => {
+		for (let i = 0, len = viewSearch.data.regExp.length; i < len; i++) {
 			let a = document.createElement("a");
 			queries.appendChild(a);
-			a.href = "#" + n;
+			a.href = "#" + i;
 			let mark = document.createElement("mark");
 			a.appendChild(mark);
-			mark.textContent = i;
-			mark.classList.add(`color${n % 6 + 1}`);
+			mark.textContent = viewSearch.data.regExp.find(item => item.termN === i).textOri;
+			mark.classList.add(`color${i % 6 + 1}`);
 			a.addEventListener("click", function(evt) {
 				evt.preventDefault();
 				bars.resultsSearchNextQuery(this);
 			});
-		});
+		}
 		// fill in xml files
 		let files = document.querySelector("#results-files");
 		files.classList.remove("off");
