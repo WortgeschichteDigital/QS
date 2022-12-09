@@ -26,6 +26,7 @@
 
 		<script src="js/app/app.js"></script>
 		<script src="js/app/bars.js"></script>
+		<script src="js/app/error.js"></script>
 		<script src="js/app/git.js"></script>
 		<script src="js/app/keyboard.js"></script>
 		<script src="js/app/prefs.js"></script>
@@ -232,15 +233,31 @@
 			</div>
 		</div>
 
+		<!-- OVERLAY: ERROR LOG -->
+		<div id="error" class="overlay hide off">
+			<div>
+				<h1>Fehlerlog<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/app/close-white.svg" width="30" height="30" alt="x"></a></h1>
+				<div id="error-functions"
+					><a href="#" id="error-open" class="icon" title="Fehlerlog öffnen"
+						><img src="img/app/open-file.svg" width="30" height="30" alt=""
+					></a
+					><a href="#" id="error-delete" class="icon" title="Fehlerlog löschen"
+						><img src="img/app/delete.svg" width="30" height="30" alt=""
+					></a
+				></div>
+				<pre></pre>
+			</div>
+		</div>
+
 		<!-- OVERLAY: PREFERENCES -->
 		<div id="prefs" class="overlay hide off">
 			<div>
 				<h1>Einstellungen<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/app/close-white.svg" width="30" height="30" alt="x"></a></h1>
 				<div>
-					<ul>
-						<li><a href="#data" class="active">Datendateien</a></li>
-						<li><a href="#git">Git</a></li>
-					</ul>
+					<ul
+						><li><a href="#data" class="active">Datendateien</a></li
+						><li><a href="#git">Git</a></li
+					></ul>
 					<div>
 						<!-- Datendateien -->
 						<div id="prefs-data" class="prefs-section">

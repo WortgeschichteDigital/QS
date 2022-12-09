@@ -6,6 +6,7 @@ let search = {
 	// all data necessary to the analysis
 	//   filters = object (filter bar filters)
 	//   regExp = array (search expressions)
+	//   results = array (added and filled by this worker; this will eventually be posted)
 	//   scope = array (scope to which the search shall be limited)
 	//   stripTags = boolean (don't search within tags)
 	//   xmlData = object (same as xml.data.files)

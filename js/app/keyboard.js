@@ -59,8 +59,7 @@ let keyboard = {
 		} else if (m === "Alt" && /^Arrow(Left|Right)$/.test(evt.key)) {
 			app.toggleViewShortcut(evt.key === "ArrowRight");
 		} else if (m === "Ctrl" && /^Arrow(Left|Right)$/.test(evt.key)) {
-			const olTop = overlay.top();
-			if (olTop === "tags") {
+			if (overlay.top() === "tags") {
 				evt.preventDefault();
 				const nav = document.querySelectorAll("#tags-nav > a");
 				if (!nav[0].parentNode.classList.contains("off")) {
@@ -70,6 +69,11 @@ let keyboard = {
 						nav[1].click();
 					}
 				}
+			}
+		} else if (m === "Ctrl" && /^Arrow(Down|Up)$/.test(evt.key)) {
+			if (overlay.top() === "prefs") {
+				evt.preventDefault();
+				shared.verticalNav(document.querySelector("#prefs ul"), evt.key === "ArrowUp");
 			}
 		}
 		// PageDown + PageUp

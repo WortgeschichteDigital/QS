@@ -1,6 +1,9 @@
 "use strict";
 
 window.addEventListener("load", async () => {
+	// RIGHT CLICK
+	window.addEventListener("contextmenu", evt => popup.open(evt));
+
 	// WINDOW EVENTS
 	let winEventsTimeout = null;
 	window.addEventListener("resize", () => {
@@ -36,19 +39,19 @@ window.addEventListener("load", async () => {
 	});
 
 	// LISTEN TO IPC MESSAGES
-	shared.ir.on("menu-nav-back", () => pv.nav("back"));
-	shared.ir.on("menu-nav-forward", () => pv.nav("forward"));
-	shared.ir.on("menu-nav-xml", () => pv.nav("xml"));
-	shared.ir.on("menu-new", () => pv.nav("new"));
-	shared.ir.on("menu-update", () => pv.nav("update"));
-	shared.ir.on("update", (evt, args) => {
+	shared.ipc.on("menu-nav-back", () => pv.nav("back"));
+	shared.ipc.on("menu-nav-forward", () => pv.nav("forward"));
+	shared.ipc.on("menu-nav-xml", () => pv.nav("xml"));
+	shared.ipc.on("menu-new", () => pv.nav("new"));
+	shared.ipc.on("menu-update", () => pv.nav("update"));
+	shared.ipc.on("update", (evt, args) => {
 		pv.data = args;
 		document.title = `QS / ${pv.data.file}`;
 		pv.xml();
 	});
 
 	// GET APP INFO
-	shared.info = await shared.ir.invoke("app-info");
+	shared.info = await shared.ipc.invoke("app-info");
 
 	// INITIALIZE WINDOW
 	shared.keyboardMacOS();
@@ -56,3 +59,6 @@ window.addEventListener("load", async () => {
 	await shared.wait(250);
 	overlay.hide("loading");
 });
+
+window.addEventListener("error", evt => shared.onError(evt));
+window.addEventListener("unhandledrejection", evt => shared.onError(evt));

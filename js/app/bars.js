@@ -139,7 +139,7 @@ let bars = {
 				bars.resultsSearchNextQuery(this);
 			});
 		}
-		// fill in xml files
+		// fill in XML files
 		let files = document.querySelector("#results-files");
 		files.classList.remove("off");
 		shared.clear(files);
@@ -229,7 +229,7 @@ let bars = {
 		}, { once: true });
 		nextMatch.classList.add("highlight");
 	},
-	// search matches for the given query
+	// results: search matches for the given query
 	//   query = string (zero-based number of the query)
 	resultsSearchNextQueryMatches (query) {
 		let reg = new RegExp(`(^|,)${query}(,|$)`),

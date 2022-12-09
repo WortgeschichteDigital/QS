@@ -87,7 +87,7 @@ let pv = {
 	// request an updated XML file
 	updateXml () {
 		document.querySelector("#update img").classList.add("rotate");
-		shared.ir.invoke("pv", {
+		shared.ipc.invoke("pv", {
 			dir: pv.data.dir,
 			file: pv.data.file,
 			git: pv.data.git,
@@ -96,7 +96,7 @@ let pv = {
 	},
 	// open the same article in another window
 	newWin () {
-		shared.ir.invoke("pv-new", {
+		shared.ipc.invoke("pv-new", {
 			dir: pv.data.dir,
 			file: pv.data.file,
 			git: pv.data.git,

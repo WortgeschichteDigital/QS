@@ -1,0 +1,49 @@
+@charset "utf-8";
+
+/* FRAME ---------------------------------------- */
+
+main {
+	display: grid;
+	grid-template-columns: 220px 1fr;
+}
+
+nav {
+	display: block;
+	padding: 20px;
+	width: calc(100% - 40px);
+	height: calc(100vh - 40px);
+	background-color: var(--bgBlue);
+}
+
+nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+nav a {
+	display: block;
+	margin: 0 0 15px 0;
+	border-radius: 5px;
+	padding: 5px 10px;
+	background-color: #fff;
+	color: var(--text);
+	line-height: 1.5rem;
+	text-decoration: none;
+}
+
+nav a:focus,
+nav a:hover {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+}
+
+nav a.active {
+	background-color: var(--bgHighlight);
+	color: #fff;
+	font-weight: bold;
+}
+
+section {
+	padding: 20px;
+}

@@ -11,7 +11,7 @@ let git = {
 	// check Git config
 	async configCheck () {
 		// get config data
-		git.config = await shared.ir.invoke("git-config");
+		git.config = await shared.ipc.invoke("git-config");
 		// check config
 		const dirOkay = await git.dirCheck(git.config.dir);
 		if (!dirOkay[0] || !git.config.user) {
@@ -89,12 +89,12 @@ let git = {
 		}
 		// close all preview windows if dir is about to be changed
 		if (git.config.dir !== dir) {
-			shared.ir.invoke("pv-close-all");
+			shared.ipc.invoke("pv-close-all");
 		}
 		// save config data in prefs file
 		git.config.user = user;
 		git.config.dir = dir;
-		shared.ir.invoke("git-save", git.config);
+		shared.ipc.invoke("git-save", git.config);
 		// fill in preferences
 		git.fillPrefs();
 		// close window
@@ -109,7 +109,7 @@ let git = {
 				"openDirectory",
 			],
 		};
-		const result = await shared.ir.invoke("file-dialog", true, options);
+		const result = await shared.ipc.invoke("file-dialog", true, options);
 		if (result.canceld || !result?.filePaths?.length) {
 			return;
 		}

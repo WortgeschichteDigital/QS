@@ -126,6 +126,14 @@ window.addEventListener("load", async () => {
 			overlay.close(this);
 		});
 	});
+	document.querySelector("#error-open").addEventListener("click", evt => {
+		evt.preventDefault();
+		error.openLog();
+	});
+	document.querySelector("#error-delete").addEventListener("click", evt => {
+		evt.preventDefault();
+		error.deleteLog();
+	});
 	document.querySelector("#git-dir-open").addEventListener("click", evt => {
 		evt.preventDefault();
 		git.dirSelect();
@@ -160,24 +168,25 @@ window.addEventListener("load", async () => {
 	});
 
 	// LISTEN TO IPC MESSAGES
-	shared.ir.on("menu-app-updates", () => app.menuCommand("app-updates"));
-	shared.ir.on("menu-clusters", () => app.menuCommand("clusters"));
-	shared.ir.on("menu-filters", () => app.menuCommand("filters"));
-	shared.ir.on("menu-hints", () => app.menuCommand("hints"));
-	shared.ir.on("menu-preferences", () => app.menuCommand("preferences"));
-	shared.ir.on("menu-search", () => app.menuCommand("search"));
-	shared.ir.on("menu-teaser-tags", () => app.menuCommand("teaser-tags"));
-	shared.ir.on("menu-update", () => app.menuCommand("update"));
-	shared.ir.on("menu-xml", () => app.menuCommand("xml"));
-	shared.ir.on("save-prefs", () => prefs.save());
-	shared.ir.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
+	shared.ipc.on("menu-app-updates", () => app.menuCommand("app-updates"));
+	shared.ipc.on("menu-clusters", () => app.menuCommand("clusters"));
+	shared.ipc.on("menu-error-log", () => app.menuCommand("error-log"));
+	shared.ipc.on("menu-filters", () => app.menuCommand("filters"));
+	shared.ipc.on("menu-hints", () => app.menuCommand("hints"));
+	shared.ipc.on("menu-preferences", () => app.menuCommand("preferences"));
+	shared.ipc.on("menu-search", () => app.menuCommand("search"));
+	shared.ipc.on("menu-teaser-tags", () => app.menuCommand("teaser-tags"));
+	shared.ipc.on("menu-update", () => app.menuCommand("update"));
+	shared.ipc.on("menu-xml", () => app.menuCommand("xml"));
+	shared.ipc.on("save-prefs", () => prefs.save());
+	shared.ipc.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
 
 	// GET APP INFO
-	shared.info = await shared.ir.invoke("app-info");
+	shared.info = await shared.ipc.invoke("app-info");
 
 	// PRELOAD IMAGES
 	let imagesPreload = [],
-		images = await shared.ir.invoke("list-of-images");
+		images = await shared.ipc.invoke("list-of-images");
 	for (const i of images) {
 		let img = new Image();
 		img.src = "img/app/" + i;
@@ -205,3 +214,6 @@ window.addEventListener("load", async () => {
 		updates.timeout = setTimeout(() => updates.check(true), 15e3);
 	}
 });
+
+window.addEventListener("error", evt => shared.onError(evt));
+window.addEventListener("unhandledrejection", evt => shared.onError(evt));

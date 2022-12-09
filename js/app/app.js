@@ -41,6 +41,9 @@ let app = {
 			case "clusters":
 				document.querySelector("#view-clusters").click();
 				break;
+			case "error-log":
+				error.showLog();
+				break;
 			case "filters":
 				document.querySelector("#fun-filters").click();
 				break;
@@ -133,7 +136,7 @@ let app = {
 			app.openNotFound();
 			return;
 		}
-		shared.ir.invoke("pv", {
+		shared.ipc.invoke("pv", {
 			dir: data.dir,
 			file,
 			git: git.config.dir,
@@ -267,6 +270,10 @@ let app = {
 		app.switching = true;
 		// determine next view
 		let nextView = button.id.replace("view-", "");
+		// close results bar (if necessary)
+		if (!/hints|search/.test(nextView) && document.querySelector("#results.visible")) {
+			bars.toggle("results");
+		}
 		// determine next bar content
 		let activeBarContent = "";
 		for (const i of document.querySelectorAll("#bar > div")) {

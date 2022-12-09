@@ -376,7 +376,7 @@ let xml = {
 		// remove cache files
 		for (const branch of ["master", "preprint"]) {
 			const path = shared.path.join(shared.info.userData, `xml-cache-${branch}.json`),
-				exists = await shared.ir.invoke("exists", path);
+				exists = await shared.ipc.invoke("exists", path);
 			if (!exists) {
 				continue;
 			}
@@ -416,7 +416,7 @@ let xml = {
 			await xml.loadCache();
 		}
 		// get XML files
-		let files = xmlFiles || await shared.ir.invoke("xml-files", git.config.dir),
+		let files = xmlFiles || await shared.ipc.invoke("xml-files", git.config.dir),
 			updated = [];
 		for (const [k, v] of Object.entries(files)) {
 			// save file content

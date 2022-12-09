@@ -5,7 +5,7 @@ window.addEventListener("load", async () => {
 	window.addEventListener("contextmenu", evt => popup.open(evt));
 
 	// GET APP INFO
-	shared.info = await shared.ir.invoke("app-info");
+	shared.info = await shared.ipc.invoke("app-info");
 
 	// PRINT MAIL ADDRESS
 	const decoded = about.decodeMail("xbwfiehdhwrerzkpn{mbgutfpogspeqspAixfh0eg"),
@@ -25,3 +25,6 @@ window.addEventListener("load", async () => {
 	document.body.classList.add("scrollable");
 	overlay.hide("loading");
 });
+
+window.addEventListener("error", evt => shared.onError(evt));
+window.addEventListener("unhandledrejection", evt => shared.onError(evt));

@@ -23,6 +23,35 @@
 }
 
 
+/* ERROR ---------------------------------------- */
+
+#error > div {
+	width: 700px;
+}
+
+#error-functions {
+	margin: 10px;
+	text-align: center;
+}
+
+#error-functions a:last-child {
+	margin-left: 20px;
+}
+
+#error pre {
+	margin: 10px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 10px;
+	max-height: 330px;
+	background-color: var(--bgGreyLight);
+	font-family: "Noto Sans Mono", monospace;
+	font-size: .7rem;
+	line-height: 1.1rem;
+	white-space: pre-wrap;
+}
+
+
 /* PREFERENCES ---------------------------------- */
 
 #prefs > div {
@@ -31,31 +60,39 @@
 
 #prefs > div > div {
 	display: grid;
-	grid-template-columns: 160px 1fr;
-	column-gap: 20px;
+	grid-template-columns: 190px 1fr;
+	column-gap: 15px;
 }
 
 #prefs ul {
-	margin: 0 0 0 -1px;
-	padding: 0;
 	list-style-type: none;
-}
-
-#prefs li {
-	margin: 10px 0;
+	margin: 3px 0 -1px -1px;
+	border-bottom-left-radius: 10px;
+	padding: 15px;
+	background-color: var(--bgBlue);
 }
 
 #prefs li a {
 	display: block;
+	margin: 0 0 10px 0;
+	border-radius: 5px;
 	padding: 0 10px;
-	background-color: var(--bgBlue);
-	color: #fff;
+	background-color: #fff;
+	color: var(--text);
 	font-size: 1rem;
 	text-decoration: none;
 }
 
+#prefs li a:focus,
+#prefs li a:hover {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+}
+
 #prefs li a.active {
 	background-color: var(--bgHighlight);
+	color: #fff;
+	font-weight: bold;
 }
 
 #prefs h2 {

@@ -12,18 +12,30 @@ let popup = {
 			return;
 		}
 		// collect items
-		let items = [];
-		if (target === "text_field") {
-			items = ["editUndo", "editRedo", "sep", "editCut", "editCopy", "editPaste", "editSelectAll"];
-		} else if (target === "filters_reset") {
-			items = ["filtersReset"];
+		let items = [],
+			def = ["close"],
+			defSep = ["sep"].concat(def);
+		if (typeof app !== "undefined") {
+			def = ["update", "sep", "viewXml", "viewHints", "viewClusters", "viewSearch"],
+			defSep = ["sep"].concat(def);
+		}
+		if (target === "filters_reset") {
+			items = ["filtersReset"].concat(defSep);
 		} else if (target === "link") {
-			items = ["copyLink"];
+			items = ["copyLink"].concat(defSep);
 		} else if (target === "mail") {
-			items = ["copyMail"];
+			items = ["copyMail"].concat(defSep);
+		} else if (target === "results_bar") {
+			items = ["results"].concat(defSep);
+		} else if (target === "text_field") {
+			items = ["editCut", "editCopy", "editPaste", "sep", "editSelectAll"];
+		} else {
+			items = def;
 		}
 		// cretae popup menu
-		shared.ir.invoke("popup", items);
+		if (items.length) {
+			shared.ipc.invoke("popup", items);
+		}
 	},
 	// detect the matching target for the current right click
 	//   path = array (save the event path, that is an element list
@@ -50,7 +62,15 @@ let popup = {
 				return "mail";
 			}
 		}
-		// no popup menu
-		return "";
+		// overlay visible?
+		if (overlay.top()) {
+			return "";
+		}
+		// default popup menu
+		if (typeof app !== "undefined" && /hints|search/.test(app.view)) {
+			return "results_bar";
+		}
+		// default popup menu
+		return "default";
 	},
 };

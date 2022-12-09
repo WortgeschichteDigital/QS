@@ -3,9 +3,9 @@
 let prefs = {
 	// preferences data as received from main
 	data: {},
-	// initialize preferences
+	// initialize preferences at startup
 	async init () {
-		prefs.data = await shared.ir.invoke("prefs");
+		prefs.data = await shared.ipc.invoke("prefs");
 		for (const [k, v] of Object.entries(prefs.data)) {
 			// option not within the preferences overlay
 			if (k === "filters") {
@@ -33,7 +33,7 @@ let prefs = {
 			await prefs.zeitstrahlRead(prefs.data.zeitstrahl);
 		}
 	},
-	// initialize filter options
+	// initialize filter options at startup
 	initFilters () {
 		for (const [k, v] of Object.entries(prefs.data.filters)) {
 			if (k === "barVisible" && v) {
@@ -43,7 +43,7 @@ let prefs = {
 			}
 		}
 	},
-	// initialize sorting options
+	// initialize sorting options at startup
 	initSorting () {
 		for (const [k, v] of Object.entries(prefs.data.sorting)) {
 			if (k === "ascending" && !v) {
@@ -59,7 +59,7 @@ let prefs = {
 			}
 		}
 	},
-	// initialize searching options
+	// initialize advanced search options at startup
 	initSearch () {
 		for (const [id, checked] of Object.entries(prefs.data.search)) {
 			const opt = document.getElementById(id);
@@ -78,7 +78,7 @@ let prefs = {
 		// fill in search data
 		prefs.data.search = viewSearch.getAdvancedData();
 		// save preferences
-		shared.ir.invoke("prefs-save", prefs.data);
+		shared.ipc.invoke("prefs-save", prefs.data);
 	},
 	// change section
 	//   a = element (toc item)
@@ -119,7 +119,7 @@ let prefs = {
 			}
 		}, 50);
 	},
-	// choose data.json for Zeitstrahl
+	// Zeistrahl: choose data.json
 	async zeitstrahlOpen () {
 		const options = {
 			title: "Zeitstrahldatei auswählen",
@@ -134,7 +134,7 @@ let prefs = {
 				"openFile",
 			],
 		};
-		const result = await shared.ir.invoke("file-dialog", true, options);
+		const result = await shared.ipc.invoke("file-dialog", true, options);
 		if (result.canceld || !result?.filePaths?.length) {
 			return;
 		}
@@ -147,7 +147,7 @@ let prefs = {
 		prefs.data.zeitstrahl = path;
 		prefs.save();
 	},
-	// read Zeistrahl data from data file
+	// Zeistrahl: read data file
 	//   path = string
 	//   passive = false | undefined
 	async zeitstrahlRead (path, passive = true) {
@@ -184,7 +184,7 @@ let prefs = {
 		}
 		return true;
 	},
-	// remove link to data file
+	// Zeistrahl: remove link to data file
 	zeitstrahlRemove () {
 		if (!prefs.data.zeitstrahl) {
 			return;

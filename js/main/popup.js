@@ -4,6 +4,12 @@ const { BrowserWindow, Menu, MenuItem } = require("electron"),
 	path = require("path");
 
 const items = {
+	close: {
+		label: "Fenster schließen",
+		icon: "close.png",
+		click: 'shared.ipc.invoke("close")',
+		accelerator: "CommandOrControl+W",
+	},
 	copyLink: {
 		label: "Link kopieren",
 		icon: "link.png",
@@ -14,40 +20,66 @@ const items = {
 		icon: "mail.png",
 		click: 'shared.clipboard.writeText(popup.element.getAttribute("href").replace(/^mailto:/, ""))',
 	},
-	editUndo: {
-		label: "Rückgängig",
-		icon: "edit-undo.png",
-		role: "undo",
-	},
-	editRedo: {
-		label: "Wiederherstellen",
-		icon: "edit-redo.png",
-		role: "redo",
-	},
 	editCut: {
 		label: "Ausschneiden",
 		icon: "edit-cut.png",
 		role: "cut",
+		accelerator: "CommandOrControl+X",
 	},
 	editCopy: {
 		label: "Kopieren",
 		icon: "edit-copy.png",
 		role: "copy",
+		accelerator: "CommandOrControl+C",
 	},
 	editPaste: {
 		label: "Einfügen",
 		icon: "edit-paste.png",
 		role: "paste",
+		accelerator: "CommandOrControl+V",
 	},
 	editSelectAll: {
 		label: "Alles auswählen",
 		icon: "edit-select-all.png",
 		role: "selectAll",
+		accelerator: "CommandOrControl+A",
 	},
 	filtersReset: {
 		label: "Filter zurücksetzen",
 		icon: "cleanup.png",
 		click: 'document.querySelector("#filters-reset").click()',
+	},
+	results: {
+		label: "Ergebnisleiste",
+		icon: "sidebar.png",
+		click: 'bars.toggle("results")',
+	},
+	update: {
+		label: "Update",
+		icon: "view-refresh.png",
+		click: 'app.menuCommand("update")',
+		accelerator: "F5",
+	},
+	viewClusters: {
+		label: "Clusterei",
+		icon: "clusters.png",
+		click: 'app.menuCommand("clusters")',
+	},
+	viewHints: {
+		label: "Hinweise",
+		icon: "info.png",
+		click: 'app.menuCommand("hints")',
+	},
+	viewSearch: {
+		label: "Suche",
+		icon: "search.png",
+		click: 'app.menuCommand("search")',
+		accelerator: "CommandOrControl+F",
+	},
+	viewXml: {
+		label: "XML",
+		icon: "xml.png",
+		click: 'app.menuCommand("xml")',
 	},
 };
 
@@ -64,7 +96,7 @@ function makeSep () {
 //   icon = string (PNG file)
 //   click = string (functions to execute on click)
 //   role = string (predefined menu role)
-function makeItem ({ wc, label, icon, click = "", role = "" }) {
+function makeItem ({ wc, label, icon, click = "", role = "", accelerator = "" }) {
 	let opt = {
 		label,
 		icon: path.join(__dirname, "../", "../", "img", "main", icon),
@@ -74,6 +106,9 @@ function makeItem ({ wc, label, icon, click = "", role = "" }) {
 	}
 	if (role) {
 		opt.role = role;
+	}
+	if (accelerator) {
+		opt.accelerator = accelerator;
 	}
 	return new MenuItem(opt);
 }

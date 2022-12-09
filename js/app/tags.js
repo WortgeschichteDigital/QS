@@ -14,17 +14,15 @@ let tags = {
 				const name = i.nodeName;
 				if (!tags.data[name]) {
 					tags.data[name] = {
-						_all: [],
+						_all: [k],
 					};
-				}
-				if (!tags.data[name]._all.includes(k)) {
+				} else if (!tags.data[name]._all.includes(k)) {
 					tags.data[name]._all.push(k);
 				}
 				for (const a of i.attributes) {
 					if (!tags.data[name][a.name]) {
-						tags.data[name][a.name] = [];
-					}
-					if (!tags.data[name][a.name].includes(k)) {
+						tags.data[name][a.name] = [k];
+					} else if (!tags.data[name][a.name].includes(k)) {
 						tags.data[name][a.name].push(k);
 					}
 				}
@@ -92,7 +90,7 @@ let tags = {
 		}
 		// show all blocks
 		document.querySelectorAll("#tags .off").forEach(i => i.classList.remove("off"));
-		// build list and show first item
+		// build files list and show code of first item
 		attrCont.firstChild.click();
 	},
 	// build files list
@@ -120,12 +118,12 @@ let tags = {
 				tags.showSummary(this);
 			});
 		}
-		// show first file in the row
+		// show code of first file in the row
 		navCont.firstChild.click();
 	},
 	// resources/wortgeschichten-teaser-xml.xsl
 	showSummaryXsl: "",
-	// display a summary (Kurz gefasst)
+	// show summary code
 	//   ele = element
 	async showSummary (ele) {
 		// toggle active mark
@@ -159,7 +157,7 @@ let tags = {
 		if (!result) {
 			return;
 		}
-		// extract summary (Kurz gefasst)
+		// extract summary
 		const file = ele.getAttribute("href").substring(1),
 			doc = new DOMParser().parseFromString(xml.files[file], "text/xml"),
 			xslt = new DOMParser().parseFromString(tags.showSummaryXsl, "application/xml"),
@@ -198,6 +196,7 @@ let tags = {
 		for (let i = 0, len = files.length; i < len; i++) {
 			if (files[i].classList.contains("active")) {
 				active = i;
+				break;
 			}
 		}
 		if (forward) {

@@ -22,6 +22,10 @@
 	opacity: 1;
 }
 
+.feedback.type-error {
+	background-image: url(../../img/app/button-no.svg);
+}
+
 .feedback.type-okay {
 	background-image: url(../../img/app/button-yes.svg);
 }

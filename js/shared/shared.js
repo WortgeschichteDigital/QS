@@ -12,9 +12,9 @@ let shared = {
 	info: {},
 	// Electron modules
 	// (this file is also included in workers, but in that context,
-	// require() isn't available => test whether window exists)
+	// require() isn't available => test whether window exists or not)
 	clipboard: typeof window !== "undefined" ? require("electron").clipboard : null,
-	ir: typeof window !== "undefined" ? require("electron").ipcRenderer : null,
+	ipc: typeof window !== "undefined" ? require("electron").ipcRenderer : null,
 	shell: typeof window !== "undefined" ? require("electron").shell : null,
 	// Node.js modules
 	exec: typeof window !== "undefined" ? require("child_process").exec : null,
@@ -68,6 +68,51 @@ let shared = {
 	escapeRegExp (text) {
 		return text.replace(/\/|\(|\)|\[|\]|\{|\}|\.|\?|\\|\+|\*|\^|\$|\|/g, m => `\\${m}`);
 	},
+	// log errors
+	//   evt = object
+	onError (evt) {
+		let file = evt.filename, // normal errors
+			message = evt.message,
+			line = evt.lineno,
+			column = evt.colno;
+		if (evt.stack) { // forwarded errors
+			if (!/file:.+?\.js/.test(evt.stack)) {
+				noDetails();
+			} else {
+				file = evt.stack.match(/file:.+?\.js/)[0];
+				message = `${evt.name}: ${evt.message}`;
+				line = parseInt(evt.stack.match(/\.js:([0-9]+):/)[1], 10);
+				column = parseInt(evt.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
+			}
+		} else if (evt.reason) { // in promise errors
+			if (!/file:.+?\.js/.test(evt.reason.stack)) {
+				noDetails();
+			} else {
+				file = evt.reason.stack.match(/file:.+?\.js/)[0];
+				message = evt.reason.stack.match(/(.+?)\n/)[1];
+				line = parseInt(evt.reason.stack.match(/\.js:([0-9]+):/)[1], 10);
+				column = parseInt(evt.reason.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
+			}
+		}
+		// create error and send to main
+		let err = `\n----- ${new Date().toISOString()} -----\n`;
+		if (file || line || column) {
+			err += `${file}: ${line}:${column}\n`;
+		}
+		err += message + "\n";
+		shared.ipc.invoke("error", err);
+		// no details avaiblable
+		function noDetails () {
+			let stack = evt.reason.stack ? evt.reason.stack : "";
+			if (!stack && evt.reason.name) {
+				stack = `${evt.reason.name}: ${evt.reason.message}`;
+			}
+			file = "";
+			message = stack;
+			line = 0;
+			column = 0;
+		}
+	},
 	// open links in external program
 	externalLinks () {
 		document.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
@@ -116,6 +161,22 @@ let shared = {
 			i.title = i.title.replace(/Alt\s\+/, sc.Alt + "\u00A0+");
 			i.title = i.title.replace(/Strg\s\+/, sc.Strg + "\u00A0+");
 		});
+	},
+	// navigate through a vertical navigation
+	//   nav = element
+	//   up = boolean
+	verticalNav (nav, up) {
+		let active = nav.querySelector(".active"),
+			target;
+		if (up) {
+			target = active.parentNode.previousSibling;
+		} else {
+			target = active.parentNode.nextSibling;
+		}
+		if (!target) {
+			return;
+		}
+		target.firstChild.click();
 	},
 	// detect scroll end
 	//   obj = element (scrollable element)

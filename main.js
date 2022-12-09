@@ -16,6 +16,37 @@ const popup = require("./js/main/popup"),
 	xml = require("./js/main/xml");
 
 
+/***** ERRORS *****/
+
+let error = {
+	// register an error in main.js
+	//   err = object
+	register (err) {
+		let e = `\n----- ${new Date().toISOString()} -----\n`;
+		e += "main.js\n";
+		e += err.stack + "\n";
+		error.log(e);
+	},
+	// log variables
+	logFile: path.join(app.getPath("userData"), "error.log"),
+	logStash: "", // in case many errors appear in fast succession
+	logTimeout: null,
+	// write recent errors to log file
+	//   err = string
+	log (err) {
+		clearTimeout(error.logTimeout);
+		error.logStash += err;
+		error.logTimeout = setTimeout(() => {
+			fsp.appendFile(error.logFile, error.logStash)
+				.then(() => error.logStash = "");
+		}, 5e3);
+	},
+};
+
+process.on("uncaughtException", err => error.register(err));
+process.on("unhandledRejection", err => error.register(err));
+
+
 /***** SINGLE INSTANCE LOCK *****/
 
 if (!app.requestSingleInstanceLock()) {
@@ -46,7 +77,7 @@ let menuApp = [
 				click: () => winMenu.execute("clusters"),
 			},
 			{
-				label: "Search",
+				label: "Suche",
 				icon: path.join(__dirname, "img", "main", "search.png"),
 				click: () => winMenu.execute("search"),
 				accelerator: "CommandOrControl+F",
@@ -234,7 +265,7 @@ let menuHelp = [
 			{
 				label: "Handbuch",
 				icon: path.join(__dirname, "img", "main", "help.png"),
-				// click: () => win.bw.webContents.send("show-handbook"),
+				click: () => win.infoOpen("help"),
 				accelerator: "F1",
 			},
 			{ type: "separator" },
@@ -244,13 +275,13 @@ let menuHelp = [
 			},
 			{
 				label: "Fehlerlog",
-				// click: () => win.bw.webContents.send("show-handbook"),
+				click: () => winMenu.execute("error-log"),
 			},
 			{ type: "separator" },
 			{
 				label: "Über QS",
 				icon: path.join(__dirname, "img", "main", "info.png"),
-				click: () => win.about(),
+				click: () => win.infoOpen("about"),
 			},
 		],
 	},
@@ -370,16 +401,16 @@ for (const i of ["about", "app", "help", "pv"]) {
 /***** APP WINDOWS *****/
 
 let win = {
-	// currently open windows; filled with objects:
+	// data of currently open windows; filled with objects:
 	//   bw = object (browser window)
 	//   id = integer (window ID)
 	//   type = string (about | app | help | pv)
 	//   xml = string (name of XML file shown in pv window, otherwise empty string)
-	open: [],
-	// create window
+	data: [],
+	// open new window
 	//   type = string (about | app | help | pv)
 	//   xml = object | undefined (see win.pvOpen())
-	create (type, xml = {}) {
+	open (type, xml = {}) {
 		// define window dimensions
 		const workArea = display.getPrimaryDisplay().workArea,
 			data = prefs.data.win[type],
@@ -429,7 +460,7 @@ let win = {
 			},
 		};
 		if (type === "about") {
-			bwOptions.parent = win.open.find(i => i.type === "app").bw;
+			bwOptions.parent = win.data.find(i => i.type === "app").bw;
 			bwOptions.modal = true;
 			bwOptions.center = true;
 			bwOptions.resizable = false;
@@ -442,7 +473,7 @@ let win = {
 			}
 		} else if (type === "pv") {
 			// if this is the n-th preview window => let the system decide how to place it
-			const pvWin = win.open.filter(i => i.type === "pv");
+			const pvWin = win.data.filter(i => i.type === "pv");
 			if (pvWin.length > 0) {
 				bwOptions.x = null;
 				bwOptions.y = null;
@@ -456,7 +487,7 @@ let win = {
 			bw.maximize();
 		}
 		// memorize window
-		win.open.push({
+		win.data.push({
 			bw,
 			id: bw.id,
 			type,
@@ -488,10 +519,10 @@ let win = {
 			// search window
 			let idx = -1,
 				type = "";
-			for (let i = 0, len = win.open.length; i < len; i++) {
-				if (win.open[i].id === this.id) {
+			for (let i = 0, len = win.data.length; i < len; i++) {
+				if (win.data[i].id === this.id) {
 					idx = i;
-					type = win.open[i].type;
+					type = win.data[i].type;
 					break;
 				}
 			}
@@ -518,16 +549,26 @@ let win = {
 			// save window size and state
 			if (type !== "about") {
 				const data = prefs.data.win[type],
-					bounds = win.open[idx].bw.getBounds();
+					bounds = win.data[idx].bw.getBounds();
 				data.x = bounds.x;
 				data.y = bounds.y;
 				data.width = bounds.width;
 				data.height = bounds.height;
-				data.maximized = win.open[idx].bw.isMaximized();
+				data.maximized = win.data[idx].bw.isMaximized();
 			}
 			// dereference window
-			win.open.splice(idx, 1);
+			win.data.splice(idx, 1);
 		});
+	},
+	// open an informational window
+	//   type = string (about | help)
+	infoOpen (type) {
+		const w = win.data.find(i => i.type === type);
+		if (w) {
+			w.bw.focus();
+		} else {
+			win.open(type);
+		}
 	},
 	// close the currently active (i.e. focused) window
 	close () {
@@ -537,8 +578,8 @@ let win = {
 	// close all windows
 	//   exclude = array (exclude windows the given window types from closing)
 	async closeAll (exclude) {
-		for (let i = win.open.length - 1; i >= 0; i--) {
-			const w = win.open[i];
+		for (let i = win.data.length - 1; i >= 0; i--) {
+			const w = win.data[i];
 			if (w.type === "app" || // the main window should remain open until last
 					exclude.includes(w.type)) { // exclude this window type from closing
 				continue;
@@ -547,7 +588,7 @@ let win = {
 			await new Promise(resolve => setTimeout(() => resolve(true), 50));
 		}
 		if (!exclude.includes("app")) {
-			win.open[0].bw.close();
+			win.data[0].bw.close();
 		}
 	},
 	// make app icon
@@ -575,19 +616,19 @@ let win = {
 	//     git = string (path to git directory)
 	//     winId = integer (window ID)
 	pvOpen (args) {
-		for (const i of win.open) {
+		for (const i of win.data) {
 			if (!args.winId && i.xml === args.file ||
 					args.winId && i.id === args.winId) {
 				win.pvSend(i.bw, args);
 				return;
 			}
 		}
-		win.create("pv", args);
+		win.open("pv", args);
 	},
 	// close all preview windows
 	pvCloseAll () {
 		let exclude = [];
-		for (const w of win.open) {
+		for (const w of win.data) {
 			if (w.type !== "pv") {
 				exclude.push(w.type);
 			}
@@ -607,7 +648,7 @@ let win = {
 			if (xmlFiles[args.file]) {
 				args.xml = xmlFiles[args.file].xml;
 				// update file data in main window
-				const appWin = win.open.find(i => i.type === "app");
+				const appWin = win.data.find(i => i.type === "app");
 				appWin.bw.webContents.send("update-file", xmlFiles);
 			}
 		}
@@ -617,15 +658,6 @@ let win = {
 		// (this is important in case the window already exists)
 		bw.focus();
 	},
-	// open or focus about window
-	about () {
-		const about = win.open.find(i => i.type === "about");
-		if (about) {
-			about.bw.focus();
-		} else {
-			win.create("about");
-		}
-	},
 };
 
 
@@ -633,7 +665,7 @@ let win = {
 
 // focus existing app window in case a second instance is opened
 app.on("second-instance", () => {
-	for (const i of win.open) {
+	for (const i of win.data) {
 		if (i.type === "app") {
 			i.bw.focus();
 			break;
@@ -645,8 +677,8 @@ app.on("second-instance", () => {
 app.on("ready", async () => {
 	// read preferences
 	await prefs.read();
-	// create app window
-	win.create("app");
+	// open app window
+	win.open("app");
 });
 
 // quit app when every window is closed
@@ -665,14 +697,14 @@ app.on("activate", () => {
 	// on macOS the window object might already exist;
 	// in this case, we don't need to create the app window
 	let appWinExists = false;
-	for (const i of win.open) {
+	for (const i of win.data) {
 		if (i.type === "app") {
 			appWinExists = true;
 			break;
 		}
 	}
 	if (!appWinExists) {
-		win.create("app");
+		win.open("app");
 	}
 });
 
@@ -691,6 +723,13 @@ ipcMain.handle("app-info", evt => {
 		winId: bw.id,
 	};
 });
+
+ipcMain.handle("close", evt => {
+	const bw = BrowserWindow.fromWebContents(evt.sender);
+	bw.close();
+});
+
+ipcMain.handle("error", async (evt, err) => error.log(err));
 
 ipcMain.handle("exists", async (evt, path) => await services.exists(path));
 
@@ -724,6 +763,6 @@ ipcMain.handle("pv", (evt, args) => win.pvOpen(args));
 
 ipcMain.handle("pv-close-all", () => win.pvCloseAll());
 
-ipcMain.handle("pv-new", (evt, args) => win.create("pv", args));
+ipcMain.handle("pv-new", (evt, args) => win.open("pv", args));
 
 ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));

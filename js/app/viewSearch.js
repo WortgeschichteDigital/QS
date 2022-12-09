@@ -2,6 +2,7 @@
 
 let viewSearch = {
 	// intersection observer for search results
+	// (the last result is observed if there are more to display)
 	observer: new IntersectionObserver(entries => {
 		entries.forEach(entry => {
 			if (!entry.isIntersecting) {
@@ -10,21 +11,21 @@ let viewSearch = {
 			viewSearch.printMoreResults();
 		});
 	}),
-	// as the search can be pretty expensive, let's have a worker
+	// let's have a worker, as the search can be pretty expensive
 	worker: null,
-	// regular expressions for the current search
+	// data for the current search
 	data: {
 		// regExp is filled with objects:
 		//   high = regular expression for highlighting the results
 		//   search = regular expression for searching the text
-		//   termN = zero-based term number (in the order as they appear in the results bar)
+		//   termN = zero-based term number (in the order they appear in the results bar)
 		//   text = search text (used for sorting the expressions by length)
 		//   textOri = search term as it was typed
 		regExp: [],
 		results: [],
 		resultsFiles: new Set(),
 		resultsFilesPrinted: new Set(),
-		running: false, // starting of a new search is blocked
+		running: false, // starting a new search is blocked
 		searching: false, // determines whether the worker has finished or not
 		stripTags: false,
 	},
@@ -50,7 +51,7 @@ let viewSearch = {
 				type: "alert",
 				text: "Sie haben keinen Suchtext eingegeben.",
 			});
-			finishUp();
+			finishUp(false);
 			return;
 		}
 		if (document.querySelector("#search-always-xml").checked) {
@@ -59,8 +60,7 @@ let viewSearch = {
 			viewSearch.data.stripTags = !/[<>]/.test(text);
 		}
 		let search = [];
-		const matchesRegExp = text.matchAll(/\/(.+?)\/(i)?/g);
-		for (const i of matchesRegExp) {
+		for (const i of text.matchAll(/\/(.+?)\/(i)?/g)) { // regular expressions
 			search.push({
 				isInsensitive: i[2] ? true : false,
 				isRegExp: true,
@@ -71,8 +71,7 @@ let viewSearch = {
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
-		const matchesPhrase = text.matchAll(/'(.+?)'|"(.+?)"/g);
-		for (const i of matchesPhrase) {
+		for (const i of text.matchAll(/'(.+?)'|"(.+?)"/g)) { // phrases
 			search.push({
 				isInsensitive: !/[A-ZÄÖÜ]/.test(i[1] || i[2]),
 				isRegExp: false,
@@ -83,7 +82,7 @@ let viewSearch = {
 			text = text.replace(i[0], "");
 		}
 		text = text.trim();
-		for (let i of text.split(" ")) {
+		for (let i of text.split(" ")) { // single search words
 			i = i.trim();
 			if (!i) {
 				continue;
@@ -98,9 +97,8 @@ let viewSearch = {
 		}
 		// sort search terms by position in the search expression
 		for (const i of search) {
-			const reg = new RegExp(shared.escapeRegExp(i.textOri), "g"),
-				match = reg.exec(textOri);
-			i.textOriIdx = match.index;
+			const reg = new RegExp(shared.escapeRegExp(i.textOri), "g");
+			i.textOriIdx = reg.exec(textOri).index;
 		}
 		search.sort((a, b) => a.textOriIdx - b.textOriIdx);
 		// create regular expressions
@@ -132,6 +130,7 @@ let viewSearch = {
 					text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${shared.errorString(err.message)}`,
 				});
 				searchText.select();
+				finishUp(false);
 				return;
 			}
 			viewSearch.data.regExp.push({
@@ -158,12 +157,12 @@ let viewSearch = {
 			return text;
 		}
 		function maskSpecialTokens (text) {
-			const variants = new Map([
+			const tokens = new Map([
 				[/"/g, "&quot;"],
 				[/(?<!\()</g, "&lt;"],
 				[/>(?![\])])/g, "&gt;"],
 			]);
-			for (const [k, v] of variants) {
+			for (const [k, v] of tokens) {
 				text = text.replace(k, v);
 			}
 			return text;
@@ -178,11 +177,18 @@ let viewSearch = {
 		viewSearch.printResults();
 		// handle results bar
 		bars.resultsSearch();
-		// refocus search field
-		finishUp();
-		function finishUp () {
+		// finish up
+		finishUp(true);
+		function finishUp (feedback) {
 			searchText.select();
 			viewSearch.data.running = false;
+			if (feedback && app.view !== "search") {
+				if (viewSearch.data.results.length) {
+					shared.feedback("okay");
+				} else {
+					shared.feedback("error");
+				}
+			}
 		}
 	},
 	// perform search in XML files
@@ -192,7 +198,7 @@ let viewSearch = {
 		const res = document.querySelector("#search");
 		shared.clear(res);
 		res.appendChild(app.pleaseWait());
-		// load worker
+		// load worker if necessary
 		if (!viewSearch.worker) {
 			viewSearch.worker = new Worker("js/app/workerSearch.js");
 			viewSearch.worker.addEventListener("message", evt => {
@@ -295,15 +301,13 @@ let viewSearch = {
 				break;
 			}
 		}
-		let lastFile = "",
-			n = 0;
+		let lastFile = "";
 		// print next 50 results
 		for (let f = start, len = viewSearch.data.results.length; f < len; f++) {
 			const i = viewSearch.data.results[f];
-			n++;
 			// heading
 			if (i.file !== lastFile) {
-				if (n >= 50) {
+				if (f - start + 1 >= 50) {
 					break;
 				}
 				printed.add(i.file);
@@ -405,12 +409,11 @@ let viewSearch = {
 				open >= 0 && close >= 0 && close < open) {
 			text = "&lt;!-- " + text;
 		}
-		// comments
-		// (comments may be incomplete)
+		// highlight tags
 		text = text.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
 		text = text.replace(/&lt;.+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
 		text = text.replace(/<span class="xml-tag">(.+?)<\/span>/g, (m, p1) => {
-			p1 = p1.replace(/ (.+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
+			p1 = p1.replace(/ ([^\s]+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
 				return ` <span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
 			});
 			return `<span class="xml-tag">${p1}</span>`;
@@ -433,9 +436,6 @@ let viewSearch = {
 				if (/[<>]/.test(m)) {
 					let n = 0;
 					m = m.replace(/<.+?>/g, m => {
-						// if (/^<\//.test(m)) {
-						// 	return `</mark>${m}`;
-						// }
 						n++;
 						return `</mark>${m}<mark class="color${color} ${n}">`;
 					});
@@ -465,6 +465,7 @@ let viewSearch = {
 		const clean = new RegExp(`(<[^>]*?)<mark class="color[0-9]">(.+?)<\/mark>`, "g");
 		while (clean.test(text)) {
 			text = text.replace(clean, (m, p1, p2) => p1 + p2);
+			clean.lastIndex = -1;
 		}
 		return {
 			matched: [...matched].sort((a, b) => a - b),
@@ -479,14 +480,14 @@ let viewSearch = {
 		text = text.replace(/(?<!&amp;|<)\//g, "/<wbr>");
 		return text;
 	},
-	// read the checkboxes within advanced options
+	// read checkboxes in advanced search options
 	getAdvancedData () {
 		let advanced = {};
 		document.querySelectorAll("#search-advanced input").forEach(i => advanced[i.id] = i.checked);
 		return advanced;
 	},
 	// toggle advanced search options
-	//   force = on | off | undefined
+	//   force = "on" | "off" | undefined
 	toggleAdvanced (force = "") {
 		return new Promise(async resolve => {
 			const a = document.querySelector("#search-advanced"),
@@ -509,7 +510,7 @@ let viewSearch = {
 			resolve(true);
 		});
 	},
-	// toggle color of advanced icon
+	// toggle color of advanced options icon
 	toggleAdvancedIcon () {
 		const dataA = viewSearch.getAdvancedData(),
 			checked = Object.values(dataA).filter(i => i).length,
