@@ -21,14 +21,22 @@ let xml = {
 	//                              0        = unknown (no quotation for this lemma)
 	//       hash           = ""  SHA1 hash, derived from file content ("xml")
 	//       hints          = []  all hints regarding this file
-	//         context      = ""  text context of "from"
-	//         from         = ""  text that triggered this hint, see "to"
+	//         ident        = ""  identifier hash (10 hex digits, not in every case unique)
+	//         line         = 1   line number
 	//         linkCount    = 1   link count, > 0 means: 'there are already links to the proposed destination';
 	//                              the analysis is limited to the current block (i.e. <Wortgeschichte> etc.)
-	//         line         = 1   line number
-	//         scope        = ""  Artikel | Bedeutungsgerüst | Kurz gefasst | Verweise | Wortgeschichte
-	//         to           = []  proposition into which "from" should be changed TODO no array!
-	//         type         = ""  hint type TODO documentation!
+	//         scope        = ""  Artikel | Bedeutungsgerüst | Kurz gefasst | Literatur | Verweise | Wortgeschichte
+	//         textErr      = []  text that triggered the hint (second slot might give helpful context info)
+	//         textHint     = []  proposal into which "textErr" should be changed
+	//           copy       = |   enable simple copy for this text
+	//           text       = ""  text of proposal
+	//         type         = ""  hint type; available types
+	//                              article_id        = correct article ID
+	//                              article_file      = correct file name
+	//                              diasystemic_value = add diasystemic value
+	//                              link_error        = correct internal link
+	//                              literature_error  = correct literature title
+	//                              semantic_type     = add semantic type
 	//       hl             = []  //Artikel/Lemma[@Typ = "Hauptlemma"]/Schreibung;
 	//                              field articles have the string " (Wortfeld)" attached to them
 	//       hlJoined       = []  same as "hl", but Schreibung is joined with a slash as separator
@@ -78,9 +86,8 @@ let xml = {
 	async fillData (updated) {
 		const errors = [];
 		for (const file of updated) {
-			const parser = new DOMParser(),
-				doc = parser.parseFromString(xml.files[file], "text/xml");
-			// xml not well-formed
+			const doc = new DOMParser().parseFromString(xml.files[file], "text/xml");
+			// XML not well-formed
 			if (doc.querySelector("parsererror")) {
 				errors.push({
 					file,
@@ -170,7 +177,7 @@ let xml = {
 					d.first[lemma] = year;
 				}
 				// create array for hints
-				// (filled in xml.hints())
+				// (filled in hints.glean())
 				d.hints = [];
 				// file ID
 				d.id = doc.querySelector("Artikel").getAttribute("xml:id");
@@ -324,6 +331,17 @@ let xml = {
 	//   doc = document (parsed XML file)
 	//   file = string (unparsed XML file)
 	getLineNumber (ele, doc, file) {
+		// erase comments but retain the line breaks
+		// (tags of the searched type can be located within a comment
+		// which would produce bogus line counts)
+		file = file.replace(/<!--.+?-->/gs, m => {
+			const n = m.match(/\n/g);
+			if (n) {
+				return "\n".repeat(n.length);
+			}
+			return "";
+		});
+		// search line number
 		let tag = ele.nodeName,
 			nodes = doc.getElementsByTagName(tag),
 			hitIdx = 0;
@@ -339,10 +357,6 @@ let xml = {
 			offset = reg.exec(file).index;
 		}
 		return file.substring(0, offset).split("\n").length;
-	},
-	// glean hints
-	async hints () {
-		// TODO Problem: in alten Dateien, die nicht aufgefrischt wurden, könnten sich Hinweise verstecken, die neue Dateien betreffen => alle hints neu machen
 	},
 	// load cache file
 	async loadCache () {
@@ -362,10 +376,7 @@ let xml = {
 		try {
 			await shared.fsp.writeFile(path, JSON.stringify(xml.data));
 		} catch (err) {
-			dialog.open({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${shared.errorString(err.message)}`,
-			});
+			shared.error(`${err.name}: ${err.message}`);
 		}
 	},
 	// remove cache files and rebuild xml data
@@ -474,8 +485,9 @@ let xml = {
 			await xml.fillData(updated);
 		}
 		// glean hints & save data to cache file
+		await hints.glean(); // TEST TODO EX
 		if (updated.length || removedFiles) {
-			await xml.hints();
+			// await hints.glean(); TODO ON
 			xml.data.date = new Date().toISOString();
 			await xml.writeCache();
 		}

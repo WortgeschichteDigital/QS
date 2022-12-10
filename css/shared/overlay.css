@@ -119,7 +119,6 @@
 
 #dialog.code #dialog-text p {
 	margin-right: 30px;
-	border-radius: 10px;
 	padding: 10px;
 	background-color: var(--bgGreyLight);
 	font-family: "Noto Sans Mono", monospace;

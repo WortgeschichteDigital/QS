@@ -162,19 +162,13 @@ let prefs = {
 			zsData = JSON.parse(content);
 		} catch (err) {
 			if (!passive) {
-				dialog.open({
-					type: "alert",
-					text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err.message}`,
-				});
+				shared.error(`${err.name}: ${err.message}`);
 			}
 			return false;
 		}
 		if (!zsData.fields || !zsData.lemmas) {
 			if (!passive) {
-				dialog.open({
-					type: "alert",
-					text: 'Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Die Datei enthält keine Zeitstrahldaten.',
-				});
+				shared.error("Datei enthält keine Zeitstrahldaten");
 			}
 			return false;
 		}

@@ -188,10 +188,7 @@ let git = {
 		const notClean = await git.commandExec("git diff --stat");
 		if (notClean || notClean === false) {
 			if (notClean && feedback) {
-				await dialog.open({
-					type: "alert",
-					text: 'Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Der Branch ist nicht sauber. Änderungen an Dateien wurden noch nicht committet.'
-				});
+				await shared.error("Branch nicht sauber, Änderungen an Dateien noch nicht committet");
 			}
 			return false;
 		}
@@ -271,10 +268,7 @@ let git = {
 			// Passwort auslesen
 			pass = document.querySelector("#dialog input").value.trim();
 			if (!pass) {
-				dialog.open({
-					type: "alert",
-					text: 'Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Sie haben kein Passwort eingegeben.',
-				});
+				shared.error("kein Passwort eingegeben");
 				return;
 			}
 		}
@@ -350,10 +344,7 @@ let git = {
 		});
 		// handle errors
 		if (Array.isArray(result)) {
-			await dialog.open({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlercode:</i> ${result[0]}\n<i>Fehlermeldung:</i><br>${shared.errorString(result[1])}`,
-			});
+			await shared.error(`Fehlercode: ${result[0]}, ${result[1]}`);
 			return false;
 		}
 		// return result

@@ -29,10 +29,7 @@ let error = {
 		}
 		const result = await shared.shell.openPath(error.log);
 		if (result) {
-			dialog.open({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${result}`,
-			});
+			shared.error(result);
 		}
 	},
 	// delete log file
@@ -56,10 +53,7 @@ let error = {
 		}
 		result = await shared.fsp.unlink(error.log);
 		if (result) {
-			dialog.open({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${result}`,
-			});
+			shared.error(result);
 		} else {
 			document.querySelector("#error pre").textContent = "Das Fehlerlog ist leer.";
 		}

@@ -12,11 +12,11 @@ let updates = {
 			return;
 		}
 		// download RSS feed
-		const data = await updates.fetchRSS();
+		const data = await shared.fetch("https://github.com/WortgeschichteDigital/QS/releases.atom");
 		// error
 		if (!data.ok) {
 			if (!auto) {
-				updates.error(data.err);
+				shared.error(`${data.err.name}: ${data.err.message}`);
 			}
 			return;
 		}
@@ -28,10 +28,7 @@ let updates = {
 			// no entries found, so probably the feed was not well-formed
 			// (which happens sometimes)
 			if (!auto) {
-				updates.error({
-					name: "Server-Fehler",
-					message: "RSS-Feed nicht wohlgeformt",
-				});
+				shared.error("Server-Fehler: RSS-Feed nicht wohlgeformt");
 			}
 			return;
 		}
@@ -60,48 +57,6 @@ let updates = {
 		}
 		// memorize last update check
 		prefs.data.updateCheck = new Date().toISOString().split("T")[0];
-	},
-	// display error message
-	//   err = object
-	error (err) {
-		dialog.open({
-			type: "alert",
-			text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err.name}: ${err.message}`,
-		});
-	},
-	// fetch RSS feed
-	async fetchRSS () {
-		const controller = new AbortController();
-		setTimeout(() => controller.abort(), 1e4);
-		let response;
-		try {
-			const url = "https://github.com/WortgeschichteDigital/QS/releases.atom";
-			response = await fetch(url, {
-				signal: controller.signal,
-			});
-		} catch (err) {
-			return {
-				ok: false,
-				err,
-				text: "",
-			};
-		}
-		if (!response.ok) {
-			return {
-				ok: false,
-				err: {
-					name: "Server-Fehler",
-					message: `HTTP-Status-Code ${response.status}`,
-				},
-				text: "",
-			};
-		}
-		const text = await response.text();
-		return {
-			ok: true,
-			err: {},
-			text,
-		};
 	},
 	// convert a version string into an integer
 	//   version = string

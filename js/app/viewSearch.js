@@ -125,10 +125,7 @@ let viewSearch = {
 				}
 			} catch (err) {
 				await shared.wait(25);
-				await dialog.open({
-					type: "alert",
-					text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${shared.errorString(err.message)}`,
-				});
+				await shared.error(`${err.name}: ${err.message}`);
 				searchText.select();
 				finishUp(false);
 				return;

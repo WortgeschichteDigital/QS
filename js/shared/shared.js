@@ -18,6 +18,7 @@ let shared = {
 	shell: typeof window !== "undefined" ? require("electron").shell : null,
 	// Node.js modules
 	exec: typeof window !== "undefined" ? require("child_process").exec : null,
+	crypto: typeof window !== "undefined" ? require("crypto") : null,
 	fsp: typeof window !== "undefined" ? require("fs").promises : null,
 	path: typeof window !== "undefined" ? require("path") : null,
 	// erase all children within the given element
@@ -57,16 +58,21 @@ let shared = {
 		}
 		return m.join("+");
 	},
+	// display error message
+	//   err = string
+	async error (err) {
+		err = shared.errorString(err);
+		await dialog.open({
+			type: "alert",
+			text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err}`,
+		});
+	},
 	// prepare error strings for better readability
 	//   err = string
 	errorString (err) {
 		err = err.replace(/\n/g, "<br>");
 		err = err.replace(/(?<!<)[/\\]/g, m => `${m}<wbr>`);
 		return err;
-	},
-	// escape special RegExp tokens
-	escapeRegExp (text) {
-		return text.replace(/\/|\(|\)|\[|\]|\{|\}|\.|\?|\\|\+|\*|\^|\$|\|/g, m => `\\${m}`);
 	},
 	// log errors
 	//   evt = object
@@ -113,6 +119,10 @@ let shared = {
 			column = 0;
 		}
 	},
+	// escape special RegExp tokens
+	escapeRegExp (text) {
+		return text.replace(/\/|\(|\)|\[|\]|\{|\}|\.|\?|\\|\+|\*|\^|\$|\|/g, m => `\\${m}`);
+	},
 	// open links in external program
 	externalLinks () {
 		document.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
@@ -138,6 +148,40 @@ let shared = {
 			this.parentNode.removeChild(this);
 		}, { once: true });
 		fb.classList.remove("visible");
+	},
+	// fetch data
+	//   url = string
+	async fetch (url) {
+		const controller = new AbortController();
+		setTimeout(() => controller.abort(), 1e4);
+		let response;
+		try {
+			response = await fetch(url, {
+				signal: controller.signal,
+			});
+		} catch (err) {
+			return {
+				ok: false,
+				err,
+				text: "",
+			};
+		}
+		if (!response.ok) {
+			return {
+				ok: false,
+				err: {
+					name: "Server-Fehler",
+					message: `HTTP-Status-Code ${response.status}`,
+				},
+				text: "",
+			};
+		}
+		const text = await response.text();
+		return {
+			ok: true,
+			err: {},
+			text,
+		};
 	},
 	// change titles with keyboard shortcuts if on macOS
 	keyboardMacOS () {

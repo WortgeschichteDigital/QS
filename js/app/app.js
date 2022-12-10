@@ -86,10 +86,7 @@ let app = {
 			obj[key] = await shared.fsp.readFile(path, { encoding: "utf8" });
 			return true;
 		} catch (err) {
-			open.dialog({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err.message}`,
-			});
+			shared.error(`${err.name}: ${err.message}`);
 			return false;
 		}
 	},
@@ -133,7 +130,7 @@ let app = {
 	openPv (file) {
 		const data = xml.data.files[file];
 		if (!data) {
-			app.openNotFound();
+			shared.error(`Datei „${file}“ nicht mehr gefunden`);
 			return;
 		}
 		shared.ipc.invoke("pv", {
@@ -147,25 +144,14 @@ let app = {
 	async openEditor (file) {
 		const data = xml.data.files[file];
 		if (!data) {
-			app.openNotFound();
+			shared.error(`Datei „${file}“ nicht mehr gefunden`);
 			return;
 		}
 		const path = shared.path.join(git.config.dir, data.dir, file),
 			result = await shared.shell.openPath(path);
 		if (result) {
-			dialog.open({
-				type: "alert",
-				text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${result}`,
-			});
+			shared.error(result);
 		}
-	},
-	// error message in case a file was not found anymore
-	//   file = string (XML file name)
-	openNotFound (file) {
-		dialog.open({
-			type: "alert",
-			text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>Die Datei „${file}“ wurde nicht mehr gefunden.`,
-		});
 	},
 	// print a rotating icon
 	pleaseWait () {
