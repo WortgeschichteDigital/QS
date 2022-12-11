@@ -26,17 +26,31 @@ let xml = {
 	//         linkCount    = 1   link count, > 0 means: 'there are already links to the proposed destination';
 	//                              the analysis is limited to the current block (i.e. <Wortgeschichte> etc.)
 	//         scope        = ""  Artikel | Bedeutungsgerüst | Kurz gefasst | Literatur | Verweise | Wortgeschichte
-	//         textErr      = []  text that triggered the hint (second slot might give helpful context info)
-	//         textHint     = []  proposal into which "textErr" should be changed
-	//           copy       = |   enable simple copy for this text
-	//           text       = ""  text of proposal
+	//         textErr      = []  text that triggered the hint;
+	//                              the slots contain either strings or objects; objects have this structure:
+	//                                text = text to be printed
+	//                                type = information on how to handle the text; used types:
+	//                                  comment_link = show how to enclose links to missing lemmas in comments
+	//                                  context      = this is contextual information
+	//                                  copy         = enable fast copy of text
+	//         textHint     = []  proposal into which "textErr" should be changed;
+	//                              the structure is the same as "textErr"
 	//         type         = ""  hint type; available types
-	//                              article_id        = correct article ID
-	//                              article_file      = correct file name
-	//                              diasystemic_value = add diasystemic value
-	//                              link_error        = correct internal link
-	//                              literature_error  = correct literature title
-	//                              semantic_type     = add semantic type
+	//                              article_id          = correct article ID
+	//                              article_file        = correct XML file name
+	//                              comment             = comment node
+	//                              diasystemic_value   = add diasystemic value
+	//                              ez_link             = <erwaehntes_Zeichen>: link to matching article
+	//                              ez_stichwort        = <erwaehntes_Zeichen>: change tag to <Stichwort>
+	//                              link_duplicate      = erase duplicate link in <Verweise>
+	//                              link_error          = correct internal link
+	//                              literature_error    = add missing or correct existing literature title
+	//                              semantic_type       = add semantic type
+	//                              sprache_superfluous = @Sprache is superfluous
+	//                              tr_error            = correct internal reference
+	//                              tr_link             = replace internal reference with link to article
+	//                              www_error           = correct external link
+	//                              www_link            = change external link into internal
 	//       hl             = []  //Artikel/Lemma[@Typ = "Hauptlemma"]/Schreibung;
 	//                              field articles have the string " (Wortfeld)" attached to them
 	//       hlJoined       = []  same as "hl", but Schreibung is joined with a slash as separator
@@ -49,6 +63,7 @@ let xml = {
 	//         points       = 1   cluster points for this link
 	//         scope        = ""  Kurz gefasst | Verweise | Wortgeschichte
 	//         type         = []  semantic types attached to this link
+	//         verweistext  = ""  original content of //Verweis/Verweistext
 	//         verweisziel  = ""  original content of //Verweis/Verweisziel
 	//       name           = ""  article name with all lemmas and the attached " (Wortfeld)" if applicable
 	//       published      = ""  date the article was published (YYYY-MM-DD),
@@ -84,12 +99,11 @@ let xml = {
 	// fill file data
 	//   updated = array (names of files to be updated)
 	async fillData (updated) {
-		const errors = [];
 		for (const file of updated) {
 			const doc = new DOMParser().parseFromString(xml.files[file], "text/xml");
 			// XML not well-formed
 			if (doc.querySelector("parsererror")) {
-				errors.push({
+				xml.updateErrors.push({
 					file,
 					err: "XML not well-formed",
 				});
@@ -184,7 +198,8 @@ let xml = {
 				// collect all links
 				d.links = [];
 				doc.querySelectorAll("Verweis").forEach(i => {
-					const verweisziel = i.querySelector("Verweisziel").textContent,
+					const verweistext = i.querySelector("Verweistext").textContent.trim(),
+						verweisziel = i.querySelector("Verweisziel").textContent.trim(),
 						scopePoints = xml.getScopePoints(i, d.fa);
 					d.links.push({
 						lemma: {},
@@ -192,6 +207,7 @@ let xml = {
 						points: scopePoints.points,
 						scope: scopePoints.scope,
 						type: i?.getAttribute("Typ")?.split(" ") || [],
+						verweistext,
 						verweisziel,
 					});
 				});
@@ -212,9 +228,9 @@ let xml = {
 					}
 				});
 			} catch (err) {
-				errors.push({
+				xml.updateErrors.push({
 					file,
-					err: err.message,
+					err: `${err.name}: ${err.message}`,
 				});
 			}
 		}
@@ -229,18 +245,12 @@ let xml = {
 				link.lemma = lemma;
 			}
 		}
-		// display errors if any
-		if (errors.length) {
-			let errorList = [];
-			for (const i of errors) {
-				delete xml.data.files[i.file];
-				delete xml.files[i.file];
-				errorList.push(`• <i>${i.file}:</i> ${shared.errorString(i.err.replace(/\n/g, " "))}`);
-			}
-			dialog.open({
-				type: "alert",
-				text: `${errors.length === 1 ? "Es ist ein" : "Es sind"} <b class="warn">Fehler</b> aufgetreten!\n${errorList.join("<br>")}`,
-			});
+		// purge files that produced errors
+		// (this has to be done here as well,
+		// as all files are parsed again in hints.glean())
+		for (const i of xml.updateErrors) {
+			delete xml.data.files[i.file];
+			delete xml.files[i.file];
 		}
 	},
 	// determine scope and cluster points of the given link
@@ -330,29 +340,39 @@ let xml = {
 	//   ele = element
 	//   doc = document (parsed XML file)
 	//   file = string (unparsed XML file)
-	getLineNumber (ele, doc, file) {
+	//   idx = number | undefined (set in case ele is a comment node)
+	getLineNumber (ele, doc, file, idx = -1) {
 		// erase comments but retain the line breaks
 		// (tags of the searched type can be located within a comment
 		// which would produce bogus line counts)
-		file = file.replace(/<!--.+?-->/gs, m => {
-			const n = m.match(/\n/g);
-			if (n) {
-				return "\n".repeat(n.length);
-			}
-			return "";
-		});
+		if (idx === -1) {
+			file = file.replace(/<!--.+?-->/gs, m => {
+				const n = m.match(/\n/g);
+				if (n) {
+					return "\n".repeat(n.length);
+				}
+				return "";
+			});
+		}
 		// search line number
 		let tag = ele.nodeName,
-			nodes = doc.getElementsByTagName(tag),
+			reg = new RegExp(`<${tag}(?=[ >])`, "g"),
 			hitIdx = 0;
-		for (let i = 0, len = nodes.length; i < len; i++) {
-			if (nodes[i] === ele) {
-				hitIdx = i;
-				break;
+		if (idx === -1) {
+			// element nodes
+			const nodes = doc.getElementsByTagName(tag);
+			for (let i = 0, len = nodes.length; i < len; i++) {
+				if (nodes[i] === ele) {
+					hitIdx = i;
+					break;
+				}
 			}
+		} else {
+			// comment nodes
+			reg = new RegExp("<!--", "g");
+			hitIdx = idx;
 		}
-		let reg = new RegExp(`<${tag}(?=[ >])`, "g"),
-			offset = 0;
+		let offset = 0;
 		for (let i = 0; i <= hitIdx; i++) {
 			offset = reg.exec(file).index;
 		}
@@ -376,7 +396,7 @@ let xml = {
 		try {
 			await shared.fsp.writeFile(path, JSON.stringify(xml.data));
 		} catch (err) {
-			shared.error(`${err.name}: ${err.message}`);
+			shared.error(`${err.name}: ${err.message} (${shared.reduceErrorStack(err.stack)})`);
 		}
 	},
 	// remove cache files and rebuild xml data
@@ -400,7 +420,8 @@ let xml = {
 		xml.files = {};
 		// start update operation
 		await xml.update();
-		if (active) {
+		if (active &&
+				!xml.updateErrors.length) {
 			dialog.open({
 				type: "alert",
 				text: "Der Cache wurde geleert und für den aktuellen Branch neu aufgebaut.",
@@ -411,6 +432,7 @@ let xml = {
 	//   xmlFiles = object | undefined (filled in case a file is requested by a preview window)
 	async update (xmlFiles = null) {
 		xml.updating = true;
+		xml.updateErrors = [];
 		const update = document.querySelector("#fun-update");
 		if (update.classList.contains("active")) {
 			return;
@@ -485,9 +507,8 @@ let xml = {
 			await xml.fillData(updated);
 		}
 		// glean hints & save data to cache file
-		await hints.glean(); // TEST TODO EX
 		if (updated.length || removedFiles) {
-			// await hints.glean(); TODO ON
+			await hints.glean();
 			xml.data.date = new Date().toISOString();
 			await xml.writeCache();
 		}
@@ -502,10 +523,29 @@ let xml = {
 			img.src = "img/app/view-refresh-white.svg";
 			img.classList.remove("rotate");
 			xml.updating = false;
+			xml.showUpdateErrors();
 		}
 	},
 	// update procedure is running
 	updating: false,
+	// list of errors that occured during the update process
+	updateErrors: [],
+	// show errors that occured during the update process
+	showUpdateErrors () {
+		if (!xml.updateErrors.length) {
+			return;
+		}
+		let errorList = [];
+		for (const i of xml.updateErrors) {
+			delete xml.data.files[i.file];
+			delete xml.files[i.file];
+			errorList.push(`• <i>${i.file}:</i> ${shared.errorString(i.err.replace(/\n/g, " "))}`);
+		}
+		dialog.open({
+			type: "alert",
+			text: `${xml.updateErrors.length === 1 ? "Es ist ein" : "Es sind"} <b class="warn">Fehler</b> aufgetreten!\n${errorList.join("<br>")}`,
+		});
+	},
 	// assisting function to stall operations while the update procdure is still running
 	async updateWait () {
 		if (!xml.updating) {

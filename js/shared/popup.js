@@ -16,7 +16,7 @@ let popup = {
 			def = ["close"],
 			defSep = ["sep"].concat(def);
 		if (typeof app !== "undefined") {
-			def = ["update", "sep", "viewXml", "viewHints", "viewClusters", "viewSearch"],
+			def = ["update", "sep", "viewXml", "viewHints", "viewClusters", "viewSearch"];
 			defSep = ["sep"].concat(def);
 		}
 		if (target === "filters_reset") {
@@ -53,7 +53,7 @@ let popup = {
 				return "filters_reset";
 			}
 			// links
-			const href = path[i].nodeType === 1 ? path[i].getAttribute("href") : "";
+			const href = path[i].nodeType === Node.ELEMENT_NODE ? path[i].getAttribute("href") : "";
 			if (/^https:/.test(href)) {
 				popup.element = path[i];
 				return "link";

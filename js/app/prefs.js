@@ -162,7 +162,7 @@ let prefs = {
 			zsData = JSON.parse(content);
 		} catch (err) {
 			if (!passive) {
-				shared.error(`${err.name}: ${err.message}`);
+				shared.error(`${err.name}: ${err.message} (${shared.reduceErrorStack(err.stack)})`);
 			}
 			return false;
 		}

@@ -16,7 +16,7 @@ let updates = {
 		// error
 		if (!data.ok) {
 			if (!auto) {
-				shared.error(`${data.err.name}: ${data.err.message}`);
+				shared.error(`${data.err.name}: ${data.err.message} (${shared.reduceErrorStack(data.err.stack)})`);
 			}
 			return;
 		}

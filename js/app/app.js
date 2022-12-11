@@ -86,7 +86,7 @@ let app = {
 			obj[key] = await shared.fsp.readFile(path, { encoding: "utf8" });
 			return true;
 		} catch (err) {
-			shared.error(`${err.name}: ${err.message}`);
+			shared.error(`${err.name}: ${err.message} (${shared.reduceErrorStack(err.stack)})`);
 			return false;
 		}
 	},

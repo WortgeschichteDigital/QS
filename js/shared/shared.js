@@ -67,6 +67,16 @@ let shared = {
 			text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err}`,
 		});
 	},
+	// reduce the error stack
+	//   err = string
+	reduceErrorStack (err) {
+		let stack = [];
+		for (const m of err.matchAll(/[a-zA-Z]+\.js:[0-9]+/g)) {
+			stack.push(m[0]);
+		}
+		stack.reverse();
+		return stack.join(" – ");
+	},
 	// prepare error strings for better readability
 	//   err = string
 	errorString (err) {
@@ -80,7 +90,8 @@ let shared = {
 		let file = evt.filename, // normal errors
 			message = evt.message,
 			line = evt.lineno,
-			column = evt.colno;
+			column = evt.colno,
+			stack = "";
 		if (evt.stack) { // forwarded errors
 			if (!/file:.+?\.js/.test(evt.stack)) {
 				noDetails();
@@ -89,6 +100,7 @@ let shared = {
 				message = `${evt.name}: ${evt.message}`;
 				line = parseInt(evt.stack.match(/\.js:([0-9]+):/)[1], 10);
 				column = parseInt(evt.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
+				stack = shared.reduceErrorStack(evt.stack);
 			}
 		} else if (evt.reason) { // in promise errors
 			if (!/file:.+?\.js/.test(evt.reason.stack)) {
@@ -98,6 +110,7 @@ let shared = {
 				message = evt.reason.stack.match(/(.+?)\n/)[1];
 				line = parseInt(evt.reason.stack.match(/\.js:([0-9]+):/)[1], 10);
 				column = parseInt(evt.reason.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
+				stack = shared.reduceErrorStack(evt.reason.stack);
 			}
 		}
 		// create error and send to main
@@ -106,6 +119,9 @@ let shared = {
 			err += `${file}: ${line}:${column}\n`;
 		}
 		err += message + "\n";
+		if (stack) {
+			err += `(${stack})\n`;
+		}
 		shared.ipc.invoke("error", err);
 		// no details avaiblable
 		function noDetails () {

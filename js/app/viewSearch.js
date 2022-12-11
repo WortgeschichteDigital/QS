@@ -125,7 +125,7 @@ let viewSearch = {
 				}
 			} catch (err) {
 				await shared.wait(25);
-				await shared.error(`${err.name}: ${err.message}`);
+				await shared.error(`${err.name}: ${err.message} (${shared.reduceErrorStack(err.stack)})`);
 				searchText.select();
 				finishUp(false);
 				return;
