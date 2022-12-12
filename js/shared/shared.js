@@ -72,10 +72,9 @@ let shared = {
 	reduceErrorStack (err) {
 		let stack = [];
 		for (const m of err.matchAll(/[a-zA-Z]+\.js:[0-9]+/g)) {
-			stack.push(m[0]);
+			stack.unshift(m[0]);
 		}
-		stack.reverse();
-		return stack.join(" – ");
+		return stack.join(" > ");
 	},
 	// prepare error strings for better readability
 	//   err = string

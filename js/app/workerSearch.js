@@ -27,8 +27,11 @@ let search = {
 				continue;
 			}
 			// get lines within the scope
-			let text = d.xmlFiles[file],
-				linesScope = [];
+			let text = d.xmlFiles[file];
+			if (!text) {
+				continue;
+			}
+			let linesScope = [];
 			for (const s of d.scope) {
 				let lines = [];
 				for (const m of text.matchAll(new RegExp("<" + s, "g"))) {

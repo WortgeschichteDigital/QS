@@ -40,6 +40,13 @@ let prefs = {
 				document.querySelector("#fun-filters").click();
 			} else if (/^select-/.test(k)) {
 				document.getElementById(k).dataset.value = v;
+			} else {
+				const ele = document.getElementById(k);
+				if (!ele) {
+					delete prefs.data.filters[k];
+					continue;
+				}
+				ele.checked = v;
 			}
 		}
 	},
@@ -188,5 +195,50 @@ let prefs = {
 		prefs.save();
 		xml.zeitstrahl = {};
 		xml.resetCache();
+	},
+	// statistical data
+	statsData: [],
+	// update statistical data
+	//   type = string (clusters | search | update)
+	//   start = date (object)
+	stats (type, start) {
+		// add new entry
+		prefs.statsData.push({
+			duration: new Date() - start,
+			type,
+		});
+		// sort entries
+		prefs.statsData.sort((a, b) => {
+			if (a.type === b.type) {
+				return 0;
+			}
+			let x = [a.type, b.type];
+			x.sort();
+			if (x[0] === a.type) {
+				return 1;
+			}
+			return -1;
+		});
+		// update prefs page
+		const typeSwitch = {
+			clusters: "Cluster",
+			search: "Suche",
+			update: "Update",
+		};
+		let cont = document.querySelector("#prefs-statistics-cont"),
+			lastType = "";
+		shared.clear(cont);
+		for (let i = prefs.statsData.length - 1; i >= 0; i--) {
+			const item = prefs.statsData[i];
+			if (item.type !== lastType) {
+				let h3 = document.createElement("h3");
+				cont.appendChild(h3);
+				h3.textContent = typeSwitch[item.type];
+				lastType = item.type;
+			}
+			let p = document.createElement("p");
+			cont.appendChild(p);
+			p.textContent = item.duration + "\u00A0ms";
+		}
 	},
 };

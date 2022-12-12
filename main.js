@@ -404,7 +404,7 @@ let win = {
 	// data of currently open windows; filled with objects:
 	//   bw = object (browser window)
 	//   id = integer (window ID)
-	//   type = string (about | app | help | pv)
+	//   type = string (about | app | help | pv | worker)
 	//   xml = string (name of XML file shown in pv window, otherwise empty string)
 	data: [],
 	// open new window
@@ -452,10 +452,10 @@ let win = {
 			show: false,
 			webPreferences: {
 				contextIsolation: false,
-				nodeIntegration: true,
-				enableRemoteModule: false,
-				devTools: !app.isPackaged,
 				defaultEncoding: "utf-8",
+				devTools: !app.isPackaged,
+				enableRemoteModule: false,
+				nodeIntegration: true,
 				spellcheck: false,
 			},
 		};
@@ -517,15 +517,8 @@ let win = {
 		// window is going to be closed
 		bw.on("close", async function(evt) {
 			// search window
-			let idx = -1,
-				type = "";
-			for (let i = 0, len = win.data.length; i < len; i++) {
-				if (win.data[i].id === this.id) {
-					idx = i;
-					type = win.data[i].type;
-					break;
-				}
-			}
+			const idx = win.data.findIndex(i => i.id === this.id),
+				type = win.data[idx].type;
 			// close every other window and
 			// save preferences when the main window is about to be closed
 			if (type === "app" && typeof prefs.saved === "undefined") {
@@ -661,6 +654,74 @@ let win = {
 };
 
 
+/***** WORKER WINDOW *****/
+
+let worker = {
+	// data received from worker
+	data: null,
+	// make the worker work
+	//   data = object
+	async work (data) {
+		// send data to existing worker window or create a new one
+		const workerWin = win.data.find(i => i.type === "worker");
+		if (workerWin) {
+			workerWin.bw.webContents.send("work", data);
+		} else {
+			// create browser window
+			const bw = new BrowserWindow({
+				title: "QS / Worker",
+				width: 800,
+				height: 600,
+				show: false,
+				webPreferences: {
+					backgroundThrottling: false,
+					contextIsolation: false,
+					defaultEncoding: "utf-8",
+					devTools: !app.isPackaged,
+					enableRemoteModule: false,
+					nodeIntegration: true,
+				},
+			});
+			// memorize window
+			win.data.push({
+				bw,
+				id: bw.id,
+				type: "worker",
+				xml: "",
+			});
+			// load html
+			bw.loadFile(path.join(__dirname, "win", "worker.html"));
+			// window is going to be closed
+			bw.on("close", async function(evt) {
+				const idx = win.data.findIndex(i => i.type === "worker");
+				win.data.splice(idx, 1);
+			});
+			// send data
+			bw.webContents.once("did-finish-load", function() {
+				const bw = BrowserWindow.fromWebContents(this);
+				bw.webContents.send("work", data);
+			});
+		}
+		// wait for worker to finish
+		worker.data = null;
+		await new Promise(resolve => {
+			const timeout = setTimeout(() => {
+				worker.data = false;
+				resolve(false);
+			}, 6e4);
+			const wait = setInterval(() => {
+				if (worker.data !== null) {
+					clearTimeout(timeout);
+					clearInterval(wait);
+					resolve(true);
+				}
+			}, 100);
+		});
+		return worker.data;
+	},
+};
+
+
 /***** APP EVENTS *****/
 
 // focus existing app window in case a second instance is opened
@@ -766,3 +827,7 @@ ipcMain.handle("pv-close-all", () => win.pvCloseAll());
 ipcMain.handle("pv-new", (evt, args) => win.open("pv", args));
 
 ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));
+
+ipcMain.handle("xml-worker-done", (evt, data) => worker.data = data);
+
+ipcMain.handle("xml-worker-work", async (evt, data) => await worker.work(data));

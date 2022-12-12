@@ -2,7 +2,13 @@
 
 let viewHints = {
 	// populate the view
-	populate () {
+	//   type = string (switched | updated)
+	async populate (type) {
+		await xml.updateWait();
+		if (app.view !== "hints") {
+			return;
+		}
+		app.resetViewScrollTop(type);
 		// TODO
 	},
 };

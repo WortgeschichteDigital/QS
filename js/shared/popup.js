@@ -7,7 +7,7 @@ let popup = {
 	//   evt = object
 	open (evt) {
 		// detect click target
-		const target = popup.getTarget(evt.path);
+		const target = popup.getTarget(evt.composedPath());
 		if (!target) {
 			return;
 		}

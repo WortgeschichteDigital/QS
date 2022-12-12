@@ -52,7 +52,8 @@
 	height: 30px;
 }
 
-.overlay h2 {
+.overlay h2,
+.overlay h3 {
 	margin: 20px 10px 10px 10px;
 	color: var(--textColor);
 	font-size: .9rem;
@@ -60,8 +61,14 @@
 	line-height: 1.35rem;
 }
 
-.overlay h2:first-child {
+.overlay h2:first-child,
+.overlay h3:first-child {
 	margin-top: 0;
+}
+
+.overlay h3 {
+	font-size: .8rem;
+	line-height: 1.2rem;
 }
 
 

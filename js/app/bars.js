@@ -37,6 +37,9 @@ let bars = {
 		document.querySelectorAll(".select-filter").forEach(i => {
 			data[i.id] = i.dataset.value;
 		});
+		document.querySelectorAll("#filters input").forEach(i => {
+			data[i.id] = i.checked;
+		});
 		return data;
 	},
 	// filters: update filter values
@@ -66,8 +69,14 @@ let bars = {
 	filtersActive () {
 		let data = bars.getFiltersData(),
 			active = false;
-		for (const v of Object.values(data)) {
-			if (v) {
+		for (const [k, v] of Object.entries(data)) {
+			const ele = document.getElementById(k);
+			if (ele.closest(".off")) {
+				continue;
+			}
+			const name = ele.nodeName;
+			if (name === "INPUT" && !v ||
+					name !== "INPUT" && v) {
 				active = true;
 				break;
 			}
@@ -81,12 +90,21 @@ let bars = {
 	},
 	// filters: reset all filters in the filter bar
 	filtersReset () {
+		const statusOff = document.querySelector("#filters-status.off");
 		document.querySelectorAll(".select-filter").forEach(i => {
+			if (i.id === "select-status" && statusOff) {
+				return;
+			}
 			if (i.dataset.value) {
 				i.dataset.value = "";
 				bars.fillSelect(i);
 			}
 		});
+		if (!document.querySelector("#filters-hints.off")) {
+			document.querySelectorAll("#filters input").forEach(i => {
+				i.checked = i.defaultChecked;
+			});
+		}
 		bars.filtersActive();
 		if (/xml|hints/.test(app.view)) {
 			app.populateView();
@@ -109,6 +127,20 @@ let bars = {
 			status.classList.add("off");
 			hints.classList.add("off");
 		}
+	},
+	// timeout when checkboxes in the filters bar are toggled
+	// (to prevent the filling of the hints view in too rapid succession)
+	toggleFiltersHintTimeout: null,
+	// filters: bulk toggle for all hint filters
+	//   id = string
+	toggleFiltersHints (id) {
+		const checked = /-all$/.test(id);
+		document.querySelectorAll('#filters-hints input[id^="filters-hints"]').forEach(i => {
+			i.checked = checked;
+		});
+		bars.filtersActive();
+		clearTimeout(bars.toggleFiltersHintTimeout);
+		bars.toggleFiltersHintTimeout = setTimeout(() => app.populateView(), 1e3);
 	},
 	// results: handle results bar after a succesful search
 	resultsSearch () {

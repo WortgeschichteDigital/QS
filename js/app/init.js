@@ -88,6 +88,19 @@ window.addEventListener("load", async () => {
 		evt.preventDefault();
 		bars.filtersReset();
 	});
+	document.querySelectorAll("#filters-hints-all, #filters-hints-none").forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			bars.toggleFiltersHints(this.id);
+		});
+	});
+	document.querySelectorAll("#filters input").forEach(i => {
+		i.addEventListener("change", () => {
+			bars.filtersActive();
+			clearTimeout(bars.toggleFiltersHintTimeout);
+			bars.toggleFiltersHintTimeout = setTimeout(() => app.populateView(), 1e3);
+		});
+	});
 
 	// CLICK EVENTS: HEADER
 	document.querySelectorAll("#view a").forEach(a => {

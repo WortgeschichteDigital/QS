@@ -31,7 +31,8 @@ let viewSearch = {
 	},
 	// start search
 	async start () {
-		const searchText = document.querySelector("#search-text");
+		const statsStart = new Date(),
+			searchText = document.querySelector("#search-text");
 		if (viewSearch.data.running) {
 			await dialog.open({
 				type: "alert",
@@ -41,7 +42,6 @@ let viewSearch = {
 			return;
 		}
 		viewSearch.data.running = true;
-		await xml.updateWait();
 		// split up search term
 		let textOri = searchText.value.trim(),
 			text = textOri;
@@ -186,6 +186,7 @@ let viewSearch = {
 					shared.feedback("error");
 				}
 			}
+			prefs.stats("search", statsStart);
 		}
 	},
 	// perform search in XML files

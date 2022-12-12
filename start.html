@@ -2,7 +2,7 @@
 <html lang="de">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://www.deutschestextarchiv.de/demo/cab/ https://github.com/WortgeschichteDigital/QS/">
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://github.com/WortgeschichteDigital/QS/">
 
 		<title>QS</title>
 
@@ -28,7 +28,6 @@
 		<script src="js/app/bars.js"></script>
 		<script src="js/app/error.js"></script>
 		<script src="js/app/git.js"></script>
-		<script src="js/app/hints.js"></script>
 		<script src="js/app/keyboard.js"></script>
 		<script src="js/app/prefs.js"></script>
 		<script src="js/app/tags.js"></script>
@@ -195,8 +194,55 @@
 
 				<div id="filters-hints" class="off">
 					<h1>Markierungen</h1>
+					<p
+						><input type="checkbox" id="filters-marks-unchecked" checked
+							><label for="filters-marks-unchecked"><img src="img/app/mark-unchecked.svg" width="24" height="24" alt=""></label
+						><input type="checkbox" id="filters-marks-checked_okay" checked
+							><label for="filters-marks-checked_okay"><img src="img/app/mark-checked-okay.svg" width="24" height="24" alt=""></label
+						><input type="checkbox" id="filters-marks-checked_error" checked
+							><label for="filters-marks-checked_error"><img src="img/app/mark-checked-error.svg" width="24" height="24" alt=""></label
+					></p>
 
 					<h1>Hinweise</h1>
+					<p class="toggle"
+						><a href="#" id="filters-hints-all">alle</a>·<a href="#" id="filters-hints-none">keine</a
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-links_error" checked
+						><label for="filters-hints-links_error">Verweise: Fehler</label
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-links_suggestion" checked
+						><label for="filters-hints-links_suggestion">Verweise: Verlinkungen</label
+					></p>
+					<p class="indent"
+						><input type="checkbox" id="filters-hints-links_suggestion_filter" checked
+						><label for="filters-hints-links_suggestion_filter">Vorschläge reduzieren</label
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-tagging_error" checked
+						><label for="filters-hints-tagging_error">Tagging: Fehler</label
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-tagging_diasystems" checked
+						><label for="filters-hints-tagging_diasystems">Tagging: Diasystematik</label
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-tagging_semantics" checked
+						><label for="filters-hints-tagging_semantics">Tagging: Semantik</label
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-general" checked
+						><label for="filters-hints-general">allgemeine Fehler</label
+					></p>
+					<p
+						><input type="checkbox" id="filters-hints-comment" checked
+						><label for="filters-hints-comment">Kommentare</label
+					></p>
+					<p class="indent"
+						><input type="checkbox" id="filters-hints-comment_filter" checked
+						><label for="filters-hints-comment_filter">nur mit Autorentext</label
+					></p>
 				</div>
 			</div>
 		</div>
@@ -258,6 +304,7 @@
 					<ul
 						><li><a href="#data" class="active">Datendateien</a></li
 						><li><a href="#git">Git</a></li
+						><li><a href="#statistics">Statistik</a></li
 					></ul>
 					<div>
 						<!-- Datendateien -->
@@ -285,6 +332,12 @@
 							<p
 								><input type="button" value="Konfiguration" id="prefs-git-config"
 							></p>
+						</div>
+
+						<!-- Statistik -->
+						<div id="prefs-statistics" class="prefs-section off">
+							<h2>Dauer aufwendiger Berechnungen</h2>
+							<div id="prefs-statistics-cont"></div>
 						</div>
 					</div>
 				</div>

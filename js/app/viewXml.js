@@ -2,9 +2,13 @@
 
 let viewXml = {
 	// populate the view
-	async populate () {
+	//   type = string ("switched": view switched | "updated": XML files updated)
+	async populate (type) {
 		await xml.updateWait();
-		window.scrollTo(0, 0);
+		if (app.view !== "xml") {
+			return;
+		}
+		app.resetViewScrollTop(type);
 		// glean data
 		let data = [];
 		for (const [file, values] of Object.entries(xml.data.files)) {
@@ -146,6 +150,9 @@ let viewXml = {
 			i.addEventListener("click", async function(evt) {
 				evt.preventDefault();
 				await xml.updateWait();
+				if (app.view !== "xml") {
+					return;
+				}
 				viewXml["fun" + this.dataset.event](this);
 			});
 		});
@@ -179,7 +186,12 @@ let viewXml = {
 		}
 		// extract summary (Kurz gefasst)
 		const tr = a.closest("tr"),
-			doc = new DOMParser().parseFromString(xml.files[tr.dataset.file], "text/xml"),
+			file = xml.files[tr.dataset.file];
+		if (!file) {
+			shared.error(`Dateidaten für „${tr.dataset.file}“ nicht gefunden`);
+			return;
+		}
+		const doc = new DOMParser().parseFromString(file, "text/xml"),
 			xslt = new DOMParser().parseFromString(viewXml.funTeaserXsl, "application/xml"),
 			processor = new XSLTProcessor();
 		processor.importStylesheet(xslt);

@@ -63,13 +63,16 @@
 	line-height: 1.5rem;
 }
 
-#filters-reset {
+#filters-reset,
+#filters-hints a {
 	color: #fff;
 	text-decoration: underline;
 }
 
 #filters-reset:focus,
-#filters-reset:hover {
+#filters-reset:hover,
+#filters-hints a:focus,
+#filters-hints a:hover {
 	outline: none;
 	text-decoration: none;
 }
@@ -77,6 +80,41 @@
 #filters-reset img {
 	vertical-align: top;
 	margin-right: 5px;
+}
+
+#filters input[id^="filters-marks"]:not(:first-child) {
+	margin-left: 20px;
+}
+
+#filters label[for^="filters-marks"] img {
+	vertical-align: top;
+}
+
+#filters-hints p {
+	margin-bottom: 5px;
+	white-space: nowrap;
+}
+
+#filters-hints p.toggle {
+	margin-bottom: 10px;
+	margin-left: 32px;
+}
+
+#filters-hints p.toggle a:first-child {
+	margin-right: 10px;
+}
+
+#filters-hints p.toggle a:last-child {
+	margin-left: 10px;
+}
+
+#filters-hints p.indent {
+	margin-left: 32px;
+}
+
+#filters-hints input {
+	margin-top: 1px;
+	margin-left: 2px;
 }
 
 

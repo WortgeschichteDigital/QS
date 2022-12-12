@@ -24,7 +24,7 @@ let pv = {
 			.then(() => pv.loadingDone(wv))
 			.catch(err => {
 				wv.stop();
-				wv.loadURL("file://" + shared.path.join(shared.info.appPath, "win", "pv-error.html"))
+				wv.loadURL("file://" + shared.path.join(shared.info.appPath, "win", "pvError.html"))
 					.then(() => {
 						pv.loadingDone(wv);
 						wv.executeJavaScript(`
@@ -46,7 +46,7 @@ let pv = {
 	// show error document if XML file was not found (anymore)
 	xmlNotFound () {
 		const wv = document.querySelector("webview");
-		wv.loadURL("file://" + shared.path.join(shared.info.appPath, "win", "pv-error.html"))
+		wv.loadURL("file://" + shared.path.join(shared.info.appPath, "win", "pvError.html"))
 			.then(() => {
 				pv.loadingDone(wv);
 				wv.executeJavaScript(`

@@ -567,7 +567,7 @@ let hints = {
 					linkCount: 0,
 					scope: hints.detectScope(i),
 					textErr: ['<Verweis_extern Typ="Cluster">'],
-					textHint: ["Attribut Typ entfernen"],
+					textHint: ["Attribut Typ überflüssig"],
 					type: "www_error",
 				});
 			}
@@ -711,7 +711,7 @@ let hints = {
 			}
 		}
 	},
-	// LITERATURE_ERROR
+	// LITERATURE_ERROR, LITERATURE_MISSING
 	//   file = string (XML file name)
 	//   doc = document
 	//   content = string
@@ -737,7 +737,7 @@ let hints = {
 					scope: "Literatur",
 					textErr: [`<Literaturtitel xml:id="${id}"/>`],
 					textHint: ["Literaturtitel existiert nicht"],
-					type: "literature_error",
+					type: "literature_missing",
 				});
 			}
 		}
@@ -858,7 +858,7 @@ let hints = {
 		// in case they were updated while the app was running
 		hints.diasystems = {};
 		// check whether Diasystematik.rnc exists or not
-		const path = shared.path.join(git.config.dir, "share", "rnc", "Diasystematik.rnc"),
+		const path = shared.path.join(xml.gitDir, "share", "rnc", "Diasystematik.rnc"),
 			exists = await shared.ipc.invoke("exists", path);
 		if (!exists) {
 			return false;
@@ -883,7 +883,7 @@ let hints = {
 		// in case they were updated while the app was running
 		hints.literature = new Set();
 		// check whether Literaturliste.xml exists or not
-		const path = shared.path.join(git.config.dir, "share", "Literaturliste.xml"),
+		const path = shared.path.join(xml.gitDir, "share", "Literaturliste.xml"),
 			exists = await shared.ipc.invoke("exists", path);
 		if (!exists) {
 			return false;
@@ -951,8 +951,8 @@ let hints = {
 					break;
 				}
 				// no variants for single letters or words with apostrophe
-				if (/’/.test(missing[j]) ||
-						missing[j].length === 1) {
+				if (/^[0-9]|’/.test(missing[j]) ||
+						missing[j].length < 3) {
 					hints.variants[missing[j]] = [missing[j]];
 					save = true;
 					continue;

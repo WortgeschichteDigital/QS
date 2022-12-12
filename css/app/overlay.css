@@ -136,6 +136,26 @@
 	margin-left: 5px;
 }
 
+#prefs-statistics-cont {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#prefs-statistics-cont h3 {
+	flex: 0 0 100%;
+	margin: 10px 0 5px 0;
+	font-style: italic;
+	font-weight: normal;
+}
+
+#prefs-statistics-cont h3:first-child {
+	margin-top: 0;
+}
+
+#prefs-statistics-cont p {
+	margin: 0 15px 0 0;
+}
+
 
 /* SUMMARY -------------------------------------- */
 

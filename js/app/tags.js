@@ -31,6 +31,10 @@ let tags = {
 	},
 	// show all tags used in each and every summary
 	show () {
+		if (!Object.keys(xml.files).length) {
+			shared.error("XML-Dateidaten nicht geladen");
+			return;
+		}
 		if (!Object.keys(tags.data).length) {
 			// collect tags and attributes
 			tags.collectData();

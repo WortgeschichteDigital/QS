@@ -112,3 +112,7 @@ input[type="checkbox"]:focus {
 	outline-offset: 0;
 	border-color: var(--outline);
 }
+
+input[type="checkbox"]:focus::before {
+	background-color: var(--outline);
+}

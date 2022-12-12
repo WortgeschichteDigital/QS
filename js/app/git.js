@@ -217,7 +217,7 @@ let git = {
 			type: "alert",
 			text: status,
 		});
-		win.classList.remove("code");
+		setTimeout(() => win.classList.remove("code"), 300);
 	},
 	// change branch
 	async commandBranch () {

@@ -36,15 +36,16 @@ let xml = {
 	//         textHint     = []  proposal into which "textErr" should be changed;
 	//                              the structure is the same as "textErr"
 	//         type         = ""  hint type; available types
-	//                              article_id          = correct article ID
 	//                              article_file        = correct XML file name
+	//                              article_id          = correct article ID
 	//                              comment             = comment node
 	//                              diasystemic_value   = add diasystemic value
 	//                              ez_link             = <erwaehntes_Zeichen>: link to matching article
 	//                              ez_stichwort        = <erwaehntes_Zeichen>: change tag to <Stichwort>
 	//                              link_duplicate      = erase duplicate link in <Verweise>
 	//                              link_error          = correct internal link
-	//                              literature_error    = add missing or correct existing literature title
+	//                              literature_error    = correct literature tag
+	//                              literature_missing  = add missing literature title
 	//                              semantic_type       = add semantic type
 	//                              sprache_superfluous = @Sprache is superfluous
 	//                              tr_error            = correct internal reference
@@ -86,7 +87,7 @@ let xml = {
 	// XML file content
 	//   [FILENAME.xml] = string (complete XML file)
 	files: {},
-	// contents of data.json with Zeitstrahl data (see preferences "Externe Daten"); important keys:
+	// contents of data.json with Zeitstrahl data (see preferences); important keys:
 	//   zeitstrahl.lemmas
 	//     [LEMMA|XML-ID] = {}
 	//       spelling     = ""  spelling of the lemma
@@ -96,288 +97,6 @@ let xml = {
 	//                            2 digits = century
 	//                            0        = unknown (no quotation for this lemma)
 	zeitstrahl: {},
-	// fill file data
-	//   updated = array (names of files to be updated)
-	async fillData (updated) {
-		for (const file of updated) {
-			const doc = new DOMParser().parseFromString(xml.files[file], "text/xml");
-			// XML not well-formed
-			if (doc.querySelector("parsererror")) {
-				xml.updateErrors.push({
-					file,
-					err: "XML not well-formed",
-				});
-				continue;
-			}
-			// parse file
-			// (assume that authors try to parse invalid XML files;
-			// therefore, let's wrap it all in a try block)
-			let d = xml.data.files[file];
-			try {
-				// authors
-				d.authors = [];
-				doc.querySelectorAll("Revision Autor").forEach(i => {
-					const text = i.textContent;
-					if (!d.authors.includes(text)) {
-						d.authors.push(text);
-					}
-				});
-				// field
-				d.fa = doc.querySelector('Artikel[Typ="Wortfeldartikel"]') ? true : false;
-				// main lemmas
-				d.hl = [];
-				d.hlJoined = [];
-				doc.querySelectorAll('Artikel > Lemma[Typ="Hauptlemma"]').forEach(i => {
-					let schreibungen = [];
-					i.querySelectorAll("Schreibung").forEach(s => {
-						schreibungen.push(s.textContent);
-					});
-					if (d.fa) {
-						schreibungen[0] = schreibungen[0] + " (Wortfeld)";
-					}
-					d.hl = d.hl.concat(schreibungen);
-					d.hlJoined.push(schreibungen.join("/"));
-				});
-				// sub lemmas
-				d.nl = [];
-				d.nlJoined = [];
-				d.nlTargets = {};
-				doc.querySelectorAll('Artikel > Lemma[Typ="Nebenlemma"]').forEach(i => {
-					let schreibungen = [];
-					i.querySelectorAll("Schreibung").forEach(s => {
-						schreibungen.push(s.textContent);
-					});
-					d.nl = d.nl.concat(schreibungen);
-					d.nlJoined.push(schreibungen.join("/"));
-					// ascertain target
-					const target = i.querySelector("Textreferenz").getAttribute("Ziel");
-					for (const s of schreibungen) {
-						d.nlTargets[s] = target;
-					}
-				});
-				// diasystemic information
-				d.diasys = [];
-				let lemma = d.hl[0];
-				doc.querySelectorAll("Lesarten").forEach(l => {
-					const schreibung = l.querySelectorAll("Lemma Schreibung")?.textContent;
-					if (schreibung) {
-						lemma = schreibung;
-					}
-					l.querySelectorAll("Diasystematik > *").forEach(i => {
-						d.diasys.push({
-							category: i.nodeName,
-							value: i.textContent,
-							lemma,
-						});
-					});
-				});
-				// topic domains
-				d.domains = [];
-				doc.querySelectorAll("Artikel > Diasystematik Themenfeld").forEach(i => {
-					d.domains.push(i.textContent);
-				});
-				// first lemma quotation
-				d.first = {};
-				for (const lemma of d.hl.concat(d.nl)) {
-					let year = 0;
-					if (xml.zeitstrahl.lemmas) {
-						for (const v of Object.values(xml.zeitstrahl.lemmas)) {
-							if (v.xml === file && v.spelling === lemma) {
-								year = v.year;
-								break;
-							}
-						}
-					}
-					d.first[lemma] = year;
-				}
-				// create array for hints
-				// (filled in hints.glean())
-				d.hints = [];
-				// file ID
-				d.id = doc.querySelector("Artikel").getAttribute("xml:id");
-				// collect all links
-				d.links = [];
-				doc.querySelectorAll("Verweis").forEach(i => {
-					const verweistext = i.querySelector("Verweistext").textContent.trim(),
-						verweisziel = i.querySelector("Verweisziel").textContent.trim(),
-						scopePoints = xml.getScopePoints(i, d.fa);
-					d.links.push({
-						lemma: {},
-						line: xml.getLineNumber(i, doc, xml.files[file]),
-						points: scopePoints.points,
-						scope: scopePoints.scope,
-						type: i?.getAttribute("Typ")?.split(" ") || [],
-						verweistext,
-						verweisziel,
-					});
-				});
-				// article name
-				d.name = d.hlJoined.join(", ");
-				if (d.nlJoined.length) {
-					d.name += ` (${d.nlJoined.join(", ")})`;
-				}
-				// publication date
-				const published = doc.querySelector("Revision Datum").textContent.split(".");
-				d.published = published[2] + "-" + published[1] + "-" + published[0];
-				// all possibile targets within the article
-				d.targets = [];
-				doc.querySelectorAll("Wortgeschichte *").forEach(i => {
-					const id = i.getAttribute("xml:id");
-					if (id) {
-						d.targets.push(id);
-					}
-				});
-			} catch (err) {
-				xml.updateErrors.push({
-					file,
-					err: `${err.name}: ${err.message}`,
-				});
-			}
-		}
-		// fill "lemma" in all links
-		for (const values of Object.values(xml.data.files)) {
-			if (!values.links) {
-				// in case an XML file could not be read due to a "not well-formed" error
-				continue;
-			}
-			for (const link of values.links) {
-				const lemma = xml.getLemma(link.verweisziel);
-				link.lemma = lemma;
-			}
-		}
-		// purge files that produced errors
-		// (this has to be done here as well,
-		// as all files are parsed again in hints.glean())
-		for (const i of xml.updateErrors) {
-			delete xml.data.files[i.file];
-			delete xml.files[i.file];
-		}
-	},
-	// determine scope and cluster points of the given link
-	//   link = element
-	//   fa = boolean (article is a field article)
-	getScopePoints (link, fa) {
-		if (link.closest("Anmerkung") ||
-				link.closest("Abschnitt") &&
-				link.closest("Abschnitt").getAttribute("Relevanz") === "niedrig") {
-			// footnote or learn more (Mehr erfahren)
-			return {
-				points: 1,
-				scope: "Wortgeschichte",
-			};
-		} else if (link.closest("Wortgeschichte")) {
-			// continuous text (base value)
-			return {
-				points: 2,
-				scope: "Wortgeschichte",
-			};
-		} else if (link.closest("Wortgeschichte_kompakt")) {
-			// summary (Kurz gefasst)
-			return {
-				points: 3,
-				scope: "Kurz gefasst",
-			};
-		} else if (link.closest("Verweise")) {
-			if (fa) {
-				// field article
-				return {
-					points: 10,
-					scope: "Verweise",
-				};
-			}
-			// structured reference list
-			return {
-				points: 3,
-				scope: "Verweise",
-			};
-		}
-		// this should never happen
-		return {
-			points: 0,
-			scope: "",
-		};
-	},
-	// get the actual lemma a <Verweisziel> points to
-	//   vz = string (contents of <Verweisziel>)
-	//   data = object (article data)
-	getLemma (vz) {
-		let lemma = vz.split("#")[0],
-			hash = vz.split("#")[1] || "";
-		if (/^Wortfeld-/.test(lemma)) {
-			lemma = lemma.replace(/^Wortfeld-/, "");
-			lemma += " (Wortfeld)";
-		}
-		for (const [file, values] of Object.entries(xml.data.files)) {
-			if (values.nl.includes(lemma)) {
-				// erroneous usage of sub lemma as link target
-				return {
-					file,
-					spelling: lemma,
-				};
-			} else if (values.hl.includes(lemma)) {
-				if (hash) {
-					// the link might point to a sub lemma
-					for (const [nl, target] of Object.entries(values.nlTargets)) {
-						if (target === hash) {
-							lemma = nl;
-							break;
-						}
-					}
-				}
-				return {
-					file,
-					spelling: lemma,
-				};
-			}
-		}
-		// this can happen when the user wrote an unresolvable <Verweisziel>
-		return {
-			file: "",
-			spelling: "",
-		};
-	},
-	// get line number of current element
-	//   ele = element
-	//   doc = document (parsed XML file)
-	//   file = string (unparsed XML file)
-	//   idx = number | undefined (set in case ele is a comment node)
-	getLineNumber (ele, doc, file, idx = -1) {
-		// erase comments but retain the line breaks
-		// (tags of the searched type can be located within a comment
-		// which would produce bogus line counts)
-		if (idx === -1) {
-			file = file.replace(/<!--.+?-->/gs, m => {
-				const n = m.match(/\n/g);
-				if (n) {
-					return "\n".repeat(n.length);
-				}
-				return "";
-			});
-		}
-		// search line number
-		let tag = ele.nodeName,
-			reg = new RegExp(`<${tag}(?=[ >])`, "g"),
-			hitIdx = 0;
-		if (idx === -1) {
-			// element nodes
-			const nodes = doc.getElementsByTagName(tag);
-			for (let i = 0, len = nodes.length; i < len; i++) {
-				if (nodes[i] === ele) {
-					hitIdx = i;
-					break;
-				}
-			}
-		} else {
-			// comment nodes
-			reg = new RegExp("<!--", "g");
-			hitIdx = idx;
-		}
-		let offset = 0;
-		for (let i = 0; i <= hitIdx; i++) {
-			offset = reg.exec(file).index;
-		}
-		return file.substring(0, offset).split("\n").length;
-	},
 	// load cache file
 	async loadCache () {
 		let json;
@@ -389,15 +108,6 @@ let xml = {
 			return;
 		}
 		xml.data = json;
-	},
-	// write cache file
-	async writeCache () {
-		const path = shared.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
-		try {
-			await shared.fsp.writeFile(path, JSON.stringify(xml.data));
-		} catch (err) {
-			shared.error(`${err.name}: ${err.message} (${shared.reduceErrorStack(err.stack)})`);
-		}
 	},
 	// remove cache files and rebuild xml data
 	//   active = true | undefined (clear was initiated by user)
@@ -431,6 +141,7 @@ let xml = {
 	// execute update operation
 	//   xmlFiles = object | undefined (filled in case a file is requested by a preview window)
 	async update (xmlFiles = null) {
+		const statsStart = new Date();
 		xml.updating = true;
 		xml.updateErrors = [];
 		const update = document.querySelector("#fun-update");
@@ -442,42 +153,11 @@ let xml = {
 		const img = update.firstChild;
 		img.src = "img/app/view-refresh.svg";
 		img.classList.add("rotate");
-		// detect current branch & update header if necessary
+		// detect current branch, update header, load cached data
 		const branch = await git.branchCurrentPrint();
 		if (xml.data.branch !== branch) {
 			xml.data.branch = branch;
 			await xml.loadCache();
-		}
-		// get XML files
-		let files = xmlFiles || await shared.ipc.invoke("xml-files", git.config.dir),
-			updated = [];
-		for (const [k, v] of Object.entries(files)) {
-			// save file content
-			xml.files[k] = v.xml;
-			// update file data?
-			if (xml.data.files?.[k]?.hash !== v.hash) {
-				updated.push(k);
-				xml.data.files[k] = {};
-				for (const [key, val] of Object.entries(v)) {
-					if (key === "xml") {
-						continue;
-					}
-					xml.data.files[k][key] = val;
-				}
-			}
-		}
-		// remove files that don't exist anymore from data objects
-		let removedFiles = false; // some files were removed => update all hints
-		if (!xmlFiles) { // don't remove any file in case only some files were received
-			for (const file of Object.keys(xml.data.files)) {
-				if (!files[file]) {
-					removedFiles = true;
-					delete xml.data.files[file];
-					if (xml.files[file]) {
-						delete xml.files[file];
-					}
-				}
-			}
 		}
 		// detect changed and untracked files
 		let changed = await git.commandExec("git ls-files --modified");
@@ -492,38 +172,40 @@ let xml = {
 			return;
 		}
 		untracked = untracked.split("\n");
-		for (let file of changed.concat(untracked)) {
-			if (!/^articles\//.test(file)) {
-				continue;
-			}
-			const name = file.split("/")[1].trim();
-			if (xml.data.files[name]) {
-				// deleted files appear as changed
-				xml.data.files[name].status = changed.includes(file) ? 1 : 2;
-			}
+		// start worker
+		const response = await shared.ipc.invoke("xml-worker-work", {
+			data: xml.data,
+			files: xml.files,
+			gitDir: git.config.dir,
+			zeitstrahl: xml.zeitstrahl,
+			changed,
+			untracked,
+			xmlFiles,
+		});
+		if (!response) {
+			shared.error("Einlesen der XML-Dateidaten gescheitert");
+			reset();
+			return;
 		}
-		// analyze new files
-		if (updated.length) {
-			await xml.fillData(updated);
-		}
-		// glean hints & save data to cache file
-		if (updated.length || removedFiles) {
-			await hints.glean();
-			xml.data.date = new Date().toISOString();
-			await xml.writeCache();
-		}
-		// update list of possible filter values
-		bars.filtersUpdate();
-		// update current view
-		app.populateView();
-		// reset button
+		xml.data = response.data;
+		xml.files = response.files;
+		xml.updateErrors = response.updateErrors;
+		// finish up
 		reset();
 		function reset () {
+			// update list of possible filter values
+			bars.filtersUpdate();
+			// update current view
+			app.populateView("updated");
+			// reset button
 			update.classList.remove("active");
 			img.src = "img/app/view-refresh-white.svg";
 			img.classList.remove("rotate");
-			xml.updating = false;
+			// errors that occured during the update process
 			xml.showUpdateErrors();
+			// finish up
+			xml.updating = false;
+			prefs.stats("update", statsStart);
 		}
 	},
 	// update procedure is running

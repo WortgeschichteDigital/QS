@@ -102,10 +102,9 @@ let app = {
 		div.appendChild(hint);
 		let tipp = textTipp || "";
 		if (!tipp && app.view === "search") {
-			let dataF = bars.getFiltersData(),
-				dataA = viewSearch.getAdvancedData(),
+			let dataA = viewSearch.getAdvancedData(),
 				tipps = [];
-			if (Object.values(dataF).some(i => i)) {
+			if (document.querySelector("#fun-filters.active-filters")) {
 				tipps.push("verwenden Sie weniger Filter");
 			}
 			if (dataA["search-scope-0"].checked) {
@@ -118,11 +117,16 @@ let app = {
 				tipp = tipps.join(" und ");
 				tipp = tipp.substring(0, 1).toUpperCase() + tipp.substring(1);
 			}
+			if (!Object.keys(xml.files).length) {
+				tipp = "Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden";
+			}
 			tipp = `Tipp: ${tipp}.`;
+		} else if (app.view === "xml" && !Object.keys(xml.files).length) {
+			tipp = "Tipp: Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden.";
 		} else if (!tipp) {
 			tipp = "Tipp: Verwenden Sie weniger Filter.";
 		}
-		hint.textContent = tipp;
+		hint.innerHTML = tipp;
 		return div;
 	},
 	// open preview
@@ -219,7 +223,19 @@ let app = {
 			type: document.querySelector("#sorting-alpha.active") ? "alpha" : "time",
 		};
 	},
+	// saves scroll position of view
+	viewScrollTop: {},
+	// reset the scroll position of the current view
+	//   type = string (switched | updated)
+	resetViewScrollTop (type) {
+		if (type && app.viewScrollTop[app.view]) {
+			window.scrollTo(0, app.viewScrollTop[app.view]);
+		} else {
+			window.scrollTo(0, 0);
+		}
+	},
 	// determine the next view after pressing the keyboard shortcut
+	//   toRight = boolean
 	toggleViewShortcut (toRight) {
 		let views = document.querySelectorAll("#view a"),
 			idx = -1;
@@ -254,6 +270,8 @@ let app = {
 			return;
 		}
 		app.switching = true;
+		// save scroll position
+		app.viewScrollTop[app.view] = window.scrollY;
 		// determine next view
 		let nextView = button.id.replace("view-", "");
 		// close results bar (if necessary)
@@ -330,24 +348,31 @@ let app = {
 		// finish up
 		app.view = nextView;
 		bars.toggleFiltersCat();
-		app.populateView();
+		bars.filtersActive();
+		app.populateView("switched");
 		app.switching = false;
 	},
 	// popuplate the current view
-	populateView () {
+	//   type = string | undefined
+	populateView (type = "") {
 		switch (app.view) {
 			case "xml":
-				viewXml.populate();
+				viewXml.populate(type);
 				break;
 			case "hints":
-				viewHints.populate();
+				viewHints.populate(type);
 				break;
 			case "clusters":
 				viewClusters.populate();
 				break;
 			case "search":
-				viewSearch.toggleAdvanced("on");
-				document.querySelector("#search-text").select();
+				if (type === "switched") {
+					app.resetViewScrollTop(type);
+				}
+				if (type !== "updated") {
+					viewSearch.toggleAdvanced("on");
+					document.querySelector("#search-text").select();
+				}
 				break;
 		}
 	},
