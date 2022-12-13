@@ -410,7 +410,8 @@ let win = {
 	// open new window
 	//   type = string (about | app | help | pv)
 	//   xml = object | undefined (see win.pvOpen())
-	open (type, xml = {}) {
+	//   show = object | undefined (show section in help window)
+	open ({ type, xml = {}, show = null }) {
 		// define window dimensions
 		const workArea = display.getPrimaryDisplay().workArea,
 			data = prefs.data.win[type],
@@ -502,7 +503,14 @@ let win = {
 			help: path.join(__dirname, "win", "help.html"),
 			pv: path.join(__dirname, "win", "pv.html"),
 		};
-		bw.loadFile(html[type]);
+		if (!app.isPackaged) {
+			// no cache while developing
+			bw.loadURL("file://" + html[type], {
+				extraHeaders: "pragma: no-cache\n",
+			});
+		} else {
+			bw.loadFile(html[type]);
+		}
 		// focus window (otherwise it might not be in the foreground)
 		win.focus(bw);
 		// show window (this prevents flickering on startup)
@@ -512,6 +520,12 @@ let win = {
 			bw.webContents.once("did-finish-load", function() {
 				const bw = BrowserWindow.fromWebContents(this);
 				win.pvSend(bw, xml);
+			});
+		}
+		// make the window show a section
+		else if (show) {
+			bw.webContents.once("did-finish-load", function() {
+				this.send("show", show);
 			});
 		}
 		// window is going to be closed
@@ -560,7 +574,7 @@ let win = {
 		if (w) {
 			w.bw.focus();
 		} else {
-			win.open(type);
+			win.open({ type });
 		}
 	},
 	// close the currently active (i.e. focused) window
@@ -616,7 +630,7 @@ let win = {
 				return;
 			}
 		}
-		win.open("pv", args);
+		win.open({ type: "pv", xml: args });
 	},
 	// close all preview windows
 	pvCloseAll () {
@@ -650,6 +664,16 @@ let win = {
 		// focus window
 		// (this is important in case the window already exists)
 		bw.focus();
+	},
+	// show section in help window
+	//   data = object
+	help (data) {
+		const w = win.data.find(i => i.type === "help");
+		if (w) {
+			w.bw.webContents.send("show", data);
+		} else {
+			win.open({ type: "help", show: data });
+		}
 	},
 };
 
@@ -690,7 +714,15 @@ let worker = {
 				xml: "",
 			});
 			// load html
-			bw.loadFile(path.join(__dirname, "win", "worker.html"));
+			const html = path.join(__dirname, "win", "worker.html");
+			if (!app.isPackaged) {
+				// no cache while developing
+				bw.loadURL("file://" + html, {
+					extraHeaders: "pragma: no-cache\n",
+				});
+			} else {
+				bw.loadFile(html);
+			}
 			// window is going to be closed
 			bw.on("close", async function(evt) {
 				const idx = win.data.findIndex(i => i.type === "worker");
@@ -739,7 +771,7 @@ app.on("ready", async () => {
 	// read preferences
 	await prefs.read();
 	// open app window
-	win.open("app");
+	win.open({ type: "app" });
 });
 
 // quit app when every window is closed
@@ -765,7 +797,7 @@ app.on("activate", () => {
 		}
 	}
 	if (!appWinExists) {
-		win.open("app");
+		win.open({ type: "app" });
 	}
 });
 
@@ -789,6 +821,8 @@ ipcMain.handle("close", evt => {
 	const bw = BrowserWindow.fromWebContents(evt.sender);
 	bw.close();
 });
+
+ipcMain.handle("help", (evt, data) => win.help(data));
 
 ipcMain.handle("error", async (evt, err) => error.log(err));
 
@@ -824,7 +858,7 @@ ipcMain.handle("pv", (evt, args) => win.pvOpen(args));
 
 ipcMain.handle("pv-close-all", () => win.pvCloseAll());
 
-ipcMain.handle("pv-new", (evt, args) => win.open("pv", args));
+ipcMain.handle("pv-new", (evt, args) => win.open({ type: "pv", xml: args }));
 
 ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));
 

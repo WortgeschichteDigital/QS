@@ -15,6 +15,9 @@ window.addEventListener("load", async () => {
 		});
 	});
 
+	// LISTEN TO IPC MESSAGES
+	shared.ipc.on("show", (evt, data) => help.show(data));
+
 	// GET APP INFO
 	shared.info = await shared.ipc.invoke("app-info");
 

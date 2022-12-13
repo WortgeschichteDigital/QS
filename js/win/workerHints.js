@@ -69,8 +69,14 @@ let hints = {
 								line: i.line,
 								linkCount: 0,
 								scope: "Verweise",
-								textErr: [`<Verweisziel>${i.verweisziel}</Verweisziel>`],
-								textHint: ["identischer Verweis bereits in Wortinformationen"],
+								textErr: [
+									{
+										text: "identischer Verweis bereits in Wortinformationen",
+										type: "hint_text",
+									},
+									`<Verweisziel>${i.verweisziel}</Verweisziel>`,
+								],
+								textHint: [],
 								type: "link_duplicate",
 							});
 						}
@@ -84,8 +90,14 @@ let hints = {
 							line: i.line,
 							linkCount: 0,
 							scope: i.scope,
-							textErr: [`<Verweisziel>${i.verweisziel}</Verweisziel>`],
-							textHint: ["Sprungziel nicht gefunden"],
+							textErr: [
+								{
+									text: "Sprungziel nicht gefunden",
+									type: "hint_text",
+								},
+								`<Verweisziel>${i.verweisziel}</Verweisziel>`,
+							],
+							textHint: [],
 							type: "link_error",
 						});
 					}
@@ -124,10 +136,14 @@ let hints = {
 								linkCount: 0,
 								scope: i.scope,
 								textErr: [
+									{
+										text: "Verweistext passt nicht zum Verweisziel",
+										type: "hint_text",
+									},
 									`<Verweistext>${i.verweistext}</Verweistext>`,
 									`<Verweisziel>${i.verweisziel}</Verweisziel>`,
 								],
-								textHint: ["Verweistext passt nicht zum Verweisziel"],
+								textHint: [],
 								type: "link_error",
 							});
 						}
@@ -140,14 +156,17 @@ let hints = {
 							line: i.line,
 							linkCount: 0,
 							scope: i.scope,
-							textErr: [`<Verweisziel>${i.verweisziel}</Verweisziel>`],
-							textHint: [
-								"Wortfeldartikel falsch verlinkt",
+							textErr: [
 								{
-									text: `<Verweisziel>Wortfeld-${i.verweisziel}</Verweisziel>`,
-									type: "copy",
+									text: "Wortfeldartikel falsch verlinkt",
+									type: "hint_text",
 								},
+								`<Verweisziel>${i.verweisziel}</Verweisziel>`,
 							],
+							textHint: [{
+								text: `<Verweisziel>Wortfeld-${i.verweisziel}</Verweisziel>`,
+								type: "copy",
+							}],
 							type: "link_error",
 						});
 					} else {
@@ -155,9 +174,15 @@ let hints = {
 							line: i.line,
 							linkCount: 0,
 							scope: i.scope,
-							textErr: [`<Verweisziel>${i.verweisziel}</Verweisziel>`],
+							textErr: [
+								{
+									text: "Lemma nicht gefunden",
+									type: "hint_text",
+								},
+								`<Verweisziel>${i.verweisziel}</Verweisziel>`,
+							],
 							textHint: [{
-								text: "Lemma nicht gefunden",
+								text: "",
 								type: "comment_link",
 							}],
 							type: "link_error",
@@ -172,16 +197,17 @@ let hints = {
 						linkCount: 0,
 						scope: i.scope,
 						textErr: [
+							{
+								text: "Verweistext nicht angegeben",
+								type: "hint_text",
+							},
 							"<Verweistext/>",
 							`<Verweisziel>${i.verweisziel}</Verweisziel>`,
 						],
-						textHint: [
-							"Verweistext nicht angegeben",
-							{
-								text: `<Verweistext>${i.lemma.spelling}</Verweistext>`,
-								type: "copy",
-							},
-						],
+						textHint: [{
+							text: `<Verweistext>${i.lemma.spelling}</Verweistext>`,
+							type: "copy",
+						}],
 						type: "link_error",
 					});
 				}
@@ -193,14 +219,17 @@ let hints = {
 						line: i.line,
 						linkCount: 0,
 						scope: i.scope,
-						textErr: [`<Verweisziel>${i.verweisziel}</Verweisziel>`],
-						textHint: [
-							"Nebenlemma anstelle von Hauptlemma",
-							{
-								text: `<Verweisziel>${targetData.hl[0]}#${targetData.nlTargets[i.verweisziel]}</Verweisziel>`,
-								type: "copy",
-							}
+						textErr: [
+								{
+									text: "Nebenlemma anstelle von Hauptlemma",
+									type: "hint_text",
+								},
+								`<Verweisziel>${i.verweisziel}</Verweisziel>`,
 						],
+						textHint: [{
+							text: `<Verweisziel>${targetData.hl[0]}#${targetData.nlTargets[i.verweisziel]}</Verweisziel>`,
+							type: "copy",
+						}],
 						type: "link_error",
 					});
 				}
@@ -213,12 +242,19 @@ let hints = {
 								i.lemma.spelling === x.lemma.spelling &&
 								hints.semCorrTypes[i.type[0]] &&
 								typeJoined !== x.type.sort().join()) {
+							let hintText = "keine Typisierung";
+							if (x.type.length) {
+								hintText = `<Verweis Typ="${x.type.join(" ")}">`;
+							}
 							hints.add(data.hints, file, {
 								line: x.line,
 								linkCount: 0,
 								scope: x.scope,
 								textErr: [
-									x.type.length ? `<Verweis Typ="${x.type.join(" ")}">` : "[keine Typisierung]",
+									{
+										text: hintText,
+										type: "hint_text",
+									},
 									{
 										text: `<Verweisziel>${x.verweisziel}</Verweisziel>`,
 										type: "context",
@@ -252,12 +288,19 @@ let hints = {
 						if (x.lemma.file === file &&
 								data.hl.includes(x.lemma.spelling) &&
 								!semCorrCorrect(data.hl, semCorr, x.type)) {
+							let hintText = "keine Typisierung";
+							if (x.type.length) {
+								hintText = `<Verweis Typ="${x.type.join(" ")}">`;
+							}
 							hints.add(target.hints, i.lemma.file, {
 								line: x.line,
 								linkCount: 0,
 								scope: x.scope,
 								textErr: [
-									x.type.length ? `<Verweis Typ="${x.type.join(" ")}">` : "[keine Typisierung]",
+									{
+										text: hintText,
+										type: "hint_text",
+									},
 									{
 										text: `<Verweisziel>${x.verweisziel}</Verweisziel>`,
 										type: "context",
@@ -472,7 +515,7 @@ let hints = {
 			}
 		}
 	},
-	// TR_ERROR, TR_LINK
+	// TR_ERROR, TR_SUPERFLUOUS, TR_LINK
 	//   file = string (XML file name)
 	//   doc = document
 	//   content = string
@@ -487,12 +530,18 @@ let hints = {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
 					scope: hints.detectScope(i),
-					textErr: [`<Textreferenz Ziel="${target}">${text}</Textreferenz>`],
-					textHint: [`@xml:id="${target}" nicht gefunden`],
+					textErr: [
+						{
+							text: `xml:id="${target}" nicht gefunden`,
+							type: "hint_text",
+						},
+						`<Textreferenz Ziel="${target}">${text}</Textreferenz>`,
+					],
+					textHint: [],
 					type: "tr_error",
 				});
 			}
-			// TR_ERROR: linked text is lemma of the current article
+			// TR_SUPERFLUOUS: linked text is lemma of the current article
 			else if (data.hl.includes(text) ||
 					data.nl.includes(text)) {
 				const type = data.hl.includes(text) ? "Hauptlemma" : "Nebenlemma";
@@ -500,9 +549,15 @@ let hints = {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
 					scope: hints.detectScope(i),
-					textErr: [`<Textreferenz Ziel="${target}">${text}</Textreferenz>`],
-					textHint: [`Textreferenz verlinkt ${type} des Artikels`],
-					type: "tr_error",
+					textErr: [
+						{
+							text: `Textreferenz verlinkt ${type} des Artikels`,
+							type: "hint_text",
+						},
+						`<Textreferenz Ziel="${target}">${text}</Textreferenz>`,
+					],
+					textHint: [],
+					type: "tr_superfluous",
 				});
 			}
 			// TR_LINK: replace <Textreferenz> with <Verweis>
@@ -566,8 +621,14 @@ let hints = {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
 					scope: hints.detectScope(i),
-					textErr: ['<Verweis_extern Typ="Cluster">'],
-					textHint: ["Attribut Typ überflüssig"],
+					textErr: [
+						{
+							text: "Attribut Typ überflüssig",
+							type: "hint_text",
+						},
+						'<Verweis_extern Typ="Cluster">',
+					],
+					textHint: [],
 					type: "www_error",
 				});
 			}
@@ -622,8 +683,18 @@ let hints = {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
 					scope: hints.detectScope(i),
-					textErr: [`<${i.nodeName} Sprache="dt">`],
-					textHint: ['Attribut Sprache entfernen (Typ="dt" ist impliziert)'],
+					textErr: [
+						{
+							text: "Attribut Sprache überflüssig",
+							type: "hint_text",
+						},
+						`<${i.nodeName} Sprache="dt">`,
+						{
+							text: 'Typ="dt" ist impliziert',
+							type: "context",
+						},
+					],
+					textHint: [],
 					type: "sprache_superfluous",
 				});
 			}
@@ -639,8 +710,18 @@ let hints = {
 						line: xml.getLineNumber(x, doc, content),
 						linkCount: 0,
 						scope: hints.detectScope(x),
-						textErr: [`<${x.nodeName} Sprache="${langX}">`],
-						textHint: [`Attribut Sprache entfernen (impliziert wegen <Absatz Sprache="${langX}">)`],
+						textErr: [
+							{
+								text: "Attribut Sprache überflüssig",
+								type: "hint_text",
+							},
+							`<${x.nodeName} Sprache="${langX}">`,
+							{
+								text: `impliziert wegen <Absatz Sprache="${langX}">`,
+								type: "context",
+							},
+						],
+						textHint: [],
 						type: "sprache_superfluous",
 					});
 				}
@@ -725,8 +806,14 @@ let hints = {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
 					scope: "Literatur",
-					textErr: [`<Literaturtitel xml:id="${id}"/>`],
-					textHint: ["Tag formal fehlerhaft"],
+					textErr: [
+						{
+							text: "Tag formal fehlerhaft",
+							type: "hint_text",
+						},
+						`<Literaturtitel xml:id="${id}"/>`,
+					],
+					textHint: [],
 					type: "literature_error",
 				});
 			}
@@ -735,8 +822,14 @@ let hints = {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
 					scope: "Literatur",
-					textErr: [`<Literaturtitel xml:id="${id}"/>`],
-					textHint: ["Literaturtitel existiert nicht"],
+					textErr: [
+						{
+							text: "Literaturtitel existiert nicht",
+							type: "hint_text",
+						},
+						`<Literaturtitel xml:id="${id}"/>`,
+					],
+					textHint: [],
 					type: "literature_missing",
 				});
 			}
@@ -765,7 +858,7 @@ let hints = {
 		}
 	},
 	// detect scope
-	//   node = element | comment
+	//   node = element node | comment node
 	detectScope (node) {
 		let parent = node.parentNode;
 		while (parent) {
@@ -799,7 +892,7 @@ let hints = {
 		return target;
 	},
 	// detect whether there is already a matching internal link in the same block
-	//   ele = element
+	//   ele = node
 	//   target = string (string of <Verweisziel>)
 	detectVerweisInBlock (ele, target) {
 		let blocks = ["Textblock", "Blockzitat", "Liste"],

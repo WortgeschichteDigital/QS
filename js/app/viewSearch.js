@@ -279,18 +279,6 @@ let viewSearch = {
 			viewSearch.observer.unobserve(res.lastChild);
 		}
 		// prepare printing
-		const icons = [
-			{
-				fun: "openPv",
-				icon: "xml.svg",
-				title: "Datei in der Vorschau öffnen",
-			},
-			{
-				fun: "openEditor",
-				icon: "open-file.svg",
-				title: "Datei im Editor öffnen",
-			},
-		];
 		let printed = viewSearch.data.resultsFilesPrinted,
 			start = 0;
 		for (let i = 0, len = viewSearch.data.results.length; i < len; i++) {
@@ -310,30 +298,7 @@ let viewSearch = {
 				}
 				printed.add(i.file);
 				// create heading
-				let h1 = document.createElement("h1");
-				res.appendChild(h1);
-				h1.id = i.file;
-				h1.textContent = i.file;
-				// const icons
-				for (const icon of icons) {
-					let a = document.createElement("a");
-					h1.appendChild(a);
-					a.classList.add("icon");
-					a.dataset.fun = icon.fun;
-					a.dataset.file = i.file;
-					a.href = "#";
-					a.title = icon.title;
-					a.addEventListener("click", function(evt) {
-						evt.preventDefault();
-						app[this.dataset.fun](this.dataset.file);
-					});
-					let img = document.createElement("img");
-					a.appendChild(img);
-					img.src = `img/app/${icon.icon}`;
-					img.width = "30";
-					img.height = "30";
-					img.alt = "";
-				}
+				res.appendChild(app.makeListHeading(i.file));
 				// update variables
 				lastFile = i.file;
 			}
@@ -520,7 +485,7 @@ let viewSearch = {
 		}
 	},
 	// toggle checkboxes
-	//   cb = element (changed checkbox)
+	//   cb = node (changed checkbox)
 	toggleScope (cb) {
 		const scope0 = document.querySelector("#search-scope-0");
 		if (cb.checked && cb.value !== "0") {

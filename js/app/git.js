@@ -195,7 +195,7 @@ let git = {
 		return true;
 	},
 	// execute a basic git command
-	//   a = element
+	//   a = node
 	async command (a) {
 		await xml.updateWait();
 		let command = a.id.replace("fun-git-", "");

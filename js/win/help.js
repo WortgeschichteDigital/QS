@@ -32,4 +32,10 @@ let help = {
 		// scroll to top
 		window.scrollTo(0, 0);
 	},
+	// show a specific section
+	//   data = object
+	show (data) {
+		document.querySelector(`nav a[href="#${data.section}"]`).click();
+		window.location.hash = "#" + data.id;
+	},
 };

@@ -50,6 +50,7 @@ let xml = {
 	//                              sprache_superfluous = @Sprache is superfluous
 	//                              tr_error            = correct internal reference
 	//                              tr_link             = replace internal reference with link to article
+	//                              tr_superfluous      = remove internal reference
 	//                              www_error           = correct external link
 	//                              www_link            = change external link into internal
 	//       hl             = []  //Artikel/Lemma[@Typ = "Hauptlemma"]/Schreibung;
@@ -162,13 +163,13 @@ let xml = {
 		// detect changed and untracked files
 		let changed = await git.commandExec("git ls-files --modified");
 		if (changed === false) {
-			reset();
+			reset(false);
 			return;
 		}
 		changed = changed.split("\n");
 		let untracked = await git.commandExec("git ls-files --others --exclude-standard");
 		if (untracked === false) {
-			reset();
+			reset(false);
 			return;
 		}
 		untracked = untracked.split("\n");
@@ -184,15 +185,15 @@ let xml = {
 		});
 		if (!response) {
 			shared.error("Einlesen der XML-Dateidaten gescheitert");
-			reset();
+			reset(false);
 			return;
 		}
 		xml.data = response.data;
 		xml.files = response.files;
 		xml.updateErrors = response.updateErrors;
 		// finish up
-		reset();
-		function reset () {
+		reset(true);
+		function reset (success) {
 			// update list of possible filter values
 			bars.filtersUpdate();
 			// update current view
@@ -203,6 +204,10 @@ let xml = {
 			img.classList.remove("rotate");
 			// errors that occured during the update process
 			xml.showUpdateErrors();
+			// clean marks
+			if (success) {
+				viewHints.cleanMarks();
+			}
 			// finish up
 			xml.updating = false;
 			prefs.stats("update", statsStart);

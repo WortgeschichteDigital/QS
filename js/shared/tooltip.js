@@ -5,7 +5,7 @@ let tooltip = {
 	// skip timeout, show tooltip immediately
 	noTimeout: false,
 	// initialize tooltip
-	//   basis = element | undefined
+	//   basis = node | undefined
 	init (basis = document) {
 		basis.querySelectorAll("[title]").forEach(i => {
 			i.dataset.tooltip = i.title;
@@ -22,7 +22,7 @@ let tooltip = {
 		});
 	},
 	// show tooltip
-	//   ele = element (on which the mouse hovers)
+	//   ele = node (on which the mouse hovers)
 	on (ele) {
 		let tip = document.querySelector("#tooltip");
 		// create tooltip (if needed)
@@ -50,7 +50,9 @@ let tooltip = {
 		}
 		tip.style.top = top + "px";
 		let left = rect.left + Math.round(rect.width / 2) - Math.round(tip.offsetWidth / 2);
-		if (left + width > window.innerWidth - 10) {
+		if (ele.nodeName === "P") {
+			left = rect.left;
+		} else if (left + width > window.innerWidth - 10) {
 			left = rect.right - width;
 		} else if (left < 10) {
 			left = rect.left;

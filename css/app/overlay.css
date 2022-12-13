@@ -46,8 +46,8 @@
 	max-height: 330px;
 	background-color: var(--bgGreyLight);
 	font-family: "Noto Sans Mono", monospace;
-	font-size: .7rem;
-	line-height: 1.1rem;
+	font-size: .8rem;
+	line-height: 1.2rem;
 	white-space: pre-wrap;
 }
 
@@ -243,8 +243,16 @@
 	margin: 0;
 }
 
+#tags-label {
+	line-height: 1.5rem;
+}
+
+#tags-label a {
+	margin-left: 20px;
+}
+
 #tags-code {
-	font-size: .7rem;
-	line-height: 1.1rem;
+	font-size: .8rem;
+	line-height: 1.2rem;
 	white-space: pre-wrap;
 }

@@ -61,7 +61,7 @@ let tags = {
 		overlay.show("tags");
 	},
 	// build attributes list
-	//   ele = element (clicked tag)
+	//   ele = node (clicked tag)
 	listAttributes (ele) {
 		// toggle active mark
 		document.querySelectorAll("#tags-tags a").forEach(i => {
@@ -98,7 +98,7 @@ let tags = {
 		attrCont.firstChild.click();
 	},
 	// build files list
-	//   ele = element (clicked attribute)
+	//   ele = node (clicked attribute)
 	listFiles (ele) {
 		// toggle active mark
 		document.querySelectorAll("#tags-attributes a").forEach(i => {
@@ -128,7 +128,7 @@ let tags = {
 	// resources/wortgeschichten-teaser-xml.xsl
 	showSummaryXsl: "",
 	// show summary code
-	//   ele = element
+	//   ele = node
 	async showSummary (ele) {
 		// toggle active mark
 		document.querySelectorAll("#tags-nav span a").forEach(i => {
@@ -182,7 +182,9 @@ let tags = {
 			});
 		}
 		// print result
-		document.querySelector("#tags-label").textContent = file;
+		const label = document.querySelector("#tags-label");
+		label.dataset.file = file;
+		label.firstChild.textContent = file;
 		let code = processedDoc.querySelector("Wortgeschichte_kompakt").innerHTML.trim();
 		code = code.replace(/ xmlns=".+?"/, "");
 		code = code.replace(/^\s*\n/gm, "");

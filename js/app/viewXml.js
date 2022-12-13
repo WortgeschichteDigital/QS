@@ -1,6 +1,11 @@
 "use strict";
 
 let viewXml = {
+	// last content state of this view
+	contentState: {
+		filterState: "", // hash
+		xmlDate: "", // date of last XML update
+	},
 	// populate the view
 	//   type = string ("switched": view switched | "updated": XML files updated)
 	async populate (type) {
@@ -8,7 +13,14 @@ let viewXml = {
 		if (app.view !== "xml") {
 			return;
 		}
-		app.resetViewScrollTop(type);
+		// get current content state
+		// (restore scroll position in case the state is unchanged)
+		const filterState = app.getFilterState();
+		if (filterState === viewXml.contentState.filterState &&
+				xml.data.date === viewXml.contentState.xmlDate) {
+			app.resetViewScrollTop(type);
+			return;
+		}
 		// glean data
 		let data = [];
 		for (const [file, values] of Object.entries(xml.data.files)) {
@@ -35,33 +47,7 @@ let viewXml = {
 			}
 		}
 		// sort data
-		const sortingDir = dataS.ascending ? [-1, 1] : [1, -1];
-		data.sort((a, b) => {
-			// folder "ignore" first
-			if (dataS.ignore) {
-				if (a.dir === "ignore" && b.dir === "articles") {
-					return -1;
-				} else if (a.dir === "articles" && b.dir === "ignore") {
-					return 1;
-				}
-			}
-			// alpha-numeric
-			let x = a.file,
-				y = b.file;
-			if (dataS.type === "time" &&
-					a.published !== b.published) {
-				x = a.published;
-				y = b.published;
-			}
-			const result = shared.sort(x, y);
-			if (result !== 0) {
-				if (result === -1) {
-					return sortingDir[0];
-				}
-				return sortingDir[1];
-			}
-			return result;
-		});
+		app.applySorting(dataS, data);
 		// make table
 		const statusIcons = [
 			{
@@ -163,9 +149,16 @@ let viewXml = {
 		// insert table
 		const xmlSec = document.querySelector("#xml");
 		xmlSec.replaceChild(tab, xmlSec.firstChild);
+		// restore scroll position (if applicable)
+		if (filterState === viewXml.contentState.filterState) {
+			// restore scroll position only in case the filter state is identical
+			app.resetViewScrollTop(type);
+		}
+		viewXml.contentState.filterState = filterState;
+		viewXml.contentState.xmlDate = xml.data.date;
 	},
 	// open file in preview window
-	//   a = element (clicked link)
+	//   a = node (clicked link)
 	funPv (a) {
 		const tr = a.closest("tr");
 		app.openPv(tr.dataset.file);
@@ -173,7 +166,7 @@ let viewXml = {
 	// resources/wortgeschichten-teaser.xsl
 	funTeaserXsl: "",
 	// show teaser
-	//   a = element (clicked link)
+	//   a = node (clicked link)
 	async funTeaser (a) {
 		// load XSL (if needed)
 		const result = await app.loadXsl({
@@ -219,7 +212,7 @@ let viewXml = {
 		overlay.show("summary");
 	},
 	// open file in default editor
-	//   a = element (clicked link)
+	//   a = node (clicked link)
 	async funOpen (a) {
 		const tr = a.closest("tr");
 		app.openEditor(tr.dataset.file);

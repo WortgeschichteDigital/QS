@@ -22,7 +22,7 @@ let shared = {
 	fsp: typeof window !== "undefined" ? require("fs").promises : null,
 	path: typeof window !== "undefined" ? require("path") : null,
 	// erase all children within the given element
-	//   ele = element
+	//   ele = node
 	clear (ele) {
 		while (ele.hasChildNodes()) {
 			ele.removeChild(ele.lastChild);
@@ -222,7 +222,7 @@ let shared = {
 		});
 	},
 	// navigate through a vertical navigation
-	//   nav = element
+	//   nav = node
 	//   up = boolean
 	verticalNav (nav, up) {
 		let active = nav.querySelector(".active"),
@@ -238,7 +238,7 @@ let shared = {
 		target.firstChild.click();
 	},
 	// detect scroll end
-	//   obj = element (scrollable element)
+	//   obj = node (scrollable element)
 	async scrollEnd (obj = window) {
 		await new Promise(resolve => {
 			let scroll = false,

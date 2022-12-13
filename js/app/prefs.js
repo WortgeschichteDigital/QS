@@ -11,11 +11,13 @@ let prefs = {
 			if (k === "filters") {
 				prefs.initFilters();
 				continue;
-			} else if (k === "sorting") {
-				prefs.initSorting();
+			} else if (k === "marks") {
 				continue;
 			} else if (k === "search") {
 				prefs.initSearch();
+				continue;
+			} else if (k === "sorting") {
+				prefs.initSorting();
 				continue;
 			}
 			// option within the preferences overlay
@@ -88,7 +90,7 @@ let prefs = {
 		shared.ipc.invoke("prefs-save", prefs.data);
 	},
 	// change section
-	//   a = element (toc item)
+	//   a = node (toc item)
 	changeSection (a) {
 		if (a.classList.contains("active")) {
 			return;

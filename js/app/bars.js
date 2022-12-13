@@ -74,8 +74,10 @@ let bars = {
 			if (ele.closest(".off")) {
 				continue;
 			}
-			const name = ele.nodeName;
-			if (name === "INPUT" && !v ||
+			const name = ele.nodeName,
+				offDefault = /(comment_filter|links_suggestion_filter)$/.test(ele.id);
+			if (name === "INPUT" &&
+						(!offDefault && !v || offDefault && v) ||
 					name !== "INPUT" && v) {
 				active = true;
 				break;
@@ -128,9 +130,6 @@ let bars = {
 			hints.classList.add("off");
 		}
 	},
-	// timeout when checkboxes in the filters bar are toggled
-	// (to prevent the filling of the hints view in too rapid succession)
-	toggleFiltersHintTimeout: null,
 	// filters: bulk toggle for all hint filters
 	//   id = string
 	toggleFiltersHints (id) {
@@ -139,8 +138,7 @@ let bars = {
 			i.checked = checked;
 		});
 		bars.filtersActive();
-		clearTimeout(bars.toggleFiltersHintTimeout);
-		bars.toggleFiltersHintTimeout = setTimeout(() => app.populateView(), 1e3);
+		app.populateView();
 	},
 	// results: handle results bar after a succesful search
 	resultsSearch () {
@@ -217,7 +215,7 @@ let bars = {
 		idx: -1,
 	},
 	// results: navigate to next query of type
-	//   a = element (clicked query)
+	//   a = node (clicked query)
 	async resultsSearchNextQuery (a) {
 		if (viewSearch.data.running) {
 			return;
@@ -274,7 +272,7 @@ let bars = {
 		return matches;
 	},
 	// results: navigate to next file
-	//   a = element (clicked file)
+	//   a = node (clicked file)
 	resultsSearchNextFile (a) {
 		if (viewSearch.data.running) {
 			return;
@@ -298,7 +296,7 @@ let bars = {
 		});
 	},
 	// select: fill the given select according to its value
-	//   select = element
+	//   select = node
 	fillSelect (select) {
 		// no value
 		const value = select.dataset.value;
@@ -323,7 +321,7 @@ let bars = {
 		select.innerHTML = icon + data.text;
 	},
 	// select: build select popup
-	//   a = element (clicked select filter)
+	//   a = node (clicked select filter)
 	selectPopup (a) {
 		// create popup
 		let div = document.createElement("div");
@@ -367,7 +365,7 @@ let bars = {
 		div.classList.remove("hide");
 	},
 	// select: close a select popup
-	//   ele = element (caller: select filter or item in select popup)
+	//   ele = node (caller: select filter or item in select popup)
 	//   timeout = boolean
 	closeSelectPopup (ele, timeout) {
 		const wait = timeout ? 200 : 0;

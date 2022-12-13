@@ -23,7 +23,7 @@ let overlay = {
 		});
 	},
 	// react to close icon
-	//   icon = element
+	//   icon = node
 	close (icon) {
 		const id = icon.closest("[id]").id;
 		if (id === "dialog") {

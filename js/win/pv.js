@@ -65,7 +65,7 @@ let pv = {
 			});
 	},
 	// finish up the loading procedure
-	//   wv = element (<webview>)
+	//   wv = node (<webview>)
 	loadingDone (wv) {
 		document.querySelector("#update img").classList.remove("rotate");
 		wv.clearHistory();

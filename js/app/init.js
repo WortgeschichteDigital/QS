@@ -97,8 +97,7 @@ window.addEventListener("load", async () => {
 	document.querySelectorAll("#filters input").forEach(i => {
 		i.addEventListener("change", () => {
 			bars.filtersActive();
-			clearTimeout(bars.toggleFiltersHintTimeout);
-			bars.toggleFiltersHintTimeout = setTimeout(() => app.populateView(), 1e3);
+			app.populateView();
 		});
 	});
 
@@ -178,6 +177,10 @@ window.addEventListener("load", async () => {
 			evt.preventDefault();
 			tags.showSummaryNav(this.dataset.forward === "true" ? true : false);
 		});
+	});
+	document.querySelector("#tags-open-file").addEventListener("click", function(evt) {
+		evt.preventDefault();
+		app.openEditor(this.parentNode.dataset.file);
 	});
 
 	// LISTEN TO IPC MESSAGES

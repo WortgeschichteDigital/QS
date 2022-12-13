@@ -169,7 +169,7 @@ let xml = {
 		}
 	},
 	// determine scope and cluster points of the given link
-	//   link = element
+	//   link = node
 	//   fa = boolean (article is a field article)
 	getScopePoints (link, fa) {
 		if (link.closest("Anmerkung") ||
@@ -252,7 +252,7 @@ let xml = {
 		};
 	},
 	// get line number of current element
-	//   ele = element
+	//   ele = node
 	//   doc = document (parsed XML file)
 	//   file = string (unparsed XML file)
 	//   idx = number | undefined (set in case ele is a comment node)

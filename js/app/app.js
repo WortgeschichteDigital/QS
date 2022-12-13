@@ -9,7 +9,7 @@ let app = {
 	// (value is the same as the ID of the corresponding <section>)
 	view: "xml",
 	// clear a text field
-	//   clear = element (the clear icon)
+	//   clear = node (the clear icon)
 	clearTextField (clear) {
 		const input = clear.previousSibling;
 		input.value = "";
@@ -19,7 +19,7 @@ let app = {
 		}
 	},
 	// execute a menu command
-	menuCommand (command) {
+	async menuCommand (command) {
 		if (overlay.top() === "git") {
 			dialog.open({
 				type: "alert",
@@ -54,8 +54,8 @@ let app = {
 				overlay.show("prefs");
 				break;
 			case "search":
+				await app.toggleView(document.querySelector("#view-search"));
 				viewSearch.toggleAdvanced("on");
-				document.querySelector("#view-search").click();
 				break;
 			case "teaser-tags":
 				tags.show();
@@ -101,7 +101,9 @@ let app = {
 		let hint = document.createElement("p");
 		div.appendChild(hint);
 		let tipp = textTipp || "";
-		if (!tipp && app.view === "search") {
+		if (/hints|xml/.test(app.view) && !Object.keys(xml.files).length) {
+			tipp = "Tipp: Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden.";
+		} else if (!tipp && app.view === "search") {
 			let dataA = viewSearch.getAdvancedData(),
 				tipps = [];
 			if (document.querySelector("#fun-filters.active-filters")) {
@@ -121,13 +123,51 @@ let app = {
 				tipp = "Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden";
 			}
 			tipp = `Tipp: ${tipp}.`;
-		} else if (app.view === "xml" && !Object.keys(xml.files).length) {
-			tipp = "Tipp: Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden.";
 		} else if (!tipp) {
 			tipp = "Tipp: Verwenden Sie weniger Filter.";
 		}
 		hint.innerHTML = tipp;
 		return div;
+	},
+	// make a heading for the list in XML and hints view
+	//   file = string
+	makeListHeading (file) {
+		const icons = [
+			{
+				fun: "openPv",
+				icon: "xml.svg",
+				title: "Datei in der Vorschau öffnen",
+			},
+			{
+				fun: "openEditor",
+				icon: "open-file.svg",
+				title: "Datei im Editor öffnen",
+			},
+		];
+		let h1 = document.createElement("h1");
+		h1.id = file;
+		h1.textContent = file;
+		// const icons
+		for (const icon of icons) {
+			let a = document.createElement("a");
+			h1.appendChild(a);
+			a.classList.add("icon");
+			a.dataset.fun = icon.fun;
+			a.dataset.file = file;
+			a.href = "#";
+			a.title = icon.title;
+			a.addEventListener("click", function(evt) {
+				evt.preventDefault();
+				app[this.dataset.fun](this.dataset.file);
+			});
+			let img = document.createElement("img");
+			a.appendChild(img);
+			img.src = `img/app/${icon.icon}`;
+			img.width = "30";
+			img.height = "30";
+			img.alt = "";
+		}
+		return h1;
 	},
 	// open preview
 	//   file = string (XML file name)
@@ -187,8 +227,23 @@ let app = {
 			behavior: "smooth",
 		});
 	},
-	// toggle sorting icons
-	//  a = element (icon link)
+	// returns a hash that represents the current filter state of a view
+	// (constructed on selected filters and sorting options)
+	getFilterState () {
+		const dataF = bars.getFiltersData();
+		if (app.view === "xml") {
+			for (const k of Object.keys(dataF)) {
+				if (/^filters-(hints|marks)/.test(k)) {
+					delete dataF[k];
+				}
+			}
+		}
+		const dataS = app.getSortingData(),
+			str = JSON.stringify(dataF) + JSON.stringify(dataS);
+		return shared.crypto.createHash("sha1").update(str).digest("hex");
+	},
+	// sorting: toggle sorting icons
+	//  a = node (icon link)
 	toggleSortingIcons (a) {
 		if (a.id === "sorting-dir") {
 			const img = a.querySelector("img");
@@ -214,7 +269,7 @@ let app = {
 		}
 		app.populateView();
 	},
-	// get current sorting data
+	// sorting: get current sorting data
 	getSortingData () {
 		return {
 			ascending: /ascending/.test(document.querySelector("#sorting-dir img").getAttribute("src")) ? true : false,
@@ -223,18 +278,50 @@ let app = {
 			type: document.querySelector("#sorting-alpha.active") ? "alpha" : "time",
 		};
 	},
-	// saves scroll position of view
+	// sorting: apply sorting preferences
+	//   dataS = object (sorting data)
+	//   arr = array (to be sorted)
+	applySorting (dataS, arr) {
+		const sortingDir = dataS.ascending ? [-1, 1] : [1, -1];
+		arr.sort((a, b) => {
+			// folder "ignore" first
+			if (dataS.ignore) {
+				if (a.dir === "ignore" && b.dir === "articles") {
+					return -1;
+				} else if (a.dir === "articles" && b.dir === "ignore") {
+					return 1;
+				}
+			}
+			// alpha-numeric
+			let x = a.file,
+				y = b.file;
+			if (dataS.type === "time" &&
+					a.published !== b.published) {
+				x = a.published;
+				y = b.published;
+			}
+			const result = shared.sort(x, y);
+			if (result !== 0) {
+				if (result === -1) {
+					return sortingDir[0];
+				}
+				return sortingDir[1];
+			}
+			return result;
+		});
+	},
+	// view: saves scroll position of view
 	viewScrollTop: {},
-	// reset the scroll position of the current view
+	// view: reset the scroll position of the current view
 	//   type = string (switched | updated)
 	resetViewScrollTop (type) {
-		if (type && app.viewScrollTop[app.view]) {
+		if (type === "switched" && app.viewScrollTop[app.view]) {
 			window.scrollTo(0, app.viewScrollTop[app.view]);
-		} else {
+		} else if (!type) {
 			window.scrollTo(0, 0);
 		}
 	},
-	// determine the next view after pressing the keyboard shortcut
+	// view: determine the next view after pressing the keyboard shortcut
 	//   toRight = boolean
 	toggleViewShortcut (toRight) {
 		let views = document.querySelectorAll("#view a"),
@@ -255,8 +342,8 @@ let app = {
 		}
 		views[idx].click();
 	},
-	// toggle view
-	//   button = element
+	// view: toggle views
+	//   button = node
 	async toggleView (button) {
 		// view is already active
 		if (button.classList.contains("active")) {
@@ -352,7 +439,7 @@ let app = {
 		app.populateView("switched");
 		app.switching = false;
 	},
-	// popuplate the current view
+	// view: popuplate the current view
 	//   type = string | undefined
 	populateView (type = "") {
 		switch (app.view) {
@@ -366,13 +453,8 @@ let app = {
 				viewClusters.populate();
 				break;
 			case "search":
-				if (type === "switched") {
-					app.resetViewScrollTop(type);
-				}
-				if (type !== "updated") {
-					viewSearch.toggleAdvanced("on");
-					document.querySelector("#search-text").select();
-				}
+				app.resetViewScrollTop(type);
+				document.querySelector("#search-text").select();
 				break;
 		}
 	},
