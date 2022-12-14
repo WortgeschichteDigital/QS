@@ -140,12 +140,33 @@ let bars = {
 		bars.filtersActive();
 		app.populateView();
 	},
-	// results: handle results bar after a succesful search
+	// results: fill and show results bar (hints)
+	resultsHints () {
+		const data = viewHints.data;
+		// no results
+		if (!data.hints.length) {
+			bars.resultsNone();
+			return;
+		}
+		// hide queries block
+		document.querySelector("#results-queries").classList.add("off");
+		// fill summary
+		let summary = document.querySelector("#results-summary");
+		summary.classList.remove("nothing");
+		summary.innerHTML = `<b>${data.hints.length}</b> Hinweise in <b>${data.files.size}</b> Dateien`;
+		// fill in XML files
+		bars.resultsXml(data.hints);
+		// show bar
+		bars.resultsShow();
+		// scroll top
+		document.querySelector("#results div").scrollTop = 0;
+	},
+	// results: fill and show results bar (search)
 	resultsSearch () {
 		const data = viewSearch.data;
 		// no results
 		if (!data.results.length) {
-			bars.resultsSearchNone();
+			bars.resultsNone();
 			return;
 		}
 		// fill summary
@@ -156,13 +177,13 @@ let bars = {
 		let queries = document.querySelector("#results-queries");
 		queries.classList.remove("off");
 		shared.clear(queries);
-		for (let i = 0, len = viewSearch.data.regExp.length; i < len; i++) {
+		for (let i = 0, len = data.regExp.length; i < len; i++) {
 			let a = document.createElement("a");
 			queries.appendChild(a);
 			a.href = "#" + i;
 			let mark = document.createElement("mark");
 			a.appendChild(mark);
-			mark.textContent = viewSearch.data.regExp.find(item => item.termN === i).textOri;
+			mark.textContent = data.regExp.find(item => item.termN === i).textOri;
 			mark.classList.add(`color${i % 6 + 1}`);
 			a.addEventListener("click", function(evt) {
 				evt.preventDefault();
@@ -170,11 +191,40 @@ let bars = {
 			});
 		}
 		// fill in XML files
+		bars.resultsXml(data.results);
+		// reset navigation
+		bars.resultsSearchNextQueryData.query = "";
+		// show bar
+		bars.resultsShow();
+		// scroll top
+		document.querySelector("#results div").scrollTop = 0;
+	},
+	// results: show bar
+	resultsShow () {
+		if (window.innerWidth >= 1250 &&
+				!document.querySelector("#results.visible")) {
+			bars.toggle("results");
+		}
+	},
+	// results: no search results
+	resultsNone () {
+		const blocks = document.querySelectorAll("#results > div > *");
+		blocks[0].classList.add("nothing");
+		blocks[0].textContent = "Nichts gefunden!";
+		blocks[1].classList.add("off");
+		blocks[2].classList.add("off");
+		if (document.querySelector("#results.visible")) {
+			bars.toggle("results");
+		}
+	},
+	// results: build list of XML files
+	//   data = array
+	resultsXml (data) {
 		let files = document.querySelector("#results-files");
 		files.classList.remove("off");
 		shared.clear(files);
 		let lastFile = "";
-		for (const i of viewSearch.data.results) {
+		for (const i of data) {
 			if (i.file === lastFile) {
 				continue;
 			}
@@ -187,26 +237,6 @@ let bars = {
 				evt.preventDefault();
 				bars.resultsSearchNextFile(this);
 			});
-		}
-		// reset navigation
-		bars.resultsSearchNextQueryData.query = "";
-		// show bar
-		if (window.innerWidth >= 1250 &&
-				!document.querySelector("#results.visible")) {
-			bars.toggle("results");
-		}
-		// scroll top
-		document.querySelector("#results div").scrollTop = 0;
-	},
-	// results: no search results
-	resultsSearchNone () {
-		const blocks = document.querySelectorAll("#results > div > *");
-		blocks[0].classList.add("nothing");
-		blocks[0].textContent = "Nichts gefunden!";
-		blocks[1].classList.add("off");
-		blocks[2].classList.add("off");
-		if (document.querySelector("#results.visible")) {
-			bars.toggle("results");
 		}
 	},
 	// results: navigational data for queries
@@ -253,11 +283,7 @@ let bars = {
 			behavior: "smooth",
 		});
 		// highlight the result
-		await shared.scrollEnd();
-		nextMatch.addEventListener("animationend", function() {
-			this.classList.remove("highlight");
-		}, { once: true });
-		nextMatch.classList.add("highlight");
+		shared.highlightBlock(nextMatch);
 	},
 	// results: search matches for the given query
 	//   query = string (zero-based number of the query)
@@ -274,7 +300,7 @@ let bars = {
 	// results: navigate to next file
 	//   a = node (clicked file)
 	resultsSearchNextFile (a) {
-		if (viewSearch.data.running) {
+		if (app.view === "search" && viewSearch.data.running) {
 			return;
 		}
 		// find heading
@@ -282,12 +308,16 @@ let bars = {
 			h1 = document.getElementById(id);
 		while (!h1) {
 			// reload more results
-			viewSearch.printMoreResults();
+			if (app.view === "hints") {
+				viewHints.print();
+			} else if (app.view === "search") {
+				viewSearch.printMoreResults();
+			}
 			h1 = document.getElementById(id);
 		}
 		// scroll to heading
 		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom,
-			headingHeight = document.querySelector("#search h1").offsetHeight,
+			headingHeight = document.querySelector(`#${app.view} h1`).offsetHeight,
 			firstResult = h1.nextSibling.getBoundingClientRect().top;
 		window.scrollTo({
 			top: firstResult + window.scrollY - topBarsHeight - headingHeight,

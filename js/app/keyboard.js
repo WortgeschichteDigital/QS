@@ -22,6 +22,11 @@ let keyboard = {
 			const select = document.querySelector(".select-popup");
 			if (select) {
 				bars.closeSelectPopup(select, false);
+				return;
+			}
+			const commentHelp = document.querySelector(".comment-help");
+			if (commentHelp) {
+				commentHelp.firstElementChild.click();
 			}
 		}
 		// Key "Enter"
@@ -71,9 +76,12 @@ let keyboard = {
 				}
 			}
 		} else if (m === "Ctrl" && /^Arrow(Down|Up)$/.test(evt.key)) {
-			if (overlay.top() === "prefs") {
+			const olTop = overlay.top();
+			if (olTop === "prefs") {
 				evt.preventDefault();
 				shared.verticalNav(document.querySelector("#prefs ul"), evt.key === "ArrowUp");
+			} else if (!olTop && app.view === "hints") {
+				viewHints.nav(evt.key === "ArrowDown");
 			}
 		}
 		// PageDown + PageUp

@@ -16,6 +16,10 @@ const popup = require("./js/main/popup"),
 	xml = require("./js/main/xml");
 
 
+/***** VARIABLES *****/
+const dev = !app.isPackaged;
+
+
 /***** ERRORS *****/
 
 let error = {
@@ -326,7 +330,7 @@ let winMenu = {
 				menu = menu.concat(i);
 			}
 		}
-		if (!app.isPackaged) {
+		if (dev) {
 			menu = menu.concat(menuDev);
 		}
 		// remove ampersands on macOS
@@ -454,7 +458,7 @@ let win = {
 			webPreferences: {
 				contextIsolation: false,
 				defaultEncoding: "utf-8",
-				devTools: !app.isPackaged,
+				devTools: dev,
 				enableRemoteModule: false,
 				nodeIntegration: true,
 				spellcheck: false,
@@ -503,7 +507,7 @@ let win = {
 			help: path.join(__dirname, "win", "help.html"),
 			pv: path.join(__dirname, "win", "pv.html"),
 		};
-		if (!app.isPackaged) {
+		if (dev) {
 			// no cache while developing
 			bw.loadURL("file://" + html[type], {
 				extraHeaders: "pragma: no-cache\n",
@@ -701,7 +705,7 @@ let worker = {
 					backgroundThrottling: false,
 					contextIsolation: false,
 					defaultEncoding: "utf-8",
-					devTools: !app.isPackaged,
+					devTools: dev,
 					enableRemoteModule: false,
 					nodeIntegration: true,
 				},
@@ -715,7 +719,7 @@ let worker = {
 			});
 			// load html
 			const html = path.join(__dirname, "win", "worker.html");
-			if (!app.isPackaged) {
+			if (dev) {
 				// no cache while developing
 				bw.loadURL("file://" + html, {
 					extraHeaders: "pragma: no-cache\n",

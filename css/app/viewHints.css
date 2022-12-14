@@ -129,3 +129,50 @@
 	background-size: 30px 30px;
 	color: var(--textGrey);
 }
+
+
+/* COMMENT HELP --------------------------------- */
+
+.comment-help {
+	position: fixed;
+	padding: 10px;
+	max-width: 500px;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background-color: #fff;
+	opacity: 0;
+	transition: opacity .3s ease-out;
+}
+
+.comment-help.visible {
+	opacity: 1;
+}
+
+.comment-help a {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.comment-help p {
+	margin: 0 0 10px 0;
+	font-size: .8rem;
+	line-height: 1.2rem;
+}
+
+.comment-help p:first-child {
+	margin-top: 0;
+}
+
+.comment-help code {
+	margin: 0 0 10px 0;
+	font-size: .7rem;
+	line-height: 1.1rem;
+	white-space: pre-wrap;
+	word-break: break-all;
+	user-select: text;
+}
+
+.comment-help code:last-child {
+	margin-bottom: 0;
+}

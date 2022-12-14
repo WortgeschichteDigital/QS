@@ -22,12 +22,45 @@
 	opacity: 1;
 }
 
+.feedback.type-copied {
+	background-image: url(../../img/app/edit-copy.svg);
+}
+
 .feedback.type-error {
 	background-image: url(../../img/app/button-no.svg);
 }
 
 .feedback.type-okay {
 	background-image: url(../../img/app/button-yes.svg);
+}
+
+.feedback.type-reached-bottom {
+	background-image: url(../../img/app/reached-bottom.svg);
+}
+
+.feedback.type-reached-top {
+	background-image: url(../../img/app/reached-top.svg);
+}
+
+
+/* HIGHLIGHT BLOCK ------------------------------ */
+
+@keyframes highlight-block {
+	25% {
+		outline-color: var(--outline);
+	}
+	75% {
+		outline-color: var(--outline);
+	}
+	100% {
+		outline-color: transparent;
+	}
+}
+
+.highlight-block {
+	animation-name: highlight-block;
+	animation-duration: 2s;
+	animation-timing-function: linear;
 }
 
 

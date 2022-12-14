@@ -214,7 +214,7 @@ section.trans-linear {
 	background-color: var(--bgActive);
 }
 
-#sorting span {
+#sorting-filter-cont {
 	position: absolute;
 	top: 14px;
 	right: 0;
@@ -224,14 +224,28 @@ section.trans-linear {
 	overflow: hidden;
 }
 
+#sorting-filter-cont #hints-bar {
+	display: none;
+}
+
+#sorting-filter-cont.hints-view #hints-bar {
+	display: inline-block;
+}
+
 #sorting-filter {
 	vertical-align: top;
 	padding-right: 34px;
 	width: 250px;
 }
 
+#sorting-filter-cont.hints-view #sorting-filter {
+	padding-right: 63px;
+	width: 221px;
+}
+
 .clear-text-field,
 #search-advanced-toggle,
+#hints-bar,
 #search-bar,
 #search-help {
 	position: relative;
@@ -243,8 +257,17 @@ section.trans-linear {
 	height: 24px;
 }
 
+#sorting-filter-cont.hints-view .clear-text-field {
+	margin-left: -59px;
+}
+
+#hints-bar {
+	margin-left: 5px;
+}
+
 .clear-text-field:focus,
 #search-advanced-toggle:focus,
+#hints-bar:focus,
 #search-bar:focus,
 #search-help:focus {
 	outline: 2px solid var(--outline);
@@ -334,23 +357,4 @@ section.trans-linear {
 .wait {
 	margin-top: 15px;
 	text-align: center;
-}
-
-.xml-tag {
-	color: var(--colorBlueDark);
-}
-
-.xml-attr-key {
-	color: var(--colorGreen);
-}
-
-.xml-attr-val {
-	color: var(--colorRed);
-}
-
-.xml-comment,
-.xml-comment .xml-tag,
-.xml-comment .xml-attr-key,
-.xml-comment .xml-attr-val {
-	color: var(--textGrey);
 }

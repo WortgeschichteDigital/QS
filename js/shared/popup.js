@@ -7,7 +7,8 @@ let popup = {
 	//   evt = object
 	open (evt) {
 		// detect click target
-		const target = popup.getTarget(evt.composedPath());
+		const path = evt.composedPath(),
+			target = popup.getTarget(path);
 		if (!target) {
 			return;
 		}
@@ -31,6 +32,12 @@ let popup = {
 			items = ["editCut", "editCopy", "editPaste", "sep", "editSelectAll"];
 		} else {
 			items = def;
+		}
+		// add copy icon if click is on selection
+		const sel = window.getSelection();
+		if (sel.toString() &&
+				path.includes(sel.getRangeAt(0).commonAncestorContainer.parentNode)) {
+			items.unshift("editCopy", "sep");
 		}
 		// cretae popup menu
 		if (items.length) {

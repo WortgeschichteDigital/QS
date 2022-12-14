@@ -59,8 +59,10 @@ let viewHints = {
 		if (filterState === viewHints.contentState.filterState &&
 				xml.data.date === viewHints.contentState.xmlDate) {
 			app.resetViewScrollTop(type);
+			bars.resultsHints();
 			return;
 		}
+		// memorize scroll position
 		const scrollY = window.scrollY;
 		// clear hints area
 		const cont = document.querySelector("#hints");
@@ -71,6 +73,9 @@ let viewHints = {
 		const data = viewHints.data;
 		if (!data.hints.length) {
 			cont.appendChild(app.nothingToShow());
+			bars.resultsHints();
+			viewHints.contentState.filterState = filterState;
+			viewHints.contentState.xmlDate = xml.data.date;
 			return;
 		}
 		// sort hints
@@ -81,23 +86,23 @@ let viewHints = {
 		data.filesPrinted.clear();
 		data.hints.forEach(i => data.files.add(i.file));
 		// print first chunk of hints and reset scroll position
-		viewHints.printTimeout = setTimeout(() => {
-			viewHints.print();
-			if (filterState === viewHints.contentState.filterState) {
-				// restore scroll position only in case the filter state is identical
-				while (data.filesPrinted.size < data.filesPrintedBefore.size &&
-						data.filesPrinted.size < data.files.size) {
-					viewHints.print();
-				}
-				if (type === "updated") {
-					window.scrollTo(0, scrollY);
-				} else {
-					app.resetViewScrollTop(type);
-				}
+		viewHints.print();
+		if (filterState === viewHints.contentState.filterState) {
+			// restore scroll position only in case the filter state is identical
+			while (data.filesPrinted.size < data.filesPrintedBefore.size &&
+					data.filesPrinted.size < data.files.size) {
+				viewHints.print();
 			}
-			viewHints.contentState.filterState = filterState;
-			viewHints.contentState.xmlDate = xml.data.date;
-		}, 500);
+			if (type === "updated") {
+				window.scrollTo(0, scrollY);
+			} else {
+				app.resetViewScrollTop(type);
+			}
+		}
+		viewHints.contentState.filterState = filterState;
+		viewHints.contentState.xmlDate = xml.data.date;
+		// handle results bar
+		bars.resultsHints();
 	},
 	// collect hints
 	collect () {
@@ -364,8 +369,19 @@ let viewHints = {
 				} else if (i.type === "copy") {
 					p.title = "Klick zum Kopieren";
 					p.addEventListener("click", function() {
-						// TODO copy text
-						// TODO copy feedback
+						let range = new Range();
+						range.setStart(this.firstChild, 0);
+						if (this.lastChild.nodeType === Node.TEXT_NODE) {
+							range.setEnd(this.lastChild, this.lastChild.nodeValue.length);
+						} else {
+							range.setEnd(this.lastChild, 1);
+						}
+						const sel = window.getSelection();
+						sel.removeAllRanges();
+						sel.addRange(range);
+						navigator.clipboard.writeText(sel.toString())
+							.then(() => shared.feedback("copied"))
+							.catch(() => shared.feedback("error"));
 					});
 				} else if (i.type === "hint_text") {
 					p.classList.add("hint-text");
@@ -379,7 +395,7 @@ let viewHints = {
 					a.textContent = "Auskommentieren?";
 					a.addEventListener("click", function(evt) {
 						evt.preventDefault();
-						// TODO show hint
+						viewHints.showCommentHelp(this);
 					});
 				}
 			}
@@ -433,6 +449,107 @@ let viewHints = {
 				delete prefs.data.marks[ident];
 			}
 		}
+	},
+	// navigation: last index shown
+	navIdx: -1,
+	// navigation: jump to next/previous hint
+	//  down = boolean
+	nav (down) {
+		const hints = document.querySelectorAll(".hint-item");
+		if (!hints.length) {
+			return;
+		}
+		const barBottom = document.querySelector("#sorting").getBoundingClientRect().bottom,
+			h1Height = document.querySelector("#hints h1").offsetHeight,
+			top = barBottom + h1Height;
+		if (viewHints.navIdx === -1) {
+			for (let i = 0, len = hints.length; i < len; i++) {
+				const rect = hints[i].getBoundingClientRect();
+				if (rect.top >= top) {
+					if (down && rect.top === top) {
+						viewHints.navIdx = ++i;
+					} else if (down) {
+						viewHints.navIdx = i;
+					} else {
+						viewHints.navIdx = --i;
+					}
+					break;
+				}
+			}
+		} else if (down) {
+			viewHints.navIdx++;
+		} else {
+			viewHints.navIdx--;
+		}
+		if (viewHints.navIdx === hints.length) {
+			viewHints.navIdx = hints.length - 1;
+			shared.feedback("reached-bottom");
+			return;
+		} else if (viewHints.navIdx < 0) {
+			viewHints.navIdx = -1;
+			shared.feedback("reached-top");
+			return;
+		}
+		const ele = hints[viewHints.navIdx],
+			rect = ele.getBoundingClientRect();
+		window.scrollTo({
+			top: window.scrollY + rect.top - top,
+			left: 0,
+			behavior: "smooth",
+		});
+		// highlight the result
+		shared.highlightBlock(ele);
+	},
+	// show help on how add comments to a non existing link
+	//   caller = node (clicked link)
+	showCommentHelp (caller) {
+		const example = `<p>Unkommentierter Verweis:</p>
+<code><span class="xml-tag">&lt;Verweis&gt;
+  &lt;Verweistext&gt;&lt;erwaehntes_Zeichen&gt;</span>Lemma<span class="xml-tag">&lt;/erwaehntes_Zeichen&gt;&lt;/Verweistext&gt;
+  &lt;Verweisziel&gt;</span>Lemma<span class="xml-tag">&lt;/Verweisziel&gt;
+&lt;/Verweis&gt;</span></code>
+<p>Auskommentierter Verweis:</p>
+<code><span class="xml-comment">&lt;!--&lt;Verweis&gt;
+  &lt;Verweistext&gt;--&gt;</span><span class="xml-tag">&lt;erwaehntes_Zeichen&gt;</span>Lemma<span class="xml-tag">&lt;/erwaehntes_Zeichen&gt;</span><span class="xml-comment">&lt;!--&lt;/Verweistext&gt;
+  &lt;Verweisziel&gt;Lemma&lt;/Verweisziel&gt;
+&lt;/Verweis&gt;--&gt;</span></code>`;
+		// create popup
+		let div = document.createElement("div");
+		document.body.appendChild(div);
+		div.classList.add("comment-help");
+		div.innerHTML = example;
+		let a = document.createElement("a");
+		div.insertBefore(a, div.firstChild);
+		a.href = "#";
+		a.addEventListener("click", evt => {
+			evt.preventDefault();
+			viewHints.closeCommentHelp();
+		});
+		let img = document.createElement("img");
+		a.appendChild(img);
+		img.src = "img/app/close.svg";
+		img.width = "30";
+		img.height = "30";
+		img.alt = "";
+		// position popup
+		const rect = caller.getBoundingClientRect();
+		div.style.top = rect.top + rect.height + 10 + "px";
+		div.style.left = rect.left + "px";
+		// show popup
+		void div.offsetWidth;
+		div.classList.add("visible");
+	},
+	// closes all open comment helps
+	closeCommentHelp () {
+		document.querySelectorAll(".comment-help").forEach(i => {
+			if (!i.classList.contains("visible")) {
+				return;
+			}
+			i.addEventListener("transitionend", function() {
+				this.parentNode.removeChild(this);
+			}, { once: true });
+			i.classList.remove("visible");
+		});
 	},
 	// show extended XML context of a hint
 	//   ele = node (clicked link)

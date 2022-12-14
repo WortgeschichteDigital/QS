@@ -151,7 +151,7 @@ let shared = {
 		});
 	},
 	// show passive feedback
-	//   type = string
+	//   type = string (copied | error | okay | reached-bottom | reached-top)
 	async feedback (type) {
 		let fb = document.createElement("div");
 		fb.classList.add("feedback", "type-" + type);
@@ -197,6 +197,15 @@ let shared = {
 			err: {},
 			text,
 		};
+	},
+	// highlight a results block
+	//   block = node
+	async highlightBlock (block) {
+		await shared.scrollEnd();
+		block.addEventListener("animationend", function() {
+			this.classList.remove("highlight-block");
+		}, { once: true });
+		block.classList.add("highlight-block");
 	},
 	// change titles with keyboard shortcuts if on macOS
 	keyboardMacOS () {

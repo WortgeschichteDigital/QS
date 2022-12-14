@@ -357,6 +357,8 @@ let app = {
 			return;
 		}
 		app.switching = true;
+		// close help popup in hints view
+		viewHints.closeCommentHelp();
 		// save scroll position
 		app.viewScrollTop[app.view] = window.scrollY;
 		// determine next view
@@ -364,6 +366,12 @@ let app = {
 		// close results bar (if necessary)
 		if (!/hints|search/.test(nextView) && document.querySelector("#results.visible")) {
 			bars.toggle("results");
+		}
+		const sortingCont = document.querySelector("#sorting-filter-cont");
+		if (nextView === "hints") {
+			sortingCont.classList.add("hints-view");
+		} else {
+			sortingCont.classList.remove("hints-view");
 		}
 		// determine next bar content
 		let activeBarContent = "";
@@ -454,6 +462,7 @@ let app = {
 				break;
 			case "search":
 				app.resetViewScrollTop(type);
+				bars.resultsSearch();
 				document.querySelector("#search-text").select();
 				break;
 		}

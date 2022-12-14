@@ -79,24 +79,6 @@
 	line-height: 1.2rem;
 }
 
-@keyframes highlight {
-	25% {
-		outline-color: var(--outline);
-	}
-	75% {
-		outline-color: var(--outline);
-	}
-	100% {
-		outline-color: transparent;
-	}
-}
-
-.search-result.highlight {
-	animation-name: highlight;
-	animation-duration: 2s;
-	animation-timing-function: linear;
-}
-
 mark {
 	border-radius: 5px;
 	background-color: var(--colorYellow);

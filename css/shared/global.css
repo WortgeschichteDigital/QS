@@ -191,6 +191,25 @@ p.buttons {
 	color: var(--colorRed);
 }
 
+.xml-tag {
+	color: var(--colorBlueDark);
+}
+
+.xml-attr-key {
+	color: var(--colorGreen);
+}
+
+.xml-attr-val {
+	color: var(--colorRed);
+}
+
+.xml-comment,
+.xml-comment .xml-tag,
+.xml-comment .xml-attr-key,
+.xml-comment .xml-attr-val {
+	color: var(--textGrey);
+}
+
 ::placeholder {
   color: var(--textGreyLight);
 	font-style: italic;

@@ -15,15 +15,19 @@ window.addEventListener("load", async () => {
 	// WINDOW EVENTS
 	let winEventsTimeout = null;
 	window.addEventListener("resize", () => {
+		viewHints.navIdx = -1;
 		clearTimeout(winEventsTimeout);
 		winEventsTimeout = setTimeout(() => {
 			tooltip.off();
+			viewHints.closeCommentHelp();
 		}, 25);
 	});
 	window.addEventListener("scroll", () => {
+		viewHints.navIdx = -1;
 		clearTimeout(winEventsTimeout);
 		winEventsTimeout = setTimeout(() => {
 			tooltip.off();
+			viewHints.closeCommentHelp();
 		}, 25);
 	});
 
@@ -41,9 +45,11 @@ window.addEventListener("load", async () => {
 		evt.preventDefault();
 		viewSearch.toggleAdvanced();
 	});
-	document.querySelector("#search-bar").addEventListener("click", evt => {
-		evt.preventDefault();
-		bars.toggle("results");
+	document.querySelectorAll("#hints-bar, #search-bar").forEach(i => {
+		i.addEventListener("click", evt => {
+			evt.preventDefault();
+			bars.toggle("results");
+		});
 	});
 	document.querySelectorAll("#search-advanced input").forEach(i => {
 		i.addEventListener("change", () => viewSearch.toggleAdvancedIcon());
