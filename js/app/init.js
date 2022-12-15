@@ -19,7 +19,6 @@ window.addEventListener("load", async () => {
 		clearTimeout(winEventsTimeout);
 		winEventsTimeout = setTimeout(() => {
 			tooltip.off();
-			viewHints.closeCommentHelp();
 		}, 25);
 	});
 	window.addEventListener("scroll", () => {
@@ -27,7 +26,6 @@ window.addEventListener("load", async () => {
 		clearTimeout(winEventsTimeout);
 		winEventsTimeout = setTimeout(() => {
 			tooltip.off();
-			viewHints.closeCommentHelp();
 		}, 25);
 	});
 
@@ -184,6 +182,10 @@ window.addEventListener("load", async () => {
 			tags.showSummaryNav(this.dataset.forward === "true" ? true : false);
 		});
 	});
+	document.querySelector("#tags-show-teaser").addEventListener("click", function(evt) {
+		evt.preventDefault();
+		viewXml.funTeaser(this.parentNode.dataset.file);
+	});
 	document.querySelector("#tags-open-file").addEventListener("click", function(evt) {
 		evt.preventDefault();
 		app.openEditor(this.parentNode.dataset.file);
@@ -224,6 +226,7 @@ window.addEventListener("load", async () => {
 	viewSearch.toggleAdvancedIcon();
 	await git.configCheck();
 	await xml.update();
+	prefs.data["app-version"] = shared.info.version;
 	document.querySelectorAll(".select-filter").forEach(i => bars.fillSelect(i));
 	bars.filtersActive();
 	document.body.classList.add("scrollable");

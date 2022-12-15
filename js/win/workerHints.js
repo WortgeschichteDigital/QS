@@ -140,8 +140,7 @@ let hints = {
 										text: "Verweistext passt nicht zum Verweisziel",
 										type: "hint_text",
 									},
-									`<Verweistext>${i.verweistext}</Verweistext>`,
-									`<Verweisziel>${i.verweisziel}</Verweisziel>`,
+									`<Verweistext>${i.verweistext}</Verweistext>\n<Verweisziel>${i.verweisziel}</Verweisziel>`,
 								],
 								textHint: [],
 								type: "link_error",
@@ -201,8 +200,7 @@ let hints = {
 								text: "Verweistext nicht angegeben",
 								type: "hint_text",
 							},
-							"<Verweistext/>",
-							`<Verweisziel>${i.verweisziel}</Verweisziel>`,
+							`<Verweistext/>\n<Verweisziel>${i.verweisziel}</Verweisziel>`,
 						],
 						textHint: [{
 							text: `<Verweistext>${i.lemma.spelling}</Verweistext>`,
@@ -246,6 +244,7 @@ let hints = {
 							if (x.type.length) {
 								hintText = `<Verweis Typ="${x.type.join(" ")}">`;
 							}
+							const verweistext = x.verweistext ? `<Verweistext>${x.verweistext}</Verweistext>` : "<Verweistext/>";
 							hints.add(data.hints, file, {
 								line: x.line,
 								linkCount: 0,
@@ -256,7 +255,7 @@ let hints = {
 										type: "hint_text",
 									},
 									{
-										text: `<Verweisziel>${x.verweisziel}</Verweisziel>`,
+										text: `${verweistext}\n<Verweisziel>${x.verweisziel}</Verweisziel>`,
 										type: "context",
 									},
 								],
@@ -292,6 +291,7 @@ let hints = {
 							if (x.type.length) {
 								hintText = `<Verweis Typ="${x.type.join(" ")}">`;
 							}
+							const verweistext = x.verweistext ? `<Verweistext>${x.verweistext}</Verweistext>` : "<Verweistext/>";
 							hints.add(target.hints, i.lemma.file, {
 								line: x.line,
 								linkCount: 0,
@@ -302,7 +302,7 @@ let hints = {
 										type: "hint_text",
 									},
 									{
-										text: `<Verweisziel>${x.verweisziel}</Verweisziel>`,
+										text: `${verweistext}\n<Verweisziel>${x.verweisziel}</Verweisziel>`,
 										type: "context",
 									},
 								],
@@ -360,6 +360,42 @@ let hints = {
 					type: "article_file",
 				});
 			}
+		}
+		// ARTICL_ID: find duplicates
+		let files = Object.keys(xml.data.files);
+		files.sort((a, b) => {
+			const data = xml.data.files;
+			if (data[a].status > data[b].status) {
+				return 1;
+			} else if (data[a].status < data[b].status) {
+				return -1;
+			}
+			return 0;
+		});
+		let allIDs = [];
+		for (const file of files) {
+			const id = xml.data.files[file].id,
+				duplicate = allIDs.find(i => i.id === id);
+			if (duplicate) {
+				hints.add(xml.data.files[file].hints, file, {
+					line: 3,
+					linkCount: 0,
+					scope: "Artikel",
+					textErr: [
+						{
+							text: `ID bereits vergeben in „${duplicate.file}“`,
+							type: "hint_text",
+						},
+						id,
+					],
+					textHint: [],
+					type: "article_id",
+				});
+			}
+			allIDs.push({
+				file,
+				id,
+			});
 		}
 		// SEMANTIC_TYPE: check whether corresponding semantic types are correct or not
 		//   hl = array (main lemmas of current article)
@@ -479,7 +515,8 @@ let hints = {
 				}
 			}
 			// EZ_LINK: link to existing article
-			if (i.closest("Ueberschrift") ||
+			if (i.closest("Lesart") ||
+					i.closest("Ueberschrift") ||
 					i.closest("Verweis") ||
 					i.closest("Verweis_extern")) {
 				continue;
@@ -521,18 +558,19 @@ let hints = {
 	//   content = string
 	checkTR (file, doc, content) {
 		const data = xml.data.files[file];
-		for (const i of doc.querySelectorAll("Verweise Textreferenz")) {
+		for (const i of doc.querySelectorAll("Textreferenz")) {
 			const target = i.getAttribute("Ziel"),
-				text = i.textContent;
-			// TR_ERROR: target was not found
+				text = i.textContent,
+				scope = hints.detectScope(i);
+			// TR_ERROR: target was not found (check everywhere)
 			if (!data.targets.includes(target)) {
 				hints.add(data.hints, file, {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
-					scope: hints.detectScope(i),
+					scope,
 					textErr: [
 						{
-							text: `xml:id="${target}" nicht gefunden`,
+							text: `xml:id="${target}" nicht im Text der Wortgeschichte`,
 							type: "hint_text",
 						},
 						`<Textreferenz Ziel="${target}">${text}</Textreferenz>`,
@@ -540,15 +578,19 @@ let hints = {
 					textHint: [],
 					type: "tr_error",
 				});
+				continue;
 			}
-			// TR_SUPERFLUOUS: linked text is lemma of the current article
+			if (scope !== "Verweise") {
+				continue;
+			}
+			// TR_SUPERFLUOUS: linked text is lemma of the current article (check <Verweise> only)
 			else if (data.hl.includes(text) ||
 					data.nl.includes(text)) {
 				const type = data.hl.includes(text) ? "Hauptlemma" : "Nebenlemma";
 				hints.add(data.hints, file, {
 					line: xml.getLineNumber(i, doc, content),
 					linkCount: 0,
-					scope: hints.detectScope(i),
+					scope,
 					textErr: [
 						{
 							text: `Textreferenz verlinkt ${type} des Artikels`,
@@ -560,14 +602,14 @@ let hints = {
 					type: "tr_superfluous",
 				});
 			}
-			// TR_LINK: replace <Textreferenz> with <Verweis>
+			// TR_LINK: replace <Textreferenz> with <Verweis> (check <Verweise> only)
 			else if (hints.lemmas[text]) {
 				for (const x of hints.lemmas[text].xml) {
 					const newTarget = hints.detectTarget(x, text);
 					hints.add(data.hints, file, {
 						line: xml.getLineNumber(i, doc, content),
 						linkCount: 0,
-						scope: hints.detectScope(i),
+						scope,
 						textErr: [`<Textreferenz Ziel="${target}">${text}</Textreferenz>`],
 						textHint: [
 							`<Verweistext>${text}</Verweistext>`,
@@ -640,9 +682,11 @@ let hints = {
 				//   - if it doesn't link to one of the available lemmas or
 				//   - if the linked lemma is part of the current article
 				//     (in cases like that the external reference is definitley correct)
+				//   - if the link is part of the meanings structure
 				if (!hints.lemmas[lemma] ||
 					data.hl.includes(lemma) ||
-					data.nl.includes(lemma)) {
+					data.nl.includes(lemma) ||
+					i.closest("Nachweise")) {
 					continue;
 				}
 				for (const x of hints.lemmas[lemma].xml) {
@@ -690,7 +734,7 @@ let hints = {
 						},
 						`<${i.nodeName} Sprache="dt">`,
 						{
-							text: 'Typ="dt" ist impliziert',
+							text: 'Typ="dt" ist hier impliziert.',
 							type: "context",
 						},
 					],
@@ -717,7 +761,7 @@ let hints = {
 							},
 							`<${x.nodeName} Sprache="${langX}">`,
 							{
-								text: `impliziert wegen <Absatz Sprache="${langX}">`,
+								text: `Sprache="${langX}" ist hier wegen <Absatz Sprache="${langX}"> impliziert.`,
 								type: "context",
 							},
 						],
@@ -872,6 +916,8 @@ let hints = {
 				return "Wortgeschichte";
 			} else if (parent.nodeName === "Wortgeschichte_kompakt") {
 				return "Kurz gefasst";
+			} else if (parent.nodeName === "Belegreihe") {
+				return "Belegauswahl";
 			} else if (parent.nodeName === "Artikel") {
 				return "Artikel";
 			}

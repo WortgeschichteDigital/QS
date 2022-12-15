@@ -25,7 +25,7 @@ let xml = {
 	//         line         = 1   line number
 	//         linkCount    = 1   link count, > 0 means: 'there are already links to the proposed destination';
 	//                              the analysis is limited to the current block (i.e. <Wortgeschichte> etc.)
-	//         scope        = ""  Artikel | Bedeutungsgerüst | Kurz gefasst | Literatur | Verweise | Wortgeschichte
+	//         scope        = ""  Artikel | Bedeutungsgerüst | Belegauswahl | Kurz gefasst | Literatur | Verweise | Wortgeschichte
 	//         textErr      = []  text that triggered the hint;
 	//                              the slots contain either strings or objects; objects have this structure:
 	//                                text = text to be printed
@@ -33,6 +33,7 @@ let xml = {
 	//                                  comment_link = show how to enclose links to missing lemmas in comments
 	//                                  context      = this is contextual information
 	//                                  copy         = enable fast copy of text
+	//                                  hint_text    = specification for this type of error
 	//         textHint     = []  proposal into which "textErr" should be changed;
 	//                              the structure is the same as "textErr"
 	//         type         = ""  hint type; available types
@@ -181,6 +182,7 @@ let xml = {
 			zeitstrahl: xml.zeitstrahl,
 			changed,
 			untracked,
+			newAppVersion: prefs.data["app-version"] !== shared.info.version,
 			xmlFiles,
 		});
 		if (!response) {

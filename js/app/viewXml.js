@@ -153,6 +153,8 @@ let viewXml = {
 		if (filterState === viewXml.contentState.filterState) {
 			// restore scroll position only in case the filter state is identical
 			app.resetViewScrollTop(type);
+		} else {
+			window.scrollTo(0, 0);
 		}
 		viewXml.contentState.filterState = filterState;
 		viewXml.contentState.xmlDate = xml.data.date;
@@ -166,8 +168,14 @@ let viewXml = {
 	// resources/wortgeschichten-teaser.xsl
 	funTeaserXsl: "",
 	// show teaser
-	//   a = node (clicked link)
+	//   a = node | string (clicked link or file name)
 	async funTeaser (a) {
+		let fileName = "";
+		if (typeof a === "string") {
+			fileName = a;
+		} else {
+			fileName = a.closest("tr").dataset.file;
+		}
 		// load XSL (if needed)
 		const result = await app.loadXsl({
 			obj: viewXml,
@@ -178,13 +186,12 @@ let viewXml = {
 			return;
 		}
 		// extract summary (Kurz gefasst)
-		const tr = a.closest("tr"),
-			file = xml.files[tr.dataset.file];
-		if (!file) {
-			shared.error(`Dateidaten für „${tr.dataset.file}“ nicht gefunden`);
+		const fileContent = xml.files[fileName];
+		if (!fileContent) {
+			shared.error(`Dateidaten für „${fileName}“ nicht gefunden`);
 			return;
 		}
-		const doc = new DOMParser().parseFromString(file, "text/xml"),
+		const doc = new DOMParser().parseFromString(fileContent, "text/xml"),
 			xslt = new DOMParser().parseFromString(viewXml.funTeaserXsl, "application/xml"),
 			processor = new XSLTProcessor();
 		processor.importStylesheet(xslt);
@@ -199,7 +206,7 @@ let viewXml = {
 		});
 		tags.sort(shared.sort);
 		// display summary (Kurz gefasst)
-		document.querySelector("#summary h1 span").textContent = tr.dataset.file;
+		document.querySelector("#summary h1 span").textContent = fileName;
 		document.querySelector("#summary p").innerHTML = processedDoc.querySelector("p").innerHTML;
 		let code = document.querySelector("#summary code");
 		shared.clear(code);

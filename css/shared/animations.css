@@ -6,12 +6,13 @@
 	position: fixed;
 	top: 25%;
 	left: 50%;
+	z-index: 1;
 	transform: translateX(-50%);
 	opacity: 0;
-	border-radius: 20px;
+	border-radius: 10px;
 	width: 96px;
 	height: 96px;
-	background-color: rgba(255, 255, 255, .7);
+	background-color: rgba(255, 255, 255, .9);
 	background-position: top left;
 	background-repeat: no-repeat;
 	background-size: 96px 96px;

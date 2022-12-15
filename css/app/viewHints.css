@@ -4,29 +4,30 @@
 
 /* ASIDE ---------------------------------------- */
 
-.hint-item .aside {
+.hint-block .aside {
 	position: absolute;
 	top: 0;
 	left: 10px;
 }
 
-.hint-item .aside .line {
+.hint-block .aside .line {
 	color: var(--textColor);
 	font-size: .9rem;
 	line-height: 1.5rem;
 }
 
-.hint-item .aside .icons {
+.hint-block .aside .icons {
+	position: relative;
 	margin-top: 5px;
 	margin-left: -7px;
 }
 
-.hint-item a.icon {
+.hint-block a.icon {
 	width: 36px;
 	height: 36px;
 }
 
-.hint-item a.icon:last-child {
+.hint-block a.icon:nth-child(2) {
 	margin-left: 5px;
 }
 
@@ -40,7 +41,7 @@
 	line-height: 1.5rem;
 }
 
-.hint-item:last-child .hint {
+.hint-block:last-child .hint {
 	border-bottom: none;
 	padding-bottom: 0;
 }
@@ -67,12 +68,15 @@
 
 .hint p {
 	margin: 0;
+	width: max-content;
+	max-width: 100%;
 }
 
 .hint .text-correct,
 .hint .text-erroneous,
 .hint .text-hint,
 .hint .repeated {
+	position: relative;
 	margin-top: 10px;
 	padding-left: 35px;
 	background-image: url(../../img/app/text-okay.svg);
@@ -88,6 +92,7 @@
 }
 
 .hint .text-hint {
+	padding-left: 0;
 	background-image: none;
 }
 
@@ -105,11 +110,19 @@
 }
 
 .hint .context {
+	margin-bottom: 0;
 	font-size: .7rem;
+	line-height: 1rem;
+	user-select: none;
 }
 
 .hint .hint-text {
 	font-style: italic;
+	user-select: none;
+}
+
+.hint .no-select {
+	user-select: none;
 }
 
 .hint .repeated {
@@ -131,12 +144,14 @@
 }
 
 
-/* COMMENT HELP --------------------------------- */
+/* HINTS POPUP ---------------------------------- */
 
-.comment-help {
-	position: fixed;
+.hints-popup {
+	position: absolute;
+	z-index: 2;
+	box-shadow: var(--shadow);
 	padding: 10px;
-	max-width: 500px;
+	width: max-content;
 	border: 1px solid var(--line);
 	border-radius: 10px;
 	background-color: #fff;
@@ -144,27 +159,28 @@
 	transition: opacity .3s ease-out;
 }
 
-.comment-help.visible {
+.hints-popup.visible {
 	opacity: 1;
 }
 
-.comment-help a {
+.hints-popup a {
 	position: absolute;
 	top: 0;
 	right: 0;
 }
 
-.comment-help p {
+.hints-popup p {
 	margin: 0 0 10px 0;
 	font-size: .8rem;
 	line-height: 1.2rem;
 }
 
-.comment-help p:first-child {
+.hints-popup p:first-child {
 	margin-top: 0;
+	padding-right: 40px;
 }
 
-.comment-help code {
+.hints-popup code {
 	margin: 0 0 10px 0;
 	font-size: .7rem;
 	line-height: 1.1rem;
@@ -173,6 +189,37 @@
 	user-select: text;
 }
 
-.comment-help code:last-child {
+.hints-popup code:last-child {
 	margin-bottom: 0;
+}
+
+.hints-popup table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-family: "Noto Sans Mono", monospace;
+	font-size: .7rem;
+	line-height: 1.1rem;
+}
+
+.hints-popup th {
+	vertical-align: top;
+	padding: 0 10px;
+	background-color: var(--bgGreyLight);
+	color: var(--textGrey);
+	font-weight: normal;
+}
+
+.hints-popup th.hint-line {
+	color: var(--textColor);
+	font-weight: bold;
+}
+
+.hints-popup td {
+	padding: 0 0 0 10px;
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.hints-popup .scrollable {
+	overflow-y: auto;
 }

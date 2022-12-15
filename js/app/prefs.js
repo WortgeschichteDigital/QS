@@ -8,10 +8,10 @@ let prefs = {
 		prefs.data = await shared.ipc.invoke("prefs");
 		for (const [k, v] of Object.entries(prefs.data)) {
 			// option not within the preferences overlay
-			if (k === "filters") {
-				prefs.initFilters();
+			if (/app-version|marks/.test(k)) {
 				continue;
-			} else if (k === "marks") {
+			} else if (k === "filters") {
+				prefs.initFilters();
 				continue;
 			} else if (k === "search") {
 				prefs.initSearch();
@@ -38,7 +38,7 @@ let prefs = {
 	// initialize filter options at startup
 	initFilters () {
 		for (const [k, v] of Object.entries(prefs.data.filters)) {
-			if (k === "barVisible" && v) {
+			if (k === "bar-visible" && v) {
 				document.querySelector("#fun-filters").click();
 			} else if (/^select-/.test(k)) {
 				document.getElementById(k).dataset.value = v;
@@ -81,7 +81,7 @@ let prefs = {
 	save () {
 		// fill in filter data
 		prefs.data.filters = bars.getFiltersData();
-		prefs.data.filters.barVisible = document.querySelector("#fun-filters").classList.contains("active");
+		prefs.data.filters["bar-visible"] = document.querySelector("#fun-filters").classList.contains("active");
 		// fill in sorting data
 		prefs.data.sorting = app.getSortingData();
 		// fill in search data

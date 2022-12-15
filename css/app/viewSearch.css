@@ -37,7 +37,7 @@
 }
 
 .search-result,
-.hint-item {
+.hint-block {
 	position: relative;
 	margin: 0 auto;
 	outline: 2px solid transparent;
@@ -50,13 +50,13 @@
 	transition: outline-color .3s linear;
 }
 
-.hint-item {
+.hint-block {
 	margin: 0 auto 40px auto;
 	padding: 0 10px;
 	min-height: 71px;
 }
 
-.hint-item:last-child {
+.hint-block:last-child {
 	margin-bottom: 0;
 }
 

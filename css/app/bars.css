@@ -8,7 +8,7 @@
 	position: fixed;
 	top: 111px;
 	left: -285px; /* 320px bar width + 15px blur-radius of shadow */
-	z-index: 1;
+	z-index: 2;
 	box-shadow: var(--shadowRight);
 	border-top: 3px solid #fff;
 	padding: 10px;

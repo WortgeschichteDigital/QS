@@ -324,7 +324,8 @@ let xml = {
 			// save file content
 			xml.files[k] = v.xml;
 			// update file data?
-			if (xml.data.files?.[k]?.hash !== v.hash) {
+			if (xml.data.files?.[k]?.hash !== v.hash ||
+					data.newAppVersion) {
 				updated.push(k);
 				xml.data.files[k] = {};
 				for (const [key, val] of Object.entries(v)) {

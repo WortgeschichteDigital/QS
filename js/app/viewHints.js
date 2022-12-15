@@ -98,6 +98,8 @@ let viewHints = {
 			} else {
 				app.resetViewScrollTop(type);
 			}
+		} else {
+			window.scrollTo(0, 0);
 		}
 		viewHints.contentState.filterState = filterState;
 		viewHints.contentState.xmlDate = xml.data.date;
@@ -230,7 +232,7 @@ let viewHints = {
 			},
 			{
 				file: ["context.svg"],
-				fun: "showContext",
+				fun: "popupContext",
 				title: "Kontext anzeigen",
 			},
 		];
@@ -250,7 +252,7 @@ let viewHints = {
 			// BLOCK
 			let div = document.createElement("div");
 			cont.appendChild(div);
-			div.classList.add("hint-item");
+			div.classList.add("hint-block");
 			div.dataset.file = i.file;
 			div.dataset.ident = i.hint.ident;
 			div.dataset.line = i.hint.line;
@@ -362,20 +364,18 @@ let viewHints = {
 			if (typeof i === "string") {
 				p.innerHTML = prepareText(i);
 			} else {
-				let context = "";
 				if (i.type === "context") {
-					context = "<i>Kontext:</i> ";
 					p.classList.add("context");
+					let context = document.createElement("p");
+					cont.insertBefore(context, p);
+					context.classList.add("context");
+					context.innerHTML = "<i>Kontext:</i> ";
 				} else if (i.type === "copy") {
 					p.title = "Klick zum Kopieren";
 					p.addEventListener("click", function() {
 						let range = new Range();
-						range.setStart(this.firstChild, 0);
-						if (this.lastChild.nodeType === Node.TEXT_NODE) {
-							range.setEnd(this.lastChild, this.lastChild.nodeValue.length);
-						} else {
-							range.setEnd(this.lastChild, 1);
-						}
+						range.setStartBefore(this.firstChild);
+						range.setEndAfter(this.lastChild);
 						const sel = window.getSelection();
 						sel.removeAllRanges();
 						sel.addRange(range);
@@ -386,8 +386,9 @@ let viewHints = {
 				} else if (i.type === "hint_text") {
 					p.classList.add("hint-text");
 				}
-				p.innerHTML = context + prepareText(i.text);
+				p.innerHTML = prepareText(i.text);
 				if (i.type === "comment_link") {
+					p.classList.add("no-select");
 					let a = document.createElement("a");
 					p.appendChild(a);
 					a.classList.add("comment-link");
@@ -395,7 +396,7 @@ let viewHints = {
 					a.textContent = "Auskommentieren?";
 					a.addEventListener("click", function(evt) {
 						evt.preventDefault();
-						viewHints.showCommentHelp(this);
+						viewHints.popupComment(this);
 					});
 				}
 			}
@@ -407,6 +408,9 @@ let viewHints = {
 					/&gt;/.test(text)) {
 				text = viewSearch.textColorCode(text);
 			}
+			text = text.replace(/(?<=\s|^)([a-zA-Z:]+=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
+				return `<span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
+			});
 			text = text.replace(/\n/g, "<br>");
 			return text;
 		}
@@ -451,11 +455,15 @@ let viewHints = {
 		}
 	},
 	// navigation: last index shown
+	// (reset on scroll and on resize)
 	navIdx: -1,
+	// navigation last index actually shown
+	// (this variable is never reset on scroll or on resize)
+	navLastIdx: -1,
 	// navigation: jump to next/previous hint
 	//  down = boolean
 	nav (down) {
-		const hints = document.querySelectorAll(".hint-item");
+		const hints = document.querySelectorAll(".hint-block");
 		if (!hints.length) {
 			return;
 		}
@@ -490,6 +498,10 @@ let viewHints = {
 			shared.feedback("reached-top");
 			return;
 		}
+		if (down && viewHints.navIdx === viewHints.navLastIdx) {
+			viewHints.navIdx++;
+		}
+		viewHints.navLastIdx = viewHints.navIdx;
 		const ele = hints[viewHints.navIdx],
 			rect = ele.getBoundingClientRect();
 		window.scrollTo({
@@ -497,13 +509,19 @@ let viewHints = {
 			left: 0,
 			behavior: "smooth",
 		});
-		// highlight the result
+		// highlight the result and show feedback
 		shared.highlightBlock(ele);
+		if (!down && viewHints.navIdx === 0) {
+			shared.feedback("reached-top");
+		} else if (down && viewHints.navIdx === hints.length - 1) {
+			shared.feedback("reached-bottom");
+		}
 	},
-	// show help on how add comments to a non existing link
+	// popup: show help on how add comments to a non existing link
 	//   caller = node (clicked link)
-	showCommentHelp (caller) {
-		const example = `<p>Unkommentierter Verweis:</p>
+	popupComment (caller) {
+		let content = document.createElement("div");
+		content.innerHTML = `<p>Unkommentierter Verweis:</p>
 <code><span class="xml-tag">&lt;Verweis&gt;
   &lt;Verweistext&gt;&lt;erwaehntes_Zeichen&gt;</span>Lemma<span class="xml-tag">&lt;/erwaehntes_Zeichen&gt;&lt;/Verweistext&gt;
   &lt;Verweisziel&gt;</span>Lemma<span class="xml-tag">&lt;/Verweisziel&gt;
@@ -513,17 +531,269 @@ let viewHints = {
   &lt;Verweistext&gt;--&gt;</span><span class="xml-tag">&lt;erwaehntes_Zeichen&gt;</span>Lemma<span class="xml-tag">&lt;/erwaehntes_Zeichen&gt;</span><span class="xml-comment">&lt;!--&lt;/Verweistext&gt;
   &lt;Verweisziel&gt;Lemma&lt;/Verweisziel&gt;
 &lt;/Verweis&gt;--&gt;</span></code>`;
-		// create popup
-		let div = document.createElement("div");
-		document.body.appendChild(div);
-		div.classList.add("comment-help");
-		div.innerHTML = example;
+		viewHints.popupShow(caller, content, "comment");
+	},
+	// popup: show extended XML context for a certain hint
+	//   ele = node (clicked link)
+	//   file = string (XML file name)
+	//   ident = string (identification hash)
+	//   line = number
+	popupContext ({ ele, file, ident, line }) {
+		const data = xml.data.files[file],
+			hint = data.hints.find(i => i.ident === ident && i.line === line);
+		if (!hint.line) {
+			dialog.open({
+				type: "alert",
+				text: "Zu diesem Hinweis gibt es keinen Kontext.",
+			});
+			return;
+		} else if (!xml.files[file]) {
+			shared.error(`Dateidaten für „${file}“ nicht gefunden`);
+			return;
+		}
+
+		// DETECT LINES
+		let fileCont = xml.files[file].split("\n"),
+			lines = []; // zero based line count!
+		// special cases: article_id, literature_error, literature_missing
+		if (/article_id|literature_(error|missing)/.test(hint.type)) {
+			lines.push(hint.line - 1);
+		}
+		// special case: comment outside of text or link lists
+		else if (hint.type === "comment" &&
+				!/Belegauswahl|Kurz gefasst|Verweise|Wortgeschichte/.test(hint.scope)) {
+			let startIndex = /<!--/.exec(fileCont[hint.line - 1]).index,
+				l = 0;
+			for (let i = hint.line - 1, len = fileCont.length; i < len; i++) {
+				const m = /-->/.exec(fileCont[i]);
+				if (m && (i !== hint.line - 1 || m.index > startIndex)) {
+					l = i;
+					break;
+				}
+			}
+			for (let i = hint.line - 1; i <= l; i++) {
+				lines.push(i);
+			}
+		}
+		// special case: diasystemic_value
+		else if (hint.type === "diasystemic_value") {
+			let sub = 0,
+				exSub = [],
+				end = 0;
+			for (let i = hint.line, len = fileCont.length; i < len; i++) {
+				if (/<\/Lesart>/.test(fileCont[i])) {
+					if (sub) {
+						sub--;
+						for (let j = exSub[exSub.length - 1] + 1; j <= i; j++) {
+							exSub.push(j);
+						}
+						continue;
+					}
+					end = i;
+					break;
+				}
+				if (/<Lesart/.test(fileCont[i])) {
+					sub++;
+					exSub.push(i);
+				}
+			}
+			for (let i = hint.line - 1; i <= end; i++) {
+				if (exSub.includes(i)) {
+					continue;
+				}
+				lines.push(i);
+			}
+		}
+		// scope "Verweise"
+		else if (hint.scope === "Verweise") {
+			// detect start and end of the surrounding <Verweise>
+			let blockBorders = [];
+			for (let i = hint.line - 1; i > 0; i--) {
+				if (/<Verweise/.test(fileCont[i])) {
+					blockBorders.push(i);
+					break;
+				}
+			}
+			for (let i = hint.line - 1, len = fileCont.length; i < len; i++) {
+				if (/<\/Verweise>/.test(fileCont[i])) {
+					blockBorders.push(i);
+					break;
+				}
+			}
+			let nodeType = fileCont[hint.line - 1].match(/<([a-zA-Z_!\-]+)/),
+				regEnd = new RegExp(`<\/${nodeType[1]}>`);
+			if (nodeType === "!--") {
+				regEnd = new RegExp(`-->`);
+			}
+			let end = 0;
+			for (let i = hint.line - 1, len = fileCont.length; i < len; i++) {
+				const line = fileCont[i];
+				if (regEnd.test(line)) {
+					end = i;
+					break;
+				}
+			}
+			for (let i = hint.line - 1; i <= end; i++) {
+				lines.push(i);
+			}
+			if (!lines.includes(blockBorders[0])) {
+				lines.unshift(blockBorders[0]);
+			}
+			if (!lines.includes(blockBorders[1])) {
+				lines.push(blockBorders[1]);
+			}
+		}
+		// everything else
+		else {
+			let start = 0;
+			for (let i = hint.line - 1; i >= 0; i--) {
+				const line = fileCont[i];
+				if (/<(Absatz|Blockzitat|Liste|Textblock)/.test(line)) {
+					start = i;
+					break;
+				}
+			}
+			let end = 0;
+			for (let i = hint.line - 1, len = fileCont.length; i < len; i++) {
+				const line = fileCont[i];
+				if (/<\/(Absatz|Blockzitat|Liste|Textblock)>/.test(line)) {
+					end = i;
+					break;
+				}
+			}
+			for (let i = start; i <= end; i++) {
+				lines.push(i);
+			}
+		}
+
+		// PREPARE HIGHLIGHTING
+		let words = [];
+		for (const i of hint.textErr) {
+			if (typeof i === "string" || i.type === "context") {
+				let text = i.type === "context" ? i.text : i;´
+				for (const m of text.matchAll(/<[^\/].+?>(.+?)<\/.+?>/g)) {
+					if (!words.includes(m[1])) {
+						words.push(m[1]);
+					}
+				}
+			}
+		}
+		if (hint.type === "diasystemic_value") {
+			const value = hint.textHint[0].match(/> (.+)/)[1];
+			words.push(value);
+		}
+		let regExp = [];
+		for (let i = 0, len = words.length; i < len; i++) {
+			let reg;
+			if (hint.type === "diasystemic_value") {
+				reg = new RegExp(words[i], "g");
+			} else {
+				reg = new RegExp("(?<=>)" + shared.escapeRegExp(viewSearch.textMaskChars(words[i])) + "(?=<)", "g");
+			}
+			regExp.push({
+				high: reg,
+				search: reg,
+				termN: i,
+			});
+		}
+
+		// MAKE TABLE
+		let showBlankLines = lines[lines.length - 1] - lines[0] + 1 === lines.length,
+			trimWhitespace = -1;
+		for (let i = 0, len = lines.length; i < len; i++) {
+			const m = fileCont[lines[i]].match(/^\s+/);
+			if (m && (trimWhitespace === -1 || m[0].length < trimWhitespace)) {
+				trimWhitespace = m[0].length;
+			}
+		}
+		// make table
+		let table = document.createElement("table"),
+			lastLine = 0,
+			commentOpen = false;
+		for (let i = 0, len = lines.length; i < len; i++) {
+			// prepare text
+			let line = lines[i],
+				text = fileCont[line];
+			if (!showBlankLines && !text.trim()) {
+				continue;
+			}
+			if (text.length >= trimWhitespace) {
+				text = text.substring(trimWhitespace);
+			}
+			text = viewSearch.textMaskChars(text);
+			text = viewSearch.textColorCode(text, false);
+			if (regExp.length) {
+				text = viewSearch.textHighlight(text, regExp).text;
+			}
+			text = viewSearch.textWbr(text);
+			if (/--&gt;(?!<\/span>)/.test(text)) {
+				commentOpen = false;
+				text = text.replace(/.+--&gt;(?!<\/span>)/g, m => `<span class="xml-comment">${m}</span>`);
+			}
+			let commentOpenSet = false;
+			if (/(?<!<span class="xml-comment">)&lt;!--/.test(text)) {
+				commentOpen = true;
+				commentOpenSet = true;
+				text = text.replace(/(?<!<span class="xml-comment">)&lt;!--.+/g, m => `<span class="xml-comment">${m}</span>`);
+			}
+			if (commentOpen && !commentOpenSet) {
+				text = `<span class="xml-comment">${text}</span>`;
+			}
+			// print ellipsis
+			if (lastLine && line > lastLine + 1) {
+				let tr = document.createElement("tr");
+				table.appendChild(tr);
+				let td = document.createElement("td");
+				tr.appendChild(td);
+				td.setAttribute("colspan", "2");
+				td.textContent = "...";
+			}
+			lastLine = line;
+			// print line number
+			let tr = document.createElement("tr");
+			table.appendChild(tr);
+			let th = document.createElement("th");
+			tr.appendChild(th);
+			th.textContent = line + 1;
+			if (line + 1 === hint.line) {
+				th.classList.add("hint-line");
+			}
+			let td = document.createElement("td");
+			tr.appendChild(td);
+			td.innerHTML = text;
+		}
+
+		// SHOW POPUP
+		let content = document.createElement("div"),
+			p = document.createElement("p");
+		content.appendChild(p);
+		p.innerHTML = `<i>Code aus „${file}“</i>`;
+		let scrollCont = document.createElement("div");
+		content.appendChild(scrollCont);
+		scrollCont.classList.add("scrollable");
+		scrollCont.appendChild(table);
+		viewHints.popupShow(ele, content, "context");
+		// REMOVE TOOLTIP
+		ele.dispatchEvent(new Event("mouseout"));
+	},
+	// popup: show hints popup
+	//   caller = node (clicked link)
+	//   content = node
+	//   type = string (comment | context)
+	popupShow (caller, content, type) {
+		// close existing popup
+		viewHints.popupClose();
+		// create new popup
+		let popup = document.createElement("div");
+		caller.closest("div").appendChild(popup);
+		popup.classList.add("hints-popup");
+		// close icon
 		let a = document.createElement("a");
-		div.insertBefore(a, div.firstChild);
+		popup.appendChild(a);
 		a.href = "#";
 		a.addEventListener("click", evt => {
 			evt.preventDefault();
-			viewHints.closeCommentHelp();
+			viewHints.popupClose();
 		});
 		let img = document.createElement("img");
 		a.appendChild(img);
@@ -531,17 +801,52 @@ let viewHints = {
 		img.width = "30";
 		img.height = "30";
 		img.alt = "";
+		// content
+		popup.appendChild(content);
+		// set max-width
+		let maxWidth = window.innerWidth - caller.getBoundingClientRect().left - 60;
+		if (type === "comment" && maxWidth > 500) {
+			maxWidth = 500;
+		} else if (type === "context" && maxWidth > 750) {
+			maxWidth = 750;
+		}
+		popup.style.maxWidth = maxWidth + "px";
 		// position popup
-		const rect = caller.getBoundingClientRect();
-		div.style.top = rect.top + rect.height + 10 + "px";
-		div.style.left = rect.left + "px";
+		const popupHeight = popup.offsetHeight;
+		if (popupHeight > window.innerHeight / 2) {
+			const top = document.querySelector("#bar").getBoundingClientRect().bottom + 20;
+			popup.style.width = Math.round(window.innerWidth * 0.9) + "px";
+			popup.style.maxHeight = window.innerHeight - top - 60 + "px";
+			popup.style.position = "fixed";
+			popup.style.top = top + "px";
+			popup.style.left = "50%";
+			popup.style.transform = "translateX(-50%)";
+			popup.querySelector(".scrollable").style.maxHeight = popup.offsetHeight - 22 - popup.querySelector("p").offsetHeight - 10 + "px";
+		} else {
+			const callerRect = caller.getBoundingClientRect(),
+				callerTop = caller.offsetTop;
+			if (callerRect.top + callerRect.height + popupHeight + window.scrollY + 10 > document.body.scrollHeight) {
+				popup.style.top = callerTop - popupHeight - 10 + "px";
+			} else {
+				popup.style.top = callerTop + callerRect.height + 10 + "px";
+			}
+			popup.style.left = caller.offsetLeft + "px";
+		}
 		// show popup
-		void div.offsetWidth;
-		div.classList.add("visible");
+		void popup.offsetWidth;
+		popup.classList.add("visible");
+		// scroll to line in question
+		const scrollCont = popup.querySelector(".scrollable");
+		if (scrollCont && scrollCont.offsetHeight !== scrollCont.scrollHeight) {
+			const row = scrollCont.querySelector(".hint-line").parentNode.previousSibling;
+			if (row) {
+				scrollCont.scrollTop = row.offsetTop;
+			}
+		}
 	},
-	// closes all open comment helps
-	closeCommentHelp () {
-		document.querySelectorAll(".comment-help").forEach(i => {
+	// closes existing hints popup
+	popupClose () {
+		document.querySelectorAll(".hints-popup").forEach(i => {
 			if (!i.classList.contains("visible")) {
 				return;
 			}
@@ -550,13 +855,5 @@ let viewHints = {
 			}, { once: true });
 			i.classList.remove("visible");
 		});
-	},
-	// show extended XML context of a hint
-	//   ele = node (clicked link)
-	//   file = string (XML file name)
-	//   ident = string (identification hash)
-	//   line = number
-	showContext ({ ele, file, ident, line }) {
-		// TODO
 	},
 };

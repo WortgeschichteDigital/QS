@@ -358,23 +358,26 @@ let viewSearch = {
 	},
 	// color-code XML
 	//   text = string
-	textColorCode (text) {
+	//   commentCompletion = false | undefined
+	textColorCode (text, commentCompletion = true) {
 		// complete comments
 		// (as comments are often cut in half they should be completed
 		// at the beginning or at the end respectively)
-		const open = /&lt;!--/.exec(text)?.index ?? -1,
-			close = /--&gt;/.exec(text)?.index ?? -1;
-		if (open >= 0 && close.length === -1 ||
-				open >= 0 && close >= 0 && open > close) {
-			text += " --&gt;";
-		}
-		if (open === -1 && close >= 0 ||
-				open >= 0 && close >= 0 && close < open) {
-			text = "&lt;!-- " + text;
+		if (commentCompletion) {
+			const open = /&lt;!--/.exec(text)?.index ?? -1,
+				close = /--&gt;/.exec(text)?.index ?? -1;
+			if (open >= 0 && close.length === -1 ||
+					open >= 0 && close >= 0 && open > close) {
+				text += " --&gt;";
+			}
+			if (open === -1 && close >= 0 ||
+					open >= 0 && close >= 0 && close < open) {
+				text = "&lt;!-- " + text;
+			}
 		}
 		// highlight tags
 		text = text.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
-		text = text.replace(/&lt;.+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
+		text = text.replace(/&lt;[^!].+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
 		text = text.replace(/<span class="xml-tag">(.+?)<\/span>/g, (m, p1) => {
 			p1 = p1.replace(/ ([^\s]+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
 				return ` <span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
@@ -440,7 +443,7 @@ let viewSearch = {
 	textWbr (text) {
 		text = text.replace(/[%_]/g, m => `<wbr>${m}`);
 		text = text.replace(/&amp;/g, "&amp;<wbr>");
-		text = text.replace(/(?<!&amp;|<)\//g, "/<wbr>");
+		text = text.replace(/(?<!&amp;|&lt;|<)\//g, "/<wbr>");
 		return text;
 	},
 	// read checkboxes in advanced search options

@@ -30,6 +30,8 @@ let popup = {
 			items = ["results"].concat(defSep);
 		} else if (target === "text_field") {
 			items = ["editCut", "editCopy", "editPaste", "sep", "editSelectAll"];
+		} else if (target === "text_field_readonly") {
+			items = ["editCopy", "sep", "editSelectAll"];
 		} else {
 			items = def;
 		}
@@ -52,6 +54,9 @@ let popup = {
 			// text field
 			if (path[i].nodeName === "INPUT" &&
 					path[i].type === "text") {
+				if (path[i].getAttribute("readonly") !== null) {
+					return "text_field_readonly";
+				}
 				return "text_field";
 			}
 			// ID

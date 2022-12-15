@@ -357,8 +357,10 @@ let app = {
 			return;
 		}
 		app.switching = true;
-		// close help popup in hints view
-		viewHints.closeCommentHelp();
+		// close popup in hints view
+		viewHints.popupClose();
+		// reset navigation index in hints view
+		viewHints.navIdx = -1;
 		// save scroll position
 		app.viewScrollTop[app.view] = window.scrollY;
 		// determine next view
@@ -447,7 +449,7 @@ let app = {
 		app.populateView("switched");
 		app.switching = false;
 	},
-	// view: popuplate the current view
+	// view: populate the current view
 	//   type = string | undefined
 	populateView (type = "") {
 		switch (app.view) {

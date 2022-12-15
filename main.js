@@ -339,9 +339,16 @@ let winMenu = {
 				i.label = i.label.replace("&", "");
 			}
 		}
-		// build and set the mneu
+		// build and set the menu
 		const m = Menu.buildFromTemplate(menu);
-		bw.setMenu(m);
+		if (process.platform === "darwin") {
+			Menu.setApplicationMenu(m);
+		} else {
+			bw.setMenu(m);
+			if (type === "about") {
+				bw.setMenuBarVisibility(false);
+			}
+		}
 	},
 	// execute a command from the app menu
 	//   command = string
@@ -499,7 +506,13 @@ let win = {
 			xml: xml.file || "",
 		});
 		// set menu
-		winMenu.set(bw, type);
+		if (process.platform === "darwin") {
+			bw.on("focus", function() {
+				winMenu.set(this, win.data.find(i => i.id === this.id).type);
+			});
+		} else {
+			winMenu.set(bw, type);
+		}
 		// load html
 		const html = {
 			about: path.join(__dirname, "win", "about.html"),
@@ -532,7 +545,7 @@ let win = {
 				this.send("show", show);
 			});
 		}
-		// window is going to be closed
+		// window is about to be closed
 		bw.on("close", async function(evt) {
 			// search window
 			const idx = win.data.findIndex(i => i.id === this.id),

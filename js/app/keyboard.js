@@ -24,9 +24,9 @@ let keyboard = {
 				bars.closeSelectPopup(select, false);
 				return;
 			}
-			const commentHelp = document.querySelector(".comment-help");
-			if (commentHelp) {
-				commentHelp.firstElementChild.click();
+			const hintsPopup = document.querySelector(".hints-popup");
+			if (hintsPopup) {
+				hintsPopup.firstElementChild.click();
 			}
 		}
 		// Key "Enter"
