@@ -139,6 +139,11 @@ let app = {
 				title: "Datei in der Vorschau öffnen",
 			},
 			{
+				fun: "openLemmasPopup",
+				icon: "lemmas.svg",
+				title: "Lemmata des Artikels anzeigen",
+			},
+			{
 				fun: "openEditor",
 				icon: "open-file.svg",
 				title: "Datei im Editor öffnen",
@@ -158,7 +163,7 @@ let app = {
 			a.title = icon.title;
 			a.addEventListener("click", function(evt) {
 				evt.preventDefault();
-				app[this.dataset.fun](this.dataset.file);
+				app[this.dataset.fun](this.dataset.file, this);
 			});
 			let img = document.createElement("img");
 			a.appendChild(img);
@@ -195,6 +200,50 @@ let app = {
 			result = await shared.shell.openPath(path);
 		if (result) {
 			shared.error(result);
+		}
+	},
+	// open a popup that shows all article lemmas
+	//   file = string (XML file name)
+	//   caller = node
+	openLemmasPopup (file, caller) {
+		caller.dispatchEvent(new Event("mouseout"));
+		let content = document.createElement("div"),
+			h2 = document.createElement("h2");
+		content.appendChild(h2);
+		h2.textContent = file;
+		const data = xml.data.files[file];
+		if (data.fa) {
+			let h3 = document.createElement("h3");
+			content.appendChild(h3);
+			h3.textContent = "Wortfeld";
+			printLemmas(content, data.faLemmas);
+		} else {
+			for (const type of ["hl", "nl"]) {
+				const lemmas = data[type + "Joined"];
+				if (!lemmas.length) {
+					continue;
+				}
+				let h3 = document.createElement("h3");
+				content.appendChild(h3);
+				if (lemmas.length === 1) {
+					h3.textContent = type === "hl" ? "Hauptlemma" : "Nebenlemma";
+				} else {
+					h3.textContent = type === "hl" ? "Hauptlemmata" : "Nebenlemmata";
+				}
+				printLemmas(content, lemmas);
+			}
+		}
+		viewHints.popupShow(caller, content, "lemmas");
+		// print lemma list
+		function printLemmas (content, lemmas) {
+			let p = document.createElement("p");
+			content.appendChild(p);
+			for (const l of lemmas) {
+				if (p.hasChildNodes()) {
+					p.appendChild(document.createElement("br"));
+				}
+				p.appendChild(document.createTextNode(l));
+			}
 		}
 	},
 	// print a rotating icon
@@ -358,7 +407,7 @@ let app = {
 		}
 		app.switching = true;
 		// close popup in hints view
-		viewHints.popupClose();
+		viewHints.popupClose({});
 		// reset navigation index in hints view
 		viewHints.navIdx = -1;
 		// save scroll position

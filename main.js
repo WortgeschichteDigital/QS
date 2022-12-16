@@ -463,6 +463,7 @@ let win = {
 			minHeight: 700,
 			show: false,
 			webPreferences: {
+				backgroundThrottling: false,
 				contextIsolation: false,
 				defaultEncoding: "utf-8",
 				devTools: dev,
@@ -688,6 +689,7 @@ let win = {
 		const w = win.data.find(i => i.type === "help");
 		if (w) {
 			w.bw.webContents.send("show", data);
+			w.bw.focus();
 		} else {
 			win.open({ type: "help", show: data });
 		}

@@ -39,6 +39,7 @@ let xml = {
 				});
 				// field
 				data.fa = doc.querySelector('Artikel[Typ="Wortfeldartikel"]') ? true : false;
+				data.faLemmas = []; // filled after the link analysis
 				// main lemmas
 				data.hl = [];
 				data.hlJoined = [];
@@ -149,7 +150,7 @@ let xml = {
 				});
 			}
 		}
-		// fill "lemma" in all links
+		// fill "lemma" in all links and "faLemmas" in field articles
 		for (const values of Object.values(xml.data.files)) {
 			if (!values.links) {
 				// in case an XML file could not be read due to a "not well-formed" error
@@ -158,6 +159,16 @@ let xml = {
 			for (const link of values.links) {
 				const lemma = xml.getLemma(link.verweisziel);
 				link.lemma = lemma;
+			}
+			// fill "faLemmas" in field articles
+			if (values.fa) {
+				for (const link of values.links) {
+					if (link.scope !== "Verweise" ||
+							!link.lemma.spelling) {
+						continue;
+					}
+					values.faLemmas.push(link.lemma.spelling);
+				}
 			}
 		}
 		// purge files that produced errors
@@ -214,7 +225,6 @@ let xml = {
 	},
 	// get the actual lemma a <Verweisziel> points to
 	//   vz = string (contents of <Verweisziel>)
-	//   data = object (article data)
 	getLemma (vz) {
 		let lemma = vz.split("#")[0],
 			hash = vz.split("#")[1] || "";

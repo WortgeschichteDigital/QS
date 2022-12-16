@@ -16,76 +16,128 @@
 		<script src="../js/shared/overlay.js"></script>
 		<script src="../js/shared/popup.js"></script>
 		<script src="../js/shared/shared.js"></script>
+		<script src="../js/shared/tooltip.js"></script>
 
 		<script src="../js/win/help.js"></script>
 		<script src="../js/win/keyboard.js"></script>
 		<script src="../js/win/helpInit.js"></script>
 	</head>
 	<body>
-		<main>
-			<!-- NAVIGATION -->
-			<nav>
-				<ul
-					><li><a href="#general">Allgemeines</a></li
-					><li><a href="#git">Git</a></li
-					><li><a href="#xml">XML</a></li
-					><li><a href="#hints">Hinweise</a></li
-					><li><a href="#clusters">Clusterei</a></li
-					><li><a href="#search">Suche</a></li
-					><li><a href="#prefs">Einstellungen</a></li
-					><li><a href="#shortcuts">Tastaturkürzel</a></li
-					><li><a href="#miscellaneous">Verschiedenes</a></li
-				></ul>
-			</nav>
+		<!-- NAVIGATION -->
+		<nav>
+			<ul
+				><li><a href="#general">Allgemeines</a></li
+				><li><a href="#git">Git</a></li
+				><li><a href="#xml">XML</a></li
+				><li><a href="#hints">Hinweise</a></li
+				><li><a href="#clusters">Clusterei</a></li
+				><li><a href="#search">Suche</a></li
+				><li><a href="#prefs">Einstellungen</a></li
+				><li><a href="#shortcuts">Tastaturkürzel</a></li
+				><li><a href="#miscellaneous">Verschiedenes</a></li
+			></ul>
+		</nav>
 
-			<!-- SECTIONS -->
-			<div>
-				<!-- GENERAL -->
-				<section id="general">
-					<mark>TODO Allgemeines (Update + Filter)</mark>
-				</section>
+		<!-- GENERAL -->
+		<section id="general">
+			<h1><span>Aufgabe der App</span></h1>
 
-				<!-- GIT -->
-				<section id="git">
-					<mark>TODO Git</mark>
-				</section>
+			<p id="general-aufgabe"></p>
 
-				<!-- XML -->
-				<section id="xml">
-					<mark>TODO XML</mark>
-				</section>
+			<h1><span>Überblick</span></h1>
 
-				<!-- HINTS -->
-				<section id="hints">
-					<mark>TODO Hinweise</mark>
-				</section>
+			<p id="general-ueberblick"></p>
 
-				<!-- CLUSTERS -->
-				<section id="clusters">
-					<mark>TODO Clusterei</mark>
-				</section>
+			<h1><span>Funktionen</span></h1>
 
-				<!-- SEARCH -->
-				<section id="search">
-					<mark>TODO Suche</mark>
-				</section>
+			<p id="general-filter"></p>
 
-				<!-- PREFERENCES -->
-				<section id="prefs">
-					<mark>TODO Einstellungen</mark>
-				</section>
+			<h1><span>Filter</span></h1>
 
-				<!-- SHORTCUTS -->
-				<section id="shortcuts">
-					<mark>TODO Tatsturkürzel</mark>
-				</section>
+			<p id="general-filterMarkierungen"><mark>Filter nach Markierungen</mark></p>
 
-				<!-- MISCELLANEOUS -->
-				<section id="miscellaneous">
-					<mark>TODO Verschiedenes (Teaser-Tags)</mark>
-				</section>
-			</div>
-		</main>
+			<h1><span>Sortierleiste</span></h1>
+
+			<p id="general-sortierleiste"></p>
+		</section>
+
+		<!-- GIT -->
+		<section id="git">
+			<mark>TODO Git</mark>
+		</section>
+
+		<!-- XML -->
+		<section id="xml">
+			<h1><span>Vorschaufenster</span></h1>
+
+			<p id="xml-vorschaufenster"></p>
+		</section>
+
+		<!-- HINTS -->
+		<section id="hints">
+			<h1><span>Aufbau der Hinweise</span></h1>
+
+			<p id="hints-aufbau">Die Hinweise sind immer gleich aufgebaut:</p>
+
+			<ul>
+				<li>Die <b class="blue">Zeilenangabe</b> am linken Rand gibt an, wo in der XML-Datei sich das Element, auf das sich der Hinweis bezieht, befindet. Bei Elementen, die sich über mehr als eine Zeile erstrecken, wird immer die erste Zeile genannt.</li>
+
+				<li>Jeder Hinweis beginnt mit einer Nennung des <b class="red">Hinweistyps</b>. Die <a href="#hints-typen">Hinweistypen</a> sind mit ihrer Beschreibung im Handbuch verlinkt.</li>
+
+				<li>Der Textblock mit vorangestelltem <img src="../img/app/text-not-okay.svg" width="30" height="30" alt=""> beschreibt einen <b>Fehler</b>.</li>
+
+				<li>Der Textblock mit vorangestelltem <img src="../img/app/text-okay.svg" width="30" height="30" alt=""> gibt einen <b>Korrekturhinweis</b>. Wird korrekter XML-Code vorgeschlagen, kann man diesen durch einfachen Klick automatisch kopieren.</li>
+
+				<li>Einige Hinweise (<abbr title="zum Beispiel">z. B.</abbr> <a href="#hints-comment">XML-Kommentare</a>) haben keines dieser Icons. Sie sind rein informationeller Natur, sollen ein Phänomen also weder als richtig noch als falsch markieren.</li>
+
+				<li>Das Icon <img src="../img/app/location.svg" width="30" height="30" alt=""> gibt grob den <b>Ort in der XML-Datei</b> an, auf den sich der Hinweis bezieht. So kann man <abbr title="zum Beispiel">z. B.</abbr> sofort sehen, ob sich ein Verweis im Verweisblock oder Text der Wortgeschichte befindet.</li>
+			</ul>
+
+			<p>Auch Hinweise, in denen ein Phänomen als fehlerhaft markiert ist, sind nicht notwendigerweise Fehler. Dies ist häufig eine Frage der Auslegung. Auch bei diesen Hinweisen handelt sich zunächst einmal nur um Vorschläge, die bedacht, oder Informationen, die zur Kenntnis genommen werden sollten.</p>
+
+			<p>Funktion der <b>Icons unterhalb der</b> <b class="blue">Zeilenangabe</b>:</p>
+
+			<p class="indent-icon"><img src="../img/app/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/app/button-no.svg" width="30" height="30" alt=""> und <img src="../img/app/button-yes.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#general-filterMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu Hinweise als <q>geprüft</q> zu markieren, um sie nicht immer wieder aufs Neue überprüfen zu müssen.</p>
+
+			<p class="indent-icon"><img src="../img/app/context.svg" width="30" height="30" alt="">Ein Klick auf das Icon öffnet ein Popup-Fenster, in dem Sie den Hinweis im <b>Kontext des Originalquellcodes</b> einsehen können, ohne dafür eigens die XML-Datei öffnen zu müssen. Im Popup-Fenster wird der XML-Quelltext zeilenweise dargestellt. Am linken Rand finden Sie die Zeilenzählung. Die Zeile, in der das Element zu finden ist, auf das sich der Hinweis bezieht, ist <b class="blue">blau</b> dargestellt. In vielen Fällen wird sogar die genaue <mark>Stelle im Quelltext</mark> markiert, um die es geht. (Es kann passieren, dass auch andere Stellen mit einem ähnlichen Phänomen hervorgehoben werden.) Der dargestellte Quelltext kann mal mehr, mal weniger umfangreich sein. Findet sich ein Phänomen im Autor*innentext der Wortgeschichte, wird immer ein kompletter Codeblock gedruckt.</p>
+
+			<p>Die Hinweise beziehen sich – natürlich – immer auf eine bestimmte <b>XML-Datei</b>. Die XML-Datei, auf die sich der aktuelle Hinweis bezieht, ist immer am oberen Rand der Ansicht zu sehen. Neben dem Dateinamen finden Sie drei <b>Icons</b>:</p>
+
+			<p class="indent-icon"><img src="../img/app/xml.svg" width="30" height="30" alt="">Dieses Icon schickt den XML-Code der Datei an ein neues Programmfenster. In diesem wird die <b>Vorschau auf zdl.org</b> aufgerufen (<a href="#xml-vorschaufenster">mehr zum Vorschaufenster</a>).</p>
+
+			<p class="indent-icon"><img src="../img/app/lemmas.svg" width="30" height="30" alt="">Diese Icon öffnet ein Popup-Fenster, in dem die <b>Lemmata</b> aufgelistet werden, die in der XML-Datei beschrieben werden. Enthält die Datei einen Wortfeldartikel, werden die Wörter des Wortfeldes aufgelistet.</p>
+
+			<p class="indent-icon"><img src="../img/app/open-file.svg" width="30" height="30" alt="">Diese Icon öffnet die Datei im Standard-XML-<b>Editor</b> des Betriebsystems.</p>
+
+			<h1><span>Hinweistypen</span></h1>
+
+			<p id="hints-typen"></p>
+		</section>
+
+		<!-- CLUSTERS -->
+		<section id="clusters">
+			<mark>TODO Clusterei</mark>
+		</section>
+
+		<!-- SEARCH -->
+		<section id="search">
+			<mark>TODO Suche</mark>
+		</section>
+
+		<!-- PREFERENCES -->
+		<section id="prefs">
+			<mark>TODO Einstellungen</mark>
+		</section>
+
+		<!-- SHORTCUTS -->
+		<section id="shortcuts">
+			<mark>TODO Tatsturkürzel</mark>
+		</section>
+
+		<!-- MISCELLANEOUS -->
+		<section id="miscellaneous">
+			<mark>TODO Verschiedenes (Teaser-Tags)</mark>
+		</section>
 
 		<!-- OVERLAY: LOADING -->
 		<div id="loading" class="overlay"

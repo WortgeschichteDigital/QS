@@ -24,9 +24,15 @@ let keyboard = {
 				bars.closeSelectPopup(select, false);
 				return;
 			}
-			const hintsPopup = document.querySelector(".hints-popup");
-			if (hintsPopup) {
-				hintsPopup.firstElementChild.click();
+			const popups = document.querySelectorAll(".hints-popup");
+			if (popups.length) {
+				let arr = Array.from(popups);
+				arr.sort((a, b) => {
+					let x = parseInt(a.dataset.id, 10),
+						y = parseInt(b.dataset.id, 10);
+					return y - x;
+				});
+				arr[0].firstElementChild.click();
 			}
 		}
 		// Key "Enter"

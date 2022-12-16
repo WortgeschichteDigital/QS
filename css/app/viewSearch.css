@@ -2,7 +2,12 @@
 
 #search,
 #hints {
-	padding-top: 80px;
+	padding-top: 60px;
+}
+
+#search .nothing,
+#hints .nothing {
+	margin-top: 45px;
 }
 
 /* RESULTS -------------------------------------- */
@@ -14,13 +19,14 @@
 	z-index: 1;
 	margin: 40px auto 0 auto;
 	overflow: hidden; /* otherwise some letters (like J) overflow to the left and hence remain visible */
-	padding: 15px 0 25px 0;
+	padding: 15px 0;
 	width: 700px;
 	max-width: 90%;
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 60px, rgba(255, 255, 255, 0));
+	background-color: #fff;
 	font-size: 1.2rem;
 	font-weight: normal;
 	line-height: 1.8rem;
+	white-space: nowrap;
 }
 
 #search h1:first-child,
@@ -78,46 +84,3 @@
 	font-size: .8rem;
 	line-height: 1.2rem;
 }
-
-mark {
-	border-radius: 5px;
-	background-color: var(--colorYellow);
-	color: var(--text);
-	font-weight: bold;
-}
-
-mark.color2 {
-	background-color: var(--colorGreen);
-	color: #fff;
-}
-
-mark.color3 {
-	background-color: var(--colorBlueDark);
-	color: #fff;
-}
-
-mark.color4 {
-	background-color: var(--colorRed);
-	color: #fff;
-}
-
-mark.color5 {
-	background-color: var(--colorBlueLight);
-	color: #fff;
-}
-
-mark.color6 {
-	background-color: var(--colorCyan);
-	color: #fff;
-}
-
-mark.no-start {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-mark.no-end {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-}
-

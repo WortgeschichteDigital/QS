@@ -11,7 +11,13 @@ window.addEventListener("load", async () => {
 	document.querySelectorAll("nav a").forEach(i => {
 		i.addEventListener("click", function(evt) {
 			evt.preventDefault();
-			help.nav(this.getAttribute("href").substring(1));
+			help.switchSection(this.getAttribute("href").substring(1));
+		});
+	});
+	document.querySelectorAll('section a[href^="#"]').forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			help.internalLink(this.getAttribute("href"));
 		});
 	});
 
@@ -24,6 +30,7 @@ window.addEventListener("load", async () => {
 	// INITIALIZE WINDOW
 	shared.externalLinks();
 	help.init();
+	tooltip.init();
 	await shared.wait(250);
 	document.body.classList.add("scrollable");
 	overlay.hide("loading");

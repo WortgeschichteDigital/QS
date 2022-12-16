@@ -148,10 +148,10 @@
 
 .hints-popup {
 	position: absolute;
-	z-index: 2;
 	box-shadow: var(--shadow);
 	padding: 10px;
 	width: max-content;
+	max-width: 650px;
 	border: 1px solid var(--line);
 	border-radius: 10px;
 	background-color: #fff;
@@ -163,10 +163,74 @@
 	opacity: 1;
 }
 
+.hints-popup.fixed {
+	position: fixed;
+	top: 230px;
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: 750px;
+	max-height: calc(100vh - 230px - 42px); /* 42px = padding, border, margin-bottom */
+}
+
+.hints-popup.fixed.lemmas-popup {
+	top: 240px;
+	max-width: unset;
+	width: auto;
+	min-width: 200px;
+}
+
+@media (max-width: 800px) {
+	.hints-popup.context-popup {
+		max-width: calc(100vw - 130px);
+	}
+
+	.hints-popup.fixed.context-popup {
+		max-width: 90%;
+	}
+}
+
+.hints-popup.comment-popup,
+.hints-popup.fixed.comment-popup {
+	max-width: 500px;
+}
+
+@media (max-width: 750px) {
+	.hints-popup.comment-popup,
+	.hints-popup.fixed.comment-popup {
+		max-width: unset;
+		width: auto;
+	}
+}
+
+.hints-popup .scrollable {
+	overflow-y: auto;
+}
+
+.hints-popup.fixed .scrollable {
+	max-height: calc(100vh - 230px - 42px - 34px); /* see .hints-popup.fixed, 34px = p */
+}
+
 .hints-popup a {
 	position: absolute;
 	top: 0;
 	right: 0;
+}
+
+.hints-popup h2,
+.hints-popup h3 {
+	margin: 15px 0 5px 0;
+	padding-right: 30px;
+	color: var(--textColor);
+	font-size: .8rem;
+	font-style: italic;
+	font-weight: normal;
+	line-height: 1.2rem;
+}
+
+.hints-popup h2 {
+	margin-top: 0;
+	font-style: normal;
+	font-weight: bold;
 }
 
 .hints-popup p {
@@ -178,6 +242,17 @@
 .hints-popup p:first-child {
 	margin-top: 0;
 	padding-right: 40px;
+}
+
+.hints-popup p:last-child {
+	margin-bottom: 0;
+}
+
+.hints-popup.context-popup p b {
+	display: inline-block;
+	margin-right: 20px;
+	color: var(--colorRed);
+	font-weight: bold;
 }
 
 .hints-popup code {
@@ -220,6 +295,8 @@
 	word-break: break-all;
 }
 
-.hints-popup .scrollable {
-	overflow-y: auto;
+.hints-popup .xml-tag mark {
+	background-color: transparent;
+	color: inherit;
+	font-weight: normal;
 }

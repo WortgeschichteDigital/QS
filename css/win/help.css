@@ -2,15 +2,21 @@
 
 /* FRAME ---------------------------------------- */
 
-main {
-	display: grid;
-	grid-template-columns: 220px 1fr;
+:root {
+	scroll-behavior: smooth;
+}
+
+body.scrollable {
+	overflow-y: scroll;
 }
 
 nav {
-	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	box-shadow: var(--shadowRight);
 	padding: 20px;
-	width: calc(100% - 40px);
+	width: calc(220px - 40px);
 	height: calc(100vh - 40px);
 	background-color: var(--bgBlue);
 }
@@ -45,5 +51,158 @@ nav a.active {
 }
 
 section {
-	padding: 20px;
+	margin-left: 220px;
+	padding: 0 20px 20px 30px;
+}
+
+
+/* TABLE OF CONTENTS ---------------------------- */
+
+#toc {
+	position: fixed;
+	top: 11px;
+	right: 22px;
+	z-index: 1;
+	border-radius: 5px;
+	width: 48px;
+	height: 48px;
+	text-decoration: none;
+}
+
+#toc:focus {
+	outline: 2px solid var(--outline);
+	outline-offset: 0;
+}
+
+#toc img {
+	vertical-align: top;
+}
+
+.toc-popup {
+	position: fixed;
+	top: 71px;
+	right: 22px;
+	z-index: 1;
+	opacity: 0;
+	box-shadow: var(--shadow);
+	border-radius: 10px;
+	background-color: #fff;
+	transition: opacity .3s ease-out;
+}
+
+.toc-popup.visible {
+	opacity: 1;
+}
+
+.toc-popup a {
+	display: block;
+	margin: 0 0 5px 0;
+	padding: 0 15px;
+	line-height: 2rem;
+	background-color: var(--bgBlue);
+	color: #fff;
+	text-decoration: none;
+}
+
+.toc-popup a:hover {
+	background-color: var(--bgHighlight);
+}
+
+.toc-popup a:first-child {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.toc-popup a:last-child {
+	margin-bottom: 0;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.toc-popup a.level-2 {
+	padding-left: 35px;
+}
+
+
+/* DESCRIPTION ---------------------------------- */
+
+section a {
+	color: var(--textLink);
+	text-decoration: none;
+}
+
+section a:focus,
+section a:hover {
+	text-decoration: underline;
+}
+
+abbr {
+	text-decoration: none;
+}
+
+h1 {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	margin: 40px 0 0 0;
+	padding: 20px 0;
+	background-color: #fff;
+	color: var(--textColor);
+	font-size: 1rem;
+	line-height: 1.5rem;
+}
+
+h1:first-child {
+	margin-top: 0;
+}
+
+h1 span {
+	display: inline-block;
+	border-left: 5px solid var(--colorBlueDark);
+	padding-left: 25px;
+}
+
+img {
+	position: relative;
+	top: 2px;
+	vertical-align: top;
+}
+
+p {
+	margin: 0 0 10px 0;
+	font-size: .9rem;
+	line-height: 1.5rem
+}
+
+p.indent-icon {
+	margin-left: 30px;
+	padding-left: 40px;
+	text-indent: -40px;
+}
+
+p.indent-icon img:first-child {
+	margin-right: 10px;
+}
+
+section ul {
+	margin: 0 0 10px 0;
+	padding: 0 0 0 30px;
+}
+
+section li {
+	font-size: .9rem;
+	line-height: 1.5rem;
+}
+
+.blue {
+	color: var(--colorBlueDark);
+}
+
+.red {
+	color: var(--colorRed);
+}
+
+*:target {
+	margin-top: -70px;
+	padding-top: 70px;
 }

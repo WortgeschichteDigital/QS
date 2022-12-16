@@ -41,6 +41,8 @@ let hints = {
 			});
 		}
 	},
+	// regular expression for leading articles
+	artReg: /^(das|de[mnrs]|die|eine?[mnrs]?) /i,
 	// SEMANTIC_TYPE: corresponding semantic types
 	// ("Cluster" and "Kontext" are excluded)
 	semCorrTypes: {
@@ -52,7 +54,6 @@ let hints = {
 	// hints that can be derived from already present file data
 	// (no parsing of XML files needed)
 	parseData () {
-		const artReg = /^(das|de[mnrs]|die|eine?[mnrs]?) /i;
 		for (const [file, data] of Object.entries(xml.data.files)) {
 			for (const i of data.links) {
 				// LINK_DUPLICATE
@@ -118,8 +119,8 @@ let hints = {
 								bogus = false;
 								break;
 							}
-							if (!artReg.test(i.verweisziel)) {
-								text = text.replace(artReg, "");
+							if (!hints.artReg.test(i.verweisziel)) {
+								text = text.replace(hints.artReg, "");
 							}
 							let regText = hints.lemmas[i.verweisziel].reg.source;
 							regText = regText.substring(0, regText.length - 1);
@@ -468,6 +469,7 @@ let hints = {
 			}
 			try {
 				hints.checkEZ(file, doc, content);
+				hints.checkSW(file, doc, content);
 				hints.checkTR(file, doc, content);
 				hints.checkVE(file, doc, content);
 				hints.checkSprache(file, doc, content);
@@ -492,23 +494,24 @@ let hints = {
 			"Wortgeschichte_kompakt erwaehntes_Zeichen",
 			"Wortgeschichte erwaehntes_Zeichen",
 		];
+		const currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl);
 		forX: for (const i of doc.querySelectorAll(scopes.join(", "))) {
 			if (i.getAttribute("Sprache") &&
 					i.getAttribute("Sprache") !== "dt") {
 				continue;
 			}
 			// EZ_STICHWORT: current article deals with this very word => markup should be <Stichwort>
-			const text = i.textContent.trim().replace(/\s/g, " ");
-			let currentArtLemmas = data.hl.concat(data.nl);
-			currentArtLemmas.forEach((lemma, idx) => currentArtLemmas[idx] = lemma.replace(" (Wortfeld)", ""));
+			let text = i.textContent.trim(),
+				textOri = text;
+			text = text.replace(/\s/g, " ");
 			for (const lemma of currentArtLemmas) {
 				if (hints.lemmas[lemma].reg.test(text)) {
 					hints.add(data.hints, file, {
 						line: xml.getLineNumber(i, doc, content),
 						linkCount: 0,
 						scope: hints.detectScope(i),
-						textErr: [`<erwaehntes_Zeichen>${text}</erwaehntes_Zeichen>`],
-						textHint: [`<Stichwort>${text}</Stichwort>`],
+						textErr: [`<erwaehntes_Zeichen>${textOri}</erwaehntes_Zeichen>`],
+						textHint: [`<Stichwort>${textOri}</Stichwort>`],
 						type: "ez_stichwort",
 					});
 					continue forX;
@@ -540,7 +543,7 @@ let hints = {
 						line: xml.getLineNumber(i, doc, content),
 						linkCount,
 						scope: hints.detectScope(i),
-						textErr: [`<erwaehntes_Zeichen>${text}</erwaehntes_Zeichen>`],
+						textErr: [`<erwaehntes_Zeichen>${textOri}</erwaehntes_Zeichen>`],
 						textHint: [{
 							text: `<Verweisziel>${target}</Verweisziel>`,
 							type: "copy",
@@ -549,6 +552,57 @@ let hints = {
 					});
 				}
 				break;
+			}
+		}
+	},
+	// STICHWORT_EZ
+	//   file = string (XML file name)
+	//   doc = document
+	//   content = string
+	checkSW (file, doc, content) {
+		const data = xml.data.files[file];
+		const scopes = [
+			"Wortgeschichte_kompakt Stichwort",
+			"Wortgeschichte Stichwort",
+		];
+		let currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl),
+			regExp = [];
+		for (const lemma of currentArtLemmas) {
+			const source = hints.lemmas[lemma].reg.source,
+				reg = new RegExp(source.substring(0, source.length - 1), "i");
+			regExp.push(reg);
+		}
+		for (const i of doc.querySelectorAll(scopes.join(", "))) {
+			if (i.getAttribute("Sprache") &&
+					i.getAttribute("Sprache") !== "dt") {
+				continue;
+			}
+			// STICHWORT_EZ: current article does not deal with this word => markup should be <erwaehntest_Zeichen>
+			let text = i.textContent.trim();
+			if (/^-|-$/.test(text)) {
+				continue;
+			}
+			let textOri = text;
+			text = text.replace(/\s/g, " ");
+			text = text.replace(/[()]/g, "");
+			let textNoArt = text.replace(hints.artReg, ""),
+				matches = false;
+			for (const reg of regExp) {
+				if (reg.test(text) ||
+						reg.test(textNoArt)) {
+					matches = true;
+					break;
+				}
+			}
+			if (!matches) {
+				hints.add(data.hints, file, {
+					line: xml.getLineNumber(i, doc, content),
+					linkCount: 0,
+					scope: hints.detectScope(i),
+					textErr: [`<Stichwort>${textOri}</Stichwort>`],
+					textHint: [`<erwaehntes_Zeichen>${textOri}</erwaehntes_Zeichen>`],
+					type: "stichwort_ez",
+				});
 			}
 		}
 	},

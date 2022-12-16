@@ -14,6 +14,7 @@ let xml = {
 	//       dir            = ""  articles | ignore
 	//       domains        = []  topic domains of this article
 	//       fa             = |   article is field article
+	//       faLemmas       = []  lemmas a field articles deals with
 	//       first          = {}  dates of first lemma quotation
 	//         [LEMMA]      = 1   lemma as in "hl" and "nl", integers:
 	//                              4 digits = year
@@ -25,7 +26,8 @@ let xml = {
 	//         line         = 1   line number
 	//         linkCount    = 1   link count, > 0 means: 'there are already links to the proposed destination';
 	//                              the analysis is limited to the current block (i.e. <Wortgeschichte> etc.)
-	//         scope        = ""  Artikel | Bedeutungsgerüst | Belegauswahl | Kurz gefasst | Literatur | Verweise | Wortgeschichte
+	//         scope        = ""  Artikel | Bedeutungsgerüst | Belegauswahl | Kurz gefasst |
+	//                              Literatur | Verweise | Wortgeschichte
 	//         textErr      = []  text that triggered the hint;
 	//                              the slots contain either strings or objects; objects have this structure:
 	//                                text = text to be printed
@@ -49,6 +51,7 @@ let xml = {
 	//                              literature_missing  = add missing literature title
 	//                              semantic_type       = add semantic type
 	//                              sprache_superfluous = @Sprache is superfluous
+	//                              stichwort_ez        = <Stichwort>: change tag to <erwaehntes_Zeichen>
 	//                              tr_error            = correct internal reference
 	//                              tr_link             = replace internal reference with link to article
 	//                              tr_superfluous      = remove internal reference

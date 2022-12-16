@@ -15,6 +15,7 @@ let viewHints = {
 		literature_missing: "Literaturtitel ergänzen",
 		semantic_type: "Semantik ergänzen",
 		sprache_superfluous: "Sprach-Attribut entfernen",
+		stichwort_ez: "Objektsprache falsch ausgezeichnet",
 		tr_error: "Textreferenz korrigieren",
 		tr_link: "Textreferenz mit Artikel verlinken",
 		tr_superfluous: "Textreferenz entfernen",
@@ -43,12 +44,9 @@ let viewHints = {
 		filterState: "", // hash
 		xmlDate: "", // date of last XML update
 	},
-	// timeout that prevents printing the hints in a too rapid succession
-	printTimeout: null,
 	// populate the view
 	//   type = string (switched | updated)
 	async populate (type) {
-		clearTimeout(viewHints.printTimeout);
 		await xml.updateWait();
 		if (app.view !== "hints") {
 			return;
@@ -108,7 +106,7 @@ let viewHints = {
 	},
 	// collect hints
 	collect () {
-		// collect filter data
+		// get filter data
 		const dataF = bars.getFiltersData();
 		dataF["select-status"] = parseInt(dataF["select-status"], 10);
 		const dataS = app.getSortingData(),
@@ -140,6 +138,7 @@ let viewHints = {
 						"ez_stichwort",
 						"literature_error",
 						"sprache_superfluous",
+						"stichwort_ez",
 					]);
 					break;
 				case "tagging_diasystems":
@@ -177,7 +176,7 @@ let viewHints = {
 				continue;
 			}
 			for (const hint of data.hints) {
-				// filter hint types and special filters
+				// filter hint type and special filters
 				if (!hintTypes.includes(hint.type) ||
 						hint.linkCount && dataF["filters-hints-links_suggestion_filter"] ||
 						hint.type === "comment" && dataF["filters-hints-comment_filter"] && !commentAuthorText(hint.textHint[0])) {
@@ -222,7 +221,6 @@ let viewHints = {
 				break;
 			}
 		}
-		let lastFile = "";
 		// print next 50 hints
 		const asideIcons = [
 			{
@@ -236,6 +234,7 @@ let viewHints = {
 				title: "Kontext anzeigen",
 			},
 		];
+		let lastFile = "";
 		for (let f = start, len = viewHints.data.hints.length; f < len; f++) {
 			const i = viewHints.data.hints[f];
 			// HEADING
@@ -300,7 +299,7 @@ let viewHints = {
 			let hint = document.createElement("div");
 			div.appendChild(hint);
 			hint.classList.add("hint");
-			// error message
+			// general hint message
 			let h2 = document.createElement("h2");
 			hint.appendChild(h2);
 			let a = document.createElement("a");
@@ -401,13 +400,14 @@ let viewHints = {
 				}
 			}
 		}
-		// prepare text (replace special tokens, highlight)
+		// prepare text (replace special tokens, highlight, line breaks)
 		function prepareText (text) {
 			text = viewSearch.textMaskChars(text);
 			if (/&lt;/.test(text) &&
 					/&gt;/.test(text)) {
 				text = viewSearch.textColorCode(text);
 			}
+			// highligh attributs outside of tags
 			text = text.replace(/(?<=\s|^)([a-zA-Z:]+=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
 				return `<span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
 			});
@@ -417,7 +417,7 @@ let viewHints = {
 	},
 	// mark icons
 	markIcons: ["mark-unchecked-small.svg", "button-yes.svg", "button-no.svg"],
-	// toggle the mark of a hint
+	// toggle a hint's mark
 	//   ele = node (clicked link)
 	//   ident = string (identification hash)
 	toggleMark ({ ele, ident }) {
@@ -457,7 +457,7 @@ let viewHints = {
 	// navigation: last index shown
 	// (reset on scroll and on resize)
 	navIdx: -1,
-	// navigation last index actually shown
+	// navigation: last index actually shown
 	// (this variable is never reset on scroll or on resize)
 	navLastIdx: -1,
 	// navigation: jump to next/previous hint
@@ -517,7 +517,7 @@ let viewHints = {
 			shared.feedback("reached-bottom");
 		}
 	},
-	// popup: show help on how add comments to a non existing link
+	// popup: show help on how to add comments to a non existing link
 	//   caller = node (clicked link)
 	popupComment (caller) {
 		let content = document.createElement("div");
@@ -620,6 +620,7 @@ let viewHints = {
 					break;
 				}
 			}
+			// get node block
 			let nodeType = fileCont[hint.line - 1].match(/<([a-zA-Z_!\-]+)/),
 				regEnd = new RegExp(`<\/${nodeType[1]}>`);
 			if (nodeType === "!--") {
@@ -670,7 +671,7 @@ let viewHints = {
 		let words = [];
 		for (const i of hint.textErr) {
 			if (typeof i === "string" || i.type === "context") {
-				let text = i.type === "context" ? i.text : i;´
+				let text = i.type === "context" ? i.text : i;
 				for (const m of text.matchAll(/<[^\/].+?>(.+?)<\/.+?>/g)) {
 					if (!words.includes(m[1])) {
 						words.push(m[1]);
@@ -711,33 +712,33 @@ let viewHints = {
 			lastLine = 0,
 			commentOpen = false;
 		for (let i = 0, len = lines.length; i < len; i++) {
-			// prepare text
+			// prepare code
 			let line = lines[i],
-				text = fileCont[line];
-			if (!showBlankLines && !text.trim()) {
+				code = fileCont[line];
+			if (!showBlankLines && !code.trim()) {
 				continue;
 			}
-			if (text.length >= trimWhitespace) {
-				text = text.substring(trimWhitespace);
+			if (code.length >= trimWhitespace) {
+				code = code.substring(trimWhitespace);
 			}
-			text = viewSearch.textMaskChars(text);
-			text = viewSearch.textColorCode(text, false);
+			code = viewSearch.textMaskChars(code);
+			code = viewSearch.textColorCode(code, false);
 			if (regExp.length) {
-				text = viewSearch.textHighlight(text, regExp).text;
+				code = viewSearch.textHighlight(code, regExp).text;
 			}
-			text = viewSearch.textWbr(text);
-			if (/--&gt;(?!<\/span>)/.test(text)) {
+			code = viewSearch.textWbr(code);
+			if (/--&gt;(?!<\/span>)/.test(code)) {
 				commentOpen = false;
-				text = text.replace(/.+--&gt;(?!<\/span>)/g, m => `<span class="xml-comment">${m}</span>`);
+				code = code.replace(/.+--&gt;(?!<\/span>)/g, m => `<span class="xml-comment">${m}</span>`);
 			}
 			let commentOpenSet = false;
-			if (/(?<!<span class="xml-comment">)&lt;!--/.test(text)) {
+			if (/(?<!<span class="xml-comment">)&lt;!--/.test(code)) {
 				commentOpen = true;
 				commentOpenSet = true;
-				text = text.replace(/(?<!<span class="xml-comment">)&lt;!--.+/g, m => `<span class="xml-comment">${m}</span>`);
+				code = code.replace(/(?<!<span class="xml-comment">)&lt;!--.+/g, m => `<span class="xml-comment">${m}</span>`);
 			}
 			if (commentOpen && !commentOpenSet) {
-				text = `<span class="xml-comment">${text}</span>`;
+				code = `<span class="xml-comment">${code}</span>`;
 			}
 			// print ellipsis
 			if (lastLine && line > lastLine + 1) {
@@ -758,42 +759,57 @@ let viewHints = {
 			if (line + 1 === hint.line) {
 				th.classList.add("hint-line");
 			}
+			// print code
 			let td = document.createElement("td");
 			tr.appendChild(td);
-			td.innerHTML = text;
+			td.innerHTML = code;
 		}
 
 		// SHOW POPUP
 		let content = document.createElement("div"),
 			p = document.createElement("p");
 		content.appendChild(p);
-		p.innerHTML = `<i>Code aus „${file}“</i>`;
+		let text = `<b>${viewHints.types[hint.type]}</b>`,
+			hintText = hint.textErr.find(i => i.type === "hint_text");
+		if (hintText) {
+			text += `<i>${hintText.text}</i>`;
+		}
+		p.innerHTML = text;
 		let scrollCont = document.createElement("div");
 		content.appendChild(scrollCont);
 		scrollCont.classList.add("scrollable");
 		scrollCont.appendChild(table);
 		viewHints.popupShow(ele, content, "context");
+
 		// REMOVE TOOLTIP
 		ele.dispatchEvent(new Event("mouseout"));
 	},
+	// popup: ID of the last hints popup
+	popupID: 0,
 	// popup: show hints popup
 	//   caller = node (clicked link)
 	//   content = node
-	//   type = string (comment | context)
+	//   type = string (comment | context | lemmas)
 	popupShow (caller, content, type) {
-		// close existing popup
-		viewHints.popupClose();
+		// close existing popup of same type
+		viewHints.popupClose({
+			type,
+		});
 		// create new popup
 		let popup = document.createElement("div");
-		caller.closest("div").appendChild(popup);
+		caller.closest("div, section").appendChild(popup);
 		popup.classList.add("hints-popup");
+		popup.dataset.id = ++viewHints.popupID;
+		popup.style.zIndex = document.querySelectorAll(".hints-popup").length + 1;
 		// close icon
 		let a = document.createElement("a");
 		popup.appendChild(a);
 		a.href = "#";
-		a.addEventListener("click", evt => {
+		a.addEventListener("click", function(evt) {
 			evt.preventDefault();
-			viewHints.popupClose();
+			viewHints.popupClose({
+				id: this.parentNode.dataset.id,
+			});
 		});
 		let img = document.createElement("img");
 		a.appendChild(img);
@@ -801,28 +817,15 @@ let viewHints = {
 		img.width = "30";
 		img.height = "30";
 		img.alt = "";
-		// content
+		// append content
 		popup.appendChild(content);
-		// set max-width
-		let maxWidth = window.innerWidth - caller.getBoundingClientRect().left - 60;
-		if (type === "comment" && maxWidth > 500) {
-			maxWidth = 500;
-		} else if (type === "context" && maxWidth > 750) {
-			maxWidth = 750;
-		}
-		popup.style.maxWidth = maxWidth + "px";
 		// position popup
 		const popupHeight = popup.offsetHeight;
-		if (popupHeight > window.innerHeight / 2) {
-			const top = document.querySelector("#bar").getBoundingClientRect().bottom + 20;
-			popup.style.width = Math.round(window.innerWidth * 0.9) + "px";
-			popup.style.maxHeight = window.innerHeight - top - 60 + "px";
-			popup.style.position = "fixed";
-			popup.style.top = top + "px";
-			popup.style.left = "50%";
-			popup.style.transform = "translateX(-50%)";
-			popup.querySelector(".scrollable").style.maxHeight = popup.offsetHeight - 22 - popup.querySelector("p").offsetHeight - 10 + "px";
+		if (type === "lemmas" ||
+				popupHeight > window.innerHeight / 2) {
+			popup.classList.add("fixed", type + "-popup");
 		} else {
+			popup.classList.add("absolute", type + "-popup");
 			const callerRect = caller.getBoundingClientRect(),
 				callerTop = caller.offsetTop;
 			if (callerRect.top + callerRect.height + popupHeight + window.scrollY + 10 > document.body.scrollHeight) {
@@ -833,7 +836,6 @@ let viewHints = {
 			popup.style.left = caller.offsetLeft + "px";
 		}
 		// show popup
-		void popup.offsetWidth;
 		popup.classList.add("visible");
 		// scroll to line in question
 		const scrollCont = popup.querySelector(".scrollable");
@@ -845,15 +847,25 @@ let viewHints = {
 		}
 	},
 	// closes existing hints popup
-	popupClose () {
-		document.querySelectorAll(".hints-popup").forEach(i => {
+	//   id = string (ID of the popup that should be closed)
+	//   type = string (type of the popup that should be closed
+	popupClose ({ id = "", type = "" }) {
+		let close = [];
+		for (const i of document.querySelectorAll(".hints-popup")) {
 			if (!i.classList.contains("visible")) {
-				return;
+				continue;
 			}
+			if (id && i.dataset.id === id ||
+					type && i.classList.contains(type + "-popup") ||
+					!id && !type) {
+				close.push(i);
+			}
+		}
+		for (const i of close) {
 			i.addEventListener("transitionend", function() {
 				this.parentNode.removeChild(this);
 			}, { once: true });
 			i.classList.remove("visible");
-		});
+		}
 	},
 };
