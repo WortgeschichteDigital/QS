@@ -19,6 +19,10 @@
 	transition: opacity .3s ease-out;
 }
 
+.help .feedback {
+	left: calc(50% + 115px);
+}
+
 .feedback.visible {
 	opacity: 1;
 }
@@ -37,6 +41,14 @@
 
 .feedback.type-reached-bottom {
 	background-image: url(../../img/app/reached-bottom.svg);
+}
+
+.feedback.type-reached-left {
+	background-image: url(../../img/app/reached-left.svg);
+}
+
+.feedback.type-reached-right {
+	background-image: url(../../img/app/reached-right.svg);
 }
 
 .feedback.type-reached-top {

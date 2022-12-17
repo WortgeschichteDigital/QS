@@ -434,7 +434,7 @@ let win = {
 			if (type === "about") {
 				return {
 					width: 750,
-					height: 400,
+					height: 430,
 				};
 			} else {
 				return {
@@ -543,7 +543,7 @@ let win = {
 		// make the window show a section
 		else if (show) {
 			bw.webContents.once("did-finish-load", function() {
-				this.send("show", show);
+				setTimeout(() => this.send("show", show), 500);
 			});
 		}
 		// window is about to be closed

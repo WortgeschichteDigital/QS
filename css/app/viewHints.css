@@ -11,7 +11,7 @@
 }
 
 .hint-block .aside .line {
-	color: var(--textColor);
+	color: var(--colorBlueDark);
 	font-size: .9rem;
 	line-height: 1.5rem;
 }
@@ -63,7 +63,7 @@
 }
 
 .hint a.comment-link {
-	color: var(--textLink);
+	color: var(--colorBlue);
 }
 
 .hint p {
@@ -136,7 +136,7 @@
 .hint .scope {
 	margin-top: 10px;
 	padding-left: 35px;
-	background-image: url(../../img/app/location.svg);
+	background-image: url(../../img/app/location-grey.svg);
 	background-position: top left;
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
@@ -220,7 +220,7 @@
 .hints-popup h3 {
 	margin: 15px 0 5px 0;
 	padding-right: 30px;
-	color: var(--textColor);
+	color: var(--colorBlueDark);
 	font-size: .8rem;
 	font-style: italic;
 	font-weight: normal;
@@ -279,13 +279,13 @@
 .hints-popup th {
 	vertical-align: top;
 	padding: 0 10px;
-	background-color: var(--bgGreyLight);
+	background-color: var(--colorGreyLight);
 	color: var(--textGrey);
 	font-weight: normal;
 }
 
 .hints-popup th.hint-line {
-	color: var(--textColor);
+	color: var(--colorBlueDark);
 	font-weight: bold;
 }
 

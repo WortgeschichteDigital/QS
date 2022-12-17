@@ -102,10 +102,10 @@
 				></a
 				><span id="sorting-filter-cont"
 					><input type="text" value="" placeholder="Dateipfad-Filter" id="sorting-filter"
-					><a href="#" class="clear-text-field"
+					><a href="#" class="clear-text-field" title="Textfeld löschen"
 						><img src="img/app/clear-text.svg" width="24" height="24" alt=""
 					></a
-					><a href="#" id="hints-bar"
+					><a href="#" id="hints-bar" title="Ergebnisleiste umschalten"
 						><img src="img/app/sidebar.svg" width="24" height="24" alt=""
 					></a
 				></span
@@ -117,13 +117,13 @@
 			<!-- SEARCH FORM -->
 			<div id="search-form" class="off"
 				><input type="text" value="" placeholder="Suchwörter" id="search-text"
-				><a href="#" class="clear-text-field"
+				><a href="#" class="clear-text-field" title="Textfeld löschen"
 					><img src="img/app/clear-text.svg" width="24" height="24" alt=""
 				></a
-				><a href="#" id="search-advanced-toggle"
+				><a href="#" id="search-advanced-toggle" title="erweiterte Suche"
 					><img src="img/app/preferences.svg" width="24" height="24" alt=""
 				></a
-				><a href="#" id="search-bar"
+				><a href="#" id="search-bar" title="Ergebnisleiste umschalten"
 					><img src="img/app/sidebar.svg" width="24" height="24" alt=""
 				></a
 				><a href="#" id="search-help"
@@ -207,7 +207,7 @@
 							><label for="filters-marks-checked_error"><img src="img/app/mark-checked-error.svg" width="24" height="24" alt=""></label
 					></p>
 
-					<h1>Hinweise</h1>
+					<h1>Hinweistypen</h1>
 					<p class="toggle"
 						><a href="#" id="filters-hints-all">alle</a>·<a href="#" id="filters-hints-none">keine</a
 					></p>
@@ -245,7 +245,7 @@
 					></p>
 					<p class="indent"
 						><input type="checkbox" id="filters-hints-comment_filter"
-						><label for="filters-hints-comment_filter">nur mit Autorentext</label
+						><label for="filters-hints-comment_filter">nur mit Autor*innentext</label
 					></p>
 				</div>
 			</div>
@@ -370,8 +370,12 @@
 				></div>
 				<h2 id="tags-label"
 					><span></span
-					><a href="#" id="tags-show-teaser" class="icon"><img src="img/app/preview.svg" width="30" height="30" alt=""></a
-					><a href="#" id="tags-open-file" class="icon"><img src="img/app/open-file.svg" width="30" height="30" alt=""></a
+					><a href="#" id="tags-show-teaser" class="icon" title="Teaser anzeigen"
+						><img src="img/app/preview.svg" width="30" height="30" alt=""
+					></a
+					><a href="#" id="tags-open-file" class="icon" title="Datei im Editor öffnen"
+						><img src="img/app/open-file.svg" width="30" height="30" alt=""
+					></a
 				></h2>
 				<code id="tags-code"></code>
 			</div>

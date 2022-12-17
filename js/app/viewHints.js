@@ -405,11 +405,15 @@ let viewHints = {
 			text = viewSearch.textMaskChars(text);
 			if (/&lt;/.test(text) &&
 					/&gt;/.test(text)) {
-				text = viewSearch.textColorCode(text);
+				text = shared.xmlColorCode(text);
 			}
 			// highligh attributs outside of tags
-			text = text.replace(/(?<=\s|^)([a-zA-Z:]+=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
-				return `<span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
+			text = text.replace(/(@[a-zA-Z:]+=?)(&quot;.+?&quot;)?/g, (m, p1, p2) => {
+				if (!p2) {
+					return `<span class="xml-attr-key">${m}</span>`;
+				} else {
+					return `<span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
+				}
 			});
 			text = text.replace(/\n/g, "<br>");
 			return text;
@@ -722,7 +726,7 @@ let viewHints = {
 				code = code.substring(trimWhitespace);
 			}
 			code = viewSearch.textMaskChars(code);
-			code = viewSearch.textColorCode(code, false);
+			code = shared.xmlColorCode(code, false);
 			if (regExp.length) {
 				code = viewSearch.textHighlight(code, regExp).text;
 			}

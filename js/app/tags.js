@@ -190,7 +190,7 @@ let tags = {
 		code = code.replace(/^\s*\n/gm, "");
 		code = code.replace(/^ {6}/gm, "");
 		code = viewSearch.textMaskChars(code);
-		code = viewSearch.textColorCode(code);
+		code = shared.xmlColorCode(code);
 		code = viewSearch.textHighlight(code, regExp);
 		document.querySelector("#tags-code").innerHTML = code.text;
 	},

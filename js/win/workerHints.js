@@ -65,7 +65,7 @@ let hints = {
 						if (x.scope === "Verweise" &&
 								x.lemma.file === i.lemma.file &&
 								x.lemma.spelling === i.lemma.spelling &&
-								x.verweistext === i.verweistext) {
+								(!x.verweistext && !i.verweistext || x.verweistext === i.verweistext)) {
 							hints.add(data.hints, file, {
 								line: i.line,
 								linkCount: 0,
@@ -338,7 +338,13 @@ let hints = {
 					line: 3,
 					linkCount: 0,
 					scope: "Artikel",
-					textErr: [data.id],
+					textErr: [
+						{
+							text: "ID formal falsch",
+							type: "hint_text",
+						},
+						data.id,
+					],
 					textHint: [{
 						text: base + num,
 						type: "copy",
@@ -353,7 +359,13 @@ let hints = {
 					line: 0,
 					linkCount: 0,
 					scope: "Artikel",
-					textErr: [file],
+					textErr: [
+						{
+							text: "Dateiname formal falsch",
+							type: "hint_text",
+						},
+						file,
+					],
 					textHint: [{
 						text: fileName,
 						type: "copy",
@@ -624,7 +636,7 @@ let hints = {
 					scope,
 					textErr: [
 						{
-							text: `xml:id="${target}" nicht im Text der Wortgeschichte`,
+							text: `@xml:id="${target}" nicht im Text der Wortgeschichte`,
 							type: "hint_text",
 						},
 						`<Textreferenz Ziel="${target}">${text}</Textreferenz>`,
@@ -719,7 +731,7 @@ let hints = {
 					scope: hints.detectScope(i),
 					textErr: [
 						{
-							text: "Attribut Typ überflüssig",
+							text: "Attribut @Typ überflüssig",
 							type: "hint_text",
 						},
 						'<Verweis_extern Typ="Cluster">',
@@ -783,12 +795,12 @@ let hints = {
 					scope: hints.detectScope(i),
 					textErr: [
 						{
-							text: "Attribut Sprache überflüssig",
+							text: "Attribut @Sprache überflüssig",
 							type: "hint_text",
 						},
 						`<${i.nodeName} Sprache="dt">`,
 						{
-							text: 'Typ="dt" ist hier impliziert.',
+							text: '@Sprache="dt" ist hier impliziert.',
 							type: "context",
 						},
 					],
@@ -810,12 +822,12 @@ let hints = {
 						scope: hints.detectScope(x),
 						textErr: [
 							{
-								text: "Attribut Sprache überflüssig",
+								text: "Attribut @Sprache überflüssig",
 								type: "hint_text",
 							},
 							`<${x.nodeName} Sprache="${langX}">`,
 							{
-								text: `Sprache="${langX}" ist hier wegen <Absatz Sprache="${langX}"> impliziert.`,
+								text: `@Sprache="${langX}" ist hier wegen <Absatz Sprache="${langX}"> impliziert.`,
 								type: "context",
 							},
 						],

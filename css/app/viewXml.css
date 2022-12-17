@@ -24,11 +24,11 @@
 }
 
 #xml tr:nth-child(odd) {
-	background-color: var(--bgGreyLight);
+	background-color: var(--colorGreyLight);
 }
 
 #xml tr:hover {
-	background-color: var(--bgHover);
+	background-color: var(--bgActive);
 }
 
 #xml td.time {
@@ -62,7 +62,7 @@
 #xml a:hover span,
 #xml a:focus,
 #xml a:focus span {
-	color: var(--textLink);
+	color: var(--colorBlue);
 }
 
 #xml tr[data-status="0"] td:first-child img,

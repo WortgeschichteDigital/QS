@@ -3,10 +3,8 @@
 :root {
 	/* colors */
 	--text: #212529;
-	--textColor: #0000a9;
 	--textGrey: #6c757d;
 	--textGreyLight: #b6b6b6;
-	--textLink: #002bff;
 	--clusterBlock: #00156a;
 	--clusterKern: #d9d9d9;
 	--clusterSaum: #f3f3f3;
@@ -16,23 +14,17 @@
 	--colorBlueLight: #31C0FF;
 	--colorCyan: #1580ab;
 	--colorGreen: #080;
+	--colorGreyDark: #212529;
+	--colorGreyLight: #f8f8f8;
 	--colorRed: #d00;
 	--colorYellow: #f7d500;
 	--bgActive: #e1eaed;
-	--bgBlue: #0000a9;
-	--bgBlueLight: #002bff;
-	--bgGrey: #b6b6b6;
-	--bgGreyDark: #212529;
-	--bgGreyLight: #f8f8f8;
 	--bgHighlight: #31C0FF;
-	--bgHover: #e1eaed;
-	--bgSelection: #000098;
 	--line: #ccc;
 	--outline: #31C0FF;
-	--selection: #0000a9;
 
 	/* special styles */
-	--gradient: linear-gradient(90deg, var(--bgBlue) 40%, var(--bgBlueLight) 90%);
+	--gradient: linear-gradient(90deg, var(--colorBlueDark) 40%, var(--colorBlue) 90%);
 	--shadow: 5px 5px 15px rgba(33, 37, 41, .3);
 	--shadowDown: 0 5px 15px rgba(33, 37, 41, .3);
 	--shadowLeft: -5px 0 15px rgba(33, 37, 41, .3);

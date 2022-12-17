@@ -55,7 +55,7 @@
 .overlay h2,
 .overlay h3 {
 	margin: 20px 10px 10px 10px;
-	color: var(--textColor);
+	color: var(--colorBlueDark);
 	font-size: .9rem;
 	font-weight: bold;
 	line-height: 1.35rem;
@@ -127,7 +127,7 @@
 #dialog.code #dialog-text p {
 	margin-right: 30px;
 	padding: 10px;
-	background-color: var(--bgGreyLight);
+	background-color: var(--colorGreyLight);
 	font-family: "Noto Sans Mono", monospace;
 	font-size: .7rem;
 	line-height: 1rem;

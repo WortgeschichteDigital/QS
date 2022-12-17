@@ -80,7 +80,7 @@ body.scrollable {
 }
 
 a {
-	color: var(--textLink);
+	color: var(--colorBlue);
 	cursor: default;
 	-webkit-user-drag: none;
 	user-drag: none;
@@ -105,12 +105,26 @@ a.overlay-close:focus {
 	border-radius: 10px;
 }
 
+a[href^="http"]::after {
+	content: "";
+	margin-left: 5px;
+	padding-right: 24px;
+	background-image: url(../../img/app/external-link.svg);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+footer a[href^="http"]::after {
+	background-image: url(../../img/app/external-link-white.svg);
+}
+
 code {
 	display: block;
 	margin: 10px;
 	border-radius: 10px;
 	padding: 10px;
-	background-color: var(--bgGreyLight);
+	background-color: var(--colorGreyLight);
 	font-family: "Noto Sans Mono", monospace;
 	font-size: .8rem;
 	line-height: 1.2rem;
@@ -140,7 +154,7 @@ p.buttons {
 	border-radius: 5px;
 	padding: 5px 10px;
 	max-width: 250px;
-	background-color: var(--bgGreyDark);
+	background-color: var(--colorGreyDark);
 	color: #fff;
 	font-size: .75rem;
 	line-height: 1rem;
@@ -218,7 +232,7 @@ mark.no-end {
 
 #loading {
 	z-index: 1000;
-	background-color: var(--bgGreyDark);
+	background-color: var(--colorGreyDark);
 }
 
 #loading img {
@@ -261,6 +275,6 @@ mark.no-end {
 }
 
 ::selection {
-	background-color: var(--selection);
+	background-color: var(--colorBlueDark);
 	color: #fff;
 }

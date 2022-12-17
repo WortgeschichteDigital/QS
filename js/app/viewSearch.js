@@ -325,7 +325,7 @@ let viewSearch = {
 				highlight = viewSearch.textHighlight(text);
 			} else {
 				ele = document.createElement("code");
-				text = viewSearch.textColorCode(text);
+				text = shared.xmlColorCode(text);
 				highlight = viewSearch.textHighlight(text);
 			}
 			div.dataset.matched = highlight.matched.join(",");
@@ -354,36 +354,6 @@ let viewSearch = {
 		for (const [k, v] of chars) {
 			text = text.replace(k, v);
 		}
-		return text;
-	},
-	// color-code XML
-	//   text = string
-	//   commentCompletion = false | undefined
-	textColorCode (text, commentCompletion = true) {
-		// complete comments
-		// (as comments are often cut in half they should be completed
-		// at the beginning or at the end respectively)
-		if (commentCompletion) {
-			const open = /&lt;!--/.exec(text)?.index ?? -1,
-				close = /--&gt;/.exec(text)?.index ?? -1;
-			if (open >= 0 && close.length === -1 ||
-					open >= 0 && close >= 0 && open > close) {
-				text += " --&gt;";
-			}
-			if (open === -1 && close >= 0 ||
-					open >= 0 && close >= 0 && close < open) {
-				text = "&lt;!-- " + text;
-			}
-		}
-		// highlight tags
-		text = text.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
-		text = text.replace(/&lt;[^!].+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
-		text = text.replace(/<span class="xml-tag">(.+?)<\/span>/g, (m, p1) => {
-			p1 = p1.replace(/ ([^\s]+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
-				return ` <span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
-			});
-			return `<span class="xml-tag">${p1}</span>`;
-		});
 		return text;
 	},
 	// highlight search results

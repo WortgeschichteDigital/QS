@@ -20,7 +20,7 @@ input[type="button"] {
 	border-radius: 5px;
 	padding: 0 10px 0 35px;
 	width: auto;
-	background-color: var(--bgGreyLight);
+	background-color: var(--colorGreyLight);
 	background-image: url(../../img/app/button-yes.svg);
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
@@ -100,7 +100,7 @@ input[type="checkbox"]::before {
 	border-radius: 5px;
 	width: 14px;
 	height: 14px;
-	background-color: var(--bgBlue);
+	background-color: var(--colorBlueDark);
 }
 
 input[type="checkbox"]:checked::before {
