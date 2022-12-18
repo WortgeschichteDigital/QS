@@ -1,0 +1,224 @@
+@charset "utf-8";
+
+#clusters {
+	max-width: 2000px;
+}
+
+/* MODULATE ----------------------------------- */
+
+#clusters-modulate-form {
+	position: relative;
+	margin: 0 auto 20px auto;
+	width: 400px;
+	height: 30px;
+}
+
+#clusters-modulate-form input {
+	vertical-align: top;
+	width: calc(100% - 12px - 63px);
+	padding-right: 63px;
+}
+
+
+/* MODULATE CENTER ---------------------------- */
+
+#clusters-modulate-center {
+	margin: 0 auto 20px auto;
+	border-radius: 10px;
+	padding: 10px;
+	max-width: 400px;
+	background-color: var(--clusterCenter);
+	font-size: .8rem;
+	line-height: 1.4rem;
+	text-align: center;
+}
+
+#clusters-modulate-center:empty {
+	margin: 0;
+	padding: 0;
+}
+
+#clusters-modulate-center div + div {
+	margin-top: 15px;
+}
+
+#clusters-modulate-center span {
+	display: inline-block;
+	margin: 0 15px;
+}
+
+
+/* MODULATE FILES ----------------------------- */
+
+#clusters-modulate-files {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.file-block {
+	margin: 10px;
+}
+
+.file-block h1 {
+	margin: 0 0 5px 0;
+	border-bottom: 2px solid var(--colorBlueDark);
+	padding: 0 10px 5px 10px;
+	font-size: .8rem;
+	font-weight: normal;
+	line-height: 1.2rem;
+}
+
+.file-block a.icon {
+	margin-left: 5px;
+	width: 24px;
+	height: 24px;
+}
+
+.file-block a.icon[data-fun$="openPv"] {
+	margin-left: 15px;
+}
+
+.file-block h1 a.copy-all {
+	outline: none;
+	color: var(--colorRed);
+	text-decoration: none;
+}
+
+.file-block h1 a.copy-all:focus,
+.file-block h1 a.copy-all:hover {
+	text-decoration: underline;
+}
+
+.file-block img {
+	vertical-align: top;
+}
+
+.file-block div {
+	margin: 0 10px 5px 10px;
+	font-size: .8rem;
+	line-height: 1.2rem;
+}
+
+.file-block div a {
+	outline: none;
+	color: var(--colorBlue);
+	text-decoration: none;
+}
+
+.file-block div a:focus,
+.file-block div a:hover {
+	text-decoration: underline;
+}
+
+.file-block table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin: 0 0 0 20px;
+	font-size: .7rem;
+	line-height: 1rem;
+}
+
+.file-block th,
+.file-block td {
+	padding: 0;
+}
+
+.file-block th {
+	padding-right: 10px;
+	font-style: italic;
+	font-weight: normal;
+	text-align: left;
+}
+
+.file-block td {
+	text-align: right;
+}
+
+.file-block .proposals:empty {
+	margin-bottom: 0;
+}
+
+.file-block .proposals a {
+	display: block;
+	margin-bottom: 5px;
+	width: max-content;
+	color: var(--colorRed);
+}
+
+#clusters-modulate .fa {
+	font-variant: small-caps;
+	letter-spacing: 1px;
+}
+
+#clusters-modulate .nl {
+	font-style: italic;
+}
+
+
+/* MODULATE POPUP ----------------------------- */
+
+#clusters-modulate-popup {
+	position: absolute;
+	top: 37px;
+	left: 0;
+	opacity: 0;
+	box-shadow: var(--shadow);
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background-color: #fff;
+	transition: opacity .3s ease-out;
+}
+
+#clusters-modulate-popup.visible {
+	opacity: 1;
+}
+
+#clusters-modulate-popup a,
+#clusters-modulate-popup div {
+	display: block;
+	outline: none;
+	border-bottom: 1px solid var(--line);
+	padding: 5px 10px;
+	color: var(--text);
+	font-size: .7rem;
+	line-height: 1.1rem;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+#clusters-modulate-popup a:first-child {
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+}
+
+#clusters-modulate-popup a:last-child {
+	border-bottom: none;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+#clusters-modulate-popup a span {
+	display: inline-block;
+	margin-left: 10px;
+	color: var(--textGreyLight);
+	font-style: italic;
+	font-variant: normal;
+	letter-spacing: 0;
+}
+
+#clusters-modulate-popup a:hover,
+#clusters-modulate-popup a.active {
+	background-color: var(--bgActive);
+}
+
+#clusters-modulate-popup a:hover span,
+#clusters-modulate-popup a.active span {
+	color: var(--text);
+}
+
+#clusters-modulate-popup div {
+	border-bottom: 0;
+	text-align: center;
+}

@@ -108,7 +108,7 @@ let bars = {
 			});
 		}
 		bars.filtersActive();
-		if (/xml|hints/.test(app.view)) {
+		if (/xml|hints|clusters/.test(app.view)) {
 			app.populateView();
 		}
 	},
@@ -385,7 +385,7 @@ let bars = {
 				bars.closeSelectPopup(this, false);
 				select.focus();
 				bars.filtersActive();
-				if (/xml|hints/.test(app.view)) {
+				if (/xml|hints|clusters/.test(app.view)) {
 					app.populateView();
 				}
 			});

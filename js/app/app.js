@@ -14,7 +14,7 @@ let app = {
 		const input = clear.previousSibling;
 		input.value = "";
 		input.focus();
-		if (input.id === "sorting-filter") {
+		if (/sorting-filter|clusters-modulate-search/.test(input.id)) {
 			input.dispatchEvent(new Event("input"));
 		}
 	},
@@ -280,12 +280,15 @@ let app = {
 	// (constructed on selected filters and sorting options)
 	getFilterState () {
 		const dataF = bars.getFiltersData();
-		if (app.view === "xml") {
+		if (/xml|clusters/.test(app.view)) {
 			for (const k of Object.keys(dataF)) {
 				if (/^filters-(hints|marks)/.test(k)) {
 					delete dataF[k];
 				}
 			}
+		}
+		if (app.view === "clusters") {
+			delete dataF["select-status"];
 		}
 		const dataS = app.getSortingData(),
 			str = JSON.stringify(dataF) + JSON.stringify(dataS);
@@ -509,7 +512,7 @@ let app = {
 				viewHints.populate(type);
 				break;
 			case "clusters":
-				viewClusters.populate();
+				viewClusters.update(type);
 				break;
 			case "search":
 				app.resetViewScrollTop(type);

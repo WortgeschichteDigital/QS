@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="css/app/app.css">
 		<link rel="stylesheet" href="css/app/bars.css">
 		<link rel="stylesheet" href="css/app/overlay.css">
+		<link rel="stylesheet" href="css/app/viewClusters.css">
 		<link rel="stylesheet" href="css/app/viewHints.css">
 		<link rel="stylesheet" href="css/app/viewSearch.css">
 		<link rel="stylesheet" href="css/app/viewXml.css">
@@ -27,6 +28,7 @@
 
 		<script src="js/app/app.js"></script>
 		<script src="js/app/bars.js"></script>
+		<script src="js/app/clustersMod.js"></script>
 		<script src="js/app/error.js"></script>
 		<script src="js/app/git.js"></script>
 		<script src="js/app/keyboard.js"></script>
@@ -69,21 +71,6 @@
 			</div>
 		</header>
 
-		<!-- VIEW: XML -->
-		<section id="xml">
-		</section>
-
-		<!-- VIEW: HINWEISE -->
-		<section id="hints" class="off">
-		</section>
-
-		<!-- VIEW: CLUSTEREI -->
-		<section id="clusters" class="off">
-		</section>
-
-		<!-- VIEW: SUCHE -->
-		<section id="search" class="off"></section>
-
 		<!-- TOP BAR -->
 		<div id="bar">
 			<!-- SORTING AND QUICK FILTER -->
@@ -112,7 +99,21 @@
 			></div>
 
 			<!-- CLUSTER NAVIGATION -->
-			<div id="clusters-nav" class="off"></div>
+			<div id="clusters-nav" class="off"
+				><a href="#" id="clusters-nav-modulate" class="icon clusters-view active" title="Cluster modulieren"
+					><img src="img/app/preferences.svg" width="30" height="30" alt=""
+				></a
+				><a href="#" id="clusters-nav-compare" class="icon clusters-view " title="Cluster vergleichen"
+					><img src="img/app/clusters-compare.svg" width="30" height="30" alt=""
+				></a
+				><a href="#" id="clusters-nav-check" class="icon clusters-view" title="Cluster überprüfen"
+					><img src="img/app/clusters.svg" width="30" height="30" alt=""
+				></a
+				><a href="#" id="clusters-nav-preview" class="icon" title="Vorschau berechnen"
+					><img src="img/app/preview.svg" width="30" height="30" alt=""
+				></a
+				><span id="clusters-nav-domain"></span
+			></div>
 
 			<!-- SEARCH FORM -->
 			<div id="search-form" class="off"
@@ -169,6 +170,40 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- VIEW: XML -->
+		<section id="xml">
+		</section>
+
+		<!-- VIEW: HINWEISE -->
+		<section id="hints" class="off">
+		</section>
+
+		<!-- VIEW: CLUSTEREI -->
+		<section id="clusters" class="off">
+			<div id="clusters-modulate">
+				<div id="clusters-modulate-form"
+					><input type="text" value="" placeholder="Lemmasuche" id="clusters-modulate-search"
+					><a href="#" class="clear-text-field" title="Textfeld löschen"
+						><img src="img/app/clear-text.svg" width="24" height="24" alt=""
+					></a
+					><a href="#" id="clusters-modulate-reset" title="Modulierung zurücksetzen"
+						><img src="img/app/cleanup.svg" width="24" height="24" alt=""
+					></a
+				></div>
+
+				<div id="clusters-modulate-center"></div>
+
+				<div id="clusters-modulate-files"></div>
+			</div>
+
+			<div id="clusters-compare" class="off"></div>
+
+			<div id="clusters-check" class="off"></div>
+		</section>
+
+		<!-- VIEW: SUCHE -->
+		<section id="search" class="off"></section>
 
 		<!-- BAR: FILTERS -->
 		<div id="filters">

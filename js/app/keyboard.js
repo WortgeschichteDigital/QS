@@ -10,10 +10,8 @@ let keyboard = {
 		if (!m && evt.key === "Escape") {
 			const olTop = overlay.top();
 			if (olTop) {
-				const close = document.querySelector(`#${olTop} a.overlay-close`);
-				if (close) { // Git configuration has no close icon
-					close.click();
-				}
+				// Git configuration has no close icon
+				document.querySelector(`#${olTop} a.overlay-close`)?.click();
 				return;
 			} else if (active.id === "search-text") {
 				viewSearch.toggleAdvanced("off");
@@ -67,6 +65,10 @@ let keyboard = {
 				idx = buttons.length - 1;
 			}
 			buttons[idx].focus();
+		} else if (!m && /^Arrow(Down|Up)$/.test(evt.key) &&
+				active.id === "clusters-modulate-search") {
+			evt.preventDefault();
+			clustersMod.searchNav(evt.key === "ArrowUp");
 		} else if (m === "Alt" && /^Arrow(Left|Right)$/.test(evt.key)) {
 			app.toggleViewShortcut(evt.key === "ArrowRight");
 		} else if (m === "Ctrl" && /^Arrow(Left|Right)$/.test(evt.key)) {

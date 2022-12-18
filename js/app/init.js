@@ -29,6 +29,41 @@ window.addEventListener("load", async () => {
 		}, 25);
 	});
 
+	// CLUSTERS
+	document.querySelectorAll(".clusters-view").forEach(i => {
+		i.addEventListener("click", function(evt) {
+			evt.preventDefault();
+			viewClusters.switchSection(this);
+		});
+	});
+	let clustersSearchTimeout = null,
+		clustersSearch = document.querySelector("#clusters-modulate-search");
+	clustersSearch.addEventListener("input", () => {
+		clearTimeout(clustersSearchTimeout);
+		clustersSearchTimeout = setTimeout(() => clustersMod.search(), 200);
+	});
+	clustersSearch.addEventListener("keydown", evt => {
+		const m = shared.detectKeyboardModifiers(evt);
+		if (!m && evt.key === "Escape") {
+			clustersMod.searchOff();
+		} else if (!m && evt.key === "Enter") {
+			document.querySelector("#clusters-modulate-popup .active")?.click();
+		}
+	});
+	clustersSearch.addEventListener("focus", () => clustersMod.search());
+	clustersSearch.addEventListener("blur", () => {
+		clearTimeout(clustersSearchTimeout);
+		clustersSearchTimeout = setTimeout(() => clustersMod.searchOff(), 200);
+	});
+	document.querySelector("#clusters-modulate-reset").addEventListener("click", evt => {
+		evt.preventDefault();
+		clustersMod.reset();
+	});
+	document.querySelector("#clusters-nav-preview").addEventListener("click", evt => {
+		evt.preventDefault();
+		viewClusters.previewSwitchMode();
+	});
+
 	// SEARCH
 	const searchHelp = document.querySelector("#search-help");
 	searchHelp.addEventListener("click", evt => evt.preventDefault());

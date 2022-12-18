@@ -312,7 +312,7 @@ let viewHints = {
 				evt.preventDefault();
 				shared.ipc.invoke("help", {
 					id: this.dataset.type,
-					section: "hints",
+					section: "hinweise",
 				});
 			});
 			// erroneous text
