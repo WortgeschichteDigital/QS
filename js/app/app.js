@@ -92,7 +92,9 @@ let app = {
 	},
 	// print placeholder message in case there's nothing to show
 	// (which usually happens when the filters are to tight)
-	nothingToShow (textWarn = "", textTipp = "") {
+	//   textWarn = string | undefined
+	//   textTip = string | undefined
+	nothingToShow (textWarn = "", textTip = "") {
 		let div = document.createElement("div");
 		div.classList.add("nothing");
 		let warn = document.createElement("p");
@@ -100,33 +102,33 @@ let app = {
 		warn.textContent = textWarn || "Nichts gefunden!";
 		let hint = document.createElement("p");
 		div.appendChild(hint);
-		let tipp = textTipp || "";
+		let tip = textTip || "";
 		if (/hints|xml/.test(app.view) && !Object.keys(xml.files).length) {
-			tipp = "Tipp: Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden.";
-		} else if (!tipp && app.view === "search") {
+			tip = "Tipp: Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden.";
+		} else if (!tip && app.view === "search") {
 			let dataA = viewSearch.getAdvancedData(),
-				tipps = [];
+				tips = [];
 			if (document.querySelector("#fun-filters.active-filters")) {
-				tipps.push("verwenden Sie weniger Filter");
+				tips.push("verwenden Sie weniger Filter");
 			}
 			if (dataA["search-scope-0"].checked) {
-				tipps.push("erweitern Sie den Suchbereich");
+				tips.push("erweitern Sie den Suchbereich");
 			} else if (Object.values(dataA).filter(i => i).length > 1) {
-				tipps.push("schalten Sie erweiterte Suchoptionen aus");
+				tips.push("schalten Sie erweiterte Suchoptionen aus");
 			}
-			tipp = "Ändern Sie den Suchausdruck";
-			if (tipps.length) {
-				tipp = tipps.join(" und ");
-				tipp = tipp.substring(0, 1).toUpperCase() + tipp.substring(1);
+			tip = "Ändern Sie den Suchausdruck";
+			if (tips.length) {
+				tip = tips.join(" und ");
+				tip = tip.substring(0, 1).toUpperCase() + tip.substring(1);
 			}
 			if (!Object.keys(xml.files).length) {
-				tipp = "Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden";
+				tip = "Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden";
 			}
-			tipp = `Tipp: ${tipp}.`;
-		} else if (!tipp) {
-			tipp = "Tipp: Verwenden Sie weniger Filter.";
+			tip = `Tipp: ${tip}.`;
+		} else if (!tip) {
+			tip = "Tipp: Verwenden Sie weniger Filter.";
 		}
-		hint.innerHTML = tipp;
+		hint.innerHTML = tip;
 		return div;
 	},
 	// make a heading for the list in XML and hints view

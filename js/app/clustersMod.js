@@ -1,16 +1,16 @@
 "use strict";
 
 let clustersMod = {
-	// set of added files
+	// added files and lemmas
 	data: {
 		// lemmas added
-		//   [LEMMA] = object (lemma form of xml.data.files[file].hlJoined)
+		//   [LEMMA] = object (lemma in the joined form of xml.data.files[file].hlJoined)
 		//     file  = string (XML file name)
-		//     isFa  = boolean (this is a field article)
+		//     isFa  = boolean (this lemma represents a field article)
 		center: {},
 		// files added
 		//   [FILE]  = set (contains lemmas, the file links to;
-		//                 lemma form of xml.data.files[file].hlJoined)
+		//                 lemma in the joined form of xml.data.files[file].hlJoined)
 		files: {},
 	},
 	// search lemmas or XML files
@@ -45,7 +45,7 @@ let clustersMod = {
 		function addResult (file, data) {
 			results.push({
 				file,
-				hl: data.hlJoined.join(" · ").replace(" (Wortfeld)", ""),
+				hl: data.hlJoined.join(" · "),
 				isFa: data.fa,
 			});
 		}
@@ -80,7 +80,7 @@ let clustersMod = {
 			}
 			a.dataset.file = item.file;
 			a.href = "#";
-			a.innerHTML = `${item.hl} <span>${item.file}</span>`;
+			a.innerHTML = `${shared.hClear(item.hl)} <span>${item.file}</span>`;
 			a.addEventListener("click", function(evt) {
 				evt.preventDefault();
 				clustersMod.add(this.dataset.file);
@@ -91,7 +91,7 @@ let clustersMod = {
 		void popup.offsetWidth;
 		popup.classList.add("visible");
 	},
-	// navigate search results
+	// navigate through search results
 	//   up = boolean
 	searchNav (up) {
 		const popup = document.querySelector("#clusters-modulate-popup");
@@ -122,9 +122,7 @@ let clustersMod = {
 		if (n === entries.length) {
 			return;
 		}
-		if (active) {
-			active.classList.remove("active");
-		}
+		active?.classList?.remove("active");
 		if (n >= 0) {
 			entries[n].classList.add("active");
 		}
@@ -141,7 +139,7 @@ let clustersMod = {
 		}, { once: true });
 		popup.classList.remove("visible");
 	},
-	// add file to view
+	// add file to the modulation
 	//   file = string (XML file name)
 	add (file) {
 		clustersMod.data.files[file] = new Set();
@@ -165,7 +163,7 @@ let clustersMod = {
 		clustersMod.center();
 		clustersMod.proposals();
 	},
-	// head icons of a modulate block;
+	// head icons of each file block
 	fileIcons: [
 		{
 			fun: "app|openPv",
@@ -180,10 +178,10 @@ let clustersMod = {
 		{
 			fun: "clustersMod|fileRemove",
 			icon: "close.svg",
-			title: "Datei aus Modulation entfernen",
+			title: "Datei aus der Modulierung entfernen",
 		},
 	],
-	// show file blocks of added files
+	// show file block of added files
 	//   file = string (XML file name)
 	filePrint (file) {
 		// create block
@@ -225,15 +223,14 @@ let clustersMod = {
 		proposals.classList.add("proposals");
 		// glean lemma list
 		let dataFiles = clustersMod.data.files[file],
-			data = xml.data.files[file],
 			lemmas = {};
-		for (const link of data.links) {
+		for (const link of xml.data.files[file].links) {
 			if (!link.lemma.file) {
 				continue;
 			}
 			const s = link.lemma.spelling;
 			if (lemmas[s]) {
-				lemmas[s].entries.push({
+				lemmas[s].links.push({
 					line: link.line,
 					points: link.points,
 				});
@@ -252,7 +249,7 @@ let clustersMod = {
 				lemmas[s] = {
 					isFa: target.fa,
 					isNl,
-					entries: [{
+					links: [{
 						line: link.line,
 						points: link.points,
 					}],
@@ -274,16 +271,16 @@ let clustersMod = {
 				a.classList.add("nl");
 			}
 			a.href = "#";
-			a.textContent = lemma.replace(" (Wortfeld)", "");
+			a.textContent = shared.hClear(lemma);
 			a.addEventListener("click", function(evt) {
 				evt.preventDefault();
 				this.nextSibling.classList.toggle("off");
 			});
-			// creat link table
+			// create link table
 			let table = document.createElement("table");
 			entry.appendChild(table);
 			table.classList.add("off");
-			for (const link of data.entries) {
+			for (const link of data.links) {
 				let tr = document.createElement("tr");
 				table.appendChild(tr);
 				let th = document.createElement("th");
@@ -297,30 +294,28 @@ let clustersMod = {
 		// initialize tooltips
 		tooltip.init(block);
 	},
-	// remove a specific file form modulation
+	// remove a specific file form the modulation
 	//   file = string (XML file name)
 	//   a = node
-	fileRemove (file, a) {
-		a.dispatchEvent(new Event("mouseout"));
-		for (const [k, v] of Object.entries(clustersMod.data.center)) {
-			if (v.file === file) {
-				delete clustersMod.data.center[k];
-			}
+	//   bulkRemove = true | undefined
+	fileRemove (file, a, bulkRemove = false) {
+		if (a) {
+			a.dispatchEvent(new Event("mouseout"));
 		}
 		delete clustersMod.data.files[file];
 		const block = document.querySelector(`.file-block[data-file="${file}"]`);
 		block.parentNode.removeChild(block);
-		clustersMod.center();
-		clustersMod.proposals();
+		if (!bulkRemove) {
+			clustersMod.center();
+			clustersMod.proposals();
+		}
 	},
-	// show a cluster center based on the added files and make appropriate proposals
+	// construct a cluster center based on the main lemmas of the added files
+	// and make proposals of which links should be added to achieve a cluster like that
 	center () {
 		let center = document.querySelector("#clusters-modulate-center");
 		shared.clear(center);
-		if (Object.keys(clustersMod.data.files).length < 2) {
-			return;
-		}
-		// construct cluster center
+		// update center object
 		clustersMod.data.center = {};
 		let lemmas = {
 			fa: [],
@@ -340,12 +335,16 @@ let clustersMod = {
 				};
 			}
 		}
-		lemmas.fa.sort(shared.sort);
-		lemmas.hl.sort(shared.sort);
+		// no cluster center to display
+		if (Object.keys(clustersMod.data.files).length < 2) {
+			return;
+		}
+		// construct cluster center
 		for (const [type, arr] of Object.entries(lemmas)) {
 			if (!arr.length) {
 				continue;
 			}
+			arr.sort(shared.sort);
 			let div = document.createElement("div");
 			center.appendChild(div);
 			if (type === "fa") {
@@ -354,29 +353,29 @@ let clustersMod = {
 			for (const lemma of arr) {
 				let span = document.createElement("span");
 				div.appendChild(span);
-				span.textContent = lemma.replace(" (Wortfeld)", "");
+				span.textContent = shared.hClear(lemma);
 			}
 		}
 	},
-	// insert proposals that show which lemmas should be added
+	// insert proposals that make clear which lemmas should be added
 	proposals () {
 		for (const file of Object.keys(clustersMod.data.files)) {
 			const block = document.querySelector(`.file-block[data-file="${file}"]`),
 				proposals = block.querySelector(".proposals");
 			shared.clear(proposals);
 			// collect proposals
-			let propose = [];
+			let props = [];
 			for (const [lemma, val] of Object.entries(clustersMod.data.center)) {
 				if (val.file === file) {
 					continue;
 				}
 				if (!clustersMod.data.files[file].has(lemma)) {
-					propose.push(lemma);
+					props.push(lemma);
 				}
 			}
 			// add/remove copy-all link in heading
 			const h1 = block.querySelector("h1");
-			if (propose.length &&
+			if (props.length &&
 					h1.firstChild.nodeType === Node.TEXT_NODE) {
 				let a = document.createElement("a");
 				a.classList.add("copy-all");
@@ -387,14 +386,14 @@ let clustersMod = {
 					evt.preventDefault();
 					clustersMod.proposalsCopyAll(this);
 				});
-			} else if (!propose.length &&
+			} else if (!props.length &&
 					h1.firstChild.nodeType === Node.ELEMENT_NODE) {
 				const text = document.createTextNode(h1.firstChild.textContent);
 				h1.replaceChild(text, h1.firstChild);
 			}
 			// print proposals
-			propose.sort(shared.sort);
-			for (let lemma of propose) {
+			props.sort(shared.sort);
+			for (let lemma of props) {
 				let a = document.createElement("a");
 				proposals.appendChild(a);
 				if (clustersMod.data.center[lemma].isFa) {
@@ -402,7 +401,7 @@ let clustersMod = {
 				}
 				a.dataset.lemma = lemma;
 				a.href = "#";
-				a.textContent = lemma.split("/")[0].replace(" (Wortfeld)", "");
+				a.textContent = shared.hClear(lemma.split("/")[0]);
 				a.addEventListener("click", function(evt) {
 					evt.preventDefault();
 					clustersMod.proposalsCopy(this);
@@ -410,7 +409,7 @@ let clustersMod = {
 			}
 		}
 	},
-	// copy XML for one proposal
+	// copy XML for a specific proposal
 	//   a = node
 	proposalsCopy (a) {
 		const snippet = clustersMod.proposalsXml(a.dataset.lemma);
@@ -430,10 +429,10 @@ let clustersMod = {
 			.then(() => shared.feedback("copied"))
 			.catch(() => shared.feedback("error"));
 	},
-	// make XML string of a proposal
+	// make XML string with a proposal
 	//   lemma = string
 	proposalsXml (lemma) {
-		let hl = lemma.split("/")[0].replace(" (Wortfeld)", ""),
+		let hl = shared.hClear(lemma.split("/")[0]),
 			fa = "";
 		if (clustersMod.data.center[lemma].isFa) {
 			fa = "Wortfeld-";
@@ -450,6 +449,7 @@ let clustersMod = {
 	},
 	// reset the clusters' modulation
 	reset () {
+		clustersMod.data.center = {};
 		clustersMod.data.files = {};
 		for (const i of ["center", "files"]) {
 			shared.clear(document.querySelector(`#clusters-modulate-${i}`));

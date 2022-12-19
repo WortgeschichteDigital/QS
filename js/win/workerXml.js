@@ -116,7 +116,7 @@ let xml = {
 				doc.querySelectorAll("Verweis").forEach(i => {
 					const verweistext = i.querySelector("Verweistext").textContent.trim(),
 						verweisziel = i.querySelector("Verweisziel").textContent.trim(),
-						scopePoints = xml.getScopePoints(i, data.fa);
+						scopePoints = xml.getScopePoints(i);
 					data.links.push({
 						lemma: {},
 						line: xml.getLineNumber(i, doc, xml.files[file]),
@@ -181,8 +181,7 @@ let xml = {
 	},
 	// determine scope and cluster points of the given link
 	//   link = node
-	//   fa = boolean (article is a field article)
-	getScopePoints (link, fa) {
+	getScopePoints (link) {
 		if (link.closest("Anmerkung") ||
 				link.closest("Abschnitt") &&
 				link.closest("Abschnitt").getAttribute("Relevanz") === "niedrig") {
@@ -204,8 +203,8 @@ let xml = {
 				scope: "Kurz gefasst",
 			};
 		} else if (link.closest("Verweise")) {
-			if (fa) {
-				// field article
+			if (link.closest("Verweise").getAttribute("Typ") === "Wortfeldartikel") {
+				// link to field article
 				return {
 					points: 10,
 					scope: "Verweise",

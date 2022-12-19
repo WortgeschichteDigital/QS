@@ -321,7 +321,7 @@ let hints = {
 			let hl = [];
 			for (let i of data.hlJoined) {
 				i = i.split("/")[0];
-				i = i.replace(" (Wortfeld)", "");
+				i = shared.hClear(i);
 				i = i.replace(/[\s’]/g, "_");
 				hl.push(i);
 			}
@@ -1032,7 +1032,7 @@ let hints = {
 		for (const i of links) {
 			if (i.scope !== "Verweise" &&
 					i.lemma.file === file &&
-					i.lemma.spelling.replace(" (Wortfeld)", "") === lemma) {
+					shared.hClear(i.lemma.spelling) === lemma) {
 				count++;
 			}
 		}
@@ -1128,7 +1128,7 @@ let hints = {
 		let missing = [];
 		for (const [file, data] of Object.entries(xml.data.files)) {
 			for (let lemma of data.hl.concat(data.nl)) {
-				lemma = lemma.replace(" (Wortfeld)", "");
+				lemma = shared.hClear(lemma);
 				if (!hints.lemmas[lemma]) {
 					hints.lemmas[lemma] = {
 						xml: new Set(),

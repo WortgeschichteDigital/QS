@@ -28,6 +28,11 @@ let shared = {
 			ele.removeChild(ele.lastChild);
 		}
 	},
+	// clear text of homograph or field article markers
+	//   text = string
+	hClear (text) {
+		return text.replace(/ \(.+?\)$/, "");
+	},
 	// detect pressed modifiers
 	//   evt = object (keydown event)
 	detectKeyboardModifiers (evt) {

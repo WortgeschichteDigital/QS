@@ -4,7 +4,7 @@
 	max-width: 2000px;
 }
 
-/* MODULATE ----------------------------------- */
+/* MODULATE ------------------------------------- */
 
 #clusters-modulate-form {
 	position: relative;
@@ -20,7 +20,7 @@
 }
 
 
-/* MODULATE CENTER ---------------------------- */
+/* MODULATE CENTER ------------------------------ */
 
 #clusters-modulate-center {
 	margin: 0 auto 20px auto;
@@ -48,7 +48,7 @@
 }
 
 
-/* MODULATE FILES ----------------------------- */
+/* MODULATE FILES ------------------------------- */
 
 #clusters-modulate-files {
 	display: flex;
@@ -147,7 +147,8 @@
 	color: var(--colorRed);
 }
 
-#clusters-modulate .fa {
+#clusters-modulate .fa,
+#clusters-compare .fa {
 	font-variant: small-caps;
 	letter-spacing: 1px;
 }
@@ -157,7 +158,7 @@
 }
 
 
-/* MODULATE POPUP ----------------------------- */
+/* MODULATE POPUP ------------------------------- */
 
 #clusters-modulate-popup {
 	position: absolute;
@@ -221,4 +222,136 @@
 #clusters-modulate-popup div {
 	border-bottom: 0;
 	text-align: center;
+}
+
+
+/* COMPARE -------------------------------------- */
+
+#clusters-compare table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	table-layout: fixed;
+	margin: 0 auto;
+	width: 1100px;
+	max-width: 95%;
+}
+
+#clusters-compare td {
+	vertical-align: top;
+	padding: 5px;
+	width: calc(50% - 5px - 35px); /* 35px is half offsetWidth of the second cell */
+}
+
+#clusters-compare td:first-child {
+	padding-left: 0;
+}
+
+#clusters-compare td:last-child {
+	padding-right: 0;
+}
+
+#clusters-compare td:nth-child(2) {
+	width: 60px;
+	text-align: center;
+}
+
+#clusters-compare span[data-tooltip="Nebenlemma"] {
+	color: var(--textGreyLight);
+}
+
+
+/* CLUSTER BLOCKS ------------------------------- */
+
+.cluster {
+	margin: 0 auto;
+	border: 4px solid var(--clusterBlock);
+	border-radius: 5px;
+	max-width: 500px;
+	text-align: center;
+}
+
+.cluster.new-cluster {
+	border: 4px solid var(--colorRed);
+}
+
+.cluster span {
+	display: inline-block;
+	margin: 2px;
+	border-radius: 5px;
+	padding: 0 18px;
+	background-color: transparent;
+	color: var(--text);
+	white-space: nowrap;
+	transition: background-color .3s linear,
+		color .3s linear;
+}
+
+.cluster span.in-modulation {
+	background-color: var(--bgHighlight);
+	color: #fff;
+}
+
+.cluster span.new-lemma {
+	background-color: var(--colorRed);
+	color: #fff;
+}
+
+.cluster span.marked {
+	background-color: var(--colorYellow);
+	color: var(--text);
+}
+
+.cluster span.wrap {
+	display: inline-block;
+	max-width: min-content;
+	white-space: normal;
+}
+
+.cluster-circle {
+	position: relative;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	padding: 10px 10px 5px 10px;
+}
+
+.cluster > .cluster-circle {
+	margin-bottom: 0;
+}
+
+.cluster-dominant + .cluster-recessive {
+	margin-top: 10px;
+}
+
+.cluster-dominant,
+.cluster-recessive {
+	border-radius: 5px;
+}
+
+.cluster-periphery {
+	background-color: #fff;
+	font-size: .7rem;
+	line-height: 1rem;
+}
+
+.cluster-fringe {
+	background-color: var(--clusterFringe);
+	font-size: .8rem;
+	line-height: 1.2rem;
+}
+
+.cluster-fringe .cluster-dominant {
+	font-size: .9rem;
+	line-height: 1.35rem;
+}
+
+.cluster-center {
+	padding-top: 5px;
+	background-color: var(--clusterCenter);
+	font-size: .9rem;
+	line-height: 1.35rem;
+}
+
+.cluster-center .cluster-dominant {
+	font-size: 1rem;
+	line-height: 1.5rem;
 }
