@@ -3,262 +3,262 @@
 /* GIT CONFIGURATION ---------------------------- */
 
 #git > div {
-	width: 550px;
+  width: 550px;
 }
 
 #git p {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 #git label {
-	width: 130px;
+  width: 130px;
 }
 
 #git input[type="text"] {
-	width: calc(100% - 130px - 32px - 40px);
+  width: calc(100% - 130px - 32px - 40px);
 }
 
 #git .icon {
-	margin-left: 10px;
+  margin-left: 10px;
 }
 
 
 /* ERROR ---------------------------------------- */
 
 #error > div {
-	width: 700px;
+  width: 700px;
 }
 
 #error-functions {
-	margin: 10px;
-	text-align: center;
+  margin: 10px;
+  text-align: center;
 }
 
 #error-functions a:last-child {
-	margin-left: 20px;
+  margin-left: 20px;
 }
 
 #error pre {
-	margin: 10px;
-	overflow-x: hidden;
-	overflow-y: auto;
-	padding: 10px;
-	max-height: 330px;
-	background-color: var(--colorGreyLight);
-	font-family: "Noto Sans Mono", monospace;
-	font-size: .8rem;
-	line-height: 1.2rem;
-	white-space: pre-wrap;
+  margin: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 10px;
+  max-height: 330px;
+  background-color: var(--colorGreyLight);
+  font-family: "Noto Sans Mono", monospace;
+  font-size: .8rem;
+  line-height: 1.2rem;
+  white-space: pre-wrap;
 }
 
 
 /* PREFERENCES ---------------------------------- */
 
 #prefs > div {
-	width: 700px;
+  width: 700px;
 }
 
 #prefs > div > div {
-	display: grid;
-	grid-template-columns: 190px 1fr;
-	column-gap: 15px;
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  column-gap: 15px;
 }
 
 #prefs ul {
-	list-style-type: none;
-	margin: 3px 0 -1px -1px;
-	border-bottom-left-radius: 10px;
-	padding: 15px;
-	background-color: var(--colorBlueDark);
+  list-style-type: none;
+  margin: 3px 0 -1px -1px;
+  border-bottom-left-radius: 10px;
+  padding: 15px;
+  background-color: var(--colorBlueDark);
 }
 
 #prefs li a {
-	display: block;
-	margin: 0 0 10px 0;
-	border-radius: 5px;
-	padding: 0 10px;
-	background-color: #fff;
-	color: var(--text);
-	font-size: 1rem;
-	text-decoration: none;
+  display: block;
+  margin: 0 0 10px 0;
+  border-radius: 5px;
+  padding: 0 10px;
+  background-color: #fff;
+  color: var(--text);
+  font-size: 1rem;
+  text-decoration: none;
 }
 
 #prefs li a:where(:focus, :hover) {
-	outline: 2px solid var(--outline);
-	outline-offset: 0;
+  outline: 2px solid var(--outline);
+  outline-offset: 0;
 }
 
 #prefs li a.active {
-	background-color: var(--bgHighlight);
-	color: #fff;
-	font-weight: bold;
+  background-color: var(--bgHighlight);
+  color: #fff;
+  font-weight: bold;
 }
 
 #prefs h2 {
-	margin: 20px 0 10px 0;
+  margin: 20px 0 10px 0;
 }
 
 #prefs h2:first-child {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 #prefs p {
-	margin: 10px 0;
-	font-size: .8rem;
-	line-height: 1.2rem;
+  margin: 10px 0;
+  font-size: .8rem;
+  line-height: 1.2rem;
 }
 
 .prefs-section {
-	margin: 10px 10px 10px 0;
+  margin: 10px 10px 10px 0;
 }
 
 .prefs-git {
-	padding-left: 115px;
-	text-indent: -115px;
+  padding-left: 115px;
+  text-indent: -115px;
 }
 
 .prefs-git i {
-	display: inline-block;
-	width: 115px;
-	text-indent: 0;
+  display: inline-block;
+  width: 115px;
+  text-indent: 0;
 }
 
 #prefs-zeitstrahl {
-	width: calc(100% - 22px - 75px);
+  width: calc(100% - 22px - 75px);
 }
 
 #prefs-zeitstrahl + .icon {
-	margin-left: 10px;
+  margin-left: 10px;
 }
 
 #prefs .icon + .icon {
-	margin-left: 5px;
+  margin-left: 5px;
 }
 
 #prefs-statistics-cont {
-	display: flex;
-	flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 #prefs-statistics-cont h3 {
-	flex: 0 0 100%;
-	margin: 10px 0 5px 0;
-	font-style: italic;
-	font-weight: normal;
+  flex: 0 0 100%;
+  margin: 10px 0 5px 0;
+  font-style: italic;
+  font-weight: normal;
 }
 
 #prefs-statistics-cont h3:first-child {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 #prefs-statistics-cont p {
-	margin: 0 15px 0 0;
+  margin: 0 15px 0 0;
 }
 
 
 /* SUMMARY -------------------------------------- */
 
 #summary > div {
-	width: 750px;
+  width: 750px;
 }
 
 #summary p {
-	font-size: .9rem;
-	line-height: 1.35rem;
-	user-select: text;
+  font-size: .9rem;
+  line-height: 1.35rem;
+  user-select: text;
 }
 
 .wgd-ez,
 .wgd-stichwort {
-	font-style: italic;
+  font-style: italic;
 }
 
 
 /* TEASER-TAGS ---------------------------------- */
 
 #tags > div {
-	width: 800px;
+  width: 800px;
 }
 
 #tags a {
-	margin-right: 15px;
-	color: var(--text);
-	text-decoration: none;
+  margin-right: 15px;
+  color: var(--text);
+  text-decoration: none;
 }
 
 :where(#tags-tags, #tags-attributes) a:focus {
-	outline: 2px solid var(--outline);
-	outline-offset: 2px;
-	border-radius: 5px;
+  outline: 2px solid var(--outline);
+  outline-offset: 2px;
+  border-radius: 5px;
 }
 
 #tags h1 a {
-	margin-right: 0;
+  margin-right: 0;
 }
 
 #tags a.active {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 #tags-nav {
-	margin: 30px 10px 10px 10px;
+  margin: 30px 10px 10px 10px;
 }
 
 #tags-nav a {
-	display: inline-block;
-	vertical-align: top;
-	margin-right: 10px;
-	border-radius: 5px;
-	padding: 0 5px;
-	background-color: var(--colorGreyLight);
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 0 5px;
+  background-color: var(--colorGreyLight);
 }
 
 #tags-nav a:where(:focus, :hover) {
-	outline: 2px solid var(--outline);
-	outline-offset: 0;
+  outline: 2px solid var(--outline);
+  outline-offset: 0;
 }
 
 #tags-nav > a {
-	margin-top: 2px;
-	padding: 0;
-	width: 35px;
-	text-align: center;
+  margin-top: 2px;
+  padding: 0;
+  width: 35px;
+  text-align: center;
 }
 
 #tags-nav > a:last-child {
-	margin: 2px 0 0 10px;
+  margin: 2px 0 0 10px;
 }
 
 #tags-nav span {
-	position: relative; /* this way, for the first child, .offsetLeft is 0 */
-	display: inline-block;
-	padding: 2px;
-	max-width: calc(100% - 90px - 4px);
-	white-space: nowrap;
-	overflow-x: hidden;
+  position: relative; /* this way, for the first child, .offsetLeft is 0 */
+  display: inline-block;
+  padding: 2px;
+  max-width: calc(100% - 90px - 4px);
+  white-space: nowrap;
+  overflow-x: hidden;
 }
 
 #tags-nav span a.active {
-	background-color: var(--bgHighlight);
-	color: #fff;
+  background-color: var(--bgHighlight);
+  color: #fff;
 }
 
 #tags-nav span a:last-child {
-	margin: 0;
+  margin: 0;
 }
 
 #tags-label {
-	line-height: 1.5rem;
+  line-height: 1.5rem;
 }
 
 #tags-label a {
-	margin: 0 10px 0 0;
+  margin: 0 10px 0 0;
 }
 
 #tags-label span + a {
-	margin-left: 20px;
+  margin-left: 20px;
 }
 
 #tags-code {
-	white-space: pre-wrap;
+  white-space: pre-wrap;
 }

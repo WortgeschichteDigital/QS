@@ -1,402 +1,402 @@
 @charset "utf-8";
 
 #clusters {
-	max-width: 2000px;
+  max-width: 2000px;
 }
 
 /* MODULATE ------------------------------------- */
 
 #clusters-modulate-form {
-	position: relative;
-	margin: 0 auto 20px auto;
-	width: 400px;
-	height: 30px;
+  position: relative;
+  margin: 0 auto 20px auto;
+  width: 400px;
+  height: 30px;
 }
 
 #clusters-modulate-form input {
-	vertical-align: top;
-	width: calc(100% - 12px - 63px);
-	padding-right: 63px;
+  vertical-align: top;
+  width: calc(100% - 12px - 63px);
+  padding-right: 63px;
 }
 
 
 /* MODULATE CENTER ------------------------------ */
 
 #clusters-modulate-center {
-	margin: 0 auto 20px auto;
-	border-radius: 10px;
-	padding: 10px;
-	max-width: 400px;
-	background-color: var(--clusterCenter);
-	font-size: .8rem;
-	line-height: 1.4rem;
-	text-align: center;
+  margin: 0 auto 20px auto;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 400px;
+  background-color: var(--clusterCenter);
+  font-size: .8rem;
+  line-height: 1.4rem;
+  text-align: center;
 }
 
 #clusters-modulate-center:empty {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 #clusters-modulate-center div + div {
-	margin-top: 15px;
+  margin-top: 15px;
 }
 
 #clusters-modulate-center span {
-	display: inline-block;
-	margin: 0 15px;
+  display: inline-block;
+  margin: 0 15px;
 }
 
 
 /* MODULATE FILES ------------------------------- */
 
 #clusters-modulate-files {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .file-block {
-	margin: 10px;
+  margin: 10px;
 }
 
 .file-block div.file-block-list {
-	position: relative;
-	margin: 0;
+  position: relative;
+  margin: 0;
 }
 
 .file-block div.file-block-list:has(.file-block-toggle) {
-	overflow: hidden;
-	padding-bottom: 24px;
-	max-height: 174px;
+  overflow: hidden;
+  padding-bottom: 24px;
+  max-height: 174px;
 }
 
 .file-block div.file-block-list.open {
-	max-height: none;
+  max-height: none;
 }
 
 .file-block div.file-block-toggle {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	margin: 0;
-	width: 100%;
-	height: 82px;
-	background: linear-gradient(to top, #fff 24px, rgba(255, 255, 255, 0));
-	pointer-events: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  height: 82px;
+  background: linear-gradient(to top, #fff 24px, rgba(255, 255, 255, 0));
+  pointer-events: none;
 }
 
 .file-block div.file-block-list.open div.file-block-toggle {
-	background: none;
+  background: none;
 }
 
 .file-block-toggle a {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	border-radius: 5px;
-	width: 100%;
-	height: 24px;
-	background-image: url(../../img/app/toggle-down.svg);
-	background-position: center top;
-	background-repeat: no-repeat;
-	background-size: 24px 24px;
-	pointer-events: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 5px;
+  width: 100%;
+  height: 24px;
+  background-image: url(../../img/app/toggle-down.svg);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  pointer-events: auto;
 }
 
 .open div.file-block-toggle a {
-	background-image: url(../../img/app/toggle-up.svg);
+  background-image: url(../../img/app/toggle-up.svg);
 }
 
 .file-block-toggle a:where(:hover, :focus) {
-	background-color: var(--bgActive);
+  background-color: var(--bgActive);
 }
 
 .file-block h1 {
-	margin: 0 0 5px 0;
-	border-bottom: 2px solid var(--colorBlueDark);
-	padding: 0 10px 5px 10px;
-	font-size: .8rem;
-	font-weight: normal;
-	line-height: 1.2rem;
+  margin: 0 0 5px 0;
+  border-bottom: 2px solid var(--colorBlueDark);
+  padding: 0 10px 5px 10px;
+  font-size: .8rem;
+  font-weight: normal;
+  line-height: 1.2rem;
 }
 
 .file-block a.icon {
-	margin-left: 5px;
-	width: 24px;
-	height: 24px;
+  margin-left: 5px;
+  width: 24px;
+  height: 24px;
 }
 
 .file-block a.icon[data-fun$="openPv"] {
-	margin-left: 15px;
+  margin-left: 15px;
 }
 
 .file-block h1 a.copy-all {
-	outline: none;
-	color: var(--colorRed);
-	text-decoration: none;
+  outline: none;
+  color: var(--colorRed);
+  text-decoration: none;
 }
 
 .file-block h1 a.copy-all:where(:focus, :hover) {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 .file-block img {
-	vertical-align: top;
+  vertical-align: top;
 }
 
 .file-block div {
-	margin: 0 10px 5px 10px;
-	font-size: .8rem;
-	line-height: 1.2rem;
+  margin: 0 10px 5px 10px;
+  font-size: .8rem;
+  line-height: 1.2rem;
 }
 
 .file-block div a {
-	outline: none;
-	color: var(--colorBlue);
-	text-decoration: none;
+  outline: none;
+  color: var(--colorBlue);
+  text-decoration: none;
 }
 
 .file-block div a:where(:focus, :hover) {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 .file-block table {
-	border-collapse: collapse;
-	border-spacing: 0;
-	margin: 0 0 0 20px;
-	font-size: .7rem;
-	line-height: 1rem;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0 0 0 20px;
+  font-size: .7rem;
+  line-height: 1rem;
 }
 
 .file-block :where(th, td) {
-	padding: 0;
+  padding: 0;
 }
 
 .file-block th {
-	padding-right: 10px;
-	font-style: italic;
-	font-weight: normal;
-	text-align: left;
+  padding-right: 10px;
+  font-style: italic;
+  font-weight: normal;
+  text-align: left;
 }
 
 .file-block td {
-	text-align: right;
+  text-align: right;
 }
 
 .file-block .proposals:empty {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .file-block .proposals a {
-	display: block;
-	margin-bottom: 5px;
-	width: max-content;
-	color: var(--colorRed);
+  display: block;
+  margin-bottom: 5px;
+  width: max-content;
+  color: var(--colorRed);
 }
 
 :where(#clusters-modulate, #clusters-compare) .fa {
-	font-variant: small-caps;
-	letter-spacing: 1px;
+  font-variant: small-caps;
+  letter-spacing: 1px;
 }
 
 #clusters-modulate .nl {
-	font-style: italic;
+  font-style: italic;
 }
 
 
 /* MODULATE POPUP ------------------------------- */
 
 #clusters-modulate-popup {
-	position: absolute;
-	top: 37px;
-	left: 0;
-	z-index: 1;
-	opacity: 0;
-	box-shadow: var(--shadow);
-	border: 1px solid var(--line);
-	border-radius: 10px;
-	background-color: #fff;
-	transition: opacity .3s ease-out;
+  position: absolute;
+  top: 37px;
+  left: 0;
+  z-index: 1;
+  opacity: 0;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background-color: #fff;
+  transition: opacity .3s ease-out;
 }
 
 #clusters-modulate-popup.visible {
-	opacity: 1;
+  opacity: 1;
 }
 
 #clusters-modulate-popup :where(a, div) {
-	display: block;
-	outline: none;
-	border-bottom: 1px solid var(--line);
-	padding: 5px 10px;
-	color: var(--text);
-	font-size: .7rem;
-	line-height: 1.1rem;
-	text-decoration: none;
-	white-space: nowrap;
+  display: block;
+  outline: none;
+  border-bottom: 1px solid var(--line);
+  padding: 5px 10px;
+  color: var(--text);
+  font-size: .7rem;
+  line-height: 1.1rem;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 #clusters-modulate-popup a:first-child {
-	border-top-right-radius: 10px;
-	border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 }
 
 #clusters-modulate-popup a:last-child {
-	border-bottom: none;
-	border-bottom-right-radius: 10px;
-	border-bottom-left-radius: 10px;
+  border-bottom: none;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 #clusters-modulate-popup a span {
-	display: inline-block;
-	margin-left: 10px;
-	color: var(--textGreyLight);
-	font-style: italic;
-	font-variant: normal;
-	letter-spacing: 0;
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--textGreyLight);
+  font-style: italic;
+  font-variant: normal;
+  letter-spacing: 0;
 }
 
 #clusters-modulate-popup :where(a:hover, a.active) {
-	background-color: var(--bgActive);
+  background-color: var(--bgActive);
 }
 
 #clusters-modulate-popup :where(a:hover, a.active) span {
-	color: var(--text);
+  color: var(--text);
 }
 
 #clusters-modulate-popup div {
-	border-bottom: 0;
-	text-align: center;
+  border-bottom: 0;
+  text-align: center;
 }
 
 
 /* COMPARE -------------------------------------- */
 
 #clusters-compare table {
-	border-collapse: collapse;
-	border-spacing: 0;
-	table-layout: fixed;
-	margin: 0 auto;
-	width: 1100px;
-	max-width: 95%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  margin: 0 auto;
+  width: 1100px;
+  max-width: 95%;
 }
 
 #clusters-compare td {
-	vertical-align: top;
-	padding: 5px;
-	width: calc(50% - 5px - 35px); /* 35px is half offsetWidth of the second cell */
+  vertical-align: top;
+  padding: 5px;
+  width: calc(50% - 5px - 35px); /* 35px is half offsetWidth of the second cell */
 }
 
 #clusters-compare td:first-child {
-	padding-left: 0;
+  padding-left: 0;
 }
 
 #clusters-compare td:last-child {
-	padding-right: 0;
+  padding-right: 0;
 }
 
 #clusters-compare td:nth-child(2) {
-	width: 60px;
-	text-align: center;
+  width: 60px;
+  text-align: center;
 }
 
 #clusters-compare span[data-tooltip="Nebenlemma"] {
-	color: var(--textGreyLight);
+  color: var(--textGreyLight);
 }
 
 
 /* CLUSTER BLOCKS ------------------------------- */
 
 .cluster {
-	margin: 0 auto;
-	border: 4px solid var(--clusterBlock);
-	border-radius: 5px;
-	max-width: 500px;
-	text-align: center;
+  margin: 0 auto;
+  border: 4px solid var(--clusterBlock);
+  border-radius: 5px;
+  max-width: 500px;
+  text-align: center;
 }
 
 .cluster.new-cluster {
-	border: 4px solid var(--colorRed);
+  border: 4px solid var(--colorRed);
 }
 
 .cluster span {
-	display: inline-block;
-	margin: 2px;
-	border-radius: 5px;
-	padding: 0 18px;
-	background-color: transparent;
-	color: var(--text);
-	white-space: nowrap;
-	transition: background-color .3s linear,
-		color .3s linear;
+  display: inline-block;
+  margin: 2px;
+  border-radius: 5px;
+  padding: 0 18px;
+  background-color: transparent;
+  color: var(--text);
+  white-space: nowrap;
+  transition: background-color .3s linear,
+    color .3s linear;
 }
 
 .cluster span.in-modulation {
-	background-color: var(--bgHighlight);
-	color: #fff;
+  background-color: var(--bgHighlight);
+  color: #fff;
 }
 
 .cluster span.new-lemma {
-	background-color: var(--colorRed);
-	color: #fff;
+  background-color: var(--colorRed);
+  color: #fff;
 }
 
 .cluster span.marked {
-	background-color: var(--colorYellow);
-	color: var(--text);
+  background-color: var(--colorYellow);
+  color: var(--text);
 }
 
 .cluster span.wrap {
-	display: inline-block;
-	max-width: min-content;
-	white-space: normal;
+  display: inline-block;
+  max-width: min-content;
+  white-space: normal;
 }
 
 .cluster-circle {
-	margin-bottom: 5px;
-	border-radius: 5px;
-	padding: 10px 10px 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  padding: 10px 10px 5px 10px;
 }
 
 .cluster > .cluster-circle {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .cluster-dominant + .cluster-recessive {
-	margin-top: 10px;
+  margin-top: 10px;
 }
 
 .cluster-dominant,
 .cluster-recessive {
-	border-radius: 5px;
+  border-radius: 5px;
 }
 
 .cluster-periphery {
-	background-color: #fff;
-	font-size: .7rem;
-	line-height: 1rem;
+  background-color: #fff;
+  font-size: .7rem;
+  line-height: 1rem;
 }
 
 .cluster-fringe {
-	background-color: var(--clusterFringe);
-	font-size: .8rem;
-	line-height: 1.2rem;
+  background-color: var(--clusterFringe);
+  font-size: .8rem;
+  line-height: 1.2rem;
 }
 
 .cluster-fringe .cluster-dominant {
-	font-size: .9rem;
-	line-height: 1.35rem;
+  font-size: .9rem;
+  line-height: 1.35rem;
 }
 
 .cluster-center {
-	padding-top: 5px;
-	background-color: var(--clusterCenter);
-	font-size: .9rem;
-	line-height: 1.35rem;
+  padding-top: 5px;
+  background-color: var(--clusterCenter);
+  font-size: .9rem;
+  line-height: 1.35rem;
 }
 
 .cluster-center .cluster-dominant {
-	font-size: 1rem;
-	line-height: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }

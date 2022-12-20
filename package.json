@@ -1,36 +1,36 @@
 {
-	"name": "wgd-qs",
-	"productName": "QS",
-	"version": "0.0.1-beta.22",
-	"description": "Qualitätssicherung-App von „Wortgeschichte digital“, dem an der „Niedersächsischen Akademie der Wissenschaften zu Göttingen“ angesiedelten Teilprojekt des „Zentrums für digitale Lexikographie der deutschen Sprache“, gefördert durch das „Bundesministerium für Bildung und Forschung“",
-	"keywords": [
-		"Git",
-		"Lexikographie",
-		"WGd",
-		"Wörterbuch",
-		"XML",
-		"ZDL"
-	],
-	"author": {
-		"name": "Nico Dorn",
-		"url": "https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/mitarbeiterinnen-und-mitarbeiter/nico-dorn/"
-	},
-	"license": "GPL-3.0-only",
-	"homepage": "https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/WortgeschichteDigital/QS.git"
-	},
-	"bugs": {
-		"url": "https://github.com/WortgeschichteDigital/QS/issues"
-	},
-	"main": "main.js",
-	"scripts": {
-		"start": "electron ."
-	},
-	"devDependencies": {
-		"electron": "^22.0.0",
-		"electron-builder": "^23.6.0",
-		"electron-packager": "^17.1.1"
-	}
+  "name": "wgd-qs",
+  "productName": "QS",
+  "version": "0.0.1-beta.22",
+  "description": "Qualitätssicherung-App von „Wortgeschichte digital“, dem an der „Niedersächsischen Akademie der Wissenschaften zu Göttingen“ angesiedelten Teilprojekt des „Zentrums für digitale Lexikographie der deutschen Sprache“, gefördert durch das „Bundesministerium für Bildung und Forschung“",
+  "keywords": [
+    "Git",
+    "Lexikographie",
+    "WGd",
+    "Wörterbuch",
+    "XML",
+    "ZDL"
+  ],
+  "author": {
+    "name": "Nico Dorn",
+    "url": "https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/mitarbeiterinnen-und-mitarbeiter/nico-dorn/"
+  },
+  "license": "GPL-3.0-only",
+  "homepage": "https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WortgeschichteDigital/QS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WortgeschichteDigital/QS/issues"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^22.0.0",
+    "electron-builder": "^23.6.0",
+    "electron-packager": "^17.1.1"
+  }
 }

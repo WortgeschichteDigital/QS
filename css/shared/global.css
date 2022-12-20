@@ -3,276 +3,276 @@
 /* FONTS ---------------------------------------- */
 
 @font-face {
-	font-family: "Noto Sans";
-	src: url(../../fonts/NotoSans-Regular.woff2) format("woff2");
+  font-family: "Noto Sans";
+  src: url(../../fonts/NotoSans-Regular.woff2) format("woff2");
 }
 
 @font-face {
-	font-family: "Noto Sans";
-	src: url(../../fonts/NotoSans-Italic.woff2) format("woff2");
-	font-style: italic;
+  font-family: "Noto Sans";
+  src: url(../../fonts/NotoSans-Italic.woff2) format("woff2");
+  font-style: italic;
 }
 
 @font-face {
-	font-family: "Noto Sans";
-	src: url(../../fonts/NotoSans-Bold.woff2) format("woff2");
-	font-weight: bold;
+  font-family: "Noto Sans";
+  src: url(../../fonts/NotoSans-Bold.woff2) format("woff2");
+  font-weight: bold;
 }
 
 @font-face {
-	font-family: "Noto Sans";
-	src: url(../../fonts/NotoSans-BoldItalic.woff2) format("woff2");
-	font-style: italic;
-	font-weight: bold;
+  font-family: "Noto Sans";
+  src: url(../../fonts/NotoSans-BoldItalic.woff2) format("woff2");
+  font-style: italic;
+  font-weight: bold;
 }
 @font-face {
-	font-family: "Noto Serif";
-	src: url(../../fonts/NotoSerif-Regular.woff2) format("woff2");
-}
-
-@font-face {
-	font-family: "Noto Serif";
-	src: url(../../fonts/NotoSerif-Italic.woff2) format("woff2");
-	font-style: italic;
+  font-family: "Noto Serif";
+  src: url(../../fonts/NotoSerif-Regular.woff2) format("woff2");
 }
 
 @font-face {
-	font-family: "Noto Serif";
-	src: url(../../fonts/NotoSerif-Bold.woff2) format("woff2");
-	font-weight: bold;
+  font-family: "Noto Serif";
+  src: url(../../fonts/NotoSerif-Italic.woff2) format("woff2");
+  font-style: italic;
 }
 
 @font-face {
-	font-family: "Noto Serif";
-	src: url(../../fonts/NotoSerif-BoldItalic.woff2) format("woff2");
-	font-style: italic;
-	font-weight: bold;
+  font-family: "Noto Serif";
+  src: url(../../fonts/NotoSerif-Bold.woff2) format("woff2");
+  font-weight: bold;
 }
 
 @font-face {
-	font-family: "Noto Sans Mono";
-	src: url(../../fonts/NotoSansMono-Regular.woff2) format("woff2");
+  font-family: "Noto Serif";
+  src: url(../../fonts/NotoSerif-BoldItalic.woff2) format("woff2");
+  font-style: italic;
+  font-weight: bold;
 }
 
 @font-face {
-	font-family: "Noto Sans Mono";
-	src: url(../../fonts/NotoSansMono-Bold.woff2) format("woff2");
-	font-weight: bold;
+  font-family: "Noto Sans Mono";
+  src: url(../../fonts/NotoSansMono-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Sans Mono";
+  src: url(../../fonts/NotoSansMono-Bold.woff2) format("woff2");
+  font-weight: bold;
 }
 
 
 /* ELEMENTS ------------------------------------- */
 
 body {
-	margin: 0;
-	overflow-x: hidden;
-	overflow-y: hidden;
-	background-color: #fff;
-	color: var(--text);
-	font-family: "Noto Sans", sans-serif;
-	font-size: 1rem;
-	line-height: 1.5rem;
-	user-select: none;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: #fff;
+  color: var(--text);
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  user-select: none;
 }
 
 body.scrollable {
-	overflow-y: auto;
+  overflow-y: auto;
 }
 
 a {
-	color: var(--colorBlue);
-	cursor: default;
-	-webkit-user-drag: none;
-	user-drag: none;
+  color: var(--colorBlue);
+  cursor: default;
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 a.icon {
-	display: inline-block;
-	vertical-align: top;
-	width: 30px;
-	height: 30px;
+  display: inline-block;
+  vertical-align: top;
+  width: 30px;
+  height: 30px;
 }
 
 a.icon:focus {
-	outline: 2px solid var(--outline);
-	outline-offset: 0;
-	border-radius: 5px;
+  outline: 2px solid var(--outline);
+  outline-offset: 0;
+  border-radius: 5px;
 }
 
 a.overlay-close:focus {
-	outline: 2px solid var(--outline);
-	outline-offset: -5px;
-	border-radius: 10px;
+  outline: 2px solid var(--outline);
+  outline-offset: -5px;
+  border-radius: 10px;
 }
 
 a[href^="http"]::after {
-	content: "";
-	margin-left: 5px;
-	padding-right: 24px;
-	background-image: url(../../img/app/external-link.svg);
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
+  content: "";
+  margin-left: 5px;
+  padding-right: 24px;
+  background-image: url(../../img/app/external-link.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 footer a[href^="http"]::after {
-	background-image: url(../../img/app/external-link-white.svg);
+  background-image: url(../../img/app/external-link-white.svg);
 }
 
 code {
-	display: block;
-	margin: 10px;
-	border-radius: 10px;
-	padding: 10px;
-	background-color: var(--colorGreyLight);
-	font-family: "Noto Sans Mono", monospace;
-	font-size: .8rem;
-	line-height: 1.2rem;
+  display: block;
+  margin: 10px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--colorGreyLight);
+  font-family: "Noto Sans Mono", monospace;
+  font-size: .8rem;
+  line-height: 1.2rem;
 }
 
 img {
-	-webkit-user-drag: none;
-	user-drag: none;
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 p {
-	margin: 10px;
+  margin: 10px;
 }
 
 p.buttons {
-	margin-top: 20px;
-	text-align: center;
+  margin-top: 20px;
+  text-align: center;
 }
 
 
 /* TOOLTIP -------------------------------------- */
 
 #tooltip {
-	position: fixed;
-	opacity: 0;
-	box-shadow: var(--shadow);
-	border-radius: 5px;
-	padding: 5px 10px;
-	max-width: 250px;
-	background-color: var(--colorGreyDark);
-	color: #fff;
-	font-size: .75rem;
-	line-height: 1rem;
-	transition: opacity .1s linear;
+  position: fixed;
+  opacity: 0;
+  box-shadow: var(--shadow);
+  border-radius: 5px;
+  padding: 5px 10px;
+  max-width: 250px;
+  background-color: var(--colorGreyDark);
+  color: #fff;
+  font-size: .75rem;
+  line-height: 1rem;
+  transition: opacity .1s linear;
 }
 
 #tooltip.visible {
-	opacity: 1;
+  opacity: 1;
 }
 
 #tooltip.wide {
-	max-width: 450px;
+  max-width: 450px;
 }
 
 #tooltip p {
-	margin: 0 0 10px 0;
+  margin: 0 0 10px 0;
 }
 
 #tooltip p:last-child {
-	margin: 0;
+  margin: 0;
 }
 
 #tooltip .example {
-	display: block;
-	margin-left: 20px;
+  display: block;
+  margin-left: 20px;
 }
 
 
 /* MARKS ---------------------------------------- */
 
 mark {
-	border-radius: 5px;
-	background-color: var(--colorYellow);
-	color: var(--text);
-	font-weight: bold;
+  border-radius: 5px;
+  background-color: var(--colorYellow);
+  color: var(--text);
+  font-weight: bold;
 }
 
 mark.color2 {
-	background-color: var(--colorGreen);
-	color: #fff;
+  background-color: var(--colorGreen);
+  color: #fff;
 }
 
 mark.color3 {
-	background-color: var(--colorBlueDark);
-	color: #fff;
+  background-color: var(--colorBlueDark);
+  color: #fff;
 }
 
 mark.color4 {
-	background-color: var(--colorRed);
-	color: #fff;
+  background-color: var(--colorRed);
+  color: #fff;
 }
 
 mark.color5 {
-	background-color: var(--colorBlueLight);
-	color: #fff;
+  background-color: var(--colorBlueLight);
+  color: #fff;
 }
 
 mark.color6 {
-	background-color: var(--colorCyan);
-	color: #fff;
+  background-color: var(--colorCyan);
+  color: #fff;
 }
 
 mark.no-start {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 mark.no-end {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 
 /* MISCELLANEOUS -------------------------------- */
 
 #loading {
-	z-index: 1000;
-	background-color: var(--colorGreyDark);
+  z-index: 1000;
+  background-color: var(--colorGreyDark);
 }
 
 #loading img {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .off {
-	display: none !important;
+  display: none !important;
 }
 
 .warn {
-	color: var(--colorRed);
+  color: var(--colorRed);
 }
 
 .xml-tag {
-	color: var(--colorBlueDark);
+  color: var(--colorBlueDark);
 }
 
 .xml-attr-key {
-	color: var(--colorGreen);
+  color: var(--colorGreen);
 }
 
 .xml-attr-val {
-	color: var(--colorRed);
+  color: var(--colorRed);
 }
 
 .xml-comment,
 .xml-comment :where(.xml-tag, .xml-attr-key, .xml-attr-val) {
-	color: var(--textGrey);
+  color: var(--textGrey);
 }
 
 ::placeholder {
   color: var(--textGreyLight);
-	font-style: italic;
+  font-style: italic;
 }
 
 ::selection {
-	background-color: var(--colorBlueDark);
-	color: #fff;
+  background-color: var(--colorBlueDark);
+  color: #fff;
 }

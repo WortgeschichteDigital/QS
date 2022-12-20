@@ -1,72 +1,72 @@
 @charset "utf-8";
 
 #xml table {
-	margin: 0 auto;
-	border-collapse: collapse;
-	border-spacing: 0;
-	font-size: .9rem;
-	line-height: 1.35rem;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: .9rem;
+  line-height: 1.35rem;
 }
 
 #xml td {
-	padding: 5px 10px 5px 0;
+  padding: 5px 10px 5px 0;
 }
 
 #xml td:first-child {
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-	padding-left: 10px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding-left: 10px;
 }
 
 #xml td:last-child {
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 #xml tr:nth-child(odd) {
-	background-color: var(--colorGreyLight);
+  background-color: var(--colorGreyLight);
 }
 
 #xml tr:hover {
-	background-color: var(--bgActive);
+  background-color: var(--bgActive);
 }
 
 #xml td.time {
-	color: var(--textGreyLight);
+  color: var(--textGreyLight);
 }
 
 #xml tr:hover td.time {
-	color: var(--text);
+  color: var(--text);
 }
 
 #xml td:first-child img {
-	vertical-align: top;
+  vertical-align: top;
 }
 
 #xml a {
-	color: var(--text);
-	text-decoration: none;
-	white-space: nowrap;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 #xml a[data-event="pv"] {
-	outline: none;
+  outline: none;
 }
 
 #xml a span {
-	vertical-align: top;
-	color: var(--textGreyLight);
+  vertical-align: top;
+  color: var(--textGreyLight);
 }
 
 #xml a:where(:hover, :focus),
 #xml a:where(:hover, :focus) span {
-	color: var(--colorBlue);
+  color: var(--colorBlue);
 }
 
 #xml tr[data-status="0"] td:first-child img,
 #xml tr td:nth-last-child(2) a,
 #xml tr td:last-child a {
-	opacity: 0;
+  opacity: 0;
 }
 
 #xml tr[data-status="0"]:hover td:first-child img,
@@ -74,5 +74,5 @@
 #xml tr td:nth-last-child(2) a:focus,
 #xml tr:hover td:last-child a,
 #xml tr td:last-child a:focus {
-	opacity: 1;
+  opacity: 1;
 }

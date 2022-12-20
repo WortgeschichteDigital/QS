@@ -1,52 +1,52 @@
 @charset "utf-8";
 
 :root {
-	/* colors */
-	--text: #212529;
-	--textGrey: #6c757d;
-	--textGreyLight: #b6b6b6;
-	--clusterBlock: #00156a;
-	--clusterFringe: #f3f3f3;
-	--clusterCenter: #e6e6e6;
-	--colorBlue: #002bff;
-	--colorBlueDark: #0000a9;
-	--colorBlueLight: #31C0FF;
-	--colorCyan: #1580ab;
-	--colorGreen: #080;
-	--colorGreyDark: #212529;
-	--colorGreyLight: #f8f8f8;
-	--colorRed: #d00;
-	--colorYellow: #f7d500;
-	--bgActive: #e1eaed;
-	--bgHighlight: #31C0FF;
-	--line: #ccc;
-	--outline: #31C0FF;
+  /* colors */
+  --text: #212529;
+  --textGrey: #6c757d;
+  --textGreyLight: #b6b6b6;
+  --clusterBlock: #00156a;
+  --clusterFringe: #f3f3f3;
+  --clusterCenter: #e6e6e6;
+  --colorBlue: #002bff;
+  --colorBlueDark: #0000a9;
+  --colorBlueLight: #31C0FF;
+  --colorCyan: #1580ab;
+  --colorGreen: #080;
+  --colorGreyDark: #212529;
+  --colorGreyLight: #f8f8f8;
+  --colorRed: #d00;
+  --colorYellow: #f7d500;
+  --bgActive: #e1eaed;
+  --bgHighlight: #31C0FF;
+  --line: #ccc;
+  --outline: #31C0FF;
 
-	/* special styles */
-	--gradient: linear-gradient(90deg, var(--colorBlueDark) 40%, var(--colorBlue) 90%);
-	--shadow: 5px 5px 15px rgba(33, 37, 41, .3);
-	--shadowDown: 0 5px 15px rgba(33, 37, 41, .3);
-	--shadowLeft: -5px 0 15px rgba(33, 37, 41, .3);
-	--shadowRight: 5px 0 15px rgba(33, 37, 41, .3);
+  /* special styles */
+  --gradient: linear-gradient(90deg, var(--colorBlueDark) 40%, var(--colorBlue) 90%);
+  --shadow: 5px 5px 15px rgba(33, 37, 41, .3);
+  --shadowDown: 0 5px 15px rgba(33, 37, 41, .3);
+  --shadowLeft: -5px 0 15px rgba(33, 37, 41, .3);
+  --shadowRight: 5px 0 15px rgba(33, 37, 41, .3);
 
-	/* root font size */
-	font-size: 20px;
+  /* root font size */
+  font-size: 20px;
 }
 
 /* FONT SIZES -----------------------------------
-	XL
-		font-size: 1rem
-		line-height: 1.5rem;
-	L
-		font-size: .9rem
-		line-height: 1.35rem
-	M
-		font-size: .8rem
-		line-height: 1.2rem
-	S
-		font-size: .75rem
-		line-height: 1rem
-	XML-Code (klein)
-		font-size: .7rem
-		line-height: 1.1rem
+  XL
+    font-size: 1rem
+    line-height: 1.5rem;
+  L
+    font-size: .9rem
+    line-height: 1.35rem
+  M
+    font-size: .8rem
+    line-height: 1.2rem
+  S
+    font-size: .75rem
+    line-height: 1rem
+  XML-Code (klein)
+    font-size: .7rem
+    line-height: 1.1rem
 */
