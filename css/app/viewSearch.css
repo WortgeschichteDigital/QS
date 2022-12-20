@@ -5,15 +5,13 @@
 	padding-top: 60px;
 }
 
-#search .nothing,
-#hints .nothing {
+:where(#search, #hints) .nothing {
 	margin-top: 45px;
 }
 
 /* RESULTS -------------------------------------- */
 
-#search h1,
-#hints h1 {
+:where(#search, #hints) h1 {
 	position: sticky;
 	top: 171px;
 	z-index: 1;
@@ -29,13 +27,11 @@
 	white-space: nowrap;
 }
 
-#search h1:first-child,
-#hints h1:first-child {
+:where(#search, #hints) h1:first-child {
 	margin-top: 0;
 }
 
-#search h1 a,
-#hints h1 a {
+:where(#search, #hints) h1 a {
 	position: relative;
 	top: 3px;
 	margin-left: 10px;
@@ -75,8 +71,7 @@
 	line-height: 1.35rem;
 }
 
-.search-result p,
-.search-result code {
+.search-result :where(p, code) {
 	margin: 0 0 10px 100px;
 }
 

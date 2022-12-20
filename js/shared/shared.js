@@ -91,11 +91,11 @@ let shared = {
 	// log errors
 	//   evt = object
 	onError (evt) {
-		let file = evt.filename, // normal errors
-			message = evt.message,
-			line = evt.lineno,
-			column = evt.colno,
-			stack = "";
+		let file = evt.filename; // normal errors
+		let message = evt.message;
+		let line = evt.lineno;
+		let column = evt.colno;
+		let stack = "";
 		if (evt.stack) { // forwarded errors
 			if (!/file:.+?\.js/.test(evt.stack)) {
 				noDetails();
@@ -240,8 +240,8 @@ let shared = {
 	//   nav = node
 	//   up = boolean
 	verticalNav (nav, up) {
-		let active = nav.querySelector(".active"),
-			target;
+		const active = nav.querySelector(".active");
+		let target;
 		if (up) {
 			target = active.parentNode.previousSibling;
 		} else {
@@ -256,8 +256,8 @@ let shared = {
 	//   obj = node (scrollable element)
 	async scrollEnd (obj = window) {
 		await new Promise(resolve => {
-			let scroll = false,
-				scrollTimer = null;
+			let scroll = false;
+			let scrollTimer;
 			function scrollDetect () {
 				scroll = true;
 				clearTimeout(scrollTimer);
@@ -277,9 +277,9 @@ let shared = {
 	},
 	// sort alpha-numeric
 	sort (a, b) {
-		let x = shared.sortPrep(a),
-			y = shared.sortPrep(b),
-			z = [x, y];
+		const x = shared.sortPrep(a);
+		const y = shared.sortPrep(b);
+		let z = [x, y];
 		if (x === y) {
 			if (a === b) {
 				return 0;
@@ -326,8 +326,8 @@ let shared = {
 		// (as comments are often cut in half they should be completed
 		// at the beginning or at the end respectively)
 		if (commentCompletion) {
-			const open = /&lt;!--/.exec(text)?.index ?? -1,
-				close = /--&gt;/.exec(text)?.index ?? -1;
+			const open = /&lt;!--/.exec(text)?.index ?? -1;
+			const close = /--&gt;/.exec(text)?.index ?? -1;
 			if (open >= 0 && close.length === -1 ||
 					open >= 0 && close >= 0 && open > close) {
 				text += " --&gt;";

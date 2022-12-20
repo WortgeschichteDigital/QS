@@ -114,9 +114,9 @@ let xml = {
 				// collect all links
 				data.links = [];
 				doc.querySelectorAll("Verweis").forEach(i => {
-					const verweistext = i.querySelector("Verweistext").textContent.trim(),
-						verweisziel = i.querySelector("Verweisziel").textContent.trim(),
-						scopePoints = xml.getScopePoints(i);
+					const verweistext = i.querySelector("Verweistext").textContent.trim();
+					const verweisziel = i.querySelector("Verweisziel").textContent.trim();
+					const scopePoints = xml.getScopePoints(i);
 					data.links.push({
 						lemma: {},
 						line: xml.getLineNumber(i, doc, xml.files[file]),
@@ -225,8 +225,8 @@ let xml = {
 	// get the actual lemma a <Verweisziel> points to
 	//   vz = string (contents of <Verweisziel>)
 	getLemma (vz) {
-		let lemma = vz.split("#")[0],
-			hash = vz.split("#")[1] || "";
+		const hash = vz.split("#")[1] || "";
+		let lemma = vz.split("#")[0];
 		if (/^Wortfeld-/.test(lemma)) {
 			lemma = lemma.replace(/^Wortfeld-/, "");
 			lemma += " (Wortfeld)";
@@ -279,9 +279,9 @@ let xml = {
 			});
 		}
 		// search line number
-		let tag = ele.nodeName,
-			reg = new RegExp(`<${tag}(?=[ >])`, "g"),
-			hitIdx = 0;
+		const tag = ele.nodeName;
+		let reg = new RegExp(`<${tag}(?=[ >])`, "g");
+		let hitIdx = 0;
 		if (idx === -1) {
 			// element nodes
 			const nodes = doc.getElementsByTagName(tag);
@@ -323,12 +323,12 @@ let xml = {
 		xml.gitDir = data.gitDir;
 		xml.updateErrors = [];
 		xml.zeitstrahl = data.zeitstrahl;
-		const changed = data.changed,
-			untracked = data.untracked,
-			xmlFiles = data.xmlFiles;
+		const changed = data.changed;
+		const untracked = data.untracked;
+		const xmlFiles = data.xmlFiles;
 		// get XML files
-		let files = xmlFiles || await shared.ipc.invoke("xml-files", xml.gitDir),
-			updated = [];
+		const files = xmlFiles || await shared.ipc.invoke("xml-files", xml.gitDir);
+		let updated = [];
 		for (const [k, v] of Object.entries(files)) {
 			// save file content
 			xml.files[k] = v.xml;

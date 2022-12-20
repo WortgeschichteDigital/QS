@@ -6,14 +6,14 @@ window.addEventListener("load", async () => {
 
 	// KEYBOARD EVENTS
 	document.addEventListener("keydown", keyboard.shortcuts);
-	let sortingFilterTimeout = null;
+	let sortingFilterTimeout;
 	document.querySelector("#sorting-filter").addEventListener("input", evt => {
 		clearTimeout(sortingFilterTimeout);
 		sortingFilterTimeout = setTimeout(() => app.populateView(), 250);
 	});
 
 	// WINDOW EVENTS
-	let winEventsTimeout = null;
+	let winEventsTimeout;
 	window.addEventListener("resize", () => {
 		viewHints.navIdx = -1;
 		clearTimeout(winEventsTimeout);
@@ -36,8 +36,8 @@ window.addEventListener("load", async () => {
 			viewClusters.switchSection(this);
 		});
 	});
-	let clustersSearchTimeout = null,
-		clustersSearch = document.querySelector("#clusters-modulate-search");
+	let clustersSearchTimeout;
+	let clustersSearch = document.querySelector("#clusters-modulate-search");
 	clustersSearch.addEventListener("input", () => {
 		clearTimeout(clustersSearchTimeout);
 		clustersSearchTimeout = setTimeout(() => clustersMod.search(), 200);
@@ -61,7 +61,7 @@ window.addEventListener("load", async () => {
 	});
 	document.querySelector("#clusters-nav-preview").addEventListener("click", evt => {
 		evt.preventDefault();
-		viewClusters.previewSwitchMode();
+		viewClusters.previewSwitch();
 	});
 
 	// SEARCH
@@ -244,8 +244,8 @@ window.addEventListener("load", async () => {
 	shared.info = await shared.ipc.invoke("app-info");
 
 	// PRELOAD IMAGES
-	let imagesPreload = [],
-		images = await shared.ipc.invoke("list-of-images");
+	const images = await shared.ipc.invoke("list-of-images");
+	let imagesPreload = [];
 	for (const i of images) {
 		let img = new Image();
 		img.src = "img/app/" + i;

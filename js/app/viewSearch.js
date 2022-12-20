@@ -31,8 +31,8 @@ let viewSearch = {
 	},
 	// start search
 	async start () {
-		const statsStart = new Date(),
-			searchText = document.querySelector("#search-text");
+		const statsStart = new Date();
+		const searchText = document.querySelector("#search-text");
 		if (viewSearch.data.running) {
 			await dialog.open({
 				type: "alert",
@@ -43,8 +43,8 @@ let viewSearch = {
 		}
 		viewSearch.data.running = true;
 		// split up search term
-		let textOri = searchText.value.trim(),
-			text = textOri;
+		const textOri = searchText.value.trim();
+		let text = textOri;
 		if (!text) {
 			await shared.wait(25);
 			await dialog.open({
@@ -104,9 +104,9 @@ let viewSearch = {
 		// create regular expressions
 		viewSearch.data.regExp.length = 0;
 		for (let i = 0, len = search.length; i < len; i++) {
-			const item = search[i],
-				text = item.isRegExp ? item.text : shared.escapeRegExp(item.text),
-				flags = item.isInsensitive ? "gi" : "g";
+			const item = search[i];
+			const text = item.isRegExp ? item.text : shared.escapeRegExp(item.text);
+			const flags = item.isInsensitive ? "gi" : "g";
 			let reg, regHigh;
 			try {
 				reg = new RegExp(addVariants(text), flags);
@@ -279,8 +279,8 @@ let viewSearch = {
 			viewSearch.observer.unobserve(res.lastChild);
 		}
 		// prepare printing
-		let printed = viewSearch.data.resultsFilesPrinted,
-			start = 0;
+		let printed = viewSearch.data.resultsFilesPrinted;
+		let start = 0;
 		for (let i = 0, len = viewSearch.data.results.length; i < len; i++) {
 			if (!printed.has(viewSearch.data.results[i].file)) {
 				start = i;
@@ -362,10 +362,10 @@ let viewSearch = {
 	textHighlight (text, regExp = viewSearch.data.regExp) {
 		let matched = new Set();
 		for (let i = 0, len = regExp.length; i < len; i++) {
-			const item = regExp[i],
-				reg = viewSearch.data.stripTags ? item.search || item.high : item.high,
-				termN = item.termN,
-				color = termN % 6 + 1;
+			const item = regExp[i];
+			const reg = viewSearch.data.stripTags ? item.search || item.high : item.high;
+			const termN = item.termN;
+			const color = termN % 6 + 1;
 			text = text.replace(reg, m => {
 				matched.add(termN);
 				// highlighing across tag boundaries
@@ -426,10 +426,10 @@ let viewSearch = {
 	//   force = "on" | "off" | undefined
 	toggleAdvanced (force = "") {
 		return new Promise(async resolve => {
-			const a = document.querySelector("#search-advanced"),
-				maxHeight = a.offsetTop + a.offsetHeight + 10; // 10px padding-top #search-form
-			const bar = document.querySelector("#bar"),
-				barHeight = bar.offsetHeight;
+			const a = document.querySelector("#search-advanced");
+			const maxHeight = a.offsetTop + a.offsetHeight + 10; // 10px padding-top #search-form
+			const bar = document.querySelector("#bar");
+			const barHeight = bar.offsetHeight;
 			if ((!force || force === "on") && barHeight < maxHeight) {
 				// toggle on
 				bar.style.height = "60px";
@@ -448,9 +448,9 @@ let viewSearch = {
 	},
 	// toggle color of advanced options icon
 	toggleAdvancedIcon () {
-		const dataA = viewSearch.getAdvancedData(),
-			checked = Object.values(dataA).filter(i => i).length,
-			icon = document.querySelector("#search-advanced-toggle img");
+		const dataA = viewSearch.getAdvancedData();
+		const checked = Object.values(dataA).filter(i => i).length;
+		const icon = document.querySelector("#search-advanced-toggle img");
 		if (!dataA["search-scope-0"] || checked > 1) {
 			icon.src = "img/app/preferences-red.svg";
 		} else {

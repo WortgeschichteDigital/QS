@@ -17,6 +17,7 @@ let viewClusters = {
 		idx: [], // indices of clusters to show in the sections "compare" and "check"
 		repo: {}, // clusters as they appear in the file Artikel.json (lemmas in written form)
 		preview: {}, // newly calculated clusters (lemmas in written form)
+		previewDate: null, // date the preview was calculated
 	},
 	// currently active filters
 	filters: {},
@@ -88,10 +89,10 @@ let viewClusters = {
 			return;
 		}
 		// switch section
-		let oldSection = "",
-			newSection = icon.id.replace(/.+-/, ""),
-			id = "clusters-" + newSection,
-			scrollY = window.scrollY; // current scroll position
+		let oldSection = "";
+		const newSection = icon.id.replace(/.+-/, "");
+		const id = "clusters-" + newSection;
+		const scrollY = window.scrollY; // current scroll position
 		document.querySelectorAll("#clusters > div").forEach(i => {
 			if (!i.classList.contains("off")) {
 				oldSection = i.id.replace(/.+-/, "");
@@ -125,9 +126,9 @@ let viewClusters = {
 	// - Are there any clusters for this domain?
 	// - Are there any clusters for the selected author?
 	checkFilters () {
-		let data = viewClusters.data,
-			filters = viewClusters.filters,
-			error = "";
+		const filters = viewClusters.filters;
+		let data = viewClusters.data;
+		let error = "";
 		data.idx.length = 0;
 		if (!filters["select-domains"]) {
 			error = "Für diese Funktion müssen Sie ein Themenfeld einstellen.";
@@ -166,8 +167,8 @@ let viewClusters = {
 	// load the file Artikel.json from the repo
 	async loadArtikelJSON () {
 		// load file
-		let path = shared.path.join(git.config.dir, "resources", "Artikel.json"),
-			content;
+		const path = shared.path.join(git.config.dir, "resources", "Artikel.json");
+		let content;
 		try {
 			content = await shared.fsp.readFile(path, { encoding: "utf8" });
 		} catch (err) {
@@ -183,8 +184,8 @@ let viewClusters = {
 			return;
 		}
 		// extract clusters
-		let dr = viewClusters.data.repo,
-			fileCache = {};
+		let dr = viewClusters.data.repo;
+		let fileCache = {};
 		for (const [domain, clusters] of Object.entries(data.clusters)) {
 			dr[domain] = [];
 			for (const cluster of clusters) {
@@ -224,13 +225,13 @@ let viewClusters = {
 			}
 		}
 	},
-	// build a cluster block
+	// build a cluster
 	//   idx = number
-	//   checkModulate = true | undefined
-	//   markLemma = string | undefined
+	//   checkModulate = true | undefined (check whether a lemma was added to "modulate")
+	//   markLemma = string | undefined (lemma to be marked)
 	buildCluster ({ idx, checkModulate = false, markLemma = "", }) {
-		const data = viewClusters.data,
-			cluster = data[data.active][viewClusters.filters["select-domains"]][idx];
+		const data = viewClusters.data;
+		const cluster = data[data.active][viewClusters.filters["select-domains"]][idx];
 		let cont = document.createElement("div");
 		cont.classList.add("cluster");
 		// Are there any dominant lemmas?
@@ -307,14 +308,15 @@ let viewClusters = {
 							values.points > 1e3) {
 					cont = dominant;
 				}
+				// lemma
 				let span = document.createElement("span");
 				cont.appendChild(span);
 				span.dataset.lemma = lemma;
 				if (checkModulate &&
-						clustersMod.data.center[lemma]) {
+						clustersMod.data.center[lemma]) { // lemma was added to "modulate"
 					span.classList.add("in-modulation");
 				}
-				if (lemma === markLemma) {
+				if (lemma === markLemma) { // mark lemma
 					span.classList.add("marked");
 				}
 				if (xml.data.files[values.file].fa) {
@@ -341,7 +343,8 @@ let viewClusters = {
 		return cont;
 	},
 	// switch to or from clusters preview respectively
-	previewSwitchMode () {
+	previewSwitch () {
+		await xml.updateWait(); // TODO only if preview is switched on
 		// TODO change viewClusters.data.active from "repo" to "preview" and vice versa
 	},
 };

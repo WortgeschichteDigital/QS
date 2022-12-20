@@ -1,7 +1,7 @@
 "use strict";
 
 let tooltip = {
-	timeout: null,
+	timeout: undefined,
 	// skip timeout, show tooltip immediately
 	noTimeout: false,
 	// initialize tooltip
@@ -41,9 +41,9 @@ let tooltip = {
 		// fill tooltip
 		tip.innerHTML = ele.dataset.tooltip;
 		// position tooltip
-		const width = tip.offsetWidth,
-			height = tip.offsetHeight,
-			rect = ele.getBoundingClientRect();
+		const width = tip.offsetWidth;
+		const height = tip.offsetHeight;
+		const rect = ele.getBoundingClientRect();
 		let top = rect.bottom + 5;
 		if (top + height > window.innerHeight - 20) {
 			top = rect.top - 5 - height;

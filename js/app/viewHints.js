@@ -109,8 +109,8 @@ let viewHints = {
 		// get filter data
 		const dataF = bars.getFiltersData();
 		dataF["select-status"] = parseInt(dataF["select-status"], 10);
-		const dataS = app.getSortingData(),
-			regPath = new RegExp(shared.escapeRegExp(dataS.filter), "i");
+		const dataS = app.getSortingData();
+		const regPath = new RegExp(shared.escapeRegExp(dataS.filter), "i");
 		let hintTypes = [];
 		for (const [k, v] of Object.entries(dataF)) {
 			if (!/^filters-hints/.test(k) || !v) {
@@ -207,14 +207,14 @@ let viewHints = {
 	},
 	// print hints
 	print () {
-		let cont = document.querySelector("#hints");
+		const cont = document.querySelector("#hints");
 		// remove last hint from intersection observer entries
 		if (cont.lastChild) {
 			viewHints.observer.unobserve(cont.lastChild);
 		}
 		// prepare printing
-		let printed = viewHints.data.filesPrinted,
-			start = 0;
+		let printed = viewHints.data.filesPrinted;
+		let start = 0;
 		for (let i = 0, len = viewHints.data.hints.length; i < len; i++) {
 			if (!printed.has(viewHints.data.hints[i].file)) {
 				start = i;
@@ -471,9 +471,9 @@ let viewHints = {
 		if (!hints.length) {
 			return;
 		}
-		const barBottom = document.querySelector("#sorting").getBoundingClientRect().bottom,
-			h1Height = document.querySelector("#hints h1").offsetHeight,
-			top = barBottom + h1Height;
+		const barBottom = document.querySelector("#sorting").getBoundingClientRect().bottom;
+		const h1Height = document.querySelector("#hints h1").offsetHeight;
+		const top = barBottom + h1Height;
 		if (viewHints.navIdx === -1) {
 			for (let i = 0, len = hints.length; i < len; i++) {
 				const rect = hints[i].getBoundingClientRect();
@@ -506,8 +506,8 @@ let viewHints = {
 			viewHints.navIdx++;
 		}
 		viewHints.navLastIdx = viewHints.navIdx;
-		const ele = hints[viewHints.navIdx],
-			rect = ele.getBoundingClientRect();
+		const ele = hints[viewHints.navIdx];
+		const rect = ele.getBoundingClientRect();
 		window.scrollTo({
 			top: window.scrollY + rect.top - top,
 			left: 0,
@@ -543,8 +543,8 @@ let viewHints = {
 	//   ident = string (identification hash)
 	//   line = number
 	popupContext ({ ele, file, ident, line }) {
-		const data = xml.data.files[file],
-			hint = data.hints.find(i => i.ident === ident && i.line === line);
+		const data = xml.data.files[file];
+		const hint = data.hints.find(i => i.ident === ident && i.line === line);
 		if (!hint.line) {
 			dialog.open({
 				type: "alert",
@@ -557,8 +557,8 @@ let viewHints = {
 		}
 
 		// DETECT LINES
-		let fileCont = xml.files[file].split("\n"),
-			lines = []; // zero based line count!
+		const fileCont = xml.files[file].split("\n");
+		let lines = []; // zero based line count!
 		// special cases: article_id, literature_error, literature_missing
 		if (/article_id|literature_(error|missing)/.test(hint.type)) {
 			lines.push(hint.line - 1);
@@ -566,8 +566,8 @@ let viewHints = {
 		// special case: comment outside of text or link lists
 		else if (hint.type === "comment" &&
 				!/Belegauswahl|Kurz gefasst|Verweise|Wortgeschichte/.test(hint.scope)) {
-			let startIndex = /<!--/.exec(fileCont[hint.line - 1]).index,
-				l = 0;
+			const startIndex = /<!--/.exec(fileCont[hint.line - 1]).index;
+			let l = 0;
 			for (let i = hint.line - 1, len = fileCont.length; i < len; i++) {
 				const m = /-->/.exec(fileCont[i]);
 				if (m && (i !== hint.line - 1 || m.index > startIndex)) {
@@ -581,9 +581,9 @@ let viewHints = {
 		}
 		// special case: diasystemic_value
 		else if (hint.type === "diasystemic_value") {
-			let sub = 0,
-				exSub = [],
-				end = 0;
+			let sub = 0;
+			let exSub = [];
+			let end = 0;
 			for (let i = hint.line, len = fileCont.length; i < len; i++) {
 				if (/<\/Lesart>/.test(fileCont[i])) {
 					if (sub) {
@@ -625,8 +625,8 @@ let viewHints = {
 				}
 			}
 			// get node block
-			let nodeType = fileCont[hint.line - 1].match(/<([a-zA-Z_!\-]+)/),
-				regEnd = new RegExp(`<\/${nodeType[1]}>`);
+			const nodeType = fileCont[hint.line - 1].match(/<([a-zA-Z_!\-]+)/);
+			let regEnd = new RegExp(`<\/${nodeType[1]}>`);
 			if (nodeType === "!--") {
 				regEnd = new RegExp(`-->`);
 			}
@@ -703,8 +703,8 @@ let viewHints = {
 		}
 
 		// MAKE TABLE
-		let showBlankLines = lines[lines.length - 1] - lines[0] + 1 === lines.length,
-			trimWhitespace = -1;
+		const showBlankLines = lines[lines.length - 1] - lines[0] + 1 === lines.length;
+		let trimWhitespace = -1;
 		for (let i = 0, len = lines.length; i < len; i++) {
 			const m = fileCont[lines[i]].match(/^\s+/);
 			if (m && (trimWhitespace === -1 || m[0].length < trimWhitespace)) {
@@ -712,13 +712,13 @@ let viewHints = {
 			}
 		}
 		// make table
-		let table = document.createElement("table"),
-			lastLine = 0,
-			commentOpen = false;
+		let table = document.createElement("table");
+		let lastLine = 0;
+		let commentOpen = false;
 		for (let i = 0, len = lines.length; i < len; i++) {
 			// prepare code
-			let line = lines[i],
-				code = fileCont[line];
+			const line = lines[i];
+			let code = fileCont[line];
 			if (!showBlankLines && !code.trim()) {
 				continue;
 			}
@@ -770,11 +770,11 @@ let viewHints = {
 		}
 
 		// SHOW POPUP
-		let content = document.createElement("div"),
-			p = document.createElement("p");
+		let content = document.createElement("div");
+		let p = document.createElement("p");
 		content.appendChild(p);
-		let text = `<b>${viewHints.types[hint.type]}</b>`,
-			hintText = hint.textErr.find(i => i.type === "hint_text");
+		const hintText = hint.textErr.find(i => i.type === "hint_text");
+		let text = `<b>${viewHints.types[hint.type]}</b>`;
 		if (hintText) {
 			text += `<i>${hintText.text}</i>`;
 		}
@@ -830,8 +830,8 @@ let viewHints = {
 			popup.classList.add("fixed", type + "-popup");
 		} else {
 			popup.classList.add("absolute", type + "-popup");
-			const callerRect = caller.getBoundingClientRect(),
-				callerTop = caller.offsetTop;
+			const callerRect = caller.getBoundingClientRect();
+			const callerTop = caller.offsetTop;
 			if (callerRect.top + callerRect.height + popupHeight + window.scrollY + 10 > document.body.scrollHeight) {
 				popup.style.top = callerTop - popupHeight - 10 + "px";
 			} else {

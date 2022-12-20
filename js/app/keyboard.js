@@ -4,8 +4,8 @@ let keyboard = {
 	// handle keyboard events
 	//   evt = obejct
 	async shortcuts (evt) {
-		const m = shared.detectKeyboardModifiers(evt),
-			active = document.activeElement;
+		const m = shared.detectKeyboardModifiers(evt);
+		const active = document.activeElement;
 		// Key "Escape"
 		if (!m && evt.key === "Escape") {
 			const olTop = overlay.top();
@@ -26,8 +26,8 @@ let keyboard = {
 			if (popups.length) {
 				let arr = Array.from(popups);
 				arr.sort((a, b) => {
-					let x = parseInt(a.dataset.id, 10),
-						y = parseInt(b.dataset.id, 10);
+					const x = parseInt(a.dataset.id, 10);
+					const y = parseInt(b.dataset.id, 10);
 					return y - x;
 				});
 				arr[0].firstElementChild.click();
@@ -46,8 +46,8 @@ let keyboard = {
 		// Arrows
 		else if (!m && /^Arrow(Left|Right)$/.test(evt.key) &&
 				active.nodeName === "INPUT" && active.type === "button") {
-			let buttons = active.parentNode.querySelectorAll('input[type="button"]'),
-				idx = -1;
+			const buttons = active.parentNode.querySelectorAll('input[type="button"]');
+			let idx = -1;
 			for (let i = 0, len = buttons.length; i < len; i++) {
 				if (buttons[i] === active) {
 					idx = i;

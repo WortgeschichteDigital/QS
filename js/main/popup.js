@@ -1,7 +1,7 @@
 "use strict";
 
-const { BrowserWindow, Menu, MenuItem } = require("electron"),
-	path = require("path");
+const { BrowserWindow, Menu, MenuItem } = require("electron");
+const path = require("path");
 
 const items = {
 	close: {

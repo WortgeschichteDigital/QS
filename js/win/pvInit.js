@@ -5,7 +5,7 @@ window.addEventListener("load", async () => {
 	window.addEventListener("contextmenu", evt => popup.open(evt));
 
 	// WINDOW EVENTS
-	let winEventsTimeout = null;
+	let winEventsTimeout;
 	window.addEventListener("resize", () => {
 		clearTimeout(winEventsTimeout);
 		winEventsTimeout = setTimeout(() => {

@@ -57,8 +57,7 @@
 	text-decoration: none;
 }
 
-.hint a:focus,
-.hint a:hover {
+.hint a:where(:focus, :hover) {
 	text-decoration: underline;
 }
 
@@ -96,16 +95,12 @@
 	background-image: none;
 }
 
-.hint .text-correct p,
-.hint .text-erroneous p,
-.hint .text-hint p {
+.hint :where(.text-correct, .text-erroneous, .text-hint) p {
 	margin-bottom: 5px;
 	word-break: break-all;
 }
 
-.hint .text-correct p:last-child,
-.hint .text-erroneous p:last-child,
-.hint .text-hint p:last-child {
+.hint :where(.text-correct, .text-erroneous, .text-hint) p:last-child {
 	margin-bottom: 0;
 }
 
@@ -216,8 +211,7 @@
 	right: 0;
 }
 
-.hints-popup h2,
-.hints-popup h3 {
+.hints-popup :where(h2, h3) {
 	margin: 15px 0 5px 0;
 	padding-right: 30px;
 	color: var(--colorBlueDark);

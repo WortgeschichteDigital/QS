@@ -39,8 +39,8 @@ let tags = {
 			// collect tags and attributes
 			tags.collectData();
 			// build tags list
-			let tt = Object.keys(tags.data).sort(shared.sort),
-				ttCont = document.querySelector("#tags-tags");
+			const tt = Object.keys(tags.data).sort(shared.sort);
+			let ttCont = document.querySelector("#tags-tags");
 			shared.clear(ttCont);
 			for (const i of tt) {
 				let a = document.createElement("a");
@@ -72,9 +72,9 @@ let tags = {
 			}
 		});
 		// build attributes list
-		let tag = ele.getAttribute("href").substring(1),
-			attr = Object.keys(tags.data[tag]).sort(shared.sort),
-			attrCont = document.querySelector("#tags-attributes");
+		const tag = ele.getAttribute("href").substring(1);
+		const attr = Object.keys(tags.data[tag]).sort(shared.sort);
+		let attrCont = document.querySelector("#tags-attributes");
 		shared.clear(attrCont);
 		for (const i of attr) {
 			let a = document.createElement("a");
@@ -109,8 +109,8 @@ let tags = {
 			}
 		});
 		// build file list
-		let files = tags.data[ele.dataset.tag][ele.dataset.attribute].sort(shared.sort),
-			navCont = document.querySelector("#tags-nav span");
+		const files = tags.data[ele.dataset.tag][ele.dataset.attribute].sort(shared.sort);
+		let navCont = document.querySelector("#tags-nav span");
 		shared.clear(navCont);
 		for (let i = 0, len = files.length; i < len; i++) {
 			let a = document.createElement("a");
@@ -138,8 +138,8 @@ let tags = {
 				i.classList.remove("active");
 			}
 		});
-		let cont = document.querySelector("#tags-nav span"),
-			left = -1;
+		const cont = document.querySelector("#tags-nav span");
+		let left = -1;
 		if (ele.offsetLeft - cont.scrollLeft > cont.offsetWidth * 0.8) {
 			left = cont.scrollLeft + Math.round(cont.offsetWidth * 0.7);
 		} else if (ele.offsetLeft - cont.scrollLeft < cont.offsetWidth * 0.1) {
@@ -162,15 +162,15 @@ let tags = {
 			return;
 		}
 		// extract summary
-		const file = ele.getAttribute("href").substring(1),
-			doc = new DOMParser().parseFromString(xml.files[file], "text/xml"),
-			xslt = new DOMParser().parseFromString(tags.showSummaryXsl, "application/xml"),
-			processor = new XSLTProcessor();
+		const file = ele.getAttribute("href").substring(1);
+		const doc = new DOMParser().parseFromString(xml.files[file], "text/xml");
+		const xslt = new DOMParser().parseFromString(tags.showSummaryXsl, "application/xml");
+		const processor = new XSLTProcessor();
 		processor.importStylesheet(xslt);
 		const processedDoc = processor.transformToDocument(doc);
 		// prepare highlighting
-		let regExp = [],
-			attr = document.querySelector("#tags-attributes .active");
+		const attr = document.querySelector("#tags-attributes .active");
+		let regExp = [];
 		regExp.push({
 			high: new RegExp(`&lt;${attr.dataset.tag}(?= |&gt;)`, "g"),
 			termN: 0,
@@ -197,8 +197,8 @@ let tags = {
 	// navigate through the results
 	//   forward = boolean
 	showSummaryNav (forward) {
-		let files = document.querySelectorAll("#tags-nav span a"),
-			active = -1;
+		const files = document.querySelectorAll("#tags-nav span a");
+		let active = -1;
 		for (let i = 0, len = files.length; i < len; i++) {
 			if (files[i].classList.contains("active")) {
 				active = i;

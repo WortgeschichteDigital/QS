@@ -52,8 +52,7 @@
 	height: 30px;
 }
 
-.overlay h2,
-.overlay h3 {
+.overlay :where(h2, h3) {
 	margin: 20px 10px 10px 10px;
 	color: var(--colorBlueDark);
 	font-size: .9rem;
@@ -61,8 +60,7 @@
 	line-height: 1.35rem;
 }
 
-.overlay h2:first-child,
-.overlay h3:first-child {
+.overlay :where(h2:first-child, h3:first-child) {
 	margin-top: 0;
 }
 

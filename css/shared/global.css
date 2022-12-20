@@ -263,9 +263,7 @@ mark.no-end {
 }
 
 .xml-comment,
-.xml-comment .xml-tag,
-.xml-comment .xml-attr-key,
-.xml-comment .xml-attr-val {
+.xml-comment :where(.xml-tag, .xml-attr-key, .xml-attr-val) {
 	color: var(--textGrey);
 }
 

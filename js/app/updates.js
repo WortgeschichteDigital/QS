@@ -2,7 +2,7 @@
 
 let updates = {
 	// saves the timeout that is set after starting the app
-	timeout: null,
+	timeout: undefined,
 	// check for updates
 	//   auto = boolean (automatic check => no feedback in case of error)
 	async check (auto) {
@@ -21,9 +21,9 @@ let updates = {
 			return;
 		}
 		// parse RSS feed
-		const parser = new DOMParser(),
-			rss = parser.parseFromString(data.text, "text/xml"),
-			entries = rss.querySelectorAll("entry");
+		const parser = new DOMParser();
+		const rss = parser.parseFromString(data.text, "text/xml");
+		const entries = rss.querySelectorAll("entry");
 		if (!entries.length) {
 			// no entries found, so probably the feed was not well-formed
 			// (which happens sometimes)
@@ -35,8 +35,8 @@ let updates = {
 		// detect newest version
 		let versionOnline;
 		for (let i = 0, len = entries.length; i < len; i++) {
-			const entry = entries[i],
-				version = entry.querySelector("id").firstChild.nodeValue.match(/[0-9]+\.[0-9]+\.[0-9]+$/);
+			const entry = entries[i];
+			const version = entry.querySelector("id").firstChild.nodeValue.match(/[0-9]+\.[0-9]+\.[0-9]+$/);
 			if (!version) {
 				continue;
 			}

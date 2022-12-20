@@ -38,8 +38,7 @@ nav a {
 	text-decoration: none;
 }
 
-nav a:focus,
-nav a:hover {
+nav a:where(:focus, :hover) {
 	outline: 2px solid var(--outline);
 	outline-offset: 0;
 }
@@ -132,8 +131,7 @@ section a {
 	text-decoration: none;
 }
 
-section a:focus,
-section a:hover {
+section a:where(:focus, :hover) {
 	text-decoration: underline;
 }
 
@@ -175,8 +173,7 @@ h2 {
 	font-size: .9rem;
 }
 
-h1 span,
-h2 span {
+:where(h1, h2) span {
 	display: inline-block;
 	border-left: 5px solid var(--colorBlueDark);
 	padding-left: 25px;

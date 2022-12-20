@@ -14,8 +14,8 @@ let search = {
 	data: {},
 	// perform search in XML files
 	start () {
-		let d = search.data,
-			nResults = 0;
+		let d = search.data;
+		let nResults = 0;
 		x: for (const [file, values] of Object.entries(d.xmlData)) {
 			if (d.narrowSearch.size && !d.narrowSearch.has(file)) {
 				continue;
@@ -73,9 +73,9 @@ let search = {
 				text = text.replace(/<.+?>/g, "");
 			}
 			// search file
-			let hits = Array(d.regExp.length).fill(false),
-				hitLines = {},
-				points = 0;
+			let hits = Array(d.regExp.length).fill(false);
+			let hitLines = {};
+			let points = 0;
 			for (let i = 0, len = d.regExp.length; i < len; i++) {
 				for (const m of text.matchAll(d.regExp[i])) {
 					const line = text.substring(0, m.index).split("\n").length;
@@ -111,23 +111,23 @@ let search = {
 			}
 			// extract text
 			lines.sort((a, b) => a - b);
-			const textLines = text.split("\n"),
-				textLinesLen = textLines.length;
+			const textLines = text.split("\n");
+			const textLinesLen = textLines.length;
 			for (const l of lines) {
-				let text = textLines[l - 1].trim(),
-					textBefore = "",
-					textAfter = "";
+				const text = textLines[l - 1].trim();
+				let textBefore = "";
+				let textAfter = "";
 				if (text.length < 200) {
 					// text before
-					let lineNo = l - 1,
-						line = "";
+					let lineNo = l - 1;
+					let line = "";
 					while (!line && lineNo > 0) {
 						lineNo--;
 						line = textLines[lineNo].trim();
 					}
 					if (!lines.includes(lineNo + 1)) {
-						let lineLen = line.length,
-							boundary = lineLen > 200 ? lineLen - 200 : 0;
+						const lineLen = line.length;
+						let boundary = lineLen > 200 ? lineLen - 200 : 0;
 						while (boundary > 0) {
 							if (/^\b/.test(line.substring(boundary, boundary + 1))) {
 								boundary += 2;
@@ -145,8 +145,8 @@ let search = {
 						line = textLines[lineNo].trim();
 					}
 					if (!lines.includes(lineNo + 1)) {
-						let lineLen = line.length,
-							boundary = lineLen > 200 ? 200 : lineLen;
+						const lineLen = line.length;
+						let boundary = lineLen > 200 ? 200 : lineLen;
 						while (boundary < lineLen - 1) {
 							if (/\b$/.test(line.substring(boundary - 1, boundary))) {
 								boundary -= 2;

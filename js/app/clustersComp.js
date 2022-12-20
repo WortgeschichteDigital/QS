@@ -2,10 +2,8 @@
 
 let clustersComp = {
 	// similar clusters
-	data: {
-		similar: {},
-		similarSorted: [],
-	},
+	similar: {},
+	similarSorted: [],
 	// currently marked lemma
 	marked: "",
 	// intersection observer
@@ -24,23 +22,23 @@ let clustersComp = {
 		let cont = document.querySelector("#clusters-compare");
 		shared.clear(cont);
 		// search for similar clusters
-		const data = viewClusters.data,
-			cl = data[data.active][viewClusters.filters["select-domains"]],
-			threshold = 75;
-		clustersComp.data.similar = {};
-		let similar = clustersComp.data.similar;
-		for (let i = 0, len = cl.length; i < len; i++) {
+		const data = viewClusters.data;
+		const c = data[data.active][viewClusters.filters["select-domains"]];
+		const similarityThreshold = 75;
+		clustersComp.similar = {};
+		let similar = clustersComp.similar;
+		for (let i = 0, len = c.length; i < len; i++) {
 			if (!data.idx.includes(i)) {
 				continue;
 			}
-			const artI = Object.keys(cl[i].z).concat(Object.keys(cl[i].s)).concat(Object.keys(cl[i].u));
-			for (let j = 0, len = cl.length; j < len; j++) {
+			const artI = Object.keys(c[i].z).concat(Object.keys(c[i].s)).concat(Object.keys(c[i].u));
+			for (let j = 0, len = c.length; j < len; j++) {
 				if (j === i ||
 						!data.idx.includes(j) ||
 						similar[j + "-" + i]) {
 					continue;
 				}
-				const artJ = Object.keys(cl[j].z).concat(Object.keys(cl[j].s)).concat(Object.keys(cl[j].u));
+				const artJ = Object.keys(c[j].z).concat(Object.keys(c[j].s)).concat(Object.keys(c[j].u));
 				let matches = 0;
 				for (let art of artI) {
 					if (artJ.includes(art)) {
@@ -48,7 +46,7 @@ let clustersComp = {
 					}
 				}
 				const similarity = Math.round(matches / (artI.length / 100));
-				if (similarity >= threshold) {
+				if (similarity >= similarityThreshold) {
 					similar[i + "-" + j] = {
 						left: i,
 						right: j,
@@ -63,8 +61,8 @@ let clustersComp = {
 			return;
 		}
 		// sort similar clusters
-		clustersComp.data.similarSorted = Object.keys(similar);
-		clustersComp.data.similarSorted.sort((a, b) => similar[b].similarity - similar[a].similarity);
+		clustersComp.similarSorted = Object.keys(similar);
+		clustersComp.similarSorted.sort((a, b) => similar[b].similarity - similar[a].similarity);
 		// build table
 		let table = document.createElement("table");
 		cont.appendChild(table);
@@ -72,21 +70,21 @@ let clustersComp = {
 	},
 	// fill table with more results
 	fill () {
-		const data = clustersComp.data,
-			rows = document.querySelectorAll("#clusters-compare tr"),
-			start = rows.length;
+		const rows = document.querySelectorAll("#clusters-compare tr");
+		const start = rows.length;
 		if (start > 0) {
 			clustersComp.observer.unobserve(rows[start - 1]);
 		}
 		let table = document.querySelector("#clusters-compare table");
-		for (let i = start, len = data.similarSorted.length; i < len; i++) {
+		for (let i = start, len = clustersComp.similarSorted.length; i < len; i++) {
 			// ten rows at a time
-			if (i !== start && i % 10 === 0) {
+			if (i !== start &&
+					i % 10 === 0) {
 				clustersComp.observer.observe(table.lastChild);
 				break;
 			}
 			// row
-			const item = data.similar[data.similarSorted[i]];
+			const item = clustersComp.similar[clustersComp.similarSorted[i]];
 			let tr = document.createElement("tr");
 			table.appendChild(tr);
 			tr.dataset.left = item.left;
@@ -147,8 +145,8 @@ let clustersComp = {
 			parseInt(row.dataset.left, 10),
 			parseInt(row.dataset.right, 10),
 		];
-		const add = /plus\.svg$/.test(row.querySelector("img").src),
-			data = viewClusters.data;
+		const add = /plus\.svg$/.test(row.querySelector("img").src);
+		const data = viewClusters.data;
 		for (const idx of indices) {
 			const cluster = data[data.active][viewClusters.filters["select-domains"]][idx];
 			for (const [lemma, values] of Object.entries(cluster.z)) {

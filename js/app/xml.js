@@ -121,8 +121,8 @@ let xml = {
 		xml.updating = true;
 		// remove cache files
 		for (const branch of ["master", "preprint"]) {
-			const path = shared.path.join(shared.info.userData, `xml-cache-${branch}.json`),
-				exists = await shared.ipc.invoke("exists", path);
+			const path = shared.path.join(shared.info.userData, `xml-cache-${branch}.json`);
+			const exists = await shared.ipc.invoke("exists", path);
 			if (!exists) {
 				continue;
 			}

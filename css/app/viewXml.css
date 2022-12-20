@@ -58,10 +58,8 @@
 	color: var(--textGreyLight);
 }
 
-#xml a:hover,
-#xml a:hover span,
-#xml a:focus,
-#xml a:focus span {
+#xml a:where(:hover, :focus),
+#xml a:where(:hover, :focus) span {
 	color: var(--colorBlue);
 }
 

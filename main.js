@@ -3,17 +3,17 @@
 /***** LOAD MODULES *****/
 
 // Electron modules
-const { app, BrowserWindow, ipcMain, Menu, nativeImage } = require("electron"),
-	display = require("electron").screen;
+const { app, BrowserWindow, ipcMain, Menu, nativeImage } = require("electron");
+const display = require("electron").screen;
 
 // Node.js modules
-const fsp = require("fs").promises,
-	path = require("path");
+const fsp = require("fs").promises;
+const path = require("path");
 
 // costum modules
-const popup = require("./js/main/popup"),
-	services = require("./js/main/services"),
-	xml = require("./js/main/xml");
+const popup = require("./js/main/popup");
+const services = require("./js/main/services");
+const xml = require("./js/main/xml");
 
 
 /***** VARIABLES *****/
@@ -34,7 +34,7 @@ let error = {
 	// log variables
 	logFile: path.join(app.getPath("userData"), "error.log"),
 	logStash: "", // in case many errors appear in fast succession
-	logTimeout: null,
+	logTimeout: undefined,
 	// write recent errors to log file
 	//   err = string
 	log (err) {
@@ -424,12 +424,12 @@ let win = {
 	//   show = object | undefined (show section in help window)
 	open ({ type, xml = {}, show = null }) {
 		// define window dimensions
-		const workArea = display.getPrimaryDisplay().workArea,
-			data = prefs.data.win[type],
-			x = data.x >= 0 ? data.x : null,
-			y = data.y >= 0 ? data.y : null,
-			width = data.width ? data.width : defaults().width,
-			height = data.height ? data.height : defaults().height;
+		const workArea = display.getPrimaryDisplay().workArea;
+		const data = prefs.data.win[type];
+		const x = data.x >= 0 ? data.x : undefined;
+		const y = data.y >= 0 ? data.y : undefined;
+		const width = data.width ? data.width : defaults().width;
+		const height = data.height ? data.height : defaults().height;
 		function defaults () {
 			if (type === "about") {
 				return {
@@ -488,8 +488,8 @@ let win = {
 			// if this is the n-th preview window => let the system decide how to place it
 			const pvWin = win.data.filter(i => i.type === "pv");
 			if (pvWin.length > 0) {
-				bwOptions.x = null;
-				bwOptions.y = null;
+				bwOptions.x = undefined;
+				bwOptions.y = undefined;
 			}
 			// preview windows have <webview>
 			bwOptions.webPreferences.webviewTag = true;
@@ -549,8 +549,8 @@ let win = {
 		// window is about to be closed
 		bw.on("close", async function(evt) {
 			// search window
-			const idx = win.data.findIndex(i => i.id === this.id),
-				type = win.data[idx].type;
+			const idx = win.data.findIndex(i => i.id === this.id);
+			const type = win.data[idx].type;
 			// close every other window and
 			// save preferences when the main window is about to be closed
 			if (type === "app" && typeof prefs.saved === "undefined") {
@@ -573,8 +573,8 @@ let win = {
 			}
 			// save window size and state
 			if (type !== "about") {
-				const data = prefs.data.win[type],
-					bounds = win.data[idx].bw.getBounds();
+				const data = prefs.data.win[type];
+				const bounds = win.data[idx].bw.getBounds();
 				data.x = bounds.x;
 				data.y = bounds.y;
 				data.width = bounds.width;
@@ -665,8 +665,8 @@ let win = {
 	//   args = object (see win.pvOpen())
 	async pvSend (bw, args) {
 		// get XML file
-		const xmlPath = path.join(args.git, args.dir, args.file),
-			exists = await services.exists(xmlPath);
+		const xmlPath = path.join(args.git, args.dir, args.file);
+		const exists = await services.exists(xmlPath);
 		args.xml = "";
 		if (exists) {
 			const xmlFiles = await xml.getFile(args.git, args.dir, args.file);

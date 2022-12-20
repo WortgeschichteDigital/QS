@@ -83,8 +83,7 @@
 	text-decoration: none;
 }
 
-#prefs li a:focus,
-#prefs li a:hover {
+#prefs li a:where(:focus, :hover) {
 	outline: 2px solid var(--outline);
 	outline-offset: 0;
 }
@@ -187,8 +186,7 @@
 	text-decoration: none;
 }
 
-#tags-tags a:focus,
-#tags-attributes a:focus {
+:where(#tags-tags, #tags-attributes) a:focus {
 	outline: 2px solid var(--outline);
 	outline-offset: 2px;
 	border-radius: 5px;
@@ -215,8 +213,7 @@
 	background-color: var(--colorGreyLight);
 }
 
-#tags-nav a:focus,
-#tags-nav a:hover {
+#tags-nav a:where(:focus, :hover) {
 	outline: 2px solid var(--outline);
 	outline-offset: 0;
 }

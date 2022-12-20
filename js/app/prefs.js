@@ -103,8 +103,8 @@ let prefs = {
 				i.classList.remove("active");
 			}
 		}
-		const sections = document.querySelectorAll(".prefs-section"),
-			show = "prefs-" + a.getAttribute("href").substring(1);
+		const sections = document.querySelectorAll(".prefs-section");
+		const show = "prefs-" + a.getAttribute("href").substring(1);
 		for (const i of sections) {
 			if (i.id === show) {
 				i.classList.remove("off");
@@ -117,8 +117,8 @@ let prefs = {
 	gitConfig () {
 		git.configFormShow();
 		// update if dir was changed (wait for config to be closed)
-		const dir = git.config.dir,
-			win = document.querySelector("#git");
+		const dir = git.config.dir;
+		const win = document.querySelector("#git");
 		const interval = setInterval(() => {
 			if (win.classList.contains("hide")) {
 				clearInterval(interval);
@@ -147,8 +147,8 @@ let prefs = {
 		if (result.canceld || !result?.filePaths?.length) {
 			return;
 		}
-		const path = result.filePaths[0],
-			read = await prefs.zeitstrahlRead(path, false);
+		const path = result.filePaths[0];
+		const read = await prefs.zeitstrahlRead(path, false);
 		if (!read) {
 			return;
 		}
@@ -227,8 +227,8 @@ let prefs = {
 			search: "Suche",
 			update: "Update",
 		};
-		let cont = document.querySelector("#prefs-statistics-cont"),
-			lastType = "";
+		let cont = document.querySelector("#prefs-statistics-cont");
+		let lastType = "";
 		shared.clear(cont);
 		for (let i = prefs.statsData.length - 1; i >= 0; i--) {
 			const item = prefs.statsData[i];

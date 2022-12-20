@@ -103,8 +103,8 @@ let help = {
 	//   backwards = boolean
 	historyNav (backwards) {
 		// detect direction and position
-		let h = help.history,
-			idx = h.idx;
+		let h = help.history;
+		let idx = h.idx;
 		if (backwards) {
 			idx--;
 		} else {
@@ -119,8 +119,8 @@ let help = {
 			return;
 		}
 		// add new entry in case this is the first move backwards
-		const entry = h.data[idx],
-			section = document.querySelector("nav a.active").getAttribute("href").substring(1);
+		const entry = h.data[idx];
+		const section = document.querySelector("nav a.active").getAttribute("href").substring(1);
 		if (backwards &&
 				h.idx === h.data.length &&
 				(entry.section !== section ||

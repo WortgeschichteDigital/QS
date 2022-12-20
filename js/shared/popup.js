@@ -7,15 +7,15 @@ let popup = {
 	//   evt = object
 	open (evt) {
 		// detect click target
-		const path = evt.composedPath(),
-			target = popup.getTarget(path);
+		const path = evt.composedPath();
+		const target = popup.getTarget(path);
 		if (!target) {
 			return;
 		}
 		// collect items
-		let items = [],
-			def = ["close"],
-			defSep = ["sep"].concat(def);
+		let items = [];
+		let def = ["close"];
+		let defSep = ["sep"].concat(def);
 		if (typeof app !== "undefined") {
 			def = ["update", "sep", "viewXml", "viewHints", "viewClusters", "viewSearch"];
 			defSep = ["sep"].concat(def);

@@ -12,8 +12,7 @@ a {
 	cursor: pointer;
 }
 
-a:focus,
-a:hover {
+a:where(:focus, :hover) {
 	text-decoration: underline;
 }
 
@@ -51,8 +50,7 @@ footer a {
 	text-decoration: underline;
 }
 
-footer a:focus,
-footer a:hover {
+footer a:where(:focus, :hover) {
 	text-decoration: none;
 }
 
@@ -83,7 +81,6 @@ tr:first-child td {
 	padding: 0;
 }
 
-tr.license th,
-tr.license td {
+tr.license :where(th, td) {
 	padding-top: 30px;
 }

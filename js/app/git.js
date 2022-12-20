@@ -50,11 +50,11 @@ let git = {
 	},
 	// check inputs in config overlay
 	async configFormCheck () {
-		const user = document.querySelector("#git-user").value.trim(),
-			dir = document.querySelector("#git-dir").value.trim();
+		const user = document.querySelector("#git-user").value.trim();
+		const dir = document.querySelector("#git-dir").value.trim();
 		if (!user || !dir) {
-			let text = "Sie müssen noch …\n",
-				missing = [];
+			let text = "Sie müssen noch …\n";
+			let missing = [];
 			if (!user) {
 				missing.push("• den Benutzernamen angeben");
 			}
@@ -221,8 +221,8 @@ let git = {
 	},
 	// change branch
 	async commandBranch () {
-		let current = await git.branchCurrent(),
-			dest = "";
+		const current = await git.branchCurrent();
+		let dest = "";
 		switch (current) {
 			case "master":
 				dest = "preprint";

@@ -1,8 +1,8 @@
 "use strict";
 
-const { dialog } = require("electron"),
-	fsp = require("fs").promises,
-	path = require("path");
+const { dialog } = require("electron");
+const fsp = require("fs").promises;
+const path = require("path");
 
 let svg = [];
 

@@ -36,15 +36,13 @@
 	right: 0;
 }
 
-#filters > div,
-#results > div {
+:where(#filters, #results) > div {
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
 
-#filters p,
-#results p {
+:where(#filters, #results) p {
 	margin: 0;
 }
 
@@ -69,10 +67,8 @@
 	text-decoration: underline;
 }
 
-#filters-reset:focus,
-#filters-reset:hover,
-#filters-hints a:focus,
-#filters-hints a:hover {
+#filters-reset:where(:focus, :hover),
+#filters-hints a:where(:focus, :hover) {
 	outline: none;
 	text-decoration: none;
 }
@@ -193,8 +189,7 @@
 	color: var(--text);
 }
 
-#results-files a:focus,
-#results-files a:hover {
+#results-files a:where(:focus, :hover) {
 	outline: none;
 	text-decoration: none;
 }
@@ -277,8 +272,7 @@
 	border-bottom-right-radius: 10px;
 }
 
-.select-popup a:hover,
-.select-popup a:focus {
+.select-popup a:where(:hover, :focus) {
 	outline: none;
 	background-color: var(--bgActive);
 }

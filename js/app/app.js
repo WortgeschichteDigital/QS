@@ -106,8 +106,8 @@ let app = {
 		if (/hints|xml/.test(app.view) && !Object.keys(xml.files).length) {
 			tip = "Tipp: Klicken Sie auf <i>Update</i>, um die XML-Dateidaten zu laden.";
 		} else if (!tip && app.view === "search") {
-			let dataA = viewSearch.getAdvancedData(),
-				tips = [];
+			const dataA = viewSearch.getAdvancedData();
+			let tips = [];
 			if (document.querySelector("#fun-filters.active-filters")) {
 				tips.push("verwenden Sie weniger Filter");
 			}
@@ -154,7 +154,7 @@ let app = {
 		let h1 = document.createElement("h1");
 		h1.id = file;
 		h1.textContent = file;
-		// const icons
+		// icons
 		for (const icon of icons) {
 			let a = document.createElement("a");
 			h1.appendChild(a);
@@ -198,8 +198,8 @@ let app = {
 			shared.error(`Datei „${file}“ nicht mehr gefunden`);
 			return;
 		}
-		const path = shared.path.join(git.config.dir, data.dir, file),
-			result = await shared.shell.openPath(path);
+		const path = shared.path.join(git.config.dir, data.dir, file);
+		const result = await shared.shell.openPath(path);
 		if (result) {
 			shared.error(result);
 		}
@@ -209,8 +209,8 @@ let app = {
 	//   caller = node
 	openLemmasPopup (file, caller) {
 		caller.dispatchEvent(new Event("mouseout"));
-		let content = document.createElement("div"),
-			h2 = document.createElement("h2");
+		let content = document.createElement("div");
+		let h2 = document.createElement("h2");
 		content.appendChild(h2);
 		h2.textContent = file;
 		const data = xml.data.files[file];
@@ -264,8 +264,8 @@ let app = {
 	// scroll pagewise
 	//   down = boolean
 	scroll (down) {
-		const topBars = document.querySelector("#bar").getBoundingClientRect().bottom,
-			scroll = Math.round((window.innerHeight - topBars) * 0.85);
+		const topBars = document.querySelector("#bar").getBoundingClientRect().bottom;
+		const scroll = Math.round((window.innerHeight - topBars) * 0.85);
 		let top = window.scrollY;
 		if (down) {
 			top += scroll;
@@ -292,8 +292,8 @@ let app = {
 		if (app.view === "clusters") {
 			delete dataF["select-status"];
 		}
-		const dataS = app.getSortingData(),
-			str = JSON.stringify(dataF) + JSON.stringify(dataS);
+		const dataS = app.getSortingData();
+		const str = JSON.stringify(dataF) + JSON.stringify(dataS);
 		return shared.crypto.createHash("sha1").update(str).digest("hex");
 	},
 	// sorting: toggle sorting icons
@@ -347,8 +347,8 @@ let app = {
 				}
 			}
 			// alpha-numeric
-			let x = a.file,
-				y = b.file;
+			let x = a.file;
+			let y = b.file;
 			if (dataS.type === "time" &&
 					a.published !== b.published) {
 				x = a.published;
@@ -378,8 +378,8 @@ let app = {
 	// view: determine the next view after pressing the keyboard shortcut
 	//   toRight = boolean
 	toggleViewShortcut (toRight) {
-		let views = document.querySelectorAll("#view a"),
-			idx = -1;
+		const views = document.querySelectorAll("#view a");
+		let idx = -1;
 		for (let i = 0, len = views.length; i < len; i++)  {
 		 if (views[i].classList.contains("active")) {
 			idx = i;
@@ -462,8 +462,8 @@ let app = {
 		await viewSearch.toggleAdvanced("off");
 		// slide active bar content and <section>
 		await new Promise(resolve => {
-			const bc = document.getElementById(activeBarContent),
-				sect = document.getElementById(app.view);
+			const bc = document.getElementById(activeBarContent);
+			const sect = document.getElementById(app.view);
 			sect.addEventListener("transitionend", () => {
 				for (const i of [bc, sect]) {
 					i.classList.add("off");
@@ -480,8 +480,8 @@ let app = {
 		});
 		await shared.wait(25);
 		// switch to next bar content and <section>
-		const bc = document.getElementById(nextBarContent),
-			sect = document.getElementById(nextView);
+		const bc = document.getElementById(nextBarContent);
+		const sect = document.getElementById(nextView);
 		for (const i of [bc, sect]) {
 			i.style.left = direction[1] * window.innerWidth + "px";
 			i.classList.remove("off");

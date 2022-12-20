@@ -146,8 +146,7 @@ header .label {
 	text-align: center;
 }
 
-#fun-git a:hover,
-#fun-git a:focus {
+#fun-git a:where(:hover, :focus) {
 	text-decoration: none;
 }
 
@@ -200,19 +199,16 @@ section.trans-linear {
 
 /* Sorting */
 
-#sorting a.icon,
-#clusters-nav a.icon {
+:where(#sorting, #clusters-nav) a.icon {
 	margin-left: 15px;
 	padding: 5px;
 }
 
-#sorting a.icon:first-child,
-#clusters-nav a.icon:first-child {
+:where(#sorting, #clusters-nav) a.icon:first-child {
 	margin-left: 0;
 }
 
-#sorting .active,
-#clusters-nav .active {
+:where(#sorting, #clusters-nav) .active {
 	border-radius: 5px;
 	background-color: var(--bgActive);
 }

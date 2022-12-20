@@ -61,6 +61,58 @@
 	margin: 10px;
 }
 
+.file-block div.file-block-list {
+	position: relative;
+	margin: 0;
+}
+
+.file-block div.file-block-list:has(.file-block-toggle) {
+	overflow: hidden;
+	padding-bottom: 24px;
+	max-height: 174px;
+}
+
+.file-block div.file-block-list.open {
+	max-height: none;
+}
+
+.file-block div.file-block-toggle {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	width: 100%;
+	height: 82px;
+	background: linear-gradient(to top, #fff 24px, rgba(255, 255, 255, 0));
+	pointer-events: none;
+}
+
+.file-block div.file-block-list.open div.file-block-toggle {
+	background: none;
+}
+
+.file-block-toggle a {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	border-radius: 5px;
+	width: 100%;
+	height: 24px;
+	background-image: url(../../img/app/toggle-down.svg);
+	background-position: center top;
+	background-repeat: no-repeat;
+	background-size: 24px 24px;
+	pointer-events: auto;
+}
+
+.open div.file-block-toggle a {
+	background-image: url(../../img/app/toggle-up.svg);
+}
+
+.file-block-toggle a:where(:hover, :focus) {
+	background-color: var(--bgActive);
+}
+
 .file-block h1 {
 	margin: 0 0 5px 0;
 	border-bottom: 2px solid var(--colorBlueDark);
@@ -86,8 +138,7 @@
 	text-decoration: none;
 }
 
-.file-block h1 a.copy-all:focus,
-.file-block h1 a.copy-all:hover {
+.file-block h1 a.copy-all:where(:focus, :hover) {
 	text-decoration: underline;
 }
 
@@ -107,8 +158,7 @@
 	text-decoration: none;
 }
 
-.file-block div a:focus,
-.file-block div a:hover {
+.file-block div a:where(:focus, :hover) {
 	text-decoration: underline;
 }
 
@@ -120,8 +170,7 @@
 	line-height: 1rem;
 }
 
-.file-block th,
-.file-block td {
+.file-block :where(th, td) {
 	padding: 0;
 }
 
@@ -147,8 +196,7 @@
 	color: var(--colorRed);
 }
 
-#clusters-modulate .fa,
-#clusters-compare .fa {
+:where(#clusters-modulate, #clusters-compare) .fa {
 	font-variant: small-caps;
 	letter-spacing: 1px;
 }
@@ -164,6 +212,7 @@
 	position: absolute;
 	top: 37px;
 	left: 0;
+	z-index: 1;
 	opacity: 0;
 	box-shadow: var(--shadow);
 	border: 1px solid var(--line);
@@ -176,8 +225,7 @@
 	opacity: 1;
 }
 
-#clusters-modulate-popup a,
-#clusters-modulate-popup div {
+#clusters-modulate-popup :where(a, div) {
 	display: block;
 	outline: none;
 	border-bottom: 1px solid var(--line);
@@ -209,13 +257,11 @@
 	letter-spacing: 0;
 }
 
-#clusters-modulate-popup a:hover,
-#clusters-modulate-popup a.active {
+#clusters-modulate-popup :where(a:hover, a.active) {
 	background-color: var(--bgActive);
 }
 
-#clusters-modulate-popup a:hover span,
-#clusters-modulate-popup a.active span {
+#clusters-modulate-popup :where(a:hover, a.active) span {
 	color: var(--text);
 }
 
@@ -308,7 +354,6 @@
 }
 
 .cluster-circle {
-	position: relative;
 	margin-bottom: 5px;
 	border-radius: 5px;
 	padding: 10px 10px 5px 10px;

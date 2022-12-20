@@ -15,16 +15,16 @@ let clustersMod = {
 	},
 	// search lemmas or XML files
 	search () {
-		const input = document.querySelector("#clusters-modulate-search"),
-			text = input.value.trim();
+		const input = document.querySelector("#clusters-modulate-search");
+		const text = input.value.trim();
 		if (!text) {
 			clustersMod.searchOff();
 			return;
 		}
 		// search
-		let filters = viewClusters.filters,
-			reg = new RegExp(shared.escapeRegExp(text), "i"),
-			results = [];
+		const filters = viewClusters.filters;
+		const reg = new RegExp(shared.escapeRegExp(text), "i");
+		let results = [];
 		for (const [file, data] of Object.entries(xml.data.files)) {
 			if (clustersMod.data.files[file] ||
 					filters["select-authors"] && !data.authors.includes(filters["select-authors"]) ||
@@ -72,8 +72,8 @@ let clustersMod = {
 				div.textContent = "…";
 				break;
 			}
-			let item = results[i],
-				a = document.createElement("a");
+			const item = results[i];
+			let a = document.createElement("a");
 			popup.appendChild(a);
 			if (item.isFa) {
 				a.classList.add("fa");
@@ -99,9 +99,9 @@ let clustersMod = {
 			clustersMod.search();
 			return;
 		}
-		let entries = popup.querySelectorAll("a"),
-			active = popup.querySelector(".active"),
-			n = -1;
+		let entries = popup.querySelectorAll("a");
+		let active = popup.querySelector(".active");
+		let n = -1;
 		if (!active && up) {
 			return;
 		} else if (!active) {
@@ -146,6 +146,7 @@ let clustersMod = {
 		clustersMod.filePrint(file);
 		clustersMod.center();
 		clustersMod.proposals();
+		clustersMod.fileToggles();
 	},
 	// update the whole modulation
 	update () {
@@ -162,6 +163,7 @@ let clustersMod = {
 		}
 		clustersMod.center();
 		clustersMod.proposals();
+		clustersMod.fileToggles();
 	},
 	// head icons of each file block
 	fileIcons: [
@@ -208,8 +210,8 @@ let clustersMod = {
 			img.alt = "";
 			a.addEventListener("click", function(evt) {
 				evt.preventDefault();
-				const file = this.closest("div").dataset.file,
-					fun = this.dataset.fun.split("|");
+				const file = this.closest("div").dataset.file;
+				const fun = this.dataset.fun.split("|");
 				if (fun[0] === "app") {
 					app[fun[1]](file);
 				} else {
@@ -217,13 +219,17 @@ let clustersMod = {
 				}
 			});
 		}
+		// add links wrapper
+		let list = document.createElement("div");
+		block.appendChild(list);
+		list.classList.add("file-block-list");
 		// prepare proposal area
 		let proposals = document.createElement("div");
-		block.appendChild(proposals);
+		list.appendChild(proposals);
 		proposals.classList.add("proposals");
 		// glean lemma list
-		let dataFiles = clustersMod.data.files[file],
-			lemmas = {};
+		let dataFiles = clustersMod.data.files[file];
+		let lemmas = {};
 		for (const link of xml.data.files[file].links) {
 			if (!link.lemma.file) {
 				continue;
@@ -235,8 +241,8 @@ let clustersMod = {
 					points: link.points,
 				});
 			} else {
-				const target = xml.data.files[link.lemma.file],
-					isNl = target.nl.includes(link.lemma.spelling);
+				const target = xml.data.files[link.lemma.file];
+				const isNl = target.nl.includes(link.lemma.spelling);
 				if (!isNl) {
 					const reg = new RegExp(`(^|\/)${shared.escapeRegExp(link.lemma.spelling)}(\/|$)`);
 					for (const hl of target.hlJoined) {
@@ -262,7 +268,7 @@ let clustersMod = {
 			const data = lemmas[lemma];
 			// create entry
 			let entry = document.createElement("div");
-			block.appendChild(entry);
+			list.appendChild(entry);
 			let a = document.createElement("a");
 			entry.appendChild(a);
 			if (data.isFa) {
@@ -308,7 +314,41 @@ let clustersMod = {
 		if (!bulkRemove) {
 			clustersMod.center();
 			clustersMod.proposals();
+			clustersMod.fileToggles();
 		}
+	},
+	// add or remove toggles to/from all file blocks
+	fileToggles () {
+		document.querySelectorAll(".file-block").forEach(i => {
+			const list = i.querySelector(".file-block-list");
+			const n = list.querySelectorAll("a:not(.file-block-toggle-a)").length;
+			let toggle = i.querySelector(".file-block-toggle");
+			if (n > 6 && !toggle) {
+				let div = document.createElement("div");
+				list.appendChild(div);
+				div.classList.add("file-block-toggle");
+				let a = document.createElement("a");
+				div.appendChild(a);
+				a.classList.add("file-block-toggle-a");
+				a.href = "#";
+				a.addEventListener("click", function(evt) {
+					evt.preventDefault();
+					const list = this.closest(".file-block-list");
+					list.classList.toggle("open");
+					// prevent focus on hidden items
+					const items = list.querySelectorAll("a:not(.file-block-toggle-a)");
+					for (let i = 4, len = items.length; i < len; i++) {
+						if (list.classList.contains("open")) {
+							items[i].removeAttribute("tabindex");
+						} else {
+							items[i].setAttribute("tabindex", "-1");
+						}
+					}
+				});
+			} else if (n <= 6 && toggle) {
+				toggle.parentNode.removeChild(toggle);
+			}
+		});
 	},
 	// construct a cluster center based on the main lemmas of the added files
 	// and make proposals of which links should be added to achieve a cluster like that
@@ -360,8 +400,8 @@ let clustersMod = {
 	// insert proposals that make clear which lemmas should be added
 	proposals () {
 		for (const file of Object.keys(clustersMod.data.files)) {
-			const block = document.querySelector(`.file-block[data-file="${file}"]`),
-				proposals = block.querySelector(".proposals");
+			const block = document.querySelector(`.file-block[data-file="${file}"]`);
+			const proposals = block.querySelector(".proposals");
 			shared.clear(proposals);
 			// collect proposals
 			let props = [];
@@ -432,8 +472,8 @@ let clustersMod = {
 	// make XML string with a proposal
 	//   lemma = string
 	proposalsXml (lemma) {
-		let hl = shared.hClear(lemma.split("/")[0]),
-			fa = "";
+		const hl = shared.hClear(lemma.split("/")[0]);
+		let fa = "";
 		if (clustersMod.data.center[lemma].isFa) {
 			fa = "Wortfeld-";
 		}
@@ -454,6 +494,8 @@ let clustersMod = {
 		for (const i of ["center", "files"]) {
 			shared.clear(document.querySelector(`#clusters-modulate-${i}`));
 		}
-		document.querySelector("#clusters-modulate-search").select();
+		const search = document.querySelector("#clusters-modulate-search");
+		search.value = "";
+		search.focus();
 	},
 };

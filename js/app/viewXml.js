@@ -35,9 +35,9 @@ let viewXml = {
 			});
 		}
 		// filter data
-		const dataF = bars.getFiltersData(),
-			dataS = app.getSortingData(), // ascending = boolean, ignore = boolean, type = alpha | time
-			regPath = new RegExp(shared.escapeRegExp(dataS.filter), "i");
+		const dataF = bars.getFiltersData();
+		const dataS = app.getSortingData(); // ascending = boolean, ignore = boolean, type = alpha | time
+		const regPath = new RegExp(shared.escapeRegExp(dataS.filter), "i");
 		for (let i = data.length - 1; i >= 0; i--) {
 			if (dataF["select-authors"] && !data[i].authors.includes(dataF["select-authors"]) ||
 					dataF["select-domains"] && !data[i].domains.includes(dataF["select-domains"]) ||
@@ -191,9 +191,9 @@ let viewXml = {
 			shared.error(`Dateidaten für „${fileName}“ nicht gefunden`);
 			return;
 		}
-		const doc = new DOMParser().parseFromString(fileContent, "text/xml"),
-			xslt = new DOMParser().parseFromString(viewXml.funTeaserXsl, "application/xml"),
-			processor = new XSLTProcessor();
+		const doc = new DOMParser().parseFromString(fileContent, "text/xml");
+		const xslt = new DOMParser().parseFromString(viewXml.funTeaserXsl, "application/xml");
+		const processor = new XSLTProcessor();
 		processor.importStylesheet(xslt);
 		const processedDoc = processor.transformToDocument(doc);
 		// collect tags

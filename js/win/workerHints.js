@@ -21,8 +21,8 @@ let hints = {
 		// clean-up and sorting
 		for (const data of Object.values(xml.data.files)) {
 			for (let i = data.hints.length - 1; i >= 0; i--) {
-				const current = data.hints[i],
-					matches = data.hints.filter(x => x.line === current.line && x.ident === current.ident);
+				const current = data.hints[i];
+				const matches = data.hints.filter(x => x.line === current.line && x.ident === current.ident);
 				if (matches.length > 1) {
 					data.hints.splice(i, 1);
 				}
@@ -325,12 +325,12 @@ let hints = {
 				i = i.replace(/[\s’]/g, "_");
 				hl.push(i);
 			}
-			const fa = data.fa ? "Wortfeldartikel_" : "",
-				base = `WGd-${fa}${hl.join("-")}-`,
-				reg = new RegExp(`^${base}([0-9])$`);
+			const fa = data.fa ? "Wortfeldartikel_" : "";
+			const base = `WGd-${fa}${hl.join("-")}-`;
+			const reg = new RegExp(`^${base}([0-9])$`);
 			if (!reg.test(data.id)) {
-				let num = "1",
-					numMatch = data.id.match(/[0-9]$/);
+				const numMatch = data.id.match(/[0-9]$/);
+				let num = "1";
 				if (numMatch) {
 					num = numMatch[0];
 				}
@@ -387,8 +387,8 @@ let hints = {
 		});
 		let allIDs = [];
 		for (const file of files) {
-			const id = xml.data.files[file].id,
-				duplicate = allIDs.find(i => i.id === id);
+			const id = xml.data.files[file].id;
+			const duplicate = allIDs.find(i => i.id === id);
 			if (duplicate) {
 				hints.add(xml.data.files[file].hints, file, {
 					line: 3,
@@ -513,9 +513,8 @@ let hints = {
 				continue;
 			}
 			// EZ_STICHWORT: current article deals with this very word => markup should be <Stichwort>
-			let text = i.textContent.trim(),
-				textOri = text;
-			text = text.replace(/\s/g, " ");
+			const textOri = i.textContent.trim();
+			let text = textOri.replace(/\s/g, " ");
 			for (const lemma of currentArtLemmas) {
 				if (hints.lemmas[lemma].reg.test(text)) {
 					hints.add(data.hints, file, {
@@ -577,11 +576,11 @@ let hints = {
 			"Wortgeschichte_kompakt Stichwort",
 			"Wortgeschichte Stichwort",
 		];
-		let currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl),
-			regExp = [];
+		const currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl);
+		let regExp = [];
 		for (const lemma of currentArtLemmas) {
-			const source = hints.lemmas[lemma].reg.source,
-				reg = new RegExp(source.substring(0, source.length - 1), "i");
+			const source = hints.lemmas[lemma].reg.source;
+			const reg = new RegExp(source.substring(0, source.length - 1), "i");
 			regExp.push(reg);
 		}
 		for (const i of doc.querySelectorAll(scopes.join(", "))) {
@@ -597,8 +596,8 @@ let hints = {
 			let textOri = text;
 			text = text.replace(/\s/g, " ");
 			text = text.replace(/[()]/g, "");
-			let textNoArt = text.replace(hints.artReg, ""),
-				matches = false;
+			const textNoArt = text.replace(hints.artReg, "");
+			let matches = false;
 			for (const reg of regExp) {
 				if (reg.test(text) ||
 						reg.test(textNoArt)) {
@@ -625,9 +624,9 @@ let hints = {
 	checkTR (file, doc, content) {
 		const data = xml.data.files[file];
 		for (const i of doc.querySelectorAll("Textreferenz")) {
-			const target = i.getAttribute("Ziel"),
-				text = i.textContent,
-				scope = hints.detectScope(i);
+			const target = i.getAttribute("Ziel");
+			const text = i.textContent;
+			const scope = hints.detectScope(i);
 			// TR_ERROR: target was not found (check everywhere)
 			if (!data.targets.includes(target)) {
 				hints.add(data.hints, file, {
@@ -859,8 +858,8 @@ let hints = {
 					continue;
 				}
 				for (const x of d.children) {
-					const system = x.nodeName,
-						value = x.textContent.trim();
+					const system = x.nodeName;
+					const value = x.textContent.trim();
 					if (!diaValues[system]) {
 						diaValues[system] = new Set();
 					}
@@ -909,8 +908,8 @@ let hints = {
 	checkLiterature (file, doc, content) {
 		const data = xml.data.files[file];
 		for (const i of doc.querySelectorAll("Literaturtitel")) {
-			const id = i.getAttribute("xml:id"),
-				ziel = i.getAttribute("Ziel");
+			const id = i.getAttribute("xml:id");
+			const ziel = i.getAttribute("Ziel");
 			if (!ziel.includes(id)) {
 				hints.add(data.hints, file, {
 					line: xml.getLineNumber(i, doc, content),
@@ -950,10 +949,10 @@ let hints = {
 	//   doc = document
 	//   content = string
 	collectComments (file, doc, content) {
-		const data = xml.data.files[file],
-			iterator = doc.createNodeIterator(doc.documentElement, NodeFilter.SHOW_COMMENT);
-		let node = iterator.nextNode(),
-			idx = -1;
+		const data = xml.data.files[file];
+		const iterator = doc.createNodeIterator(doc.documentElement, NodeFilter.SHOW_COMMENT);
+		let node = iterator.nextNode();
+		let idx = -1;
 		while (node) {
 			idx++;
 			hints.add(data.hints, file, {
@@ -994,8 +993,8 @@ let hints = {
 	//   file = string (XML file name)
 	//   lemma = string
 	detectTarget (file, lemma) {
-		let target = lemma, // main lemma
-			data = xml.data.files[file];
+		const data = xml.data.files[file];
+		let target = lemma; // main lemma
 		if (data.nl.includes(lemma)) { // sub lemma
 			target = data.hl[0] + "#" + data.nlTargets[lemma];
 		} else if (!data.hl.includes(lemma)) { // lemma is title of field article
@@ -1007,9 +1006,8 @@ let hints = {
 	//   ele = node
 	//   target = string (string of <Verweisziel>)
 	detectVerweisInBlock (ele, target) {
-		let blocks = ["Textblock", "Blockzitat", "Liste"],
-			container;
-		for (const b of blocks) {
+		let container;
+		for (const b of ["Textblock", "Blockzitat", "Liste"]) {
 			container = ele.closest(b);
 			if (container) {
 				break;
@@ -1063,18 +1061,18 @@ let hints = {
 		// in case they were updated while the app was running
 		hints.diasystems = {};
 		// check whether Diasystematik.rnc exists or not
-		const path = shared.path.join(xml.gitDir, "share", "rnc", "Diasystematik.rnc"),
-			exists = await shared.ipc.invoke("exists", path);
+		const path = shared.path.join(xml.gitDir, "share", "rnc", "Diasystematik.rnc");
+		const exists = await shared.ipc.invoke("exists", path);
 		if (!exists) {
 			return false;
 		}
 		// read systems and values
-		const file = await shared.fsp.readFile(path, { encoding: "utf8" }),
-			systems = ["Gebrauchszeitraum", "Regiolekt", "Register", "Sachgebiet", "Soziolekt"];
+		const file = await shared.fsp.readFile(path, { encoding: "utf8" });
+		const systems = ["Gebrauchszeitraum", "Regiolekt", "Register", "Sachgebiet", "Soziolekt"];
 		for (const s of systems) {
 			hints.diasystems[s] = [];
-			const reg = new RegExp(`${s} = element ${s} \{(.+?)\}`, "s"),
-				values = file.match(reg)[0];
+			const reg = new RegExp(`${s} = element ${s} \{(.+?)\}`, "s");
+			const values = file.match(reg)[0];
 			for (const v of values.matchAll(/'(.+?)'/g)) {
 				hints.diasystems[s].push(new RegExp(v[1]));
 			}
@@ -1088,8 +1086,8 @@ let hints = {
 		// in case they were updated while the app was running
 		hints.literature = new Set();
 		// check whether Literaturliste.xml exists or not
-		const path = shared.path.join(xml.gitDir, "share", "Literaturliste.xml"),
-			exists = await shared.ipc.invoke("exists", path);
+		const path = shared.path.join(xml.gitDir, "share", "Literaturliste.xml");
+		const exists = await shared.ipc.invoke("exists", path);
 		if (!exists) {
 			return false;
 		}
@@ -1122,9 +1120,9 @@ let hints = {
 		// in case they were updated while the app was running
 		hints.lemmas = {};
 		// collect missing words and populate lemma list
-		const artBestimmt = ["der", "die", "das", "des", "dem", "den"],
-			artUnbestimmt = ["ein", "eine", "eines", "einer", "einem", "einen"],
-			noLookup = ["an", "auf", "aus", "bei", "bis", "durch", "für", "gegen", "hinter", "in", "mit", "nach", "neben", "oder", "über", "um", "und", "unter", "von", "vor", "zu", "zwischen"];
+		const artBestimmt = ["der", "die", "das", "des", "dem", "den"];
+		const artUnbestimmt = ["ein", "eine", "eines", "einer", "einem", "einen"];
+		const noLookup = ["an", "auf", "aus", "bei", "bis", "durch", "für", "gegen", "hinter", "in", "mit", "nach", "neben", "oder", "über", "um", "und", "unter", "von", "vor", "zu", "zwischen"];
 		let missing = [];
 		for (const [file, data] of Object.entries(xml.data.files)) {
 			for (let lemma of data.hl.concat(data.nl)) {
@@ -1180,16 +1178,16 @@ let hints = {
 				continue;
 			}
 			for (const t of json.body[0].tokens) {
-				let word = t.text,
-					variants = [];
+				const word = t.text;
+				let variants = [];
 				variants.push(word);
 				const wordIsLower = /^[a-zäöü]/.test(word);
 				for (const v of t.eqlemma) {
 					if (!v.hi) {
 						continue;
 					}
-					const variant = v.hi.trim(),
-						variantIsLower = /^[a-zäöü]/.test(variant);
+					const variant = v.hi.trim();
+					const variantIsLower = /^[a-zäöü]/.test(variant);
 					if (wordIsLower === variantIsLower &&
 							!/['-.:,;]/.test(variant) &&
 							!variants.includes(variant)) {

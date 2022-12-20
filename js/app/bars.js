@@ -67,15 +67,15 @@ let bars = {
 	},
 	// filters: visualize that filters are active
 	filtersActive () {
-		let data = bars.getFiltersData(),
-			active = false;
+		const data = bars.getFiltersData();
+		let active = false;
 		for (const [k, v] of Object.entries(data)) {
 			const ele = document.getElementById(k);
 			if (ele.closest(".off")) {
 				continue;
 			}
-			const name = ele.nodeName,
-				offDefault = /(comment_filter|links_suggestion_filter)$/.test(ele.id);
+			const name = ele.nodeName;
+			const offDefault = /(comment_filter|links_suggestion_filter)$/.test(ele.id);
 			if (name === "INPUT" &&
 						(!offDefault && !v || offDefault && v) ||
 					name !== "INPUT" && v) {
@@ -114,8 +114,8 @@ let bars = {
 	},
 	// filters: show or hide filter categories appropriate to the current view
 	toggleFiltersCat () {
-		const status = document.querySelector("#filters-status"),
-			hints = document.querySelector("#filters-hints");
+		const status = document.querySelector("#filters-status");
+		const hints = document.querySelector("#filters-hints");
 		if (app.view === "xml") {
 			status.classList.remove("off");
 			hints.classList.add("off");
@@ -251,8 +251,8 @@ let bars = {
 			return;
 		}
 		// detect next match
-		const data = bars.resultsSearchNextQueryData,
-			query = a.getAttribute("href").substring(1);
+		const data = bars.resultsSearchNextQueryData;
+		const query = a.getAttribute("href").substring(1);
 		let matches = bars.resultsSearchNextQueryMatches(query);
 		if (data.query !== query) {
 			data.query = query;
@@ -274,9 +274,9 @@ let bars = {
 			}
 		}
 		// scroll to next match
-		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom,
-			headingHeight = document.querySelector("#search h1").offsetHeight,
-			nextMatch = matches[data.idx];
+		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom;
+		const headingHeight = document.querySelector("#search h1").offsetHeight;
+		const nextMatch = matches[data.idx];
 		window.scrollTo({
 			top: nextMatch.getBoundingClientRect().top + window.scrollY - topBarsHeight - headingHeight,
 			left: 0,
@@ -288,8 +288,8 @@ let bars = {
 	// results: search matches for the given query
 	//   query = string (zero-based number of the query)
 	resultsSearchNextQueryMatches (query) {
-		let reg = new RegExp(`(^|,)${query}(,|$)`),
-			matches = [];
+		const reg = new RegExp(`(^|,)${query}(,|$)`);
+		let matches = [];
 		document.querySelectorAll(".search-result").forEach(i => {
 			if (reg.test(i.dataset.matched)) {
 				matches.push(i);
@@ -304,8 +304,8 @@ let bars = {
 			return;
 		}
 		// find heading
-		let id = a.getAttribute("href").substring(1),
-			h1 = document.getElementById(id);
+		const id = a.getAttribute("href").substring(1);
+		let h1 = document.getElementById(id);
 		while (!h1) {
 			// reload more results
 			if (app.view === "hints") {
@@ -316,9 +316,9 @@ let bars = {
 			h1 = document.getElementById(id);
 		}
 		// scroll to heading
-		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom,
-			headingHeight = document.querySelector(`#${app.view} h1`).offsetHeight,
-			firstResult = h1.nextSibling.getBoundingClientRect().top;
+		const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom;
+		const headingHeight = document.querySelector(`#${app.view} h1`).offsetHeight;
+		const firstResult = h1.nextSibling.getBoundingClientRect().top;
 		window.scrollTo({
 			top: firstResult + window.scrollY - topBarsHeight - headingHeight,
 			left: 0,
@@ -335,8 +335,8 @@ let bars = {
 			return;
 		}
 		// search data
-		const cat = select.id.replace("select-", ""),
-			data = bars.filtersData[cat].find(i => i.value === value);
+		const cat = select.id.replace("select-", "");
+		const data = bars.filtersData[cat].find(i => i.value === value);
 		// filter doesn't exist anymore
 		if (!data) {
 			select.dataset.value = "";
@@ -363,8 +363,8 @@ let bars = {
 			text: "<i>alle</i>",
 			value: "",
 		}];
-		const cat = a.id.replace("select-", ""),
-			hasIcons = bars.filtersData[cat].some(i => i.icon);
+		const cat = a.id.replace("select-", "");
+		const hasIcons = bars.filtersData[cat].some(i => i.icon);
 		for (const i of alle.concat(bars.filtersData[cat])) {
 			let item = document.createElement("a");
 			div.appendChild(item);

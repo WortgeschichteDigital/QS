@@ -8,8 +8,8 @@ window.addEventListener("load", async () => {
 	shared.info = await shared.ipc.invoke("app-info");
 
 	// PRINT MAIL ADDRESS
-	const decoded = about.decodeMail("xbwfiehdhwrerzkpn{mbgutfpogspeqspAixfh0eg"),
-		mail = document.querySelector("#mail");
+	const decoded = about.decodeMail("xbwfiehdhwrerzkpn{mbgutfpogspeqspAixfh0eg");
+	const mail = document.querySelector("#mail");
 	mail.href = "mailto:" + decoded;
 	mail.textContent = decoded;
 

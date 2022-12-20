@@ -1,8 +1,8 @@
 "use strict";
 
-const crypto = require("crypto"),
-	fsp = require("fs").promises,
-	path = require("path");
+const crypto = require("crypto");
+const fsp = require("fs").promises;
+const path = require("path");
 
 // fill the current file into the file object
 //   xmlFiles = object (contains data for all requested XML files)
@@ -50,8 +50,8 @@ module.exports = {
 	async getFiles (repoDir) {
 		let xmlFiles = {};
 		for (const sub of ["articles", "ignore"]) {
-			const dir = path.join(repoDir, sub),
-				files = await fsp.readdir(dir);
+			const dir = path.join(repoDir, sub);
+			const files = await fsp.readdir(dir);
 			for (const f of files) {
 				if (/^!/.test(f) || // test files
 						!/\.xml$/.test(f)) { // no XML file
