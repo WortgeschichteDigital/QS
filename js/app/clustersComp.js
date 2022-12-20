@@ -115,7 +115,7 @@ let clustersComp = {
       img.width = "30";
       img.height = "30";
       img.alt = "";
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         clustersComp.toggleAdd(this.closest("tr"));
       });
@@ -131,7 +131,7 @@ let clustersComp = {
       clustersComp.updateAddImg(tr);
       // initialize click event to mark lemmas
       tr.querySelectorAll("span").forEach(i => {
-        i.addEventListener("click", function() {
+        i.addEventListener("click", function () {
           const mark = !this.classList.contains("marked");
           clustersComp.mark(this.dataset.lemma, mark);
         });

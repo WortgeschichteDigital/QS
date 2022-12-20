@@ -157,7 +157,7 @@ let shared = {
   // open links in external program
   externalLinks () {
     document.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
-      i.addEventListener("click", function(evt) {
+      i.addEventListener("click", function (evt) {
         evt.preventDefault();
         if (evt.detail > 1) { // no double-clicks
           return;
@@ -177,7 +177,7 @@ let shared = {
     void fb.offsetWidth;
     fb.classList.add("visible");
     await shared.wait(1300);
-    fb.addEventListener("transitionend", function() {
+    fb.addEventListener("transitionend", function () {
       this.parentNode.removeChild(this);
     }, { once: true });
     fb.classList.remove("visible");
@@ -222,7 +222,7 @@ let shared = {
   //   block = node
   async highlightBlock (block) {
     await shared.scrollEnd();
-    block.addEventListener("animationend", function() {
+    block.addEventListener("animationend", function () {
       this.classList.remove("highlight-block");
     }, { once: true });
     block.classList.add("highlight-block");

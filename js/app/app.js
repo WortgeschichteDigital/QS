@@ -170,7 +170,7 @@ let app = {
       a.dataset.file = file;
       a.href = "#";
       a.title = icon.title;
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         app[this.dataset.fun](this.dataset.file, this);
       });

@@ -35,7 +35,7 @@ let help = {
     img.width = "48";
     img.height = "48";
     img.alt = "";
-    a.addEventListener("click", function(evt) {
+    a.addEventListener("click", function (evt) {
       evt.preventDefault();
       if (document.querySelector(".toc-popup")) {
         help.tocClose();
@@ -62,7 +62,7 @@ let help = {
       a.classList.add("level-" + i.nodeName.match(/[0-6]$/)[0]);
       a.href = "#" + i.nextElementSibling.id;
       a.textContent = i.textContent;
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         help.historyAdd();
         help.tocClose();
       });
@@ -78,7 +78,7 @@ let help = {
     if (!toc || !toc.classList.contains("visible")) {
       return;
     }
-    toc.addEventListener("transitionend", function() {
+    toc.addEventListener("transitionend", function () {
       this.parentNode.removeChild(this);
     }, { once: true });
     toc.classList.remove("visible");

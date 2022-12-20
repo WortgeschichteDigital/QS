@@ -82,7 +82,7 @@ let clustersMod = {
       a.dataset.file = item.file;
       a.href = "#";
       a.innerHTML = `${shared.hClear(item.hl)} <span>${item.file}</span>`;
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         clustersMod.add(this.dataset.file);
         clustersMod.searchOff();
@@ -137,7 +137,7 @@ let clustersMod = {
         !popup.classList.contains("visible")) {
       return;
     }
-    popup.addEventListener("transitionend", function() {
+    popup.addEventListener("transitionend", function () {
       this.parentNode.removeChild(this);
     }, { once: true });
     popup.classList.remove("visible");
@@ -215,7 +215,7 @@ let clustersMod = {
       img.width = "24";
       img.height = "24";
       img.alt = "";
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         const file = this.closest("div").dataset.file;
         const fun = this.dataset.fun.split("|");
@@ -285,7 +285,7 @@ let clustersMod = {
       }
       a.href = "#";
       a.textContent = shared.hClear(lemma);
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         this.nextSibling.classList.toggle("off");
       });
@@ -340,7 +340,7 @@ let clustersMod = {
         div.appendChild(a);
         a.classList.add("file-block-toggle-a");
         a.href = "#";
-        a.addEventListener("click", function(evt) {
+        a.addEventListener("click", function (evt) {
           evt.preventDefault();
           const list = this.closest(".file-block-list");
           list.classList.toggle("open");
@@ -433,7 +433,7 @@ let clustersMod = {
         a.href = "#";
         a.textContent = h1.firstChild.nodeValue;
         h1.replaceChild(a, h1.firstChild);
-        a.addEventListener("click", function(evt) {
+        a.addEventListener("click", function (evt) {
           evt.preventDefault();
           clustersMod.proposalsCopyAll(this);
         });
@@ -453,7 +453,7 @@ let clustersMod = {
         a.dataset.lemma = lemma;
         a.href = "#";
         a.textContent = shared.hClear(lemma.split("/")[0]);
-        a.addEventListener("click", function(evt) {
+        a.addEventListener("click", function (evt) {
           evt.preventDefault();
           clustersMod.proposalsCopy(this);
         });

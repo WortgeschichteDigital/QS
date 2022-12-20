@@ -22,7 +22,7 @@ window.addEventListener("load", async () => {
   // WEBVIEW EVENTS
   const wv = document.querySelector("webview");
   wv.addEventListener("did-finish-load", () => pv.updateIcons());
-  wv.addEventListener("did-fail-load", function() {
+  wv.addEventListener("did-fail-load", function () {
     if (/www\.zdl\.org\/wb\/wortgeschichten\/pv/.test(this.getURL())) {
       pv.xml();
     } else {
@@ -32,7 +32,7 @@ window.addEventListener("load", async () => {
 
   // CLICK EVENTS: HEADER
   document.querySelectorAll("header a").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       pv.nav(this.id);
     });

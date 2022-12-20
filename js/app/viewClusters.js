@@ -353,7 +353,7 @@ let viewClusters = {
   },
 
   // switch to or from clusters preview respectively
-  previewSwitch () {
+  async previewSwitch () {
     await xml.updateWait(); // TODO only if preview is switched on
     // TODO change viewClusters.data.active from "repo" to "preview" and vice versa
   },

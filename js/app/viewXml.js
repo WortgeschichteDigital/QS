@@ -134,7 +134,7 @@ let viewXml = {
     tooltip.init(tab);
     // append events
     tab.querySelectorAll("tr a").forEach(i => {
-      i.addEventListener("click", async function(evt) {
+      i.addEventListener("click", async function (evt) {
         evt.preventDefault();
         await xml.updateWait();
         if (app.view !== "xml") {

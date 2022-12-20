@@ -15,10 +15,8 @@ const popup = require("./js/main/popup");
 const services = require("./js/main/services");
 const xml = require("./js/main/xml");
 
-
 /***** VARIABLES *****/
 const dev = !app.isPackaged;
-
 
 /***** ERRORS *****/
 
@@ -52,14 +50,12 @@ let error = {
 process.on("uncaughtException", err => error.register(err));
 process.on("unhandledRejection", err => error.register(err));
 
-
 /***** SINGLE INSTANCE LOCK *****/
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
   process.exit(0);
 }
-
 
 /***** WINDOW MENU *****/
 
@@ -361,7 +357,6 @@ let winMenu = {
   },
 };
 
-
 /***** PREFERENCES *****/
 
 let prefs = {
@@ -414,7 +409,6 @@ for (const i of ["about", "app", "help", "pv"]) {
     maximized: false,
   };
 }
-
 
 /***** APP WINDOWS *****/
 
@@ -516,7 +510,7 @@ let win = {
     });
     // set menu
     if (process.platform === "darwin") {
-      bw.on("focus", function() {
+      bw.on("focus", function () {
         winMenu.set(this, win.data.find(i => i.id === this.id).type);
       });
     } else {
@@ -543,19 +537,19 @@ let win = {
     bw.once("ready-to-show", () => bw.show());
     // send XML data if necessary
     if (type === "pv") {
-      bw.webContents.once("did-finish-load", function() {
+      bw.webContents.once("did-finish-load", function () {
         const bw = BrowserWindow.fromWebContents(this);
         win.pvSend(bw, xml);
       });
     }
     // make the window show a section
     else if (show) {
-      bw.webContents.once("did-finish-load", function() {
+      bw.webContents.once("did-finish-load", function () {
         setTimeout(() => this.send("show", show), 500);
       });
     }
     // window is about to be closed
-    bw.on("close", async function(evt) {
+    bw.on("close", async function (evt) {
       // search window
       const idx = win.data.findIndex(i => i.id === this.id);
       const type = win.data[idx].type;
@@ -713,7 +707,6 @@ let win = {
   },
 };
 
-
 /***** WORKER WINDOW *****/
 
 let worker = {
@@ -761,12 +754,12 @@ let worker = {
         bw.loadFile(html);
       }
       // window is going to be closed
-      bw.on("close", async function(evt) {
+      bw.on("close", async function (evt) {
         const idx = win.data.findIndex(i => i.type === "worker");
         win.data.splice(idx, 1);
       });
       // send data
-      bw.webContents.once("did-finish-load", function() {
+      bw.webContents.once("did-finish-load", function () {
         const bw = BrowserWindow.fromWebContents(this);
         bw.webContents.send("work", data);
       });
@@ -789,7 +782,6 @@ let worker = {
     return worker.data;
   },
 };
-
 
 /***** APP EVENTS *****/
 
@@ -837,7 +829,6 @@ app.on("activate", () => {
     win.open({ type: "app" });
   }
 });
-
 
 /***** RENDERER REQUESTS *****/
 

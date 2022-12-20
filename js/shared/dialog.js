@@ -40,7 +40,7 @@ let dialog = {
       input.type = "password";
       input.value = "";
       input.placeholder = "Passwort";
-      input.addEventListener("keydown", function(evt) {
+      input.addEventListener("keydown", function (evt) {
         if (evt.key === "Enter" && !shared.detectKeyboardModifiers(evt)) {
           document.querySelector("#dialog-okay").click();
         }

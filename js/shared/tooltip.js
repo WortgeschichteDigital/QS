@@ -13,7 +13,7 @@ let tooltip = {
     basis.querySelectorAll("[title]").forEach(i => {
       i.dataset.tooltip = i.title;
       i.removeAttribute("title");
-      i.addEventListener("mouseover", function() {
+      i.addEventListener("mouseover", function () {
         clearTimeout(tooltip.timeout);
         const timeout = tooltip.noTimeout ? 0 : 500;
         tooltip.timeout = setTimeout(() => {
@@ -73,7 +73,7 @@ let tooltip = {
     if (!tip) {
       return;
     }
-    tip.addEventListener("transitionend", function() {
+    tip.addEventListener("transitionend", function () {
       if (!this.parentNode) {
         return;
       }

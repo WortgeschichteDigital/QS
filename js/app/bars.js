@@ -194,7 +194,7 @@ let bars = {
       a.appendChild(mark);
       mark.textContent = data.regExp.find(item => item.termN === i).textOri;
       mark.classList.add(`color${i % 6 + 1}`);
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         bars.resultsSearchNextQuery(this);
       });
@@ -245,7 +245,7 @@ let bars = {
       files.appendChild(a);
       a.href = "#" + i.file;
       a.textContent = i.file;
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         bars.resultsSearchNextFile(this);
       });
@@ -395,7 +395,7 @@ let bars = {
         icon = `<img src="img/app/placeholder.svg" width="24" height="24" alt="">`;
       }
       item.innerHTML = icon + i.text;
-      item.addEventListener("click", function(evt) {
+      item.addEventListener("click", function (evt) {
         evt.preventDefault();
         const select = this.closest(".select-cont").firstChild;
         select.dataset.value = i.value;
@@ -421,7 +421,7 @@ let bars = {
     setTimeout(() => {
       const dd = ele.closest(".select-cont").querySelector(".select-popup");
       if (dd) {
-        dd.addEventListener("transitionend", function() {
+        dd.addEventListener("transitionend", function () {
           if (this.parentNode) {
             this.parentNode.removeChild(this);
           }

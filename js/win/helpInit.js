@@ -9,13 +9,13 @@ window.addEventListener("load", async () => {
 
   // CLICK EVENTS
   document.querySelectorAll("nav a").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       help.switchSection(this.getAttribute("href").substring(1));
     });
   });
   document.querySelectorAll('section a[href^="#"]').forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       help.internalLink(this.getAttribute("href"));
     });

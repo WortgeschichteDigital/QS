@@ -290,7 +290,7 @@ let viewHints = {
         img.width = "36";
         img.height = "36";
         img.alt = "";
-        a.addEventListener("click", function(evt) {
+        a.addEventListener("click", function (evt) {
           evt.preventDefault();
           const hint = this.closest("[data-file]").dataset;
           viewHints[this.dataset.fun]({
@@ -314,7 +314,7 @@ let viewHints = {
       a.href = "#";
       a.textContent = viewHints.types[i.hint.type];
       a.title = "Erläuterung im Handbuch öffnen";
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         shared.ipc.invoke("help", {
           id: this.dataset.type,
@@ -378,7 +378,7 @@ let viewHints = {
           context.innerHTML = "<i>Kontext:</i> ";
         } else if (i.type === "copy") {
           p.title = "Klick zum Kopieren";
-          p.addEventListener("click", function() {
+          p.addEventListener("click", function () {
             let range = new Range();
             range.setStartBefore(this.firstChild);
             range.setEndAfter(this.lastChild);
@@ -400,7 +400,7 @@ let viewHints = {
           a.classList.add("comment-link");
           a.href = "#";
           a.textContent = "Auskommentieren?";
-          a.addEventListener("click", function(evt) {
+          a.addEventListener("click", function (evt) {
             evt.preventDefault();
             viewHints.popupComment(this);
           });
@@ -603,7 +603,7 @@ let viewHints = {
         if (/<\/Lesart>/.test(fileCont[i])) {
           if (sub) {
             sub--;
-            for (let j = exSub[exSub.length - 1] + 1; j <= i; j++) {
+            for (let j = exSub.at(-1) + 1; j <= i; j++) {
               exSub.push(j);
             }
             continue;
@@ -718,7 +718,7 @@ let viewHints = {
     }
 
     // MAKE TABLE
-    const showBlankLines = lines[lines.length - 1] - lines[0] + 1 === lines.length;
+    const showBlankLines = lines.at(-1) - lines[0] + 1 === lines.length;
     let trimWhitespace = -1;
     for (let i = 0, len = lines.length; i < len; i++) {
       const m = fileCont[lines[i]].match(/^\s+/);
@@ -826,7 +826,7 @@ let viewHints = {
     let a = document.createElement("a");
     popup.appendChild(a);
     a.href = "#";
-    a.addEventListener("click", function(evt) {
+    a.addEventListener("click", function (evt) {
       evt.preventDefault();
       viewHints.popupClose({
         id: this.parentNode.dataset.id,
@@ -884,7 +884,7 @@ let viewHints = {
       }
     }
     for (const i of close) {
-      i.addEventListener("transitionend", function() {
+      i.addEventListener("transitionend", function () {
         this.parentNode.removeChild(this);
       }, { once: true });
       i.classList.remove("visible");

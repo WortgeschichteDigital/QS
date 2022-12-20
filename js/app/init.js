@@ -31,7 +31,7 @@ window.addEventListener("load", async () => {
 
   // CLUSTERS
   document.querySelectorAll(".clusters-view").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       viewClusters.switchSection(this);
     });
@@ -67,11 +67,11 @@ window.addEventListener("load", async () => {
   // SEARCH
   const searchHelp = document.querySelector("#search-help");
   searchHelp.addEventListener("click", evt => evt.preventDefault());
-  searchHelp.addEventListener("focus", function() {
+  searchHelp.addEventListener("focus", function () {
     tooltip.noTimeout = true;
     this.dispatchEvent(new Event("mouseover"));
   });
-  searchHelp.addEventListener("blur", function() {
+  searchHelp.addEventListener("blur", function () {
     this.dispatchEvent(new Event("mouseout"));
   });
   document.querySelector("#search-advanced-toggle").addEventListener("click", evt => {
@@ -89,26 +89,26 @@ window.addEventListener("load", async () => {
   });
   document.querySelector("#search-start").addEventListener("click", () => viewSearch.start());
   document.querySelectorAll("#search-scope input").forEach(i => {
-    i.addEventListener("change", function() {
+    i.addEventListener("change", function () {
       viewSearch.toggleScope(this);
     });
   });
 
   // CLICK EVENTS
   document.querySelectorAll(".clear-text-field").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       app.clearTextField(this);
     });
   });
   document.querySelectorAll("#sorting a.icon").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       app.toggleSortingIcons(this);
     });
   });
   document.querySelectorAll(".select-filter").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       if (this.parentNode.querySelector(".select-popup")) {
         bars.closeSelectPopup(this, false);
@@ -116,7 +116,7 @@ window.addEventListener("load", async () => {
         bars.selectPopup(this);
       }
     });
-    i.addEventListener("blur", function() {
+    i.addEventListener("blur", function () {
       const activeSelect = this.closest(".select-cont:focus-within");
       if (!activeSelect) {
         bars.closeSelectPopup(this, true);
@@ -128,7 +128,7 @@ window.addEventListener("load", async () => {
     bars.filtersReset();
   });
   document.querySelectorAll("#filters-hints-all, #filters-hints-none").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       bars.toggleFiltersHints(this.id);
     });
@@ -142,7 +142,7 @@ window.addEventListener("load", async () => {
 
   // CLICK EVENTS: HEADER
   document.querySelectorAll("#view a").forEach(a => {
-    a.addEventListener("click", function(evt) {
+    a.addEventListener("click", function (evt) {
       evt.preventDefault();
       app.toggleView(this);
     });
@@ -156,7 +156,7 @@ window.addEventListener("load", async () => {
     xml.update();
   });
   document.querySelectorAll("#fun-git a").forEach(a => {
-    a.addEventListener("click", function(evt) {
+    a.addEventListener("click", function (evt) {
       evt.preventDefault();
       git.command(this);
     });
@@ -164,7 +164,7 @@ window.addEventListener("load", async () => {
 
   // CLICK EVENTS: OVERLAYS
   document.querySelectorAll(".overlay").forEach(i => {
-    i.addEventListener("click", function() {
+    i.addEventListener("click", function () {
       this.querySelector(".overlay-close")?.click();
     });
   });
@@ -172,7 +172,7 @@ window.addEventListener("load", async () => {
     i.addEventListener("click", evt => evt.stopPropagation());
   });
   document.querySelectorAll(".overlay-close").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       overlay.close(this);
     });
@@ -191,7 +191,7 @@ window.addEventListener("load", async () => {
   });
   document.querySelector("#git-okay").addEventListener("click", () => git.configFormCheck());
   document.querySelectorAll("#prefs li a").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       prefs.changeSection(this);
     });
@@ -207,21 +207,21 @@ window.addEventListener("load", async () => {
   });
   document.querySelector("#prefs-git-config").addEventListener("click", () => prefs.gitConfig());
   document.querySelectorAll("#dialog input").forEach(i => {
-    i.addEventListener("click", function() {
+    i.addEventListener("click", function () {
       dialog.response = this.dataset.response === "true" ? true : false;
     });
   });
   document.querySelectorAll("#tags-nav a").forEach(i => {
-    i.addEventListener("click", function(evt) {
+    i.addEventListener("click", function (evt) {
       evt.preventDefault();
       tags.showSummaryNav(this.dataset.forward === "true" ? true : false);
     });
   });
-  document.querySelector("#tags-show-teaser").addEventListener("click", function(evt) {
+  document.querySelector("#tags-show-teaser").addEventListener("click", function (evt) {
     evt.preventDefault();
     viewXml.funTeaser(this.parentNode.dataset.file);
   });
-  document.querySelector("#tags-open-file").addEventListener("click", function(evt) {
+  document.querySelector("#tags-open-file").addEventListener("click", function (evt) {
     evt.preventDefault();
     app.openEditor(this.parentNode.dataset.file);
   });

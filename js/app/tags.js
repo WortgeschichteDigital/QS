@@ -49,7 +49,7 @@ let tags = {
         ttCont.appendChild(a);
         a.href = `#${i}`;
         a.textContent = `<${i}>`;
-        a.addEventListener("click", function(evt) {
+        a.addEventListener("click", function (evt) {
           evt.preventDefault();
           tags.listAttributes(this);
         });
@@ -90,7 +90,7 @@ let tags = {
       } else {
         a.textContent = `@${i}`;
       }
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         tags.listFiles(this);
       });
@@ -121,7 +121,7 @@ let tags = {
       navCont.appendChild(a);
       a.href = "#" + files[i];
       a.textContent = i + 1;
-      a.addEventListener("click", function(evt) {
+      a.addEventListener("click", function (evt) {
         evt.preventDefault();
         tags.showSummary(this);
       });
