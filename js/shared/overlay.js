@@ -1,6 +1,6 @@
 "use strict";
 
-let overlay = {
+const overlay = {
   // z-index for stacking order
   zIndex: 1000,
 
@@ -30,7 +30,7 @@ let overlay = {
   // react to close icon
   //   icon = node
   close (icon) {
-    const id = icon.closest("[id]").id;
+    const { id } = icon.closest("[id]");
     if (id === "dialog") {
       dialog.response = null;
     }
@@ -39,7 +39,7 @@ let overlay = {
 
   // detect topmost overlay window
   top () {
-    let top = {
+    const top = {
       zIndex: 0,
       id: "",
     };

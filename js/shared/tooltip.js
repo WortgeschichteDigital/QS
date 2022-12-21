@@ -1,6 +1,6 @@
 "use strict";
 
-let tooltip = {
+const tooltip = {
   // tooltip timeout
   timeout: undefined,
 
@@ -31,7 +31,7 @@ let tooltip = {
     let tip = document.querySelector("#tooltip");
     // create tooltip (if needed)
     if (!tip) {
-      let div = document.createElement("div");
+      const div = document.createElement("div");
       div.id = "tooltip";
       tip = div;
       document.body.appendChild(div);
@@ -55,11 +55,11 @@ let tooltip = {
     tip.style.top = top + "px";
     let left = rect.left + Math.round(rect.width / 2) - Math.round(tip.offsetWidth / 2);
     if (ele.nodeName === "P") {
-      left = rect.left;
+      ({ left } = rect);
     } else if (left + width > window.innerWidth - 10) {
       left = rect.right - width;
     } else if (left < 10) {
-      left = rect.left;
+      ({ left } = rect);
     }
     tip.style.left = left + "px";
     tip.style.zIndex = ++overlay.zIndex;
@@ -69,7 +69,7 @@ let tooltip = {
   // Tooltip ausblenden
   off () {
     clearTimeout(tooltip.timeout);
-    let tip = document.querySelector("#tooltip");
+    const tip = document.querySelector("#tooltip");
     if (!tip) {
       return;
     }
@@ -87,7 +87,7 @@ let tooltip = {
     const title = `<p>Suchwörter sind durch <b>Leerzeichen</b> getrennt. Beim Suchen werden die einzelnen Wörter durch ein <b>logisches Und</b> miteinander verknüpft:<span class="example">alternative Fakten<br>= Suche nach „alternative“ UND „Fakten“.</span></p>
     <p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird bei der Suche für dieses Wort zwischen Groß- und Kleinschreibung unterschieden.</p>
     <p>Taucht im Suchausdruck eine <b>Spitzklammer</b> auf (&lt; oder &gt;), werden neben dem Text auch die Tags durchsucht.</p>
-    <p>Als <b>Phrase</b> können mehrere Wörter mithilfe von nicht-typo\u00ADgraphi\u00ADschen Anführungs\u00ADzeichen gesucht werden:<span class="example">"alternative Fakten"<br>   oder<br>'alternative Fakten'<br>= Suche nach der Phrase „alternative Fakten“.</span></p>
+    <p>Als <b>Phrase</b> können mehrere Wörter mithilfe von nicht-typo\u00ADgraphi\u00ADschen Anführungs\u00ADzeichen gesucht werden:<span class="example">"alternative Fakten"<br>${"\u00A0".repeat(3)}oder<br>'alternative Fakten'<br>= Suche nach der Phrase „alternative Fakten“.</span></p>
     <p>Man kann auch mit <b>regulären Ausdrücken</b> suchen:<span class="example">/alternativen? fakt(en)?/i<br>= Phrasensuche, „alternativen“ mit oder ohne „n“, „fakt“ oder „fakten“, Groß- und Kleinschreibung irrelevant (wegen des optionalen i-Schalters hinter dem schließenden /).</span></p>`;
     document.querySelector("#search-help").title = title;
   },

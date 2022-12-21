@@ -25,6 +25,7 @@
   font-style: italic;
   font-weight: bold;
 }
+
 @font-face {
   font-family: "Noto Serif";
   src: url(../../fonts/NotoSerif-Regular.woff2) format("woff2");
@@ -109,14 +110,14 @@ a[href^="http"]::after {
   content: "";
   margin-left: 5px;
   padding-right: 24px;
-  background-image: url(../../img/app/external-link.svg);
+  background-image: url(../../img/win/external-link.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 footer a[href^="http"]::after {
-  background-image: url(../../img/app/external-link-white.svg);
+  background-image: url(../../img/win/external-link-white.svg);
 }
 
 code {
@@ -170,7 +171,7 @@ p.buttons {
 }
 
 #tooltip p {
-  margin: 0 0 10px 0;
+  margin: 0 0 10px;
 }
 
 #tooltip p:last-child {

@@ -1,6 +1,6 @@
 "use strict";
 
-let shared = {
+const shared = {
   // app info
   //   appPath = string (path to app root folder)
   //   documents = string (path to user documents dir)
@@ -13,7 +13,7 @@ let shared = {
 
   // Electron modules
   // (this file is also included in workers, but in that context,
-  // require() isn't available => test whether window exists or not)
+  // require() isn't available => check whether window exists or not)
   clipboard: typeof window !== "undefined" ? require("electron").clipboard : null,
   ipc: typeof window !== "undefined" ? require("electron").ipcRenderer : null,
   shell: typeof window !== "undefined" ? require("electron").shell : null,
@@ -24,14 +24,6 @@ let shared = {
   fsp: typeof window !== "undefined" ? require("fs").promises : null,
   path: typeof window !== "undefined" ? require("path") : null,
 
-  // erase all children within the given element
-  //   ele = node
-  clear (ele) {
-    while (ele.hasChildNodes()) {
-      ele.removeChild(ele.lastChild);
-    }
-  },
-
   // clear text of homograph or field article markers
   //   text = string
   hClear (text) {
@@ -41,7 +33,7 @@ let shared = {
   // detect pressed modifiers
   //   evt = object (keydown event)
   detectKeyboardModifiers (evt) {
-    let m = [];
+    const m = [];
     if (evt.altKey) {
       m.push("Alt");
     }
@@ -69,67 +61,70 @@ let shared = {
     return m.join("+");
   },
 
-  // display error message
+  // error: display error message
   //   err = string
   async error (err) {
-    err = shared.errorString(err);
+    const error = shared.errorString(err);
     await dialog.open({
       type: "alert",
-      text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${err}`,
+      text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${error}`,
     });
   },
 
-  // reduce the error stack
+  // error: reduce the error stack
   //   err = string
-  reduceErrorStack (err) {
-    let stack = [];
+  errorReduceStack (err) {
+    const stack = [];
     for (const m of err.matchAll(/[a-zA-Z]+\.js:[0-9]+/g)) {
       stack.unshift(m[0]);
     }
-    return stack.join(" > ");
+    return stack.join("\u00A0> ");
   },
 
-  // prepare error strings for better readability
+  // error: prepare error strings for better readability
   //   err = string
   errorString (err) {
-    err = err.replace(/\n/g, "<br>");
-    err = err.replace(/(?<!<)[/\\]/g, m => `${m}<wbr>`);
-    return err;
+    let error = err.replace(/\n/g, "<br>");
+    error = error.replace(/(?<!<)[/\\]/g, m => `${m}<wbr>`);
+    return error;
   },
 
-  // log errors
+  // error: log errors
   //   evt = object
-  onError (evt) {
-    let file = evt.filename; // normal errors
-    let message = evt.message;
-    let line = evt.lineno;
-    let column = evt.colno;
+  errorLog (evt) {
+    // evt.filename marks a normal error
+    let { filename } = evt;
+    let { message } = evt;
+    let { lineno } = evt;
+    let { colno } = evt;
     let stack = "";
-    if (evt.stack) { // forwarded errors
+    // forwarded errors
+    if (evt.stack) {
       if (!/file:.+?\.js/.test(evt.stack)) {
         noDetails();
       } else {
-        file = evt.stack.match(/file:.+?\.js/)[0];
+        [ filename ] = evt.stack.match(/file:.+?\.js/);
         message = `${evt.name}: ${evt.message}`;
-        line = parseInt(evt.stack.match(/\.js:([0-9]+):/)[1], 10);
-        column = parseInt(evt.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
-        stack = shared.reduceErrorStack(evt.stack);
+        lineno = parseInt(evt.stack.match(/\.js:([0-9]+):/)[1], 10);
+        colno = parseInt(evt.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
+        stack = shared.errorReduceStack(evt.stack);
       }
-    } else if (evt.reason) { // in promise errors
+    // in promise errors
+    } else if (evt.reason) {
       if (!/file:.+?\.js/.test(evt.reason.stack)) {
         noDetails();
       } else {
-        file = evt.reason.stack.match(/file:.+?\.js/)[0];
+        [ filename ] = evt.reason.stack.match(/file:.+?\.js/);
         message = evt.reason.stack.match(/(.+?)\n/)[1];
-        line = parseInt(evt.reason.stack.match(/\.js:([0-9]+):/)[1], 10);
-        column = parseInt(evt.reason.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
-        stack = shared.reduceErrorStack(evt.reason.stack);
+        lineno = parseInt(evt.reason.stack.match(/\.js:([0-9]+):/)[1], 10);
+        colno = parseInt(evt.reason.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
+        stack = shared.errorReduceStack(evt.reason.stack);
       }
     }
     // create error and send to main
     let err = `\n----- ${new Date().toISOString()} -----\n`;
-    if (file || line || column) {
-      err += `${file}: ${line}:${column}\n`;
+    if (filename || lineno || colno) {
+      err += `${filename}: ${lineno}:${colno}\n`;
     }
     err += message + "\n";
     if (stack) {
@@ -142,10 +137,10 @@ let shared = {
       if (!stack && evt.reason.name) {
         stack = `${evt.reason.name}: ${evt.reason.message}`;
       }
-      file = "";
+      filename = "";
       message = stack;
-      line = 0;
-      column = 0;
+      lineno = 0;
+      colno = 0;
     }
   },
 
@@ -159,7 +154,8 @@ let shared = {
     document.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
       i.addEventListener("click", function (evt) {
         evt.preventDefault();
-        if (evt.detail > 1) { // no double-clicks
+        // prevent double-clicks
+        if (evt.detail > 1) {
           return;
         }
         shared.shell.openExternal(this.getAttribute("href"));
@@ -171,7 +167,7 @@ let shared = {
   //   type = string (copied | error | okay | reached-bottom | reached-left |
   //     reached-right | reached-top)
   async feedback (type) {
-    let fb = document.createElement("div");
+    const fb = document.createElement("div");
     fb.classList.add("feedback", "type-" + type);
     document.body.appendChild(fb);
     void fb.offsetWidth;
@@ -297,12 +293,12 @@ let shared = {
   sort (a, b) {
     const x = shared.sortPrep(a);
     const y = shared.sortPrep(b);
-    let z = [x, y];
+    let z = [ x, y ];
     if (x === y) {
       if (a === b) {
         return 0;
       }
-      z = [a, b];
+      z = [ a, b ];
     }
     z.sort();
     if (z[0] === x ||
@@ -322,13 +318,13 @@ let shared = {
     }
     let norm = str.toLowerCase();
     const rep = new Map([
-      [/ä/g, "ae"],
-      [/[èé]/g, "e"],
-      [/ö/g, "oe"],
-      [/ü/g, "ue"],
-      [/ß/g, "ss"],
+      [ /ä/g, "ae" ],
+      [ /[èé]/g, "e" ],
+      [ /ö/g, "oe" ],
+      [ /ü/g, "ue" ],
+      [ /ß/g, "ss" ],
     ]);
-    for (let [k, v] of rep) {
+    for (const [ k, v ] of rep) {
       norm = norm.replace(k, v);
     }
     shared.sortPrepCache[str] = norm;
@@ -337,38 +333,37 @@ let shared = {
 
   // wait for the given milliseconds
   //   ms = integer
-  wait (ms) {
-    return new Promise(resolve => setTimeout(() => resolve(true), ms));
+  async wait (ms) {
+    await new Promise(resolve => setTimeout(() => resolve(true), ms));
   },
 
   // color-code XML
   //   text = string
   //   commentCompletion = false | undefined
   xmlColorCode (text, commentCompletion = true) {
+    let t = text;
     // complete comments
     // (as comments are often cut in half they should be completed
     // at the beginning or at the end respectively)
     if (commentCompletion) {
-      const open = /&lt;!--/.exec(text)?.index ?? -1;
-      const close = /--&gt;/.exec(text)?.index ?? -1;
+      const open = /&lt;!--/.exec(t)?.index ?? -1;
+      const close = /--&gt;/.exec(t)?.index ?? -1;
       if (open >= 0 && close.length === -1 ||
           open >= 0 && close >= 0 && open > close) {
-        text += " --&gt;";
+        t += " --&gt;";
       }
       if (open === -1 && close >= 0 ||
           open >= 0 && close >= 0 && close < open) {
-        text = "&lt;!-- " + text;
+        t = "&lt;!-- " + t;
       }
     }
     // highlight tags
-    text = text.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
-    text = text.replace(/&lt;[^!].+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
-    text = text.replace(/<span class="xml-tag">(.+?)<\/span>/g, (m, p1) => {
-      p1 = p1.replace(/ ([^\s]+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => {
-        return ` <span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
-      });
-      return `<span class="xml-tag">${p1}</span>`;
+    t = t.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
+    t = t.replace(/&lt;[^!].+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);
+    t = t.replace(/<span class="xml-tag">(.+?)<\/span>/g, (m, p1) => {
+      const paren = p1.replace(/ ([^\s]+?=)(&quot;.+?&quot;)/g, (m, p1, p2) => ` <span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`);
+      return `<span class="xml-tag">${paren}</span>`;
     });
-    return text;
+    return t;
   },
 };

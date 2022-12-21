@@ -1,0 +1,81 @@
+@charset "utf-8";
+
+#search,
+#hints {
+  padding-top: 60px;
+}
+
+:where(#search, #hints) .nothing {
+  margin-top: 45px;
+}
+
+/* RESULTS -------------------------------------- */
+
+:where(#search, #hints) h1 {
+  position: sticky;
+  top: 171px;
+  z-index: 1;
+  margin: 40px auto 0;
+  overflow: hidden; /* otherwise some letters (like J) overflow to the left and hence remain visible */
+  padding: 15px 0;
+  width: 700px;
+  max-width: 90%;
+  background-color: #fff;
+  font-size: 1.2rem;
+  font-weight: normal;
+  line-height: 1.8rem;
+  white-space: nowrap;
+}
+
+:where(#search, #hints) h1:first-child {
+  margin-top: 0;
+}
+
+:where(#search, #hints) h1 a {
+  position: relative;
+  top: 3px;
+  margin-left: 10px;
+  vertical-align: top;
+}
+
+.search-result,
+.hint-block {
+  position: relative;
+  margin: 0 auto;
+  outline: 2px solid transparent;
+  outline-offset: 5px;
+  border-radius: 10px;
+  width: 700px;
+  max-width: 90%;
+  font-size: .9rem;
+  line-height: 1.35rem;
+  transition: outline-color .3s linear;
+}
+
+.hint-block {
+  margin: 0 auto 40px;
+  padding: 0 10px;
+  min-height: 71px;
+}
+
+.hint-block:last-child {
+  margin-bottom: 0;
+}
+
+.search-result > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--colorBlueDark);
+  font-size: .9rem;
+  line-height: 1.35rem;
+}
+
+.search-result :where(p, code) {
+  margin: 0 0 10px 100px;
+}
+
+.search-result code {
+  font-size: .8rem;
+  line-height: 1.2rem;
+}

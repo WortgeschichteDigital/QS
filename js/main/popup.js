@@ -57,29 +57,29 @@ const items = {
   update: {
     label: "Update",
     icon: "view-refresh.png",
-    click: 'app.menuCommand("update")',
+    click: 'win.menuCommand("update")',
     accelerator: "F5",
   },
   viewClusters: {
     label: "Clusterei",
     icon: "clusters.png",
-    click: 'app.menuCommand("clusters")',
+    click: 'win.menuCommand("clusters")',
   },
   viewHints: {
     label: "Hinweise",
     icon: "info.png",
-    click: 'app.menuCommand("hints")',
+    click: 'win.menuCommand("hints")',
   },
   viewSearch: {
     label: "Suche",
     icon: "search.png",
-    click: 'app.menuCommand("search")',
+    click: 'win.menuCommand("search")',
     accelerator: "CommandOrControl+F",
   },
   viewXml: {
     label: "XML",
     icon: "xml.png",
-    click: 'app.menuCommand("xml")',
+    click: 'win.menuCommand("xml")',
   },
 };
 
@@ -97,7 +97,7 @@ function makeSep () {
 //   click = string (functions to execute on click)
 //   role = string (predefined menu role)
 function makeItem ({ wc, label, icon, click = "", role = "", accelerator = "" }) {
-  let opt = {
+  const opt = {
     label,
     icon: path.join(__dirname, "../", "../", "img", "main", icon),
   };
@@ -119,14 +119,14 @@ module.exports = {
   //   list = array (list of menu items)
   make (wc, list) {
     // create new menu
-    let menu = new Menu();
+    const menu = new Menu();
     for (const i of list) {
       if (i === "sep") {
         // separator
         menu.append(makeSep());
       } else {
         // menu item
-        let args = {...items[i]};
+        const args = { ...items[i] };
         args.wc = wc;
         menu.append(makeItem(args));
       }

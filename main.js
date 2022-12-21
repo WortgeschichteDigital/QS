@@ -1,6 +1,6 @@
 "use strict";
 
-/***** LOAD MODULES *****/
+/* LOAD MODULES --------------------------------- */
 
 // Electron modules
 const { app, BrowserWindow, ipcMain, Menu, nativeImage } = require("electron");
@@ -15,12 +15,14 @@ const popup = require("./js/main/popup");
 const services = require("./js/main/services");
 const xml = require("./js/main/xml");
 
-/***** VARIABLES *****/
+
+/* VARIABLES ------------------------------------ */
 const dev = !app.isPackaged;
 
-/***** ERRORS *****/
 
-let error = {
+/* ERRORS --------------------------------------- */
+
+const error = {
   // register an error in main.js
   //   err = object
   register (err) {
@@ -32,7 +34,8 @@ let error = {
 
   // log variables
   logFile: path.join(app.getPath("userData"), "error.log"),
-  logStash: "", // in case many errors appear in fast succession
+  // stash for errors in case many errors appear in fast succession
+  logStash: "",
   logTimeout: undefined,
 
   // write recent errors to log file
@@ -42,7 +45,9 @@ let error = {
     error.logStash += err;
     error.logTimeout = setTimeout(() => {
       fsp.appendFile(error.logFile, error.logStash)
-        .then(() => error.logStash = "");
+        .then(() => {
+          error.logStash = "";
+        });
     }, 5e3);
   },
 };
@@ -50,263 +55,262 @@ let error = {
 process.on("uncaughtException", err => error.register(err));
 process.on("unhandledRejection", err => error.register(err));
 
-/***** SINGLE INSTANCE LOCK *****/
+
+/* SINGLE INSTANCE LOCK ------------------------- */
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
   process.exit(0);
 }
 
-/***** WINDOW MENU *****/
 
-let menuApp = [
-  {
-    label: "&QS",
-    submenu: [
-      {
-        label: "XML",
-        icon: path.join(__dirname, "img", "main", "xml.png"),
-        click: () => winMenu.execute("xml"),
-      },
-      {
-        label: "Hinweise",
-        icon: path.join(__dirname, "img", "main", "info.png"),
-        click: () => winMenu.execute("hints"),
-      },
-      {
-        label: "Clusterei",
-        icon: path.join(__dirname, "img", "main", "clusters.png"),
-        click: () => winMenu.execute("clusters"),
-      },
-      {
-        label: "Suche",
-        icon: path.join(__dirname, "img", "main", "search.png"),
-        click: () => winMenu.execute("search"),
-        accelerator: "CommandOrControl+F",
-      },
-      { type: "separator" },
-      {
-        label: "Einstellungen",
-        icon: path.join(__dirname, "img", "main", "preferences.png"),
-        click: () => winMenu.execute("preferences"),
-      },
-      { type: "separator" },
-      {
-        label: "Beenden",
-        icon: path.join(__dirname, "img", "main", "exit.png"),
-        click: () => win.closeAll([]),
-        accelerator: "CommandOrControl+Q",
-      },
-    ],
-  },
-  {
-    label: "&Funktionen",
-    submenu: [
-      {
-        label: "Filter",
-        icon: path.join(__dirname, "img", "main", "filter.png"),
-        click: () => winMenu.execute("filters"),
-        accelerator: "CommandOrControl+Shift+F",
-      },
-      {
-        label: "Update",
-        icon: path.join(__dirname, "img", "main", "view-refresh.png"),
-        click: () => winMenu.execute("update"),
-        accelerator: "F5",
-      },
-      { type: "separator" },
-      {
-        label: "Teaser-Tags",
-        icon: path.join(__dirname, "img", "main", "xml.png"),
-        click: () => winMenu.execute("teaser-tags"),
-      },
-    ],
-  },
-];
+/* WINDOW MENU ---------------------------------- */
 
-let menuPv = [
-  {
-    label: "&QS",
-    submenu: [
-      {
-        label: "Fenster schließen",
-        icon: path.join(__dirname, "img", "main", "close.png"),
-        click: () => win.close(),
-        accelerator: "CommandOrControl+W",
-      },
-    ],
-  },
-  {
-    label: "&Navigation",
-    submenu: [
-      {
-        label: "Zurück",
-        icon: path.join(__dirname, "img", "main", "nav-back.png"),
-        click: () => winMenu.execute("nav-back"),
-        accelerator: "Alt+Left",
-      },
-      {
-        label: "Vorwärts",
-        icon: path.join(__dirname, "img", "main", "nav-forward.png"),
-        click: () => winMenu.execute("nav-forward"),
-        accelerator: "Alt+Right",
-      },
-      { type: "separator" },
-      {
-        label: "XML-Vorschau",
-        icon: path.join(__dirname, "img", "main", "xml.png"),
-        click: () => winMenu.execute("nav-xml"),
-        accelerator: "Alt+Home",
-      },
-    ],
-  },
-  {
-    label: "&Funktionen",
-    submenu: [
-      {
-        label: "Update",
-        icon: path.join(__dirname, "img", "main", "view-refresh.png"),
-        click: () => winMenu.execute("update"),
-        accelerator: "F5",
-      },
-      {
-        label: "Neues Fenster",
-        icon: path.join(__dirname, "img", "main", "window-new.png"),
-        click: () => winMenu.execute("new"),
-        accelerator: "CommandOrControl+N",
-      },
-    ],
-  },
-];
+const winMenu = {
+  // menu templates
+  menuApp: [
+    {
+      label: "&QS",
+      submenu: [
+        {
+          label: "XML",
+          icon: path.join(__dirname, "img", "main", "xml.png"),
+          click: () => winMenu.execute("xml"),
+        },
+        {
+          label: "Hinweise",
+          icon: path.join(__dirname, "img", "main", "info.png"),
+          click: () => winMenu.execute("hints"),
+        },
+        {
+          label: "Clusterei",
+          icon: path.join(__dirname, "img", "main", "clusters.png"),
+          click: () => winMenu.execute("clusters"),
+        },
+        {
+          label: "Suche",
+          icon: path.join(__dirname, "img", "main", "search.png"),
+          click: () => winMenu.execute("search"),
+          accelerator: "CommandOrControl+F",
+        },
+        { type: "separator" },
+        {
+          label: "Einstellungen",
+          icon: path.join(__dirname, "img", "main", "preferences.png"),
+          click: () => winMenu.execute("preferences"),
+        },
+        { type: "separator" },
+        {
+          label: "Beenden",
+          icon: path.join(__dirname, "img", "main", "exit.png"),
+          click: () => win.closeAll([]),
+          accelerator: "CommandOrControl+Q",
+        },
+      ],
+    },
+    {
+      label: "&Funktionen",
+      submenu: [
+        {
+          label: "Filter",
+          icon: path.join(__dirname, "img", "main", "filter.png"),
+          click: () => winMenu.execute("filters"),
+          accelerator: "CommandOrControl+Shift+F",
+        },
+        {
+          label: "Update",
+          icon: path.join(__dirname, "img", "main", "view-refresh.png"),
+          click: () => winMenu.execute("update"),
+          accelerator: "F5",
+        },
+        { type: "separator" },
+        {
+          label: "Teaser-Tags",
+          icon: path.join(__dirname, "img", "main", "xml.png"),
+          click: () => winMenu.execute("teaser-tags"),
+        },
+      ],
+    },
+  ],
+  menuPv: [
+    {
+      label: "&QS",
+      submenu: [
+        {
+          label: "Fenster schließen",
+          icon: path.join(__dirname, "img", "main", "close.png"),
+          click: () => win.close(),
+          accelerator: "CommandOrControl+W",
+        },
+      ],
+    },
+    {
+      label: "&Navigation",
+      submenu: [
+        {
+          label: "Zurück",
+          icon: path.join(__dirname, "img", "main", "nav-back.png"),
+          click: () => winMenu.execute("nav-back"),
+          accelerator: "Alt+Left",
+        },
+        {
+          label: "Vorwärts",
+          icon: path.join(__dirname, "img", "main", "nav-forward.png"),
+          click: () => winMenu.execute("nav-forward"),
+          accelerator: "Alt+Right",
+        },
+        { type: "separator" },
+        {
+          label: "XML-Vorschau",
+          icon: path.join(__dirname, "img", "main", "xml.png"),
+          click: () => winMenu.execute("nav-xml"),
+          accelerator: "Alt+Home",
+        },
+      ],
+    },
+    {
+      label: "&Funktionen",
+      submenu: [
+        {
+          label: "Update",
+          icon: path.join(__dirname, "img", "main", "view-refresh.png"),
+          click: () => winMenu.execute("update"),
+          accelerator: "F5",
+        },
+        {
+          label: "Neues Fenster",
+          icon: path.join(__dirname, "img", "main", "window-new.png"),
+          click: () => winMenu.execute("new"),
+          accelerator: "CommandOrControl+N",
+        },
+      ],
+    },
+  ],
+  menuWin: [
+    {
+      label: "&QS",
+      submenu: [
+        {
+          label: "Fenster schließen",
+          icon: path.join(__dirname, "img", "main", "close.png"),
+          click: () => win.close(),
+          accelerator: "CommandOrControl+W",
+        },
+      ],
+    },
+  ],
+  menuAll: [
+    {
+      label: "&Bearbeiten",
+      submenu: [
+        {
+          label: "Rückgängig",
+          icon: path.join(__dirname, "img", "main", "edit-undo.png"),
+          role: "undo",
+        },
+        {
+          label: "Wiederherstellen",
+          icon: path.join(__dirname, "img", "main", "edit-redo.png"),
+          role: "redo",
+        },
+        { type: "separator" },
+        {
+          label: "Ausschneiden",
+          icon: path.join(__dirname, "img", "main", "edit-cut.png"),
+          role: "cut",
+        },
+        {
+          label: "Kopieren",
+          icon: path.join(__dirname, "img", "main", "edit-copy.png"),
+          role: "copy",
+        },
+        {
+          label: "Einfügen",
+          icon: path.join(__dirname, "img", "main", "edit-paste.png"),
+          role: "paste",
+        },
+        { type: "separator" },
+        {
+          label: "Alles auswählen",
+          icon: path.join(__dirname, "img", "main", "edit-select-all.png"),
+          role: "selectAll",
+        },
+      ],
+    },
+    {
+      label: "&Ansicht",
+      submenu: [
+        {
+          label: "Anzeige vergrößern",
+          icon: path.join(__dirname, "img", "main", "zoom-in.png"),
+          role: "zoomIn",
+          // Electron-Bug (otherwise Ctrl + Plus doesn't work)
+          accelerator: "CommandOrControl+=",
+        },
+        {
+          label: "Anzeige verkleinern",
+          icon: path.join(__dirname, "img", "main", "zoom-out.png"),
+          role: "zoomOut",
+        },
+        {
+          label: "Standardgröße",
+          icon: path.join(__dirname, "img", "main", "zoom-original.png"),
+          role: "resetZoom",
+        },
+        { type: "separator" },
+        {
+          label: "Vollbild",
+          icon: path.join(__dirname, "img", "main", "view-fullscreen.png"),
+          role: "toggleFullScreen",
+        },
+      ],
+    },
+  ],
+  menuHelp: [
+    {
+      label: "&Hilfe",
+      submenu: [
+        {
+          label: "Handbuch",
+          icon: path.join(__dirname, "img", "main", "help.png"),
+          click: () => win.infoOpen("help"),
+          accelerator: "F1",
+        },
+        { type: "separator" },
+        {
+          label: "Updates",
+          click: () => winMenu.execute("app-updates"),
+        },
+        {
+          label: "Fehlerlog",
+          click: () => winMenu.execute("error-log"),
+        },
+        { type: "separator" },
+        {
+          label: "Über QS",
+          icon: path.join(__dirname, "img", "main", "info.png"),
+          click: () => win.infoOpen("about"),
+        },
+      ],
+    },
+  ],
+  menuDev: [
+    {
+      label: "&Dev",
+      submenu: [
+        {
+          role: "reload",
+        },
+        {
+          role: "forceReload",
+        },
+        {
+          role: "toggleDevTools",
+        },
+      ],
+    },
+  ],
 
-let menuWin = [
-  {
-    label: "&QS",
-    submenu: [
-      {
-        label: "Fenster schließen",
-        icon: path.join(__dirname, "img", "main", "close.png"),
-        click: () => win.close(),
-        accelerator: "CommandOrControl+W",
-      },
-    ],
-  },
-];
-
-let menuAll = [
-  {
-    label: "&Bearbeiten",
-    submenu: [
-      {
-        label: "Rückgängig",
-        icon: path.join(__dirname, "img", "main", "edit-undo.png"),
-        role: "undo",
-      },
-      {
-        label: "Wiederherstellen",
-        icon: path.join(__dirname, "img", "main", "edit-redo.png"),
-        role: "redo",
-      },
-      { type: "separator" },
-      {
-        label: "Ausschneiden",
-        icon: path.join(__dirname, "img", "main", "edit-cut.png"),
-        role: "cut",
-      },
-      {
-        label: "Kopieren",
-        icon: path.join(__dirname, "img", "main", "edit-copy.png"),
-        role: "copy",
-      },
-      {
-        label: "Einfügen",
-        icon: path.join(__dirname, "img", "main", "edit-paste.png"),
-        role: "paste",
-      },
-      { type: "separator" },
-      {
-        label: "Alles auswählen",
-        icon: path.join(__dirname, "img", "main", "edit-select-all.png"),
-        role: "selectAll",
-      },
-    ],
-  },
-  {
-    label: "&Ansicht",
-    submenu: [
-      {
-        label: "Anzeige vergrößern",
-        icon: path.join(__dirname, "img", "main", "zoom-in.png"),
-        role: "zoomIn",
-        accelerator: "CommandOrControl+=", // Electron-BUG: otherwise Ctrl + Plus doesn't work
-      },
-      {
-        label: "Anzeige verkleinern",
-        icon: path.join(__dirname, "img", "main", "zoom-out.png"),
-        role: "zoomOut",
-      },
-      {
-        label: "Standardgröße",
-        icon: path.join(__dirname, "img", "main", "zoom-original.png"),
-        role: "resetZoom",
-      },
-      { type: "separator" },
-      {
-        label: "Vollbild",
-        icon: path.join(__dirname, "img", "main", "view-fullscreen.png"),
-        role: "toggleFullScreen",
-      },
-    ],
-  },
-];
-
-let menuHelp = [
-  {
-    label: "&Hilfe",
-    submenu: [
-      {
-        label: "Handbuch",
-        icon: path.join(__dirname, "img", "main", "help.png"),
-        click: () => win.infoOpen("help"),
-        accelerator: "F1",
-      },
-      { type: "separator" },
-      {
-        label: "Updates",
-        click: () => winMenu.execute("app-updates"),
-      },
-      {
-        label: "Fehlerlog",
-        click: () => winMenu.execute("error-log"),
-      },
-      { type: "separator" },
-      {
-        label: "Über QS",
-        icon: path.join(__dirname, "img", "main", "info.png"),
-        click: () => win.infoOpen("about"),
-      },
-    ],
-  },
-];
-
-let menuDev = [
-  {
-    label: "&Dev",
-    submenu: [
-      {
-        role: "reload",
-      },
-      {
-        role: "forceReload",
-      },
-      {
-        role: "toggleDevTools",
-      },
-    ],
-  },
-];
-
-let winMenu = {
   // set window menu
   //   bw = object (browser window)
   //   type = string (about | app | help | pv)
@@ -314,22 +318,22 @@ let winMenu = {
     // build window specific app menu
     let menu = [];
     if (type === "about") {
-      menu = menuWin;
+      menu = winMenu.menuWin;
     } else if (type === "app") {
-      for (const i of [menuApp, menuAll, menuHelp]) {
+      for (const i of [ winMenu.menuApp, winMenu.menuAll, winMenu.menuHelp ]) {
         menu = menu.concat(i);
       }
     } else if (type === "pv") {
-      for (const i of [menuPv, menuAll]) {
+      for (const i of [ winMenu.menuPv, winMenu.menuAll ]) {
         menu = menu.concat(i);
       }
     } else {
-      for (const i of [menuWin, menuAll]) {
+      for (const i of [ winMenu.menuWin, winMenu.menuAll ]) {
         menu = menu.concat(i);
       }
     }
     if (dev) {
-      menu = menu.concat(menuDev);
+      menu = menu.concat(winMenu.menuDev);
     }
     // remove ampersands on macOS
     if (process.platform === "darwin") {
@@ -357,9 +361,10 @@ let winMenu = {
   },
 };
 
-/***** PREFERENCES *****/
 
-let prefs = {
+/* PREFERENCES ---------------------------------- */
+
+const prefs = {
   // contents of preferences.json
   data: {
     git: {
@@ -400,7 +405,7 @@ let prefs = {
   },
 };
 
-for (const i of ["about", "app", "help", "pv"]) {
+for (const i of [ "about", "app", "help", "pv" ]) {
   prefs.data.win[i] = {
     x: -1,
     y: -1,
@@ -410,9 +415,10 @@ for (const i of ["about", "app", "help", "pv"]) {
   };
 }
 
-/***** APP WINDOWS *****/
 
-let win = {
+/* APP WINDOWS ---------------------------------- */
+
+const win = {
   // data of currently open windows; filled with objects:
   //   bw = object (browser window)
   //   id = integer (window ID)
@@ -426,7 +432,7 @@ let win = {
   //   show = object | undefined (show section in help window)
   open ({ type, xml = {}, show = null }) {
     // define window dimensions
-    const workArea = display.getPrimaryDisplay().workArea;
+    const { workArea } = display.getPrimaryDisplay();
     const data = prefs.data.win[type];
     const x = data.x >= 0 ? data.x : undefined;
     const y = data.y >= 0 ? data.y : undefined;
@@ -438,12 +444,11 @@ let win = {
           width: 750,
           height: 430,
         };
-      } else {
-        return {
-          width: 1000,
-          height: workArea.height,
-        };
       }
+      return {
+        width: 1000,
+        height: workArea.height,
+      };
     }
     // win title
     const title = {
@@ -453,7 +458,7 @@ let win = {
       pv: "QS / " + xml.file,
     };
     // open window
-    let bwOptions = {
+    const bwOptions = {
       title: title[type],
       icon: win.icon(),
       backgroundColor: "#fff",
@@ -518,10 +523,10 @@ let win = {
     }
     // load html
     const html = {
-      about: path.join(__dirname, "win", "about.html"),
-      app: path.join(__dirname, "start.html"),
-      help: path.join(__dirname, "win", "help.html"),
-      pv: path.join(__dirname, "win", "pv.html"),
+      about: path.join(__dirname, "html", "about.html"),
+      app: path.join(__dirname, "win.html"),
+      help: path.join(__dirname, "html", "help.html"),
+      pv: path.join(__dirname, "html", "pv.html"),
     };
     if (dev) {
       // no cache while developing
@@ -541,9 +546,8 @@ let win = {
         const bw = BrowserWindow.fromWebContents(this);
         win.pvSend(bw, xml);
       });
-    }
     // make the window show a section
-    else if (show) {
+    } else if (show) {
       bw.webContents.once("did-finish-load", function () {
         setTimeout(() => this.send("show", show), 500);
       });
@@ -552,13 +556,13 @@ let win = {
     bw.on("close", async function (evt) {
       // search window
       const idx = win.data.findIndex(i => i.id === this.id);
-      const type = win.data[idx].type;
+      const { type } = win.data[idx];
       // close every other window and
       // save preferences when the main window is about to be closed
       if (type === "app" && typeof prefs.saved === "undefined") {
         evt.preventDefault();
         // close every other window
-        await win.closeAll(["app"]);
+        await win.closeAll([ "app" ]);
         // save preferences
         prefs.saved = false;
         this.webContents.send("save-prefs");
@@ -606,12 +610,14 @@ let win = {
   },
 
   // close all windows
-  //   exclude = array (exclude windows the given window types from closing)
+  //   exclude = array (exclude the given window types from closing)
   async closeAll (exclude) {
     for (let i = win.data.length - 1; i >= 0; i--) {
       const w = win.data[i];
-      if (w.type === "app" || // the main window should remain open until last
-          exclude.includes(w.type)) { // exclude this window type from closing
+      // 1. the main window should remain open until last
+      // 2. exclude passed window types from closing
+      if (w.type === "app" ||
+          exclude.includes(w.type)) {
         continue;
       }
       w.bw.close();
@@ -628,9 +634,8 @@ let win = {
       return nativeImage.createFromPath(path.join(__dirname, "img", "icon", "win", "icon.ico"));
     } else if (process.platform === "darwin") {
       return nativeImage.createFromPath(path.join(__dirname, "img", "icon", "mac", "icon.icns"));
-    } else {
-      return nativeImage.createFromPath(path.join(__dirname, "img", "icon", "linux", "icon-64px.png"));
     }
+    return nativeImage.createFromPath(path.join(__dirname, "img", "icon", "linux", "icon-64px.png"));
   },
 
   // focus the app window
@@ -656,12 +661,15 @@ let win = {
         return;
       }
     }
-    win.open({ type: "pv", xml: args });
+    win.open({
+      type: "pv",
+      xml: args,
+    });
   },
 
   // close all preview windows
   pvCloseAll () {
-    let exclude = [];
+    const exclude = [];
     for (const w of win.data) {
       if (w.type !== "pv") {
         exclude.push(w.type);
@@ -702,14 +710,18 @@ let win = {
       w.bw.webContents.send("show", data);
       w.bw.focus();
     } else {
-      win.open({ type: "help", show: data });
+      win.open({
+        type: "help",
+        show: data,
+      });
     }
   },
 };
 
-/***** WORKER WINDOW *****/
 
-let worker = {
+/* WORKER WINDOW -------------------------------- */
+
+const worker = {
   // data received from worker
   data: null,
 
@@ -744,7 +756,7 @@ let worker = {
         xml: "",
       });
       // load html
-      const html = path.join(__dirname, "win", "worker.html");
+      const html = path.join(__dirname, "html", "worker.html");
       if (dev) {
         // no cache while developing
         bw.loadURL("file://" + html, {
@@ -754,7 +766,7 @@ let worker = {
         bw.loadFile(html);
       }
       // window is going to be closed
-      bw.on("close", async function (evt) {
+      bw.on("close", () => {
         const idx = win.data.findIndex(i => i.type === "worker");
         win.data.splice(idx, 1);
       });
@@ -783,7 +795,8 @@ let worker = {
   },
 };
 
-/***** APP EVENTS *****/
+
+/* APP EVENTS ----------------------------------- */
 
 // focus existing app window in case a second instance is opened
 app.on("second-instance", () => {
@@ -830,7 +843,8 @@ app.on("activate", () => {
   }
 });
 
-/***** RENDERER REQUESTS *****/
+
+/* RENDERER REQUESTS ---------------------------- */
 
 ipcMain.handle("app-info", evt => {
   const bw = BrowserWindow.fromWebContents(evt.sender);
@@ -852,13 +866,21 @@ ipcMain.handle("close", evt => {
 
 ipcMain.handle("help", (evt, data) => win.help(data));
 
-ipcMain.handle("error", async (evt, err) => error.log(err));
+ipcMain.handle("error", (evt, err) => error.log(err));
 
-ipcMain.handle("exists", async (evt, path) => await services.exists(path));
+ipcMain.handle("exists", async (evt, path) => {
+  const result = await services.exists(path);
+  return result;
+});
 
 ipcMain.handle("file-dialog", async (evt, open, options) => {
   const bw = BrowserWindow.fromWebContents(evt.sender);
-  return await services.fileDialog({ bw, open, options });
+  const result = await services.fileDialog({
+    bw,
+    open,
+    options,
+  });
+  return result;
 });
 
 ipcMain.handle("git-config", () => prefs.data.git);
@@ -868,7 +890,10 @@ ipcMain.handle("git-save", (evt, config) => {
   prefs.write();
 });
 
-ipcMain.handle("list-of-images", async () => await services.svg());
+ipcMain.handle("list-of-images", async () => {
+  const result = await services.svg();
+  return result;
+});
 
 ipcMain.handle("popup", (evt, items) => popup.make(evt.sender, items));
 
@@ -886,10 +911,21 @@ ipcMain.handle("pv", (evt, args) => win.pvOpen(args));
 
 ipcMain.handle("pv-close-all", () => win.pvCloseAll());
 
-ipcMain.handle("pv-new", (evt, args) => win.open({ type: "pv", xml: args }));
+ipcMain.handle("pv-new", (evt, args) => win.open({
+  type: "pv",
+  xml: args,
+}));
 
-ipcMain.handle("xml-files", async (evt, repoDir) => await xml.getFiles(repoDir));
+ipcMain.handle("xml-files", async (evt, repoDir) => {
+  const result = await xml.getFiles(repoDir);
+  return result;
+});
 
-ipcMain.handle("xml-worker-done", (evt, data) => worker.data = data);
+ipcMain.handle("xml-worker-done", (evt, data) => {
+  worker.data = data;
+});
 
-ipcMain.handle("xml-worker-work", async (evt, data) => await worker.work(data));
+ipcMain.handle("xml-worker-work", async (evt, data) => {
+  const result = await worker.work(data);
+  return result;
+});

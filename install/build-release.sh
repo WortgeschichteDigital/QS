@@ -57,7 +57,7 @@ appVersion() {
 
 # update copyright year
 updateCopyright() {
-  local about="${dir}/../win/about.html"
+  local about="${dir}/../html/about.html"
   local year="2022"
   if [ "$(date +%Y)" != "$year" ]; then
     year+="–$(date +%Y)"

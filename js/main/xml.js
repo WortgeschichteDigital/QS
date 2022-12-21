@@ -1,7 +1,7 @@
 "use strict";
 
 const crypto = require("crypto");
-const fsp = require("fs").promises;
+const { promises: fsp } = require("fs");
 const path = require("path");
 
 // fill the current file into the file object
@@ -16,12 +16,12 @@ async function fillFileObject ({ xmlFiles, dir, sub, f }) {
   // status 2 = new (assume this if file is in ignore only)
   let status = sub === "articles" ? 0 : 2;
   if (xmlFiles[f]) {
-    status = 1; 
+    status = 1;
   }
   const xml = await new Promise(resolve => {
-    fsp.readFile( path.join(dir, f) )
-      .then(buffer => resolve( buffer.toString() ) )
-      .catch(() => resolve(false) );
+    fsp.readFile(path.join(dir, f))
+      .then(buffer => resolve(buffer.toString()))
+      .catch(() => resolve(false));
   });
   if (!xml) {
     // only in case an error occures
@@ -48,16 +48,24 @@ module.exports = {
   // get contents of xml files
   //   repoDir = string (path to repository)
   async getFiles (repoDir) {
-    let xmlFiles = {};
-    for (const sub of ["articles", "ignore"]) {
+    const xmlFiles = {};
+    for (const sub of [ "articles", "ignore" ]) {
       const dir = path.join(repoDir, sub);
       const files = await fsp.readdir(dir);
       for (const f of files) {
-        if (/^!/.test(f) || // test files
-            !/\.xml$/.test(f)) { // no XML file
+        // exclude files that
+        //   - have a ! prefix
+        //   - aren't XML files
+        if (/^!/.test(f) ||
+            !/\.xml$/.test(f)) {
           continue;
         }
-        await fillFileObject({ xmlFiles, dir, sub, f });
+        await fillFileObject({
+          xmlFiles,
+          dir,
+          sub,
+          f,
+        });
       }
     }
     return xmlFiles;
@@ -68,7 +76,7 @@ module.exports = {
   //   sub = string (articles | ignore)
   //   f = string (XML file name)
   async getFile (repoDir, sub, f) {
-    let xmlFiles = {};
+    const xmlFiles = {};
     await fillFileObject({
       xmlFiles,
       dir: path.join(repoDir, sub),

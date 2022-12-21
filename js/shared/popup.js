@@ -1,6 +1,6 @@
 "use strict";
 
-let popup = {
+const popup = {
   // element the event refers to
   element: null,
 
@@ -15,24 +15,24 @@ let popup = {
     }
     // collect items
     let items = [];
-    let def = ["close"];
-    let defSep = ["sep"].concat(def);
-    if (typeof app !== "undefined") {
-      def = ["update", "sep", "viewXml", "viewHints", "viewClusters", "viewSearch"];
-      defSep = ["sep"].concat(def);
+    let def = [ "close" ];
+    let defSep = [ "sep" ].concat(def);
+    if (typeof win !== "undefined") {
+      def = [ "update", "sep", "viewXml", "viewHints", "viewClusters", "viewSearch" ];
+      defSep = [ "sep" ].concat(def);
     }
     if (target === "filters_reset") {
-      items = ["filtersReset"].concat(defSep);
+      items = [ "filtersReset" ].concat(defSep);
     } else if (target === "link") {
-      items = ["copyLink"].concat(defSep);
+      items = [ "copyLink" ].concat(defSep);
     } else if (target === "mail") {
-      items = ["copyMail"].concat(defSep);
+      items = [ "copyMail" ].concat(defSep);
     } else if (target === "results_bar") {
-      items = ["results"].concat(defSep);
+      items = [ "results" ].concat(defSep);
     } else if (target === "text_field") {
-      items = ["editCut", "editCopy", "editPaste", "sep", "editSelectAll"];
+      items = [ "editCut", "editCopy", "editPaste", "sep", "editSelectAll" ];
     } else if (target === "text_field_readonly") {
-      items = ["editCopy", "sep", "editSelectAll"];
+      items = [ "editCopy", "sep", "editSelectAll" ];
     } else {
       items = def;
     }
@@ -62,7 +62,7 @@ let popup = {
         return "text_field";
       }
       // ID
-      const id = path[i].id;
+      const { id } = path[i];
       if (id === "fun-filters") {
         return "filters_reset";
       }
@@ -81,7 +81,7 @@ let popup = {
       return "";
     }
     // default popup menu
-    if (typeof app !== "undefined" && /hints|search/.test(app.view)) {
+    if (typeof win !== "undefined" && /hints|search/.test(win.view)) {
       return "results_bar";
     }
     // default popup menu

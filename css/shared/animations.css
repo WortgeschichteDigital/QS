@@ -12,7 +12,7 @@
   border-radius: 10px;
   width: 96px;
   height: 96px;
-  background-color: rgba(255, 255, 255, .9);
+  background-color: rgb(255 255 255 / 90%);
   background-position: top left;
   background-repeat: no-repeat;
   background-size: 96px 96px;
@@ -28,31 +28,31 @@
 }
 
 .feedback.type-copied {
-  background-image: url(../../img/app/edit-copy.svg);
+  background-image: url(../../img/win/edit-copy.svg);
 }
 
 .feedback.type-error {
-  background-image: url(../../img/app/button-no.svg);
+  background-image: url(../../img/win/button-no.svg);
 }
 
 .feedback.type-okay {
-  background-image: url(../../img/app/button-yes.svg);
+  background-image: url(../../img/win/button-yes.svg);
 }
 
 .feedback.type-reached-bottom {
-  background-image: url(../../img/app/reached-bottom.svg);
+  background-image: url(../../img/win/reached-bottom.svg);
 }
 
 .feedback.type-reached-left {
-  background-image: url(../../img/app/reached-left.svg);
+  background-image: url(../../img/win/reached-left.svg);
 }
 
 .feedback.type-reached-right {
-  background-image: url(../../img/app/reached-right.svg);
+  background-image: url(../../img/win/reached-right.svg);
 }
 
 .feedback.type-reached-top {
-  background-image: url(../../img/app/reached-top.svg);
+  background-image: url(../../img/win/reached-top.svg);
 }
 
 
@@ -62,9 +62,11 @@
   25% {
     outline-color: var(--outline);
   }
+
   75% {
     outline-color: var(--outline);
   }
+
   100% {
     outline-color: transparent;
   }
@@ -83,12 +85,15 @@
   25% {
     transform: rotate(90deg);
   }
+
   50% {
     transform: rotate(180deg);
   }
+
   75% {
     transform: rotate(270deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

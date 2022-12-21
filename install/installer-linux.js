@@ -14,8 +14,8 @@ if (!email || !/^.+@.+\..+$/.test(email)) {
 
 // preparation
 const builder = require("electron-builder");
-const Arch = builder.Arch;
-const Platform = builder.Platform;
+const { Arch } = builder;
+const { Platform } = builder;
 const prepare = require("./installer");
 const year = prepare.getYear();
 let keywords = "";
@@ -23,16 +23,12 @@ let config = {};
 
 prepare.makeBuild()
   .then(async () => {
-    if (type === "appImage") {
-      return;
-    } else {
+    if (type !== "appImage") {
       await prepare.makeChangelog();
     }
   })
   .then(async () => {
-    if (type === "appImage") {
-      return;
-    } else {
+    if (type !== "appImage") {
       keywords = await prepare.getKeywords();
     }
   })
@@ -52,7 +48,7 @@ function makeConfig () {
     config: {
       extraMetadata: {
         author: {
-          email: email,
+          email,
         },
       },
       appId: "zdl.wgd.QS",
@@ -75,15 +71,13 @@ function makeConfig () {
       },
       [type]: {
         packageCategory: "science",
-        fpm: [
-          `--${type}-changelog=../build/changelog`,
-        ],
+        fpm: [ `--${type}-changelog=../build/changelog` ],
       },
       extraResources: [
         {
           from: "./resources",
           to: "./",
-          filter: ["*.xsl"],
+          filter: [ "*.xsl" ],
         },
       ],
     },

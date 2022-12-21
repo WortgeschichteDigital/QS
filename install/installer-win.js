@@ -11,8 +11,8 @@ if (!email || !/^.+@.+\..+$/.test(email)) {
 
 // preparation
 const builder = require("electron-builder");
-const Arch = builder.Arch;
-const Platform = builder.Platform;
+const { Arch } = builder;
+const { Platform } = builder;
 const prepare = require("./installer");
 const year = prepare.getYear();
 let config = {};
@@ -34,7 +34,7 @@ function makeConfig () {
     config: {
       extraMetadata: {
         author: {
-          email: email,
+          email,
         },
       },
       appId: "zdl.wgd.QS",
@@ -56,7 +56,7 @@ function makeConfig () {
         {
           from: "./resources",
           to: "./",
-          filter: ["*.xsl"],
+          filter: [ "*.xsl" ],
         },
       ],
     },

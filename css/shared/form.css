@@ -21,7 +21,7 @@ input[type="button"] {
   padding: 0 10px 0 35px;
   width: auto;
   background-color: var(--colorGreyLight);
-  background-image: url(../../img/app/button-yes.svg);
+  background-image: url(../../img/win/button-yes.svg);
   background-repeat: no-repeat;
   background-size: 30px 30px;
   color: var(--text);
@@ -32,24 +32,28 @@ input[type="button"] {
 
 input[type="button"]:disabled {
   color: var(--textGrey);
-  background-image: url(../../img/app/button-yes-grey.svg);
+  background-image: url(../../img/win/button-yes-grey.svg);
   pointer-events: none;
 }
 
 input[type="button"][value="Konfiguration"] {
-  background-image: url(../../img/app/preferences.svg);
+  background-image: url(../../img/win/preferences.svg);
 }
 
 input[type="button"][value="Nein"] {
-  background-image: url(../../img/app/button-no.svg);
+  background-image: url(../../img/win/button-no.svg);
 }
 
 input[type="button"][value="Suchen"] {
-  background-image: url(../../img/app/search.svg);
+  background-image: url(../../img/win/search.svg);
 }
 
 input[type="button"][value="Zurücksetzen"] {
-  background-image: url(../../img/app/cleanup.svg);
+  background-image: url(../../img/win/cleanup.svg);
+}
+
+label + input[type="text"] {
+  margin-left: 10px;
 }
 
 input[type="text"]:focus,
@@ -71,7 +75,6 @@ label {
   font-style: italic;
 }
 
-label + input[type="text"],
 input[type="text"] + label {
   margin-left: 10px;
 }

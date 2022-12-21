@@ -1,7 +1,7 @@
 "use strict";
 
 const { dialog } = require("electron");
-const fsp = require("fs").promises;
+const { promises: fsp } = require("fs");
 const path = require("path");
 
 let svg = [];
@@ -35,10 +35,11 @@ module.exports = {
     });
   },
 
-  // return a list of all SVG files in folder /img/app/
+  // return a list of all SVG files in folder /img/win/
   async svg () {
     if (!svg.length) {
-      svg = await fsp.readdir(path.join(__dirname, "..", "..", "img", "app"));
+      const result = await fsp.readdir(path.join(__dirname, "..", "..", "img", "win"));
+      svg = result;
     }
     return svg;
   },

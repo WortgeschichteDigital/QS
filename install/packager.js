@@ -11,14 +11,14 @@ const packager = require("electron-packager");
 const prepare = require("./installer");
 const year = prepare.getYear();
 
-let config = {
+const config = {
   platform: type,
   arch: "x64",
   dir: "./",
   out: process.argv[3] || "../build",
   executableName: "QS",
   extraResource: "./resources",
-  ignore: [/node_modules/, /package-lock\.json/],
+  ignore: [ /node_modules/, /package-lock\.json/ ],
   overwrite: true,
   asar: true,
   prune: true,
@@ -45,7 +45,7 @@ switch (type) {
 
 // packager
 packager(config)
-  .then(async () => {
+  .then(() => {
     let os = "Linux";
     if (type === "darwin") {
       os = "macOS";

@@ -1,0 +1,41 @@
+@charset "utf-8";
+
+/* LOADING -------------------------------------- */
+
+div {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 96px;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+
+/* ERROR ---------------------------------------- */
+
+p {
+  margin: 10px auto;
+  width: 700px;
+  max-width: 90%;
+}
+
+p.label {
+  font-style: italic;
+}
+
+h1 {
+  margin: 20px auto 40px;
+  width: 700px;
+  max-width: 90%;
+  color: var(--colorRed);
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+}

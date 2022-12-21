@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const fsp = fs.promises;
+const { promises: fsp } = fs;
 
 module.exports = {
   // check build folder
@@ -55,10 +55,10 @@ module.exports = {
 
   // detect copyright year
   getYear () {
-    const year_current = new Date().getFullYear();
+    const current = new Date().getFullYear();
     let year = "2022";
-    if (year_current > 2022) {
-      year += `–${year_current}`;
+    if (current > 2022) {
+      year += `–${current}`;
     }
     return year;
   },

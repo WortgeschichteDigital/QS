@@ -1,6 +1,6 @@
 "use strict";
 
-let dialog = {
+const dialog = {
   // user response to the currently shown dialog
   //   undefined = initial state
   //   null = dialog was canceled (close icon or Escape key)
@@ -23,19 +23,17 @@ let dialog = {
     dialog.response = undefined;
     // print text
     const t = document.querySelector("#dialog-text");
-    while (t.hasChildNodes()) {
-      t.removeChild(t.lastChild);
-    }
+    t.replaceChildren();
     for (const i of text.split("\n")) {
-      let p = document.createElement("p");
+      const p = document.createElement("p");
       t.appendChild(p);
       p.innerHTML = i;
     }
     // print password field if requested
     if (type === "pass") {
-      let p = document.createElement("p");
+      const p = document.createElement("p");
       t.appendChild(p);
-      let input = document.createElement("input");
+      const input = document.createElement("input");
       p.appendChild(input);
       input.type = "password";
       input.value = "";
@@ -52,22 +50,20 @@ let dialog = {
     overlay.show("dialog");
     if (type === "pass") {
       document.querySelector("#dialog input").focus();
-    } else {
-      if (wait) {
-        const yes = document.querySelector("#dialog-yes");
-        yes.disabled = true;
-        await shared.wait(3e3);
-        if (win.classList.contains("hide")) {
-          return dialog.response;
-        }
-        yes.disabled = false;
-        yes.focus();
-      } else {
-        document.querySelector(`#dialog-${type} input`).focus();
+    } else if (wait) {
+      const yes = document.querySelector("#dialog-yes");
+      yes.disabled = true;
+      await shared.wait(3e3);
+      if (win.classList.contains("hide")) {
+        return dialog.response;
       }
+      yes.disabled = false;
+      yes.focus();
+    } else {
+      document.querySelector(`#dialog-${type} input`).focus();
     }
     // wait for response
-    return await new Promise(resolve => {
+    const response = await new Promise(resolve => {
       const interval = setInterval(async () => {
         if (typeof dialog.response === "undefined") {
           return;
@@ -79,5 +75,6 @@ let dialog = {
         resolve(dialog.response);
       }, 25);
     });
+    return response;
   },
 };

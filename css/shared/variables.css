@@ -10,7 +10,7 @@
   --clusterCenter: #e6e6e6;
   --colorBlue: #002bff;
   --colorBlueDark: #0000a9;
-  --colorBlueLight: #31C0FF;
+  --colorBlueLight: #31c0ff;
   --colorCyan: #1580ab;
   --colorGreen: #080;
   --colorGreyDark: #212529;
@@ -18,16 +18,16 @@
   --colorRed: #d00;
   --colorYellow: #f7d500;
   --bgActive: #e1eaed;
-  --bgHighlight: #31C0FF;
+  --bgHighlight: #31c0ff;
   --line: #ccc;
-  --outline: #31C0FF;
+  --outline: #31c0ff;
 
   /* special styles */
   --gradient: linear-gradient(90deg, var(--colorBlueDark) 40%, var(--colorBlue) 90%);
-  --shadow: 5px 5px 15px rgba(33, 37, 41, .3);
-  --shadowDown: 0 5px 15px rgba(33, 37, 41, .3);
-  --shadowLeft: -5px 0 15px rgba(33, 37, 41, .3);
-  --shadowRight: 5px 0 15px rgba(33, 37, 41, .3);
+  --shadow: 5px 5px 15px rgb(33 37 41 / 30%);
+  --shadowDown: 0 5px 15px rgb(33 37 41 / 30%);
+  --shadowLeft: -5px 0 15px rgb(33 37 41 / 30%);
+  --shadowRight: 5px 0 15px rgb(33 37 41 / 30%);
 
   /* root font size */
   font-size: 20px;
