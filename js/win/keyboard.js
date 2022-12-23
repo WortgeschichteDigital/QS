@@ -32,7 +32,9 @@ const keyboard = {
           return y - x;
         });
         arr[0].firstElementChild.click();
+        return;
       }
+      viewClusters.previewPopupOff("off");
     // Key "Enter"
     } else if (!m && evt.key === "Enter") {
       const olTop = overlay.top();

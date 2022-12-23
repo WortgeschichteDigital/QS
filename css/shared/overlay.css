@@ -12,7 +12,7 @@
   transition: opacity .3s ease-out;
 }
 
-.overlay.hide {
+.hide {
   opacity: 0;
 }
 
@@ -52,7 +52,7 @@
   height: 30px;
 }
 
-.overlay :where(h2, h3) {
+.overlay :is(h2, h3) {
   margin: 20px 10px 10px;
   color: var(--colorBlueDark);
   font-size: .9rem;
@@ -60,7 +60,7 @@
   line-height: 1.35rem;
 }
 
-.overlay :where(h2:first-child, h3:first-child) {
+.overlay :is(h2:first-child, h3:first-child) {
   margin-top: 0;
 }
 

@@ -63,6 +63,16 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     viewClusters.previewSwitch();
   });
+  document.querySelector("#clusters-preview a").addEventListener("click", evt => {
+    evt.preventDefault();
+    viewClusters.previewPopupOff();
+  });
+  document.querySelectorAll('#clusters-preview input[type="radio"]').forEach(i => {
+    i.addEventListener("change", () => viewClusters.previewPopupState());
+  });
+  document.querySelector("#clusters-preview-choose").addEventListener("click", () => {
+    viewClusters.previewChoose();
+  });
 
   // SEARCH
   const searchHelp = document.querySelector("#search-help");

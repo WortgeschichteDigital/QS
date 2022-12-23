@@ -83,7 +83,7 @@
   text-decoration: none;
 }
 
-#prefs li a:where(:focus, :hover) {
+#prefs li a:is(:focus, :hover) {
   outline: 2px solid var(--outline);
   outline-offset: 0;
 }
@@ -186,7 +186,7 @@
   text-decoration: none;
 }
 
-:where(#tags-tags, #tags-attributes) a:focus {
+:is(#tags-tags, #tags-attributes) a:focus {
   outline: 2px solid var(--outline);
   outline-offset: 2px;
   border-radius: 5px;
@@ -213,7 +213,7 @@
   background-color: var(--colorGreyLight);
 }
 
-#tags-nav a:where(:focus, :hover) {
+#tags-nav a:is(:focus, :hover) {
   outline: 2px solid var(--outline);
   outline-offset: 0;
 }

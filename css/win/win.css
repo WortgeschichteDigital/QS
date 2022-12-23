@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-body.scrollable {
+.scrollable {
   overflow-y: scroll;
 }
 
@@ -146,7 +146,7 @@ header .label {
   text-align: center;
 }
 
-#fun-git a:where(:hover, :focus) {
+#fun-git a:is(:hover, :focus) {
   text-decoration: none;
 }
 
@@ -199,16 +199,16 @@ section.trans-linear {
 
 /* Sorting */
 
-:where(#sorting, #clusters-nav) a.icon {
+:is(#sorting, #clusters-nav) a.icon {
   margin-left: 15px;
   padding: 5px;
 }
 
-:where(#sorting, #clusters-nav) a.icon:first-child {
+:is(#sorting, #clusters-nav) a.icon:first-child {
   margin-left: 0;
 }
 
-:where(#sorting, #clusters-nav) .active {
+:is(#sorting, #clusters-nav) .active {
   border-radius: 5px;
   background-color: var(--bgActive);
 }

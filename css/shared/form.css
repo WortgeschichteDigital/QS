@@ -48,6 +48,10 @@ input[type="button"][value="Suchen"] {
   background-image: url(../../img/win/search.svg);
 }
 
+input[type="button"][value^="Vorschau"] {
+  background-image: url(../../img/win/preview.svg);
+}
+
 input[type="button"][value="Zurücksetzen"] {
   background-image: url(../../img/win/cleanup.svg);
 }
@@ -79,7 +83,8 @@ input[type="text"] + label {
   margin-left: 10px;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"],
+input[type="radio"] {
   position: relative;
   top: 1px;
   display: inline-block;
@@ -94,7 +99,17 @@ input[type="checkbox"] {
   background-color: #fff;
 }
 
-input[type="checkbox"]::before {
+input[type="radio"] {
+  border-radius: 10px;
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  background-color: var(--colorGreyLight);
+}
+
+input[type="checkbox"]::before,
+input[type="radio"]::before {
   content: " ";
   position: absolute;
   top: 3px;
@@ -106,16 +121,32 @@ input[type="checkbox"]::before {
   background-color: var(--colorBlueDark);
 }
 
-input[type="checkbox"]:checked::before {
+input[type="radio"]::before {
+  border-radius: 7px;
+}
+
+input[type="checkbox"]:checked::before,
+input[type="radio"]:checked::before {
   display: block;
 }
 
-input[type="checkbox"]:focus {
+input[type="checkbox"]:disabled::before,
+input[type="radio"]:disabled::before {
+  background-color: var(--colorGrey);
+}
+
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
   outline: 1px solid var(--outline);
   outline-offset: 0;
   border-color: var(--outline);
 }
 
-input[type="checkbox"]:focus::before {
+input[type="checkbox"]:focus::before,
+input[type="radio"]:focus::before {
   background-color: var(--outline);
+}
+
+:is(input[type="checkbox"], input[type="radio"]):disabled + label {
+  color: var(--textGreyLight);
 }

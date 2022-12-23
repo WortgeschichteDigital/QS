@@ -167,7 +167,7 @@ const xml = {
         continue;
       }
       for (const link of values.links) {
-        const lemma = xml.getLemma(link.verweisziel);
+        const lemma = xml.getLemma(link.verweistext, link.verweisziel);
         link.lemma = lemma;
       }
       // fill "faLemmas" in field articles
@@ -235,10 +235,10 @@ const xml = {
   },
 
   // get the actual lemma a <Verweisziel> points to
+  //   vt = string (text contents of <Verweistext>)
   //   vz = string (contents of <Verweisziel>)
-  getLemma (vz) {
-    const hash = vz.split("#")[1] || "";
-    let [ lemma ] = vz.split("#");
+  getLemma (vt, vz) {
+    let [ lemma, hash ] = vz.split("#");
     if (/^Wortfeld-/.test(lemma)) {
       lemma = lemma.replace(/^Wortfeld-/, "");
       lemma += " (Wortfeld)";
@@ -251,13 +251,33 @@ const xml = {
           spelling: lemma,
         };
       } else if (values.hl.includes(lemma)) {
+        // the link might point to a sub lemma
         if (hash) {
-          // the link might point to a sub lemma
+          let possibleLemma = "";
           for (const [ nl, target ] of Object.entries(values.nlTargets)) {
             if (target === hash) {
-              lemma = nl;
-              break;
+              // quite often several sub lemmas share the same target =>
+              // we need to detect which sub lemma the link actually points to
+              const similarCount = Object.values(values.nlTargets).filter(i => i === hash).length;
+              if (similarCount > 1) {
+                const reg = new RegExp(shared.escapeRegExp(nl));
+                if (reg.test(vt)) {
+                  possibleLemma = "";
+                  lemma = nl;
+                  break;
+                }
+                // check if there is a better match, otherwise we accept this lemma
+                possibleLemma = nl;
+              // there is only one target that matches the hash => lemma detected
+              } else {
+                lemma = nl;
+                break;
+              }
             }
+          }
+          // if reg.test() never returns a result => take the first possible match
+          if (possibleLemma) {
+            lemma = possibleLemma;
           }
         }
         return {

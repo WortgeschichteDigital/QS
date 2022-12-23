@@ -70,7 +70,7 @@ const xml = {
   //         scope        = ""  Kurz gefasst | Verweise | Wortgeschichte
   //         type         = []  semantic types attached to this link
   //         verweistext  = ""  original text content of //Verweis/Verweistext
-  //         verweisziel  = ""  original text content of //Verweis/Verweisziel
+  //         verweisziel  = ""  original content of //Verweis/Verweisziel
   //       name           = ""  article name with all lemmas and the attached " (Wortfeld)" if applicable
   //       published      = ""  date the article was published (YYYY-MM-DD),
   //                              derived from the first occurence of //Revision/Datum

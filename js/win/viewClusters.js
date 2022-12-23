@@ -9,12 +9,14 @@ const viewClusters = {
     xmlDate: "",
   },
 
-  // clusters data
-  // structure cluster objects:
-  //   [DOMAIN]    = array (each slot contains an object with the keys "z", "s", "u")
-  //     [CIRCLE]  = object
-  //       file   = string (XML file name)
-  //       points = integer
+  // clusters' data
+  // structure of the cluster objects ("repo" and "preview"):
+  //   [DOMAIN]     = array
+  //     [CIRCLE]   = object (circles: "z" for Zentrum, "s" for Saum, "u" for Umfeld)
+  //       [LEMMA]  = object (joined spelling as in "hlJoined" and "nlJoined" in xml.data.files)
+  //         file   = string (XML file name)
+  //         points = integer
+  // the lemmas in there circle are sorted by weight or alphabet respectively
   data: {
     active: "repo",
     // indices of clusters to show in the sections "compare" and "check"
@@ -23,8 +25,12 @@ const viewClusters = {
     repo: {},
     // newly calculated clusters (lemmas in written form)
     preview: {},
+    // calculation in progress
+    previewCalculating: false,
     // date the preview was calculated
     previewDate: null,
+    // contains a date object that saves the time when the calculation started
+    previewStatsStart: null,
   },
 
   // currently active filters
@@ -32,6 +38,9 @@ const viewClusters = {
 
   // saves the sections' scroll position
   scrollPos: {},
+
+  // worker that calculates the preview
+  worker: null,
 
   // update the view
   //   type = string (switched | updated)
@@ -361,9 +370,169 @@ const viewClusters = {
     return cont;
   },
 
-  // switch to or from clusters preview respectively
+  // preview: switch to or from clusters preview respectively
   async previewSwitch () {
-    await xml.updateWait(); // TODO only if preview is switched on
-    // TODO change viewClusters.data.active from "repo" to "preview" and vice versa
+    const { data } = viewClusters;
+    // turn preview off
+    if (data.active === "preview") {
+      if (viewClusters.data.previewCalculating) {
+        viewClusters.worker.terminate();
+        viewClusters.worker = null;
+        shared.feedback("error");
+      }
+      data.active = "repo";
+      viewClusters.previewButtonUpdate();
+      viewClusters.previewIconState("done");
+      return;
+    }
+    // show preview configuration window
+    await xml.updateWait();
+    const oldPreview = document.querySelector("#clusters-preview-choose-old");
+    const newPreview = document.querySelector("#clusters-preview-choose-new");
+    if (data.previewDate) {
+      const pd = data.previewDate;
+      const pdText = `von ${pd.getHours()}:${pd.getMinutes().toString().padStart(2, "0")} Uhr `;
+      oldPreview.nextSibling.querySelector("span").textContent = pdText;
+      oldPreview.disabled = false;
+    } else {
+      oldPreview.disabled = true;
+    }
+    if (oldPreview.disabled) {
+      oldPreview.checked = false;
+      newPreview.checked = true;
+    } else {
+      oldPreview.checked = true;
+      newPreview.checked = false;
+    }
+    const mod = document.querySelector("#clusters-preview-modulate-check");
+    if (document.querySelector("#clusters-modulate-files .proposals a")) {
+      mod.checked = true;
+    } else {
+      mod.checked = false;
+    }
+    viewClusters.previewPopupState();
+    const popup = document.querySelector("#clusters-preview");
+    popup.classList.remove("off");
+    void popup.offsetWidth;
+    popup.classList.add("visible");
+    document.querySelector("#clusters-preview-choose").focus();
+  },
+
+  // preview: choose what to do
+  previewChoose () {
+    viewClusters.previewPopupOff();
+    viewClusters.data.active = "preview";
+    viewClusters.previewButtonUpdate();
+    if (document.querySelector("#clusters-preview-choose-old").checked) {
+      // TODO update views
+      return;
+    }
+    viewClusters.previewCalculate();
+  },
+
+  // preview: start calculation
+  previewCalculate () {
+    viewClusters.data.previewCalculating = true;
+    viewClusters.data.previewStatsStart = new Date();
+    // animate icon
+    viewClusters.previewIconState("working");
+    // load worker if necessary
+    if (!viewClusters.worker) {
+      viewClusters.worker = new Worker("js/win/workerClusters.js");
+      viewClusters.worker.addEventListener("message", evt => {
+        const { data } = viewClusters;
+        data.preview = evt.data;
+        data.previewDate = new Date();
+        prefs.stats("clusters", data.previewStatsStart);
+        viewClusters.previewIconState("done");
+        // TODO EX
+        console.log(new Date() - data.previewStatsStart);
+        // TODO update views
+        shared.feedback("okay");
+        data.previewCalculating = false;
+      });
+    }
+    // prepare data
+    const domains = [];
+    for (const v of Object.values(bars.filtersData.domains)) {
+      domains.push(v.value);
+    }
+    const files = {};
+    for (const [ k, v ] of Object.entries(xml.data.files)) {
+      files[k] = {};
+      files[k].domains = [ ...v.domains ];
+      files[k].hl = [ ...v.hlJoined ];
+      files[k].nl = [ ...v.nlJoined ];
+      files[k].links = structuredClone(v.links);
+    }
+    // prepare if modulation shall be included
+    if (document.querySelector("#clusters-preview-modulate-check").checked) {
+      document.querySelectorAll("#clusters-modulate-files .file-block").forEach(block => {
+        const { file } = block.dataset;
+        block.querySelectorAll(".proposals a").forEach(link => {
+          const { lemma } = link.dataset;
+          files[file].links.push({
+            lemma: {
+              file: clustersMod.data.center[lemma].file,
+              spelling: lemma,
+            },
+            points: 3,
+          });
+        });
+      });
+    }
+    // start the calculation
+    viewClusters.worker.postMessage({
+      domains,
+      files,
+    });
+  },
+
+  // preview: change state of preview icon
+  //   state = string (working | done)
+  previewIconState (state) {
+    const icon = document.querySelector("#clusters-nav-preview img");
+    if (state === "working") {
+      icon.classList.add("rotate");
+      icon.src = "img/win/loading.svg";
+    } else {
+      icon.classList.remove("rotate");
+      icon.src = "img/win/preview.svg";
+    }
+  },
+
+  // preview: adapt the form elements to the choosen option
+  previewPopupState () {
+    const mod = document.querySelector("#clusters-preview-modulate-check");
+    const button = document.querySelector("#clusters-preview-choose");
+    if (document.querySelector("#clusters-preview-choose-old:checked")) {
+      mod.disabled = true;
+      button.value = "Vorschau anzeigen";
+    } else {
+      mod.disabled = false;
+      button.value = "Vorschau berechnen";
+    }
+  },
+
+  // preview: turn popup off
+  previewPopupOff () {
+    const popup = document.querySelector("#clusters-preview");
+    if (!popup?.classList?.contains("visible")) {
+      return;
+    }
+    popup.addEventListener("transitionend", function () {
+      this.classList.add("off");
+    }, { once: true });
+    popup.classList.remove("visible");
+  },
+
+  // preview: toggle the state of the preview button
+  previewButtonUpdate () {
+    const button = document.querySelector("#clusters-nav-preview");
+    if (viewClusters.data.active === "preview") {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
   },
 };

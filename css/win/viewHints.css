@@ -57,7 +57,7 @@
   text-decoration: none;
 }
 
-.hint a:where(:focus, :hover) {
+.hint a:is(:focus, :hover) {
   text-decoration: underline;
 }
 
@@ -95,12 +95,12 @@
   background-image: none;
 }
 
-.hint :where(.text-correct, .text-erroneous, .text-hint) p {
+.hint :is(.text-correct, .text-erroneous, .text-hint) p {
   margin-bottom: 5px;
   word-break: break-all;
 }
 
-.hint :where(.text-correct, .text-erroneous, .text-hint) p:last-child {
+.hint :is(.text-correct, .text-erroneous, .text-hint) p:last-child {
   margin-bottom: 0;
 }
 
@@ -154,10 +154,6 @@
   transition: opacity .3s ease-out;
 }
 
-.hints-popup.visible {
-  opacity: 1;
-}
-
 .hints-popup.fixed {
   position: fixed;
   top: 230px;
@@ -209,9 +205,17 @@
   position: absolute;
   top: 0;
   right: 0;
+  width: 30px;
+  height: 30px;
 }
 
-.hints-popup :where(h2, h3) {
+.hints-popup a:focus {
+  border-radius: 10px;
+  outline: 2px solid var(--outline);
+  outline-offset: -4px;
+}
+
+.hints-popup :is(h2, h3) {
   margin: 15px 0 5px;
   padding-right: 30px;
   color: var(--colorBlueDark);

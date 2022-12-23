@@ -23,35 +23,31 @@
   left: calc(50% + 115px);
 }
 
-.feedback.visible {
-  opacity: 1;
-}
-
-.feedback.type-copied {
+.type-copied {
   background-image: url(../../img/win/edit-copy.svg);
 }
 
-.feedback.type-error {
+.type-error {
   background-image: url(../../img/win/button-no.svg);
 }
 
-.feedback.type-okay {
+.type-okay {
   background-image: url(../../img/win/button-yes.svg);
 }
 
-.feedback.type-reached-bottom {
+.type-reached-bottom {
   background-image: url(../../img/win/reached-bottom.svg);
 }
 
-.feedback.type-reached-left {
+.type-reached-left {
   background-image: url(../../img/win/reached-left.svg);
 }
 
-.feedback.type-reached-right {
+.type-reached-right {
   background-image: url(../../img/win/reached-right.svg);
 }
 
-.feedback.type-reached-top {
+.type-reached-top {
   background-image: url(../../img/win/reached-top.svg);
 }
 
@@ -81,7 +77,7 @@
 
 /* ROTATION ------------------------------------- */
 
-@keyframes rotation {
+@keyframes rotate {
   25% {
     transform: rotate(90deg);
   }
@@ -100,7 +96,7 @@
 }
 
 .rotate {
-  animation-name: rotation;
+  animation-name: rotate;
   animation-duration: 1s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;

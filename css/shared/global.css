@@ -76,7 +76,7 @@ body {
   user-select: none;
 }
 
-body.scrollable {
+.scrollable {
   overflow-y: auto;
 }
 
@@ -162,10 +162,6 @@ p.buttons {
   transition: opacity .1s linear;
 }
 
-#tooltip.visible {
-  opacity: 1;
-}
-
 #tooltip.wide {
   max-width: 450px;
 }
@@ -193,37 +189,37 @@ mark {
   font-weight: bold;
 }
 
-mark.color2 {
+.color2 {
   background-color: var(--colorGreen);
   color: #fff;
 }
 
-mark.color3 {
+.color3 {
   background-color: var(--colorBlueDark);
   color: #fff;
 }
 
-mark.color4 {
+.color4 {
   background-color: var(--colorRed);
   color: #fff;
 }
 
-mark.color5 {
+.color5 {
   background-color: var(--colorBlueLight);
   color: #fff;
 }
 
-mark.color6 {
+.color6 {
   background-color: var(--colorCyan);
   color: #fff;
 }
 
-mark.no-start {
+.no-start {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-mark.no-end {
+.no-end {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -244,7 +240,13 @@ mark.no-end {
 }
 
 .off {
+  /* declaration is used for elements with high specificity */
   display: none !important;
+}
+
+.visible {
+  /* declaration ist used for elements with high specificity */
+  opacity: 1 !important;
 }
 
 .warn {
@@ -264,7 +266,7 @@ mark.no-end {
 }
 
 .xml-comment,
-.xml-comment :where(.xml-tag, .xml-attr-key, .xml-attr-val) {
+.xml-comment :is(.xml-tag, .xml-attr-key, .xml-attr-val) {
   color: var(--textGrey);
 }
 

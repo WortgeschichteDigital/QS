@@ -6,7 +6,7 @@
   scroll-behavior: smooth;
 }
 
-body.scrollable {
+.scrollable {
   overflow-y: scroll;
 }
 
@@ -38,7 +38,7 @@ nav a {
   text-decoration: none;
 }
 
-nav a:where(:focus, :hover) {
+nav a:is(:focus, :hover) {
   outline: 2px solid var(--outline);
   outline-offset: 0;
 }
@@ -62,7 +62,7 @@ section a {
   text-decoration: none;
 }
 
-section a:where(:focus, :hover) {
+section a:is(:focus, :hover) {
   text-decoration: underline;
 }
 
@@ -104,7 +104,7 @@ h2 {
   font-size: .9rem;
 }
 
-:where(h1, h2) span {
+:is(h1, h2) span {
   display: inline-block;
   border-left: 5px solid var(--colorBlueDark);
   padding-left: 25px;
@@ -291,10 +291,6 @@ section li {
   border-radius: 10px;
   background-color: #fff;
   transition: opacity .3s ease-out;
-}
-
-.toc-popup.visible {
-  opacity: 1;
 }
 
 .toc-popup a {
