@@ -22,6 +22,7 @@ var clustersMod = {
       clustersMod.searchOff();
       return;
     }
+
     // search
     const { filters } = viewClusters;
     const reg = new RegExp(shared.escapeRegExp(text), "i");
@@ -50,13 +51,18 @@ var clustersMod = {
         isFa: data.fa,
       });
     }
+
     // no results
     if (!results.length) {
       clustersMod.searchOff();
       return;
     }
+
     // sort results
+    shared.sortModeForLemmas = true;
     results.sort((a, b) => shared.sort(a.hl, b.hl));
+    shared.sortModeForLemmas = false;
+
     // fill popup
     let popup = document.querySelector("#clusters-modulate-popup");
     if (popup) {
@@ -81,13 +87,14 @@ var clustersMod = {
       }
       a.dataset.file = item.file;
       a.href = "#";
-      a.innerHTML = `${shared.hClear(item.hl)} <span>${item.file}</span>`;
+      a.innerHTML = `${shared.hidxClear(item.hl)} <span>${item.file}</span>`;
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
         clustersMod.add(this.dataset.file);
         clustersMod.searchOff();
       });
     }
+
     // show popup
     void popup.offsetWidth;
     popup.classList.add("visible");
@@ -161,6 +168,7 @@ var clustersMod = {
         delete clustersMod.data.files[file];
       }
     }
+
     // build center and file blocks
     document.querySelector("#clusters-modulate-files").replaceChildren();
     for (const file of Object.keys(clustersMod.data.files)) {
@@ -201,6 +209,7 @@ var clustersMod = {
     document.querySelector("#clusters-modulate-files").appendChild(block);
     block.classList.add("file-block");
     block.dataset.file = file;
+
     // create heading
     const h1 = document.createElement("h1");
     block.appendChild(h1);
@@ -225,14 +234,17 @@ var clustersMod = {
         window[this.dataset.obj][this.dataset.fun](file, this);
       });
     }
+
     // add links wrapper
     const list = document.createElement("div");
     block.appendChild(list);
     list.classList.add("file-block-list");
+
     // prepare proposal area
     const proposals = document.createElement("div");
     list.appendChild(proposals);
     proposals.classList.add("proposals");
+
     // glean lemma list
     const dataFiles = clustersMod.data.files[file];
     const lemmas = {};
@@ -270,8 +282,11 @@ var clustersMod = {
         };
       }
     }
+
     // print lemma list
+    shared.sortModeForLemmas = true;
     const lemmasSorted = Object.keys(lemmas).sort((a, b) => shared.sort(a, b));
+    shared.sortModeForLemmas = false;
     for (const lemma of lemmasSorted) {
       const data = lemmas[lemma];
       // create entry
@@ -285,11 +300,12 @@ var clustersMod = {
         a.classList.add("nl");
       }
       a.href = "#";
-      a.textContent = shared.hClear(lemma);
+      a.textContent = shared.hidxClear(lemma);
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
         this.nextSibling.classList.toggle("off");
       });
+
       // create link table
       const table = document.createElement("table");
       entry.appendChild(table);
@@ -305,6 +321,7 @@ var clustersMod = {
         td.textContent = `${link.points} Punkte`;
       }
     }
+
     // initialize tooltips
     tooltip.init(block);
   },
@@ -366,6 +383,7 @@ var clustersMod = {
   center () {
     const center = document.querySelector("#clusters-modulate-center");
     center.replaceChildren();
+
     // update center object
     clustersMod.data.center = {};
     const lemmas = {
@@ -386,10 +404,12 @@ var clustersMod = {
         };
       }
     }
+
     // no cluster center to display
     if (Object.keys(clustersMod.data.files).length < 2) {
       return;
     }
+
     // construct cluster center
     for (const [ type, arr ] of Object.entries(lemmas)) {
       if (!arr.length) {
@@ -404,7 +424,7 @@ var clustersMod = {
       for (const lemma of arr) {
         const span = document.createElement("span");
         div.appendChild(span);
-        span.textContent = shared.hClear(lemma);
+        span.textContent = shared.hidxClear(lemma);
       }
     }
   },
@@ -415,6 +435,7 @@ var clustersMod = {
       const block = document.querySelector(`.file-block[data-file="${file}"]`);
       const proposals = block.querySelector(".proposals");
       proposals.replaceChildren();
+
       // collect proposals
       const props = [];
       for (const [ lemma, val ] of Object.entries(clustersMod.data.center)) {
@@ -425,6 +446,7 @@ var clustersMod = {
           props.push(lemma);
         }
       }
+
       // add/remove copy-all link in heading
       const h1 = block.querySelector("h1");
       if (props.length &&
@@ -443,6 +465,7 @@ var clustersMod = {
         const text = document.createTextNode(h1.firstChild.textContent);
         h1.replaceChild(text, h1.firstChild);
       }
+
       // print proposals
       props.sort(shared.sort);
       for (const lemma of props) {
@@ -453,7 +476,7 @@ var clustersMod = {
         }
         a.dataset.lemma = lemma;
         a.href = "#";
-        a.textContent = shared.hClear(lemma.split("/")[0]);
+        a.textContent = shared.hidxClear(lemma.split("/")[0]);
         a.addEventListener("click", function (evt) {
           evt.preventDefault();
           clustersMod.proposalsCopy(this);
@@ -487,7 +510,7 @@ var clustersMod = {
   // make XML string with a proposal
   //   lemma = string
   proposalsXml (lemma) {
-    const hl = shared.hClear(lemma.split("/")[0]);
+    const hl = shared.hidxClear(lemma.split("/")[0]);
     let fa = "";
     if (clustersMod.data.center[lemma].isFa) {
       fa = "Wortfeld-";

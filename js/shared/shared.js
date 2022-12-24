@@ -26,7 +26,7 @@ const shared = {
 
   // clear text of homograph or field article markers
   //   text = string
-  hClear (text) {
+  hidxClear (text) {
     return text.replace(/ \(.+?\)$/, "");
   },
 
@@ -98,6 +98,7 @@ const shared = {
     let { lineno } = evt;
     let { colno } = evt;
     let stack = "";
+
     // forwarded errors
     if (evt.stack) {
       if (!/file:.+?\.js/.test(evt.stack)) {
@@ -109,6 +110,7 @@ const shared = {
         colno = parseInt(evt.stack.match(/\.js:[0-9]+:([0-9]+)/)[1], 10);
         stack = shared.errorReduceStack(evt.stack);
       }
+
     // in promise errors
     } else if (evt.reason) {
       if (!/file:.+?\.js/.test(evt.reason.stack)) {
@@ -121,6 +123,7 @@ const shared = {
         stack = shared.errorReduceStack(evt.reason.stack);
       }
     }
+
     // create error and send to main
     let err = `\n----- ${new Date().toISOString()} -----\n`;
     if (filename || lineno || colno) {
@@ -131,6 +134,7 @@ const shared = {
       err += `(${stack})\n`;
     }
     shared.ipc.invoke("error", err);
+
     // no details avaiblable
     function noDetails () {
       let stack = evt.reason.stack ? evt.reason.stack : "";
@@ -289,6 +293,15 @@ const shared = {
     });
   },
 
+  // regular expression for leading articles
+  artReg: /^(das|de[mnrs]|die|eine?[mnrs]?) /i,
+
+  // sort mode for lemmas =>
+  //   - remove leading articles
+  //   - demote lemmas with leading numbers
+  // (this is the same mode that is applied for the website)
+  sortModeForLemmas: false,
+
   // sort alpha-numeric
   sort (a, b) {
     const x = shared.sortPrep(a);
@@ -299,6 +312,16 @@ const shared = {
         return 0;
       }
       z = [ a, b ];
+    }
+    if (shared.sortModeForLemmas) {
+      // demote lemmas with leading numbers
+      const an = /^[0-9]/.test(z[0]);
+      const bn = /^[0-9]/.test(z[1]);
+      if (an && !bn) {
+        return 1;
+      } else if (!an && bn) {
+        return -1;
+      }
     }
     z.sort();
     if (z[0] === x ||
@@ -313,10 +336,15 @@ const shared = {
 
   // prepare strings for alpha-numeric sorting
   sortPrep (str) {
-    if (shared.sortPrepCache[str]) {
-      return shared.sortPrepCache[str];
+    let normArtMod = str;
+    if (shared.sortModeForLemmas) {
+      // remove leading articles
+      normArtMod = normArtMod.replace(shared.artReg, "");
     }
-    let norm = str.toLowerCase();
+    if (shared.sortPrepCache[normArtMod]) {
+      return shared.sortPrepCache[normArtMod];
+    }
+    let norm = normArtMod.toLowerCase();
     const rep = new Map([
       [ /ä/g, "ae" ],
       [ /[èé]/g, "e" ],
@@ -327,7 +355,7 @@ const shared = {
     for (const [ k, v ] of rep) {
       norm = norm.replace(k, v);
     }
-    shared.sortPrepCache[str] = norm;
+    shared.sortPrepCache[normArtMod] = norm;
     return norm;
   },
 
@@ -342,6 +370,7 @@ const shared = {
   //   commentCompletion = false | undefined
   xmlColorCode (text, commentCompletion = true) {
     let t = text;
+
     // complete comments
     // (as comments are often cut in half they should be completed
     // at the beginning or at the end respectively)
@@ -357,6 +386,7 @@ const shared = {
         t = "&lt;!-- " + t;
       }
     }
+
     // highlight tags
     t = t.replace(/&lt;!--.+?--&gt;/gs, m => `<span class="xml-comment">${m}</span>`);
     t = t.replace(/&lt;[^!].+?&gt;/g, m => `<span class="xml-tag">${m}</span>`);

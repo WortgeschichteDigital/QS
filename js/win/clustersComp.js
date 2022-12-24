@@ -24,6 +24,7 @@ const clustersComp = {
     // prepare section
     const cont = document.querySelector("#clusters-compare");
     cont.replaceChildren();
+
     // search for similar clusters
     const { data } = viewClusters;
     const c = data[data.active][viewClusters.filters["select-domains"]];
@@ -58,14 +59,17 @@ const clustersComp = {
         }
       }
     }
+
     // no similar clusters found
     if (!Object.keys(similar).length) {
       cont.appendChild(win.nothingToShow("Keine einander ähnlichen Cluster!", "Tipp: Ändern sie die Filtereinstellungen."));
       return;
     }
+
     // sort similar clusters
     clustersComp.similarSorted = Object.keys(similar);
     clustersComp.similarSorted.sort((a, b) => similar[b].similarity - similar[a].similarity);
+
     // build table
     const table = document.createElement("table");
     cont.appendChild(table);
@@ -79,6 +83,8 @@ const clustersComp = {
     if (start > 0) {
       clustersComp.observer.unobserve(rows[start - 1]);
     }
+
+    // fill table
     const table = document.querySelector("#clusters-compare table");
     for (let i = start, len = clustersComp.similarSorted.length; i < len; i++) {
       // ten rows at a time
@@ -87,12 +93,14 @@ const clustersComp = {
         clustersComp.observer.observe(table.lastChild);
         break;
       }
+
       // row
       const item = clustersComp.similar[clustersComp.similarSorted[i]];
       const tr = document.createElement("tr");
       table.appendChild(tr);
       tr.dataset.left = item.left;
       tr.dataset.right = item.right;
+
       // left
       const left = document.createElement("td");
       tr.appendChild(left);
@@ -101,6 +109,7 @@ const clustersComp = {
         checkModulate: true,
         markLemma: clustersComp.marked,
       }));
+
       // similarity and add image
       const similarity = document.createElement("td");
       tr.appendChild(similarity);
@@ -119,6 +128,7 @@ const clustersComp = {
         evt.preventDefault();
         clustersComp.toggleAdd(this.closest("tr"));
       });
+
       // right
       const right = document.createElement("td");
       tr.appendChild(right);
@@ -127,16 +137,24 @@ const clustersComp = {
         checkModulate: true,
         markLemma: clustersComp.marked,
       }));
+
       // update add image
       clustersComp.updateAddImg(tr);
+
       // initialize click event to mark lemmas
       tr.querySelectorAll("span").forEach(i => {
         i.addEventListener("click", function () {
           const mark = !this.classList.contains("marked");
-          clustersComp.mark(this.dataset.lemma, mark);
+          viewClusters.markLemma({
+            lemma: this.dataset.lemma,
+            mark,
+            section: clustersComp,
+            sectionName: "compare",
+          });
         });
       });
     }
+
     // initialize tooltips
     tooltip.init(table);
   },
@@ -164,6 +182,7 @@ const clustersComp = {
         files.push(values.file);
       }
     }
+
     // add or remove files from "modulate"
     for (let i = 0, len = files.length; i < len; i++) {
       const file = files[i];
@@ -223,24 +242,8 @@ const clustersComp = {
         i.classList.remove("in-modulation");
       }
     });
+
     // update all add images
     document.querySelectorAll("#clusters-compare tr").forEach(i => clustersComp.updateAddImg(i));
-  },
-
-  // mark or unmark lemma
-  //   lemma = string
-  //   mark = boolean
-  mark (lemma, mark) {
-    document.querySelectorAll("#clusters-compare .marked").forEach(i => i.classList.remove("marked"));
-    if (mark) {
-      document.querySelectorAll("#clusters-compare span").forEach(i => {
-        if (i.dataset.lemma === lemma) {
-          i.classList.add("marked");
-        }
-      });
-      clustersComp.marked = lemma;
-    } else {
-      clustersComp.marked = "";
-    }
   },
 };

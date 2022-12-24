@@ -21,6 +21,7 @@ const xml = {
   fillData (updated) {
     for (const file of updated) {
       const doc = new DOMParser().parseFromString(xml.files[file], "text/xml");
+
       // XML not well-formed
       if (doc.querySelector("parsererror")) {
         xml.updateErrors.push({
@@ -29,6 +30,7 @@ const xml = {
         });
         continue;
       }
+
       // parse file
       // (assume that authors try to parse invalid XML files;
       // therefore, let's wrap it all in a try block)
@@ -42,10 +44,13 @@ const xml = {
             data.authors.push(text);
           }
         });
+
         // field
         data.fa = doc.querySelector('Artikel[Typ="Wortfeldartikel"]') !== null;
+
         // data.faLemmas is filled after the link analysis
         data.faLemmas = [];
+
         // main lemmas
         data.hl = [];
         data.hlJoined = [];
@@ -60,6 +65,7 @@ const xml = {
           data.hl = data.hl.concat(schreibungen);
           data.hlJoined.push(schreibungen.join("/"));
         });
+
         // sub lemmas
         data.nl = [];
         data.nlJoined = [];
@@ -77,6 +83,7 @@ const xml = {
             data.nlTargets[s] = target;
           }
         });
+
         // diasystemic information
         data.diasys = [];
         let [ lemma ] = data.hl;
@@ -93,11 +100,13 @@ const xml = {
             });
           });
         });
+
         // topic domains
         data.domains = [];
         doc.querySelectorAll("Artikel > Diasystematik Themenfeld").forEach(i => {
           data.domains.push(i.textContent);
         });
+
         // first lemma quotation
         data.first = {};
         for (const lemma of data.hl.concat(data.nl)) {
@@ -112,11 +121,14 @@ const xml = {
           }
           data.first[lemma] = year;
         }
+
         // create array for hints
         // (filled in hints.glean())
         data.hints = [];
+
         // file ID
         data.id = doc.querySelector("Artikel").getAttribute("xml:id");
+
         // collect all links
         data.links = [];
         doc.querySelectorAll("Verweis").forEach(i => {
@@ -137,14 +149,17 @@ const xml = {
             verweisziel,
           });
         });
+
         // article name
         data.name = data.hlJoined.join(", ");
         if (data.nlJoined.length) {
           data.name += ` (${data.nlJoined.join(", ")})`;
         }
+
         // publication date
         const published = doc.querySelector("Revision Datum").textContent.split(".");
         data.published = published[2] + "-" + published[1] + "-" + published[0];
+
         // all possibile targets within the article
         data.targets = [];
         doc.querySelectorAll("Wortgeschichte *").forEach(i => {
@@ -160,6 +175,7 @@ const xml = {
         });
       }
     }
+
     // fill "lemma" in all links and "faLemmas" in field articles
     for (const values of Object.values(xml.data.files)) {
       if (!values.links) {
@@ -181,6 +197,7 @@ const xml = {
         }
       }
     }
+
     // purge files that produced errors
     // (this has to be done here as well,
     // as all files are parsed again in hints.glean())
@@ -300,6 +317,7 @@ const xml = {
   //   idx = number | undefined (set in case ele is a comment node)
   getLineNumber ({ doc, ele, file, idx = -1 }) {
     let content = file;
+
     // erase comments but retain the line breaks
     // (tags of the searched type can be located within a comment
     // which would produce bogus line counts)
@@ -312,6 +330,7 @@ const xml = {
         return "";
       });
     }
+
     // search line number
     const { nodeName } = ele;
     let reg = new RegExp(`<${nodeName}(?=[ >])`, "g");
@@ -334,6 +353,7 @@ const xml = {
     for (let i = 0; i <= hitIdx; i++) {
       offset = reg.exec(content).index;
     }
+
     return content.substring(0, offset).split("\n").length;
   },
 
@@ -362,6 +382,7 @@ const xml = {
     const { changed } = data;
     const { untracked } = data;
     const { xmlFiles } = data;
+
     // get XML files
     const files = xmlFiles || await shared.ipc.invoke("xml-files", xml.gitDir);
     const updated = [];
@@ -381,9 +402,11 @@ const xml = {
         }
       }
     }
+
     // remove files that don't exist anymore from data objects
     // removedFiles === true => some files were removed => update all hints
     let removedFiles = false;
+
     // don't remove any file in case only some files were received
     if (!xmlFiles) {
       for (const file of Object.keys(xml.data.files)) {
@@ -396,6 +419,7 @@ const xml = {
         }
       }
     }
+
     // handle changed and untracked files
     for (const file of changed.concat(untracked)) {
       if (!/^articles\//.test(file)) {
@@ -407,16 +431,19 @@ const xml = {
         xml.data.files[name].status = changed.includes(file) ? 1 : 2;
       }
     }
+
     // analyze new files
     if (updated.length) {
       xml.fillData(updated);
     }
+
     // glean hints & save data to cache file
     if (updated.length || removedFiles) {
       await hints.glean();
       xml.data.date = new Date().toISOString();
       await xml.writeCache();
     }
+
     // send data to main window
     shared.ipc.invoke("xml-worker-done", {
       data: xml.data,

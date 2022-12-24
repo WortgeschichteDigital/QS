@@ -57,6 +57,7 @@ const viewHints = {
     if (win.view !== "hints") {
       return;
     }
+
     // get current content state
     // (restore scroll position in case the state is unchanged)
     const filterState = win.getFilterState();
@@ -66,13 +67,17 @@ const viewHints = {
       bars.resultsHints();
       return;
     }
+
     // memorize scroll position
     const { scrollY } = window;
+
     // clear hints area
     const cont = document.querySelector("#hints");
     cont.replaceChildren();
+
     // collect relevant hints
     viewHints.collect();
+
     // no hints to be displayed
     const { data } = viewHints;
     if (!data.hints.length) {
@@ -82,13 +87,16 @@ const viewHints = {
       viewHints.contentState.xmlDate = xml.data.date;
       return;
     }
+
     // sort hints
     win.sortingApply(win.sortingGetData(), data.hints);
+
     // prepare file lists
     data.files.clear();
     data.filesPrintedBefore = new Set([ ...data.filesPrinted ]);
     data.filesPrinted.clear();
     data.hints.forEach(i => data.files.add(i.file));
+
     // print first chunk of hints and reset scroll position
     viewHints.print();
     if (filterState === viewHints.contentState.filterState) {
@@ -107,6 +115,7 @@ const viewHints = {
     }
     viewHints.contentState.filterState = filterState;
     viewHints.contentState.xmlDate = xml.data.date;
+
     // handle results bar
     bars.resultsHints();
   },
@@ -166,6 +175,7 @@ const viewHints = {
           break;
       }
     }
+
     // collect hints
     viewHints.data.hints = [];
     for (const [ file, data ] of Object.entries(xml.data.files)) {
@@ -199,6 +209,7 @@ const viewHints = {
         });
       }
     }
+
     // reduce comment text
     function commentAuthorText (text) {
       let t = text.match(/<!--(.+?)-->/s)[1];
@@ -210,10 +221,12 @@ const viewHints = {
   // print hints
   print () {
     const cont = document.querySelector("#hints");
+
     // remove last hint from intersection observer entries
     if (cont.lastChild) {
       viewHints.observer.unobserve(cont.lastChild);
     }
+
     // prepare printing
     const { filesPrinted } = viewHints.data;
     let start = 0;
@@ -223,6 +236,7 @@ const viewHints = {
         break;
       }
     }
+
     // print next 50 hints
     const asideIcons = [
       {
@@ -239,6 +253,7 @@ const viewHints = {
     let lastFile = "";
     for (let f = start, len = viewHints.data.hints.length; f < len; f++) {
       const i = viewHints.data.hints[f];
+
       // HEADING
       if (i.file !== lastFile) {
         if (f - start + 1 >= 50) {
@@ -250,6 +265,7 @@ const viewHints = {
         // update variables
         lastFile = i.file;
       }
+
       // BLOCK
       const div = document.createElement("div");
       cont.appendChild(div);
@@ -257,6 +273,7 @@ const viewHints = {
       div.dataset.file = i.file;
       div.dataset.ident = i.hint.ident;
       div.dataset.line = i.hint.line;
+
       // ASIDE
       // (line, mark, context)
       const aside = document.createElement("div");
@@ -297,10 +314,12 @@ const viewHints = {
           });
         });
       }
+
       // HINT
       const hint = document.createElement("div");
       div.appendChild(hint);
       hint.classList.add("hint");
+
       // general hint message
       const h2 = document.createElement("h2");
       hint.appendChild(h2);
@@ -317,6 +336,7 @@ const viewHints = {
           section: "hinweise",
         });
       });
+
       // erroneous text
       if (i.hint.textErr.length) {
         const textE = document.createElement("div");
@@ -324,6 +344,7 @@ const viewHints = {
         textE.classList.add("text-erroneous");
         viewHints.fillText(textE, i.hint.textErr);
       }
+
       // correct text
       if (i.hint.textHint.length) {
         const textH = document.createElement("div");
@@ -335,6 +356,7 @@ const viewHints = {
           textH.classList.add("text-hint");
         }
       }
+
       // link count
       if (i.hint.linkCount) {
         const count = document.createElement("div");
@@ -342,14 +364,17 @@ const viewHints = {
         count.classList.add("repeated");
         count.textContent = `Schon ${i.hint.linkCount}\u00A0⨉ verlinkt!`;
       }
+
       // scope
       const scope = document.createElement("div");
       hint.appendChild(scope);
       scope.classList.add("scope");
       scope.textContent = i.hint.scope;
     }
+
     // initialize tooltips
     tooltip.init(cont);
+
     // let's have some doomscrolling
     if (filesPrinted.size !== viewHints.data.files.size) {
       viewHints.observer.observe(cont.lastChild);
@@ -403,6 +428,7 @@ const viewHints = {
         }
       }
     }
+
     // prepare text (replace special tokens, highlight, line breaks)
     function prepareText (text) {
       let t = viewSearch.textMaskChars(text);
@@ -479,6 +505,7 @@ const viewHints = {
     if (!hints.length) {
       return;
     }
+
     const barBottom = document.querySelector("#sorting").getBoundingClientRect().bottom;
     const h1Height = document.querySelector("#hints h1").offsetHeight;
     const top = barBottom + h1Height;
@@ -501,6 +528,7 @@ const viewHints = {
     } else {
       viewHints.navIdx--;
     }
+
     if (viewHints.navIdx === hints.length) {
       viewHints.navIdx = hints.length - 1;
       shared.feedback("reached-bottom");
@@ -510,6 +538,7 @@ const viewHints = {
       shared.feedback("reached-top");
       return;
     }
+
     if (down && viewHints.navIdx === viewHints.navLastIdx) {
       viewHints.navIdx++;
     }
@@ -521,6 +550,7 @@ const viewHints = {
       left: 0,
       behavior: "smooth",
     });
+
     // highlight the result and show feedback
     shared.highlightBlock(ele);
     if (!down && viewHints.navIdx === 0) {
@@ -568,11 +598,14 @@ const viewHints = {
 
     // DETECT LINES
     const fileCont = xml.files[file].split("\n");
+
     // Numbers in "lines" are zero based!
     const lines = [];
+
     // special cases: article_id, literature_error, literature_missing
     if (/article_id|literature_(error|missing)/.test(hint.type)) {
       lines.push(hint.line - 1);
+
     // special case: comment outside of text or link lists
     } else if (hint.type === "comment" &&
         !/Belegauswahl|Kurz gefasst|Verweise|Wortgeschichte/.test(hint.scope)) {
@@ -588,6 +621,7 @@ const viewHints = {
       for (let i = hint.line - 1; i <= l; i++) {
         lines.push(i);
       }
+
     // special case: diasystemic_value
     } else if (hint.type === "diasystemic_value") {
       const exSub = [];
@@ -616,6 +650,7 @@ const viewHints = {
         }
         lines.push(i);
       }
+
     // scope "Verweise"
     } else if (hint.scope === "Verweise") {
       // detect start and end of the surrounding <Verweise>
@@ -655,6 +690,7 @@ const viewHints = {
       if (!lines.includes(blockBorders[1])) {
         lines.push(blockBorders[1]);
       }
+
     // everything else
     } else {
       let start = 0;
@@ -718,6 +754,7 @@ const viewHints = {
         trimWhitespace = m[0].length;
       }
     }
+
     // make table
     const table = document.createElement("table");
     let lastLine = 0;
@@ -751,6 +788,7 @@ const viewHints = {
       if (commentOpen && !commentOpenSet) {
         code = `<span class="xml-comment">${code}</span>`;
       }
+
       // print ellipsis
       if (lastLine && line > lastLine + 1) {
         const tr = document.createElement("tr");
@@ -761,6 +799,7 @@ const viewHints = {
         td.textContent = "...";
       }
       lastLine = line;
+
       // print line number
       const tr = document.createElement("tr");
       table.appendChild(tr);
@@ -770,6 +809,7 @@ const viewHints = {
       if (line + 1 === hint.line) {
         th.classList.add("hint-line");
       }
+
       // print code
       const td = document.createElement("td");
       tr.appendChild(td);
@@ -808,12 +848,14 @@ const viewHints = {
     viewHints.popupClose({
       type,
     });
+
     // create new popup
     const popup = document.createElement("div");
     caller.closest("div, section").appendChild(popup);
     popup.classList.add("hints-popup");
     popup.dataset.id = ++viewHints.popupID;
     popup.style.zIndex = document.querySelectorAll(".hints-popup").length + 1;
+
     // close icon
     const a = document.createElement("a");
     popup.appendChild(a);
@@ -830,8 +872,10 @@ const viewHints = {
     img.width = "30";
     img.height = "30";
     img.alt = "";
+
     // append content
     popup.appendChild(content);
+
     // position popup
     const popupHeight = popup.offsetHeight;
     if (type === "lemmas" ||
@@ -848,8 +892,10 @@ const viewHints = {
       }
       popup.style.left = caller.offsetLeft + "px";
     }
+
     // show popup
     popup.classList.add("visible");
+
     // scroll to line in question
     const scrollCont = popup.querySelector(".scrollable");
     if (scrollCont && scrollCont.offsetHeight !== scrollCont.scrollHeight) {

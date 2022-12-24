@@ -46,8 +46,8 @@
   max-height: 330px;
   background-color: var(--colorGreyLight);
   font-family: "Noto Sans Mono", monospace;
-  font-size: .8rem;
-  line-height: 1.2rem;
+  font-size: .7rem;
+  line-height: 1.1rem;
   white-space: pre-wrap;
 }
 
@@ -184,6 +184,12 @@
   margin-right: 15px;
   color: var(--text);
   text-decoration: none;
+}
+
+#tags-tags,
+#tags-attributes {
+  font-size: .8rem;
+  line-height: 1.2rem;
 }
 
 :is(#tags-tags, #tags-attributes) a:focus {

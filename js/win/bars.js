@@ -151,21 +151,27 @@ const bars = {
   // results: fill and show results bar (hints)
   resultsHints () {
     const { data } = viewHints;
+
     // no results
     if (!data.hints.length) {
       bars.resultsNone();
       return;
     }
+
     // hide queries block
     document.querySelector("#results-queries").classList.add("off");
+
     // fill summary
     const summary = document.querySelector("#results-summary");
     summary.classList.remove("nothing");
     summary.innerHTML = `<b>${data.hints.length}</b> Hinweise in <b>${data.files.size}</b> Dateien`;
+
     // fill in XML files
     bars.resultsXml(data.hints);
+
     // show bar
     bars.resultsShow();
+
     // scroll top
     document.querySelector("#results div").scrollTop = 0;
   },
@@ -173,15 +179,18 @@ const bars = {
   // results: fill and show results bar (search)
   resultsSearch () {
     const { data } = viewSearch;
+
     // no results
     if (!data.results.length) {
       bars.resultsNone();
       return;
     }
+
     // fill summary
     const summary = document.querySelector("#results-summary");
     summary.classList.remove("nothing");
     summary.innerHTML = `<b>${data.results.length}</b> Treffer in <b>${data.resultsFiles.size}</b> Dateien`;
+
     // fill in search queries
     const queries = document.querySelector("#results-queries");
     queries.classList.remove("off");
@@ -199,12 +208,16 @@ const bars = {
         bars.resultsSearchNextQuery(this);
       });
     }
+
     // fill in XML files
     bars.resultsXml(data.results);
+
     // reset navigation
     bars.resultsSearchNextQueryData.query = "";
+
     // show bar
     bars.resultsShow();
+
     // scroll top
     document.querySelector("#results div").scrollTop = 0;
   },
@@ -264,6 +277,7 @@ const bars = {
     if (viewSearch.data.running) {
       return;
     }
+
     // detect next match
     const data = bars.resultsSearchNextQueryData;
     const query = a.getAttribute("href").substring(1);
@@ -287,6 +301,7 @@ const bars = {
         data.idx = idx;
       }
     }
+
     // scroll to next match
     const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom;
     const headingHeight = document.querySelector("#search h1").offsetHeight;
@@ -296,6 +311,7 @@ const bars = {
       left: 0,
       behavior: "smooth",
     });
+
     // highlight the result
     shared.highlightBlock(nextMatch);
   },
@@ -319,6 +335,7 @@ const bars = {
     if (win.view === "search" && viewSearch.data.running) {
       return;
     }
+
     // find heading
     const id = a.getAttribute("href").substring(1);
     let h1 = document.getElementById(id);
@@ -331,6 +348,7 @@ const bars = {
       }
       h1 = document.getElementById(id);
     }
+
     // scroll to heading
     const topBarsHeight = document.querySelector("#bar").getBoundingClientRect().bottom;
     const headingHeight = document.querySelector(`#${win.view} h1`).offsetHeight;
@@ -351,15 +369,18 @@ const bars = {
       select.textContent = "alle";
       return;
     }
+
     // search data
     const cat = select.id.replace("select-", "");
     const data = bars.filtersData[cat].find(i => i.value === value);
+
     // filter doesn't exist anymore
     if (!data) {
       select.dataset.value = "";
       select.textContent = "alle";
       return;
     }
+
     // fill in filter
     let icon = "";
     if (data.icon) {
@@ -375,6 +396,7 @@ const bars = {
     const div = document.createElement("div");
     a.parentNode.appendChild(div);
     div.classList.add("select-popup", "hide");
+
     // fill popup
     const alle = [
       {
@@ -410,6 +432,7 @@ const bars = {
         }
       });
     }
+
     // show popup
     void div.offsetWidth;
     div.classList.remove("hide");

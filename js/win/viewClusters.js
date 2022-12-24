@@ -61,27 +61,60 @@ const viewClusters = {
     } else {
       window.scrollTo(0, 0);
     }
+
     // load Artikel.json from repository
     if (!Object.keys(viewClusters.data.repo).length) {
       await viewClusters.loadArtikelJSON();
     }
-    // update domain
+
+    // update filters in top bar
     viewClusters.filters = bars.filtersGetData();
-    const domain = document.querySelector("#clusters-nav-domain");
-    domain.textContent = viewClusters.filters["select-domains"] || "kein Themenfeld";
-    if (viewClusters.filters["select-domains"]) {
-      domain.classList.remove("no-domain");
-    } else {
-      domain.classList.add("no-domain");
+    const filters = document.querySelector("#clusters-nav-filters");
+    const filtersText = [];
+    if (viewClusters.filters["select-authors"]) {
+      let author = "";
+      for (const i of viewClusters.filters["select-authors"].split(/[\s-]/)) {
+        author += i.substring(0, 1);
+      }
+      filtersText.push(author);
     }
+    if (viewClusters.filters["select-domains"]) {
+      filtersText.push(viewClusters.filters["select-domains"]);
+    }
+    if (filtersText.length) {
+      filters.classList.remove("no-filters");
+      filters.textContent = filtersText.join(" | ");
+    } else {
+      filters.classList.add("no-filters");
+      filters.textContent = "keine Filter";
+    }
+
     // collect indices of relevant clusters,
     // check filters,
     // update the section views
+    viewClusters.updateCompCheck(false);
+    clustersMod.update();
+
+    // focus search field in modulation section
+    viewClusters.focusSearchField();
+  },
+
+  // update the section views "compare" and "check"
+  // (also collects indices of relevant cllusters and checks the filters)
+  //   previewToggle = boolean
+  updateCompCheck (previewToggle) {
     const result = viewClusters.checkFilters();
     if (result.ok) {
       // okay => build view
+      const { scrollY } = window;
       clustersCheck.build();
       clustersComp.build();
+      if (previewToggle &&
+          !document.querySelector("#clusters-comp.off")) {
+        // retain scroll position in "compare"
+        // when the preview has been toggled
+        window.scrollTo(0, scrollY);
+      }
     } else {
       // not okay => print message
       for (const i of [ "compare", "check" ]) {
@@ -90,9 +123,6 @@ const viewClusters = {
         sect.appendChild(result.message.cloneNode(true));
       }
     }
-    clustersMod.update();
-    // focus search field in modulation section
-    viewClusters.focusSearchField();
   },
 
   // focus search field in modulation section
@@ -109,13 +139,15 @@ const viewClusters = {
     if (icon.classList.contains("active")) {
       return;
     }
+
     // switch section
     let oldSection = "";
     const newSection = icon.id.replace(/.+-/, "");
     const id = "clusters-" + newSection;
+
     // memorize current scroll position
     const { scrollY } = window;
-    document.querySelectorAll("#clusters > div").forEach(i => {
+    document.querySelectorAll("#clusters > div:not(#clusters-preview)").forEach(i => {
       if (!i.classList.contains("off")) {
         oldSection = i.id.replace(/.+-/, "");
         viewClusters.scrollPos[oldSection] = scrollY;
@@ -126,28 +158,40 @@ const viewClusters = {
         i.classList.add("off");
       }
     });
+
     // switch active icon
     document.querySelector(".clusters-view.active").classList.remove("active");
     icon.classList.add("active");
+
     // reset scroll position
     if (typeof viewClusters.scrollPos[newSection] !== "undefined") {
       window.scrollTo(0, viewClusters.scrollPos[newSection]);
     } else {
       window.scrollTo(0, 0);
     }
+
     // update add images in comparison section
     if (newSection === "compare" &&
         oldSection === "modulate") {
       clustersComp.adaptToModulate();
     }
+
+    // toggle visibility of jump icon
+    const jump = document.querySelector("#clusters-nav-new");
+    if (newSection === "check") {
+      jump.classList.remove("off");
+    } else {
+      jump.classList.add("off");
+    }
+
     // focus search field in modulation section
     viewClusters.focusSearchField();
   },
 
   // collect indices of relevant clusters and check filters:
-  // - Is a domain selected?
-  // - Are there any clusters for this domain?
-  // - Are there any clusters for the selected author?
+  //   - Is a domain selected?
+  //   - Are there any clusters for this domain?
+  //   - Are there any clusters for the selected author?
   checkFilters () {
     const { filters } = viewClusters;
     const { data } = viewClusters;
@@ -199,6 +243,7 @@ const viewClusters = {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
       return;
     }
+
     // parse data
     let data;
     try {
@@ -207,6 +252,7 @@ const viewClusters = {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
       return;
     }
+
     // extract clusters
     const { repo } = viewClusters.data;
     const fileCache = {};
@@ -259,6 +305,7 @@ const viewClusters = {
     const cluster = data[data.active][viewClusters.filters["select-domains"]][idx];
     const cont = document.createElement("div");
     cont.classList.add("cluster");
+
     // Are there any dominant lemmas?
     const weights = [];
     for (const i of Object.values(cluster.z)) {
@@ -276,6 +323,7 @@ const viewClusters = {
         break;
       }
     }
+
     // periphery
     let periphery;
     if (Object.keys(cluster.u).length) {
@@ -283,6 +331,7 @@ const viewClusters = {
       cont.appendChild(periphery);
       periphery.classList.add("cluster-periphery", "cluster-circle");
     }
+
     // fringe
     let fringe;
     if (Object.keys(cluster.s).length) {
@@ -294,6 +343,7 @@ const viewClusters = {
       }
       fringe.classList.add("cluster-fringe", "cluster-circle");
     }
+
     // center
     const center = document.createElement("div");
     if (fringe) {
@@ -304,6 +354,7 @@ const viewClusters = {
       cont.appendChild(center);
     }
     center.classList.add("cluster-center", "cluster-circle");
+
     // fill in lemmas
     const circles = [
       {
@@ -352,7 +403,7 @@ const viewClusters = {
         } else if (xml.data.files[values.file].nlJoined.includes(lemma)) {
           span.title = "Nebenlemma";
         }
-        lemma = shared.hClear(lemma);
+        lemma = shared.hidxClear(lemma);
         if (lemma.length > 30 &&
             /\//.test(lemma)) {
           span.classList.add("wrap");
@@ -370,21 +421,45 @@ const viewClusters = {
     return cont;
   },
 
+  // mark or unmark a lemma
+  //   lemma = string
+  //   mark = boolean
+  //   section = object
+  //   sectionName = string
+  // (this method is used by clustersComp and clustersCheck)
+  markLemma ({ lemma, mark, section, sectionName }) {
+    document.querySelectorAll(`#clusters-${sectionName} .marked`).forEach(i => i.classList.remove("marked"));
+    if (mark) {
+      document.querySelectorAll(`#clusters-${sectionName} span`).forEach(i => {
+        if (i.dataset.lemma === lemma) {
+          i.classList.add("marked");
+        }
+      });
+      section.marked = lemma;
+    } else {
+      section.marked = "";
+    }
+  },
+
   // preview: switch to or from clusters preview respectively
   async previewSwitch () {
     const { data } = viewClusters;
+
     // turn preview off
     if (data.active === "preview") {
       if (viewClusters.data.previewCalculating) {
         viewClusters.worker.terminate();
         viewClusters.worker = null;
         shared.feedback("error");
+        viewClusters.data.previewCalculating = false;
       }
       data.active = "repo";
       viewClusters.previewButtonUpdate();
       viewClusters.previewIconState("done");
+      viewClusters.updateCompCheck(true);
       return;
     }
+
     // show preview configuration window
     await xml.updateWait();
     const oldPreview = document.querySelector("#clusters-preview-choose-old");
@@ -418,13 +493,13 @@ const viewClusters = {
     document.querySelector("#clusters-preview-choose").focus();
   },
 
-  // preview: choose what to do
+  // preview: choose what to do after a click on the button in the popup
   previewChoose () {
     viewClusters.previewPopupOff();
     viewClusters.data.active = "preview";
     viewClusters.previewButtonUpdate();
     if (document.querySelector("#clusters-preview-choose-old").checked) {
-      // TODO update views
+      viewClusters.updateCompCheck(true);
       return;
     }
     viewClusters.previewCalculate();
@@ -433,9 +508,10 @@ const viewClusters = {
   // preview: start calculation
   previewCalculate () {
     viewClusters.data.previewCalculating = true;
-    viewClusters.data.previewStatsStart = new Date();
+
     // animate icon
     viewClusters.previewIconState("working");
+
     // load worker if necessary
     if (!viewClusters.worker) {
       viewClusters.worker = new Worker("js/win/workerClusters.js");
@@ -445,27 +521,37 @@ const viewClusters = {
         data.previewDate = new Date();
         prefs.stats("clusters", data.previewStatsStart);
         viewClusters.previewIconState("done");
-        // TODO EX
-        console.log(new Date() - data.previewStatsStart);
-        // TODO update views
+        viewClusters.updateCompCheck(true);
         shared.feedback("okay");
         data.previewCalculating = false;
       });
     }
+
     // prepare data
+    viewClusters.data.previewStatsStart = new Date();
     const domains = [];
     for (const v of Object.values(bars.filtersData.domains)) {
       domains.push(v.value);
     }
     const files = {};
+    const removeTypeCluster = document.querySelector("#clusters-preview-no-type-cluster:checked") !== null;
     for (const [ k, v ] of Object.entries(xml.data.files)) {
       files[k] = {};
       files[k].domains = [ ...v.domains ];
       files[k].hl = [ ...v.hlJoined ];
       files[k].nl = [ ...v.nlJoined ];
       files[k].links = structuredClone(v.links);
+      // remove links of type "Cluster"
+      if (removeTypeCluster) {
+        for (let i = files[k].links.length - 1; i >= 0; i--) {
+          if (files[k].links[i].type.includes("Cluster")) {
+            files[k].links.splice(i, 1);
+          }
+        }
+      }
     }
-    // prepare if modulation shall be included
+
+    // add links if modulation shall be included
     if (document.querySelector("#clusters-preview-modulate-check").checked) {
       document.querySelectorAll("#clusters-modulate-files .file-block").forEach(block => {
         const { file } = block.dataset;
@@ -481,6 +567,7 @@ const viewClusters = {
         });
       });
     }
+
     // start the calculation
     viewClusters.worker.postMessage({
       domains,
@@ -504,13 +591,10 @@ const viewClusters = {
   // preview: adapt the form elements to the choosen option
   previewPopupState () {
     const mod = document.querySelector("#clusters-preview-modulate-check");
-    const button = document.querySelector("#clusters-preview-choose");
     if (document.querySelector("#clusters-preview-choose-old:checked")) {
       mod.disabled = true;
-      button.value = "Vorschau anzeigen";
     } else {
       mod.disabled = false;
-      button.value = "Vorschau berechnen";
     }
   },
 

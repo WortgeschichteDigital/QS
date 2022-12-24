@@ -8,12 +8,15 @@ const updates = {
   //   auto = boolean (automatic check => no feedback in case of error)
   async check (auto) {
     clearTimeout(updates.timeout);
+
     // don't check while developing
     if (auto && !shared.info.packaged) {
       return;
     }
+
     // download RSS feed
     const data = await shared.fetch("https://github.com/WortgeschichteDigital/QS/releases.atom");
+
     // error
     if (!data.ok) {
       if (!auto) {
@@ -21,6 +24,7 @@ const updates = {
       }
       return;
     }
+
     // parse RSS feed
     const parser = new DOMParser();
     const rss = parser.parseFromString(data.text, "text/xml");
@@ -33,6 +37,7 @@ const updates = {
       }
       return;
     }
+
     // detect newest version
     let versionOnline;
     for (let i = 0, len = entries.length; i < len; i++) {
@@ -44,6 +49,7 @@ const updates = {
       [ versionOnline ] = version;
       break;
     }
+
     // display outcome
     if (updates.verToInt(versionOnline) > updates.verToInt(shared.info.version)) {
       dialog.open({
@@ -56,8 +62,9 @@ const updates = {
         text: "Die App is up-to-date.",
       });
     }
+
     // memorize last update check
-    [ prefs.data.updateCheck ] = new Date().toISOString().split("T");
+    prefs.data.updateCheck = new Date().toISOString().split("T")[0];
   },
 
   // convert a version string into an integer

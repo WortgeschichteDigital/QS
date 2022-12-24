@@ -114,7 +114,10 @@
         ><a href="#" id="clusters-nav-preview" class="icon" title="Vorschau berechnen"
           ><img src="img/win/preview.svg" width="30" height="30" alt=""
         ></a
-        ><span id="clusters-nav-domain"></span
+        ><a href="#" id="clusters-nav-new" class="icon active off" title="durch neue oder geänderte Cluster springen"
+          ><img src="img/win/jump.svg" width="30" height="30" alt=""
+        ></a
+        ><span id="clusters-nav-filters"></span
       ></div>
 
       <!-- SEARCH FORM -->
@@ -129,7 +132,7 @@
         ><a href="#" id="search-bar" title="Ergebnisleiste umschalten"
           ><img src="img/win/sidebar.svg" width="24" height="24" alt=""
         ></a
-        ><a href="#" id="search-help"
+        ><a href="#suche-syntax" id="search-help"
           ><img src="img/win/help.svg" width="24" height="24" alt=""
         ></a
         ><input type="button" value="Suchen" id="search-start"
@@ -208,7 +211,7 @@
 
         <p
           ><input type="radio" name="clusters-preview-choose" id="clusters-preview-choose-old"
-          ><label for="clusters-preview-choose-old">vorherige Berechnung <span></span>anzeigen</label
+          ><label for="clusters-preview-choose-old">alte Berechnung <span></span>anzeigen</label
         ></p>
 
         <p
@@ -219,6 +222,17 @@
         <p id="clusters-preview-modulate"
           ><input type="checkbox" id="clusters-preview-modulate-check"
           ><label for="clusters-preview-modulate-check">Modulierung mit einbeziehen</label
+          ><a href="#clusterei-vorschauOptionModulierung" id="clusters-preview-help-modulate" class="icon"
+            ><img src="img/win/help.svg" width="24" height="24" alt=""
+          ></a
+        ></p>
+
+        <p
+          ><input type="checkbox" id="clusters-preview-no-type-cluster"
+          ><label for="clusters-preview-no-type-cluster">Cluster-Verweise ignorieren</label
+          ><a href="#clusterei-vorschauOptionClusterVerweise" id="clusters-preview-help-type" class="icon"
+            ><img src="img/win/help.svg" width="24" height="24" alt=""
+          ></a
         ></p>
 
         <p><input type="button" value="Vorschau" id="clusters-preview-choose"></p>

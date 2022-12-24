@@ -37,6 +37,7 @@ const tags = {
       shared.error("XML-Dateidaten nicht geladen");
       return;
     }
+
     if (!Object.keys(tags.data).length) {
       // collect tags and attributes
       tags.collectData();
@@ -55,10 +56,13 @@ const tags = {
         });
       }
     }
+
     // remove .active
     document.querySelectorAll("#tags-tags .active").forEach(i => i.classList.remove("active"));
+
     // turn off further blocks
     [ "attributes", "nav", "label", "code" ].forEach(i => document.querySelector(`#tags-${i}`).classList.add("off"));
+
     // show overlay
     overlay.show("tags");
   },
@@ -74,6 +78,7 @@ const tags = {
         i.classList.remove("active");
       }
     });
+
     // build attributes list
     const tag = ele.getAttribute("href").substring(1);
     const attr = Object.keys(tags.data[tag]).sort(shared.sort);
@@ -95,8 +100,10 @@ const tags = {
         tags.listFiles(this);
       });
     }
+
     // show all blocks
     document.querySelectorAll("#tags .off").forEach(i => i.classList.remove("off"));
+
     // build files list and show code of first item
     attrCont.firstChild.click();
   },
@@ -112,6 +119,7 @@ const tags = {
         i.classList.remove("active");
       }
     });
+
     // build file list
     const files = tags.data[ele.dataset.tag][ele.dataset.attribute].sort(shared.sort);
     const navCont = document.querySelector("#tags-nav span");
@@ -126,6 +134,7 @@ const tags = {
         tags.showSummary(this);
       });
     }
+
     // show code of first file in the row
     navCont.firstChild.click();
   },
@@ -158,6 +167,7 @@ const tags = {
         behavior: "smooth",
       });
     }
+
     // load XSL (if needed)
     const result = await win.loadXsl({
       obj: tags,
@@ -167,6 +177,7 @@ const tags = {
     if (!result) {
       return;
     }
+
     // extract summary
     const file = ele.getAttribute("href").substring(1);
     const doc = new DOMParser().parseFromString(xml.files[file], "text/xml");
@@ -174,6 +185,7 @@ const tags = {
     const processor = new XSLTProcessor();
     processor.importStylesheet(xslt);
     const processedDoc = processor.transformToDocument(doc);
+
     // prepare highlighting
     const attr = document.querySelector("#tags-attributes .active");
     const regExp = [];
@@ -187,6 +199,7 @@ const tags = {
         termN: 1,
       });
     }
+
     // print result
     const label = document.querySelector("#tags-label");
     label.dataset.file = file;

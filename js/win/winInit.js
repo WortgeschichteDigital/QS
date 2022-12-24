@@ -42,12 +42,22 @@ window.addEventListener("load", async () => {
     clearTimeout(clustersSearchTimeout);
     clustersSearchTimeout = setTimeout(() => clustersMod.search(), 200);
   });
-  clustersSearch.addEventListener("keydown", evt => {
+  clustersSearch.addEventListener("keydown", function (evt) {
     const m = shared.detectKeyboardModifiers(evt);
     if (!m && evt.key === "Escape") {
       clustersMod.searchOff();
     } else if (!m && evt.key === "Enter") {
-      document.querySelector("#clusters-modulate-popup .active")?.click();
+      const popup = document.querySelector("#clusters-modulate-popup");
+      if (!popup) {
+        return;
+      }
+      const active = popup.querySelector(".active");
+      if (active) {
+        active.click();
+      } else {
+        popup.querySelector("a").click();
+      }
+      this.select();
     }
   });
   clustersSearch.addEventListener("focus", () => clustersMod.search());
@@ -70,20 +80,14 @@ window.addEventListener("load", async () => {
   document.querySelectorAll('#clusters-preview input[type="radio"]').forEach(i => {
     i.addEventListener("change", () => viewClusters.previewPopupState());
   });
-  document.querySelector("#clusters-preview-choose").addEventListener("click", () => {
-    viewClusters.previewChoose();
+  document.querySelector("#clusters-preview-choose").addEventListener("click", () => viewClusters.previewChoose());
+  document.querySelector("#clusters-nav-new").addEventListener("click", function(evt) {
+    evt.preventDefault();
+    this.dispatchEvent(new Event("mouseout"));
+    clustersCheck.jump();
   });
 
   // SEARCH
-  const searchHelp = document.querySelector("#search-help");
-  searchHelp.addEventListener("click", evt => evt.preventDefault());
-  searchHelp.addEventListener("focus", function () {
-    tooltip.noTimeout = true;
-    this.dispatchEvent(new Event("mouseover"));
-  });
-  searchHelp.addEventListener("blur", function () {
-    this.dispatchEvent(new Event("mouseout"));
-  });
   document.querySelector("#search-advanced-toggle").addEventListener("click", evt => {
     evt.preventDefault();
     viewSearch.toggleAdvanced();
@@ -264,7 +268,7 @@ window.addEventListener("load", async () => {
 
   // INITIALIZE APP
   shared.keyboardMacOS();
-  tooltip.searchHelp();
+  tooltip.addLongHelp();
   tooltip.init();
   document.querySelector("#bar").style.height = "60px";
   await prefs.init();

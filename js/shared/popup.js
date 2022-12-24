@@ -13,6 +13,7 @@ const popup = {
     if (!target) {
       return;
     }
+
     // collect items
     let items = [];
     let def = [ "close" ];
@@ -36,12 +37,14 @@ const popup = {
     } else {
       items = def;
     }
+
     // add copy icon if click is on selection
     const sel = window.getSelection();
     if (sel.toString() &&
         path.includes(sel.getRangeAt(0).commonAncestorContainer.parentNode)) {
       items.unshift("editCopy", "sep");
     }
+
     // cretae popup menu
     if (items.length) {
       shared.ipc.invoke("popup", items);
@@ -76,14 +79,17 @@ const popup = {
         return "mail";
       }
     }
+
     // overlay visible?
     if (overlay.top()) {
       return "";
     }
+
     // default popup menu
     if (typeof win !== "undefined" && /hints|search/.test(win.view)) {
       return "results_bar";
     }
+
     // default popup menu
     return "default";
   },

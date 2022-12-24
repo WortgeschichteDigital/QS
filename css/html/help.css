@@ -186,8 +186,8 @@ pre {
   padding: 10px;
   background-color: var(--colorGreyLight);
   font-family: "Noto Sans Mono", monospace;
-  font-size: .8rem;
-  line-height: 1.2rem;
+  font-size: .7rem;
+  line-height: 1.1rem;
   white-space: pre-wrap;
   word-break: break-all;
   user-select: text;

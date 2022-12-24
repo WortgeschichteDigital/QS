@@ -17,16 +17,19 @@ const search = {
   start () {
     const { data } = search;
     let nResults = 0;
+
     x: for (const [ file, values ] of Object.entries(data.xmlData)) {
       if (data.narrowSearch.size && !data.narrowSearch.has(file)) {
         continue;
       }
+
       // ignore files that don't match the filters
       if (data.filters["select-authors"] && !values.authors.includes(data.filters["select-authors"]) ||
           data.filters["select-domains"] && !values.domains.includes(data.filters["select-domains"]) ||
           data.filters["select-status"] && values.status !== data.filters["select-status"]) {
         continue;
       }
+
       // get lines within the scope
       let text = data.xmlFiles[file];
       if (!text) {
@@ -52,7 +55,7 @@ const search = {
         }
         for (let i = lines.length - 1; i >= 0; i--) {
           // remove all lines for which no end tag was found
-          // (this may happen if the number of start and end tag differs
+          // (this may happen if the number of start and end tags differ
           // due to comments; see above)
           if (!lines[i].end) {
             lines.splice(i, 1);
@@ -69,10 +72,12 @@ const search = {
           }
         }
       }
+
       // strip text of tags if needed
       if (data.stripTags) {
         text = text.replace(/<.+?>/g, "");
       }
+
       // search file
       const hits = Array(data.regExp.length).fill(false);
       const hitLines = {};
@@ -98,6 +103,7 @@ const search = {
       if (hits.some(i => !i)) {
         continue;
       }
+
       // fill lines
       const lines = [];
       for (const [ k, v ] of Object.entries(hitLines)) {
@@ -110,6 +116,7 @@ const search = {
         // this might happen if the user only wants to see hits in the same line
         continue;
       }
+
       // extract text
       lines.sort((a, b) => a - b);
       const textLines = text.split("\n");
@@ -166,6 +173,7 @@ const search = {
           textBefore,
           textAfter,
         });
+
         // stop search if there are to many results
         nResults++;
         if (nResults > 5e3) {
@@ -173,6 +181,7 @@ const search = {
         }
       }
     }
+
     // sort results
     data.results.sort((a, b) => {
       if (a.points === b.points) {

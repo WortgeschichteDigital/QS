@@ -124,6 +124,7 @@ const xml = {
   async resetCache (active = false) {
     await xml.updateWait();
     xml.updating = true;
+
     // remove cache files
     const promises = [];
     for (const branch of [ "master", "preprint" ]) {
@@ -139,9 +140,11 @@ const xml = {
       }(branch));
     }
     await Promise.all(promises);
+
     // reset variables
     xml.data.files = {};
     xml.files = {};
+
     // start update operation
     await xml.update();
     if (active &&
@@ -163,17 +166,20 @@ const xml = {
     if (update.classList.contains("active")) {
       return;
     }
+
     // animate button
     update.classList.add("active");
     const img = update.firstChild;
     img.src = "img/win/view-refresh.svg";
     img.classList.add("rotate");
+
     // detect current branch, update header, load cached data
     const branch = await git.branchCurrentPrint();
     if (xml.data.branch !== branch) {
       xml.data.branch = branch;
       await xml.loadCache();
     }
+
     // detect changed and untracked files
     let changed = await git.commandExec("git ls-files --modified");
     if (changed === false) {
@@ -187,6 +193,7 @@ const xml = {
       return;
     }
     untracked = untracked.split("\n");
+
     // start worker
     const response = await shared.ipc.invoke("xml-worker-work", {
       data: xml.data,
@@ -206,23 +213,29 @@ const xml = {
     xml.data = response.data;
     xml.files = response.files;
     xml.updateErrors = response.updateErrors;
+
     // finish up
     reset(true);
     function reset (success) {
       // update list of possible filter values
       bars.filtersUpdate();
+
       // update current view
       win.viewPopulate("updated");
+
       // reset button
       update.classList.remove("active");
       img.src = "img/win/view-refresh-white.svg";
       img.classList.remove("rotate");
+
       // errors that occured during the update process
       xml.showUpdateErrors();
+
       // clean marks
       if (success) {
         viewHints.cleanUpMarks();
       }
+
       // finish up
       xml.updating = false;
       prefs.stats("update", statsStart);

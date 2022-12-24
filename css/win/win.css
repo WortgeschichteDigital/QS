@@ -285,7 +285,7 @@ section.trans-linear {
   margin-left: 70px;
 }
 
-#clusters-nav-domain {
+#clusters-nav-filters {
   position: absolute;
   top: 10px;
   right: 0;
@@ -295,8 +295,8 @@ section.trans-linear {
   line-height: 2rem;
 }
 
-#clusters-nav-domain.no-domain {
-  color: var(--text);
+#clusters-nav-filters.no-filters {
+  color: var(--textGrey);
   font-style: italic;
   font-weight: normal;
 }

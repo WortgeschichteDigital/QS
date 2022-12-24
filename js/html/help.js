@@ -11,6 +11,7 @@ const help = {
       }
       i.classList.add("off");
     });
+
     // color code XML
     document.querySelectorAll("code, pre").forEach(i => {
       let code = shared.xmlColorCode(i.innerHTML, false);
@@ -22,6 +23,7 @@ const help = {
       });
       i.innerHTML = code;
     });
+
     // include table of contents icon
     const a = document.createElement("a");
     document.body.appendChild(a);
@@ -50,6 +52,7 @@ const help = {
     const toc = document.createElement("div");
     document.body.appendChild(toc);
     toc.classList.add("toc-popup");
+
     // fill in headings
     const section = document.querySelector("nav a.active").getAttribute("href");
     for (const i of document.querySelector(section).children) {
@@ -66,6 +69,7 @@ const help = {
         help.tocClose();
       });
     }
+
     // show popup
     void toc.offsetWidth;
     toc.classList.add("visible");
@@ -122,6 +126,7 @@ const help = {
       }
       return;
     }
+
     // add new entry in case this is the first move backwards
     const entry = h.data[idx];
     const section = document.querySelector("nav a.active").getAttribute("href").substring(1);
@@ -135,6 +140,7 @@ const help = {
       });
     }
     h.idx = idx;
+
     // navigate
     if (entry.section !== section) {
       help.switchSection(entry.section, false);
@@ -167,6 +173,7 @@ const help = {
       help.historyAdd();
     }
     help.tocClose();
+
     // update navigation
     const active = document.querySelector("nav .active");
     if (active.getAttribute("href").substring(1) === sect) {
@@ -174,6 +181,7 @@ const help = {
     }
     active.classList.remove("active");
     document.querySelector(`nav a[href="#${sect}"]`).classList.add("active");
+
     // update section view
     document.querySelectorAll("section").forEach(i => {
       if (i.id === sect) {
@@ -182,6 +190,7 @@ const help = {
         i.classList.add("off");
       }
     });
+
     // scroll to top
     window.scrollTo(0, 0);
   },

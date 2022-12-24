@@ -35,6 +35,7 @@ const keyboard = {
         return;
       }
       viewClusters.previewPopupOff("off");
+
     // Key "Enter"
     } else if (!m && evt.key === "Enter") {
       const olTop = overlay.top();
@@ -44,6 +45,7 @@ const keyboard = {
       } else if (active.id === "search-text") {
         viewSearch.start();
       }
+
     // Arrows
     } else if (!m && /^Arrow(Left|Right)$/.test(evt.key) &&
         active.nodeName === "INPUT" && active.type === "button") {
@@ -92,6 +94,7 @@ const keyboard = {
       } else if (!olTop && win.view === "hints") {
         viewHints.nav(evt.key === "ArrowDown");
       }
+
     // PageDown + PageUp
     } else if (!m && /^Page(Down|Up)$/.test(evt.key)) {
       evt.preventDefault();

@@ -29,6 +29,7 @@ const tooltip = {
   //   ele = node (on which the mouse hovers)
   on (ele) {
     let tip = document.querySelector("#tooltip");
+
     // create tooltip (if needed)
     if (!tip) {
       const div = document.createElement("div");
@@ -36,14 +37,17 @@ const tooltip = {
       tip = div;
       document.body.appendChild(div);
     }
+
     // Wide tooltip?
     if (ele.dataset.tooltip.length > 150) {
       tip.classList.add("wide");
     } else {
       tip.classList.remove("wide");
     }
+
     // fill tooltip
     tip.innerHTML = ele.dataset.tooltip;
+
     // position tooltip
     const width = tip.offsetWidth;
     const height = tip.offsetHeight;
@@ -83,12 +87,42 @@ const tooltip = {
   },
 
   // insert titel for search help
-  searchHelp () {
-    const title = `<p>Suchwörter sind durch <b>Leerzeichen</b> getrennt. Beim Suchen werden die einzelnen Wörter durch ein <b>logisches Und</b> miteinander verknüpft:<span class="example">alternative Fakten<br>= Suche nach „alternative“ UND „Fakten“.</span></p>
-    <p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird bei der Suche für dieses Wort zwischen Groß- und Kleinschreibung unterschieden.</p>
-    <p>Taucht im Suchausdruck eine <b>Spitzklammer</b> auf (&lt; oder &gt;), werden neben dem Text auch die Tags durchsucht.</p>
-    <p>Als <b>Phrase</b> können mehrere Wörter mithilfe von nicht-typo\u00ADgraphi\u00ADschen Anführungs\u00ADzeichen gesucht werden:<span class="example">"alternative Fakten"<br>${"\u00A0".repeat(3)}oder<br>'alternative Fakten'<br>= Suche nach der Phrase „alternative Fakten“.</span></p>
-    <p>Man kann auch mit <b>regulären Ausdrücken</b> suchen:<span class="example">/alternativen? fakt(en)?/i<br>= Phrasensuche, „alternativen“ mit oder ohne „n“, „fakt“ oder „fakten“, Groß- und Kleinschreibung irrelevant (wegen des optionalen i-Schalters hinter dem schließenden /).</span></p>`;
-    document.querySelector("#search-help").title = title;
+  addLongHelp () {
+    const help = {
+      "clusters-preview-help-modulate": `
+        <p>Bei der Berechnung der Cluster wird so getan, als wären die rot eingefärbten Verweise, die in der Modulierung zur Ergänzung vorgeschlagen werden, bereits gesetzt.</p>
+        <p>Die Verweise werden mit einem Gewicht von 3 Punkten ergänzt, was der Punktzahl eines Verweises in den Wortinformationen entspricht.</p>
+      `,
+      "clusters-preview-help-type": `
+        <p>Alle Verweise, die ein Typ-Attribut mit dem Wert „Cluster“ haben, werden für die Berechnung der Vorschau ignoriert.</p>
+        <p>Mit dieser Option können Sie also bereits vorgenommene Modulierungen temporär zurücksetzen.</p>
+      `,
+      "search-help": `
+        <p>Suchwörter sind durch <b>Leerzeichen</b> getrennt. Beim Suchen werden die einzelnen Wörter durch ein <b>logisches Und</b> miteinander verknüpft:<span class="example">alternative Fakten<br>= Suche nach „alternative“ UND „Fakten“.</span></p>
+        <p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird bei der Suche für dieses Wort zwischen Groß- und Kleinschreibung unterschieden.</p>
+        <p>Taucht im Suchausdruck eine <b>Spitzklammer</b> auf (&lt; oder &gt;), werden neben dem Text auch die Tags durchsucht.</p>
+        <p>Als <b>Phrase</b> können mehrere Wörter mithilfe von nicht-typo\u00ADgraphi\u00ADschen Anführungs\u00ADzeichen gesucht werden:<span class="example">"alternative Fakten"<br>${"\u00A0".repeat(3)}oder<br>'alternative Fakten'<br>= Suche nach der Phrase „alternative Fakten“.</span></p>
+        <p>Man kann auch mit <b>regulären Ausdrücken</b> suchen:<span class="example">/alternativen? fakt(en)?/i<br>= Phrasensuche, „alternativen“ mit oder ohne „n“, „fakt“ oder „fakten“, Groß- und Kleinschreibung irrelevant (wegen des optionalen i-Schalters hinter dem schließenden /).</span></p>
+      `,
+    };
+    for (const [ id, title ] of Object.entries(help)) {
+      const a = document.getElementById(id);
+      a.title = title;
+      a.addEventListener("click", function (evt) {
+        evt.preventDefault();
+        const [ section, id ] = this.getAttribute("href").substring(1).split("-");
+        shared.ipc.invoke("help", {
+          id,
+          section,
+        });
+      });
+      a.addEventListener("focus", function () {
+        tooltip.noTimeout = true;
+        this.dispatchEvent(new Event("mouseover"));
+      });
+      a.addEventListener("blur", function () {
+        this.dispatchEvent(new Event("mouseout"));
+      });
+    }
   },
 };

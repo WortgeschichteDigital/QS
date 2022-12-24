@@ -19,8 +19,10 @@ const dialog = {
       dialog.response = null;
       await shared.wait(30);
     }
+
     // prepare for user response
     dialog.response = undefined;
+
     // print text
     const t = document.querySelector("#dialog-text");
     t.replaceChildren();
@@ -29,6 +31,7 @@ const dialog = {
       t.appendChild(p);
       p.innerHTML = i;
     }
+
     // print password field if requested
     if (type === "pass") {
       const p = document.createElement("p");
@@ -44,8 +47,10 @@ const dialog = {
         }
       });
     }
+
     // set buttons
     win.dataset.type = type;
+
     // show dialog
     overlay.show("dialog");
     if (type === "pass") {
@@ -62,6 +67,7 @@ const dialog = {
     } else {
       document.querySelector(`#dialog-${type} input`).focus();
     }
+
     // wait for response
     const response = await new Promise(resolve => {
       const interval = setInterval(async () => {

@@ -47,6 +47,7 @@ const viewSearch = {
       return;
     }
     viewSearch.data.running = true;
+
     // split up search term
     const textOri = searchText.value.trim();
     let text = textOri;
@@ -65,6 +66,7 @@ const viewSearch = {
       viewSearch.data.stripTags = !/[<>]/.test(text);
     }
     const search = [];
+
     // regular expressions
     for (const i of text.matchAll(/\/(.+?)\/(i)?/g)) {
       search.push({
@@ -77,6 +79,7 @@ const viewSearch = {
       text = text.replace(i[0], "");
     }
     text = text.trim();
+
     // phrases
     for (const i of text.matchAll(/'(.+?)'|"(.+?)"/g)) {
       search.push({
@@ -89,6 +92,7 @@ const viewSearch = {
       text = text.replace(i[0], "");
     }
     text = text.trim();
+
     // single search words
     for (let i of text.split(" ")) {
       i = i.trim();
@@ -103,12 +107,14 @@ const viewSearch = {
         textOriIdx: -1,
       });
     }
+
     // sort search terms by position in the search expression
     for (const i of search) {
       const reg = new RegExp(shared.escapeRegExp(i.textOri), "g");
       i.textOriIdx = reg.exec(textOri).index;
     }
     search.sort((a, b) => a.textOriIdx - b.textOriIdx);
+
     // create regular expressions
     viewSearch.data.regExp.length = 0;
     for (let i = 0, len = search.length; i < len; i++) {
@@ -148,6 +154,7 @@ const viewSearch = {
       });
     }
     viewSearch.data.regExp.sort((a, b) => b.text.length - a.text.length);
+
     function addVariants (text) {
       const variants = new Map([
         // the following pair is no variant
@@ -165,6 +172,7 @@ const viewSearch = {
       }
       return t;
     }
+
     function maskSpecialTokens (text) {
       const tokens = new Map([
         [ /"/g, "&quot;" ],
@@ -177,16 +185,20 @@ const viewSearch = {
       }
       return t;
     }
+
     // search XML files
     window.scrollTo(0, 0);
     await viewSearch.toggleAdvanced("off");
     await viewSearch.searchXml();
     viewSearch.data.results.forEach(i => viewSearch.data.resultsFiles.add(i.file));
     viewSearch.data.resultsFilesPrinted.clear();
+
     // print results
     viewSearch.printResults();
+
     // handle results bar
     bars.resultsSearch();
+
     // finish up
     finishUp(true);
     function finishUp (feedback) {
@@ -206,10 +218,12 @@ const viewSearch = {
   // perform search in XML files
   searchXml () {
     viewSearch.data.searching = true;
+
     // please hold the line
     const res = document.querySelector("#search");
     res.replaceChildren();
     res.appendChild(win.pleaseWait());
+
     // load worker if necessary
     if (!viewSearch.worker) {
       viewSearch.worker = new Worker("js/win/workerSearch.js");
@@ -218,6 +232,7 @@ const viewSearch = {
         viewSearch.data.searching = false;
       });
     }
+
     // get filters and determine search scope
     const dataF = bars.filtersGetData();
     dataF["select-status"] = parseInt(dataF["select-status"], 10);
@@ -235,6 +250,7 @@ const viewSearch = {
       }
       scopes[id].forEach(s => scope.push(s));
     }
+
     // post data to worker
     const narrowSearch = document.querySelector("#search-narrow");
     const regExp = [];
@@ -253,9 +269,11 @@ const viewSearch = {
     });
     narrowSearch.checked = false;
     viewSearch.toggleAdvancedIcon();
+
     // reset results objects
     viewSearch.data.results.length = 0;
     viewSearch.data.resultsFiles.clear();
+
     // wait until the worker has finished
     return new Promise(resolve => {
       const interval = setInterval(() => {
@@ -271,10 +289,12 @@ const viewSearch = {
   printResults () {
     const res = document.querySelector("#search");
     res.replaceChildren();
+
     // no results
     if (!viewSearch.data.results.length) {
       res.appendChild(win.nothingToShow());
       return;
+
     // too much results
     } else if (viewSearch.data.results.length > 5e3) {
       viewSearch.data.results.length = 0;
@@ -282,6 +302,7 @@ const viewSearch = {
       res.appendChild(div);
       return;
     }
+
     // print results
     viewSearch.printMoreResults();
   },
@@ -289,10 +310,12 @@ const viewSearch = {
   // print the next chunk of results
   printMoreResults () {
     const res = document.querySelector("#search");
+
     // remove last result from intersection observer entries
     if (res.lastChild) {
       viewSearch.observer.unobserve(res.lastChild);
     }
+
     // prepare printing
     const { resultsFilesPrinted } = viewSearch.data;
     let start = 0;
@@ -303,9 +326,11 @@ const viewSearch = {
       }
     }
     let lastFile = "";
+
     // print next 50 results
     for (let f = start, len = viewSearch.data.results.length; f < len; f++) {
       const i = viewSearch.data.results[f];
+
       // heading
       if (i.file !== lastFile) {
         if (f - start + 1 >= 50) {
@@ -317,6 +342,7 @@ const viewSearch = {
         // update variables
         lastFile = i.file;
       }
+
       // result item
       const div = document.createElement("div");
       res.appendChild(div);
@@ -324,6 +350,7 @@ const viewSearch = {
       const line = document.createElement("span");
       div.appendChild(line);
       line.innerHTML = `Zeile <b>${i.line}</b>`;
+
       // print text
       let text = "";
       if (i.textBefore) {
@@ -350,8 +377,10 @@ const viewSearch = {
       ele.innerHTML = text;
       div.appendChild(ele);
     }
+
     // initialize tooltips
     tooltip.init(res);
+
     // let's have some doomscrolling
     if (resultsFilesPrinted.size !== viewSearch.data.resultsFiles.size) {
       viewSearch.observer.observe(res.lastChild);

@@ -45,6 +45,7 @@ const git = {
   configFormShow () {
     // show window
     overlay.show("git");
+
     // fill in
     document.querySelector("#git-dir").value = git.config.dir;
     const user = document.querySelector("#git-user");
@@ -82,6 +83,7 @@ const git = {
       document.querySelector("#git-user").select();
       return;
     }
+
     // check directory
     const dirOkay = await git.dirCheck(dir);
     if (!dirOkay[0]) {
@@ -89,16 +91,20 @@ const git = {
       git.dirError(dirOkay[1]);
       return;
     }
+
     // close all preview windows if dir is about to be changed
     if (git.config.dir !== dir) {
       shared.ipc.invoke("pv-close-all");
     }
+
     // save config data in prefs file
     git.config.user = user;
     git.config.dir = dir;
     shared.ipc.invoke("git-save", git.config);
+
     // fill in preferences
     git.fillPrefs();
+
     // close window
     overlay.hide("git");
   },
@@ -233,12 +239,14 @@ const git = {
   async commandBranch () {
     const current = await git.branchCurrent();
     const dest = current === "master" ? "preprint" : "master";
+
     // Is the working tree clean?
     const clean = await git.branchClean();
     if (!clean) {
       document.querySelector("#fun-git-branch").focus();
       return;
     }
+
     // checkout branch
     const checkout = await git.commandExec(`git checkout ${dest}`);
     if (checkout === false) {
@@ -258,6 +266,7 @@ const git = {
       document.querySelector("#fun-git-pull").focus();
       return;
     }
+
     // Do I know the user's password?
     let { configPass } = git;
     if (!configPass) {
@@ -275,6 +284,7 @@ const git = {
         return;
       }
     }
+
     // Okay, let's pull it!
     const branches = [ await git.branchCurrent() ];
     branches.unshift(branches.includes("master") ? "preprint" : "master");
@@ -306,6 +316,7 @@ const git = {
       });
       return;
     }
+
     // Are you really going to do this?
     const confirm = await dialog.open({
       type: "confirm",
@@ -315,6 +326,7 @@ const git = {
     if (!confirm) {
       return;
     }
+
     // restore known folders and files
     const folders = [
       "articles",
@@ -347,11 +359,13 @@ const git = {
         }
       });
     });
+
     // handle errors
     if (Array.isArray(result)) {
       await shared.error(`Fehlercode: ${result[0]}, ${result[1]}`);
       return false;
     }
+
     // return result
     return result;
   },

@@ -161,9 +161,11 @@ var win = {
         title: "Datei im Editor öffnen",
       },
     ];
+
     const h1 = document.createElement("h1");
     h1.id = file;
     h1.textContent = file;
+
     // icons
     for (const icon of icons) {
       const a = document.createElement("a");
@@ -249,6 +251,7 @@ var win = {
       }
     }
     viewHints.popupShow(caller, content, "lemmas");
+
     // print lemma list
     function printLemmas (content, lemmas) {
       const p = document.createElement("p");
@@ -365,6 +368,7 @@ var win = {
           return 1;
         }
       }
+
       // alpha-numeric
       let x = a.file;
       let y = b.file;
@@ -429,19 +433,25 @@ var win = {
       }
       return;
     }
+
     // block switching until the current switch was finished
     if (win.switching) {
       return;
     }
     win.switching = true;
+
     // close popup in hints view
     viewHints.popupClose({});
+
     // reset navigation index in hints view
     viewHints.navIdx = -1;
+
     // save scroll position
     win.viewScrollTop[win.view] = window.scrollY;
+
     // determine next view
     const nextView = button.id.replace("view-", "");
+
     // close results bar (if necessary)
     if (!/hints|search/.test(nextView) && document.querySelector("#results.visible")) {
       bars.toggle("results");
@@ -452,6 +462,7 @@ var win = {
     } else {
       sortingCont.classList.remove("hints-view");
     }
+
     // determine next bar content
     let activeBarContent = "";
     for (const i of document.querySelectorAll("#bar > div")) {
@@ -475,14 +486,17 @@ var win = {
         nextBarContent = "search-form";
         break;
     }
+
     // left or right
     const views = [ "xml", "hints", "clusters", "search" ];
     let direction = [ 1, -1 ];
     if (views.indexOf(nextView) > views.indexOf(win.view)) {
       direction = [ -1, 1 ];
     }
+
     // reduce advanced options if necessary
     await viewSearch.toggleAdvanced("off");
+
     // slide active bar content and <section>
     await new Promise(resolve => {
       const bc = document.getElementById(activeBarContent);
@@ -502,6 +516,7 @@ var win = {
       }
     });
     await shared.wait(25);
+
     // switch to next bar content and <section>
     const bc = document.getElementById(nextBarContent);
     const sect = document.getElementById(nextView);
@@ -511,6 +526,7 @@ var win = {
       void i.offsetWidth;
       i.style.left = "0px";
     }
+
     // switch buttons
     document.querySelectorAll("#view a").forEach(b => {
       if (b === button) {
@@ -519,6 +535,7 @@ var win = {
         b.classList.remove("active");
       }
     });
+
     // finish up
     win.view = nextView;
     bars.filtersToggleCat();

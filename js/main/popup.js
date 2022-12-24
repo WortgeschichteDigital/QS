@@ -131,6 +131,7 @@ module.exports = {
         menu.append(makeItem(args));
       }
     }
+
     // show menu
     menu.popup({
       window: BrowserWindow.fromWebContents(wc),

@@ -7,6 +7,7 @@ const hints = {
     for (const v of Object.values(xml.data.files)) {
       v.hints = [];
     }
+
     // get external file data
     await new Promise(resolve => {
       Promise.all([
@@ -15,9 +16,11 @@ const hints = {
         hints.fillVariants(),
       ]).then(() => resolve(true));
     });
+
     // glean hints data
     hints.parseData();
     hints.parseFiles();
+
     // clean-up and sorting
     for (const data of Object.values(xml.data.files)) {
       for (let i = data.hints.length - 1; i >= 0; i--) {
@@ -41,9 +44,6 @@ const hints = {
       });
     }
   },
-
-  // regular expression for leading articles
-  artReg: /^(das|de[mnrs]|die|eine?[mnrs]?) /i,
 
   // SEMANTIC_TYPE: corresponding semantic types
   // ("Cluster" and "Kontext" are excluded)
@@ -86,6 +86,7 @@ const hints = {
             }
           }
         }
+
         // LINK_ERROR: target not found
         if (i.lemma.file && /#/.test(i.verweisziel)) {
           const target = i.verweisziel.split("#")[1];
@@ -106,6 +107,7 @@ const hints = {
             });
           }
         }
+
         // LINK_ERROR: <Verweisziel> does not match <Verweistext>
         // (only regards multi lemma articles)
         if (i.lemma.file &&
@@ -122,8 +124,8 @@ const hints = {
                 bogus = false;
                 break;
               }
-              if (!hints.artReg.test(i.verweisziel)) {
-                text = text.replace(hints.artReg, "");
+              if (!shared.artReg.test(i.verweisziel)) {
+                text = text.replace(shared.artReg, "");
               }
               let { source: regText } = hints.lemmas[i.verweisziel].reg;
               regText = regText.substring(0, regText.length - 1);
@@ -152,6 +154,7 @@ const hints = {
             }
           }
         }
+
         // LINK_ERROR: lemma not found
         if (!i.lemma.file) {
           if (hints.lemmas[i.verweisziel]) {
@@ -195,6 +198,7 @@ const hints = {
               type: "link_error",
             });
           }
+
         // LINK_ERROR: link text is missing
         } else if (/#/.test(i.verweisziel) &&
             !i.verweistext) {
@@ -217,6 +221,7 @@ const hints = {
             ],
             type: "link_error",
           });
+
         // LINK_ERROR: <Verweisziel> contains a sub lemma
         } else if (i.lemma.spelling === i.verweisziel &&
             xml.data.files[i.lemma.file].nl.includes(i.verweisziel)) {
@@ -240,6 +245,7 @@ const hints = {
             ],
             type: "link_error",
           });
+
         // SEMANTIC_TYPE: propose to add semantic types
         } else if (i.type.length) {
           // hint for the same article
@@ -329,11 +335,12 @@ const hints = {
           }
         }
       }
+
       // ARTICLE_ID: hint erroneous article ID
       const hl = [];
       for (let i of data.hlJoined) {
         [ i ] = i.split("/");
-        i = shared.hClear(i);
+        i = shared.hidxClear(i);
         i = i.replace(/[\s’]/g, "_");
         hl.push(i);
       }
@@ -366,6 +373,7 @@ const hints = {
           type: "article_id",
         });
       }
+
       // ARTICLE_FILE: hint erroneous file name
       const fileName = articleFileName(fa, hl);
       if (file !== fileName) {
@@ -390,6 +398,7 @@ const hints = {
         });
       }
     }
+
     // ARTICL_ID: find duplicates
     const files = Object.keys(xml.data.files);
     files.sort((a, b) => {
@@ -426,6 +435,7 @@ const hints = {
         id,
       });
     }
+
     // SEMANTIC_TYPE: check whether corresponding semantic types are correct or not
     //   hl = array (main lemmas of current article)
     //   semCorr = set (correlating semantics)
@@ -461,6 +471,7 @@ const hints = {
       // the semantics are not equal => print a proposal
       return false;
     }
+
     // ARTICLE_FILE: create correct file name
     //   fa = string
     //   hl = array
@@ -532,6 +543,7 @@ const hints = {
           i.getAttribute("Sprache") !== "dt") {
         continue;
       }
+
       // EZ_STICHWORT: current article deals with this very word => markup should be <Stichwort>
       const textOri = i.textContent.trim();
       const text = textOri.replace(/\s/g, " ");
@@ -552,6 +564,7 @@ const hints = {
           continue forX;
         }
       }
+
       // EZ_LINK: link to existing article
       if (i.closest("Lesart") ||
           i.closest("Ueberschrift") ||
@@ -619,6 +632,7 @@ const hints = {
           i.getAttribute("Sprache") !== "dt") {
         continue;
       }
+
       // STICHWORT_EZ: current article does not deal with this word => markup should be <erwaehntest_Zeichen>
       let text = i.textContent.trim();
       if (/^-|-$/.test(text)) {
@@ -627,7 +641,7 @@ const hints = {
       const textOri = text;
       text = text.replace(/\s/g, " ");
       text = text.replace(/[()]/g, "");
-      const textNoArt = text.replace(hints.artReg, "");
+      const textNoArt = text.replace(shared.artReg, "");
       let matches = false;
       for (const reg of regExp) {
         if (reg.test(text) ||
@@ -687,6 +701,7 @@ const hints = {
       }
       if (scope !== "Verweise") {
         continue;
+
       // TR_SUPERFLUOUS: linked text is lemma of the current article (check <Verweise> only)
       } else if (data.hl.includes(text) ||
           data.nl.includes(text)) {
@@ -709,6 +724,7 @@ const hints = {
           textHint: [],
           type: "tr_superfluous",
         });
+
       // TR_LINK: replace <Textreferenz> with <Verweis> (check <Verweise> only)
       } else if (hints.lemmas[text]) {
         for (const x of hints.lemmas[text].xml) {
@@ -760,6 +776,7 @@ const hints = {
         });
         continue;
       }
+
       // WWW_ERROR: <URL> missing
       const url = i?.querySelector("URL")?.textContent;
       if (!url) {
@@ -777,6 +794,7 @@ const hints = {
         });
         continue;
       }
+
       // WWW_ERROR: link has @Typ="Cluster"
       if (i.getAttribute("Typ") === "Cluster") {
         hints.add(data.hints, file, {
@@ -798,6 +816,7 @@ const hints = {
           type: "www_error",
         });
       }
+
       // WWW_LINK: propose to link to existing article
       const dwds = url.match(/dwds\.de\/wb\/(.+?)(?=#|$)/);
       if (dwds) {
@@ -878,6 +897,7 @@ const hints = {
         });
       }
     }
+
     // a tag has the same @Sprache as the parent <Absatz>
     // (<Absatz> can only be found in quotations)
     for (const i of doc.querySelectorAll("Absatz[Sprache]")) {
@@ -926,6 +946,7 @@ const hints = {
         iterateNodes(n, n, getDiaValues(n));
       }
     }
+
     function getDiaValues (lesart) {
       const diaValues = {};
       for (const d of lesart.querySelectorAll("Diasystematik")) {
@@ -943,6 +964,7 @@ const hints = {
       }
       return diaValues;
     }
+
     function iterateNodes (nodes, lesart, diaValues) {
       for (const n of nodes.childNodes) {
         if (n.nodeType === Node.ELEMENT_NODE &&
@@ -1131,7 +1153,7 @@ const hints = {
     for (const i of links) {
       if (i.scope !== "Verweise" &&
           i.lemma.file === file &&
-          shared.hClear(i.lemma.spelling) === lemma) {
+          shared.hidxClear(i.lemma.spelling) === lemma) {
         count++;
       }
     }
@@ -1230,9 +1252,11 @@ const hints = {
         }
       }
     }
+
     // it's better to fill these values every time,
     // in case they were updated while the app was running
     hints.lemmas = {};
+
     // collect missing words and populate lemma list
     const artBestimmt = [ "der", "die", "das", "des", "dem", "den" ];
     const artUnbestimmt = [ "ein", "eine", "eines", "einer", "einem", "einen" ];
@@ -1240,7 +1264,7 @@ const hints = {
     const missing = [];
     for (const [ file, data ] of Object.entries(xml.data.files)) {
       for (let lemma of data.hl.concat(data.nl)) {
-        lemma = shared.hClear(lemma);
+        lemma = shared.hidxClear(lemma);
         if (!hints.lemmas[lemma]) {
           hints.lemmas[lemma] = {
             xml: new Set(),
@@ -1259,6 +1283,7 @@ const hints = {
         }
       }
     }
+
     // download missing variants (chunks of 50 words)
     const promises = [];
     let save = false;
@@ -1317,6 +1342,7 @@ const hints = {
         save = true;
       }
     }
+
     // make RegExp for lemma list
     for (const [ lemma, data ] of Object.entries(hints.lemmas)) {
       const vari = [];
@@ -1333,6 +1359,7 @@ const hints = {
       }
       data.reg = new RegExp(`^${vari.join(" ")}$`);
     }
+
     // save completed variants to cache file
     if (save) {
       try {

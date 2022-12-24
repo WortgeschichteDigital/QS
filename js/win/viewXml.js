@@ -16,6 +16,7 @@ const viewXml = {
     if (win.view !== "xml") {
       return;
     }
+
     // get current content state
     // (restore scroll position in case the state is unchanged)
     const filterState = win.getFilterState();
@@ -24,6 +25,7 @@ const viewXml = {
       win.viewScrollTopReset(type);
       return;
     }
+
     // glean data
     const data = [];
     for (const [ file, values ] of Object.entries(xml.data.files)) {
@@ -37,6 +39,7 @@ const viewXml = {
         status: "" + values.status,
       });
     }
+
     // filter data
     const dataF = bars.filtersGetData();
     // dataS.ascending = boolean, .ignore = boolean, .type = alpha | time
@@ -50,8 +53,10 @@ const viewXml = {
         data.splice(i, 1);
       }
     }
+
     // sort data
     win.sortingApply(dataS, data);
+
     // make table
     const statusIcons = [
       {
@@ -85,6 +90,7 @@ const viewXml = {
       tab.appendChild(tr);
       tr.dataset.file = i.file;
       tr.dataset.status = i.status;
+
       // status
       const status = document.createElement("td");
       tr.appendChild(status);
@@ -95,6 +101,7 @@ const viewXml = {
       statusImg.height = "30";
       statusImg.alt = "";
       statusImg.title = statusIcons[i.status].title;
+
       // file
       const file = document.createElement("td");
       tr.appendChild(file);
@@ -107,6 +114,7 @@ const viewXml = {
       pv.appendChild(pvDir);
       pvDir.textContent = i.dir + "/";
       pv.appendChild(document.createTextNode(i.file));
+
       // time
       if (dataS.type === "time") {
         const td = document.createElement("td");
@@ -115,6 +123,7 @@ const viewXml = {
         const published = i.published.split("-");
         td.textContent = `${published[2]}.\u00A0${published[1]}.\u00A0${published[0]}`;
       }
+
       // teaser & open
       for (let j = 0; j < 2; j++) {
         const td = document.createElement("td");
@@ -133,8 +142,10 @@ const viewXml = {
         img.alt = "";
       }
     }
+
     // add tooltips
     tooltip.init(tab);
+
     // append events
     tab.querySelectorAll("tr a").forEach(i => {
       i.addEventListener("click", async function (evt) {
@@ -146,13 +157,16 @@ const viewXml = {
         viewXml["fun" + this.dataset.event](this);
       });
     });
+
     // print placeholder in case no XML file made it through
     if (!data.length) {
       tab = win.nothingToShow();
     }
+
     // insert table
     const xmlSec = document.querySelector("#xml");
     xmlSec.replaceChild(tab, xmlSec.firstChild);
+
     // restore scroll position (if applicable)
     if (filterState === viewXml.contentState.filterState) {
       // restore scroll position only in case the filter state is identical
@@ -183,6 +197,7 @@ const viewXml = {
     } else {
       fileName = a.closest("tr").dataset.file;
     }
+
     // load XSL (if needed)
     const result = await win.loadXsl({
       obj: viewXml,
@@ -192,6 +207,7 @@ const viewXml = {
     if (!result) {
       return;
     }
+
     // extract summary (Kurz gefasst)
     const fileContent = xml.files[fileName];
     if (!fileContent) {
@@ -203,6 +219,7 @@ const viewXml = {
     const processor = new XSLTProcessor();
     processor.importStylesheet(xslt);
     const processedDoc = processor.transformToDocument(doc);
+
     // collect tags
     const tags = [];
     doc.querySelectorAll("Wortgeschichte_kompakt *").forEach(i => {
@@ -212,6 +229,7 @@ const viewXml = {
       }
     });
     tags.sort(shared.sort);
+
     // display summary (Kurz gefasst)
     document.querySelector("#summary h1 span").textContent = fileName;
     document.querySelector("#summary p").innerHTML = processedDoc.querySelector("p").innerHTML;

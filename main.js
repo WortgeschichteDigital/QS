@@ -3,11 +3,10 @@
 /* LOAD MODULES --------------------------------- */
 
 // Electron modules
-const { app, BrowserWindow, ipcMain, Menu, nativeImage } = require("electron");
-const display = require("electron").screen;
+const { app, BrowserWindow, screen: display, ipcMain, Menu, nativeImage } = require("electron");
 
 // Node.js modules
-const fsp = require("fs").promises;
+const { promises: fsp } = require("fs");
 const path = require("path");
 
 // costum modules
@@ -36,6 +35,7 @@ const error = {
   logFile: path.join(app.getPath("userData"), "error.log"),
   // stash for errors in case many errors appear in fast succession
   logStash: "",
+  // timeout so that the error log is not written too often
   logTimeout: undefined,
 
   // write recent errors to log file
@@ -335,12 +335,14 @@ const winMenu = {
     if (dev) {
       menu = menu.concat(winMenu.menuDev);
     }
+
     // remove ampersands on macOS
     if (process.platform === "darwin") {
       for (const i of menu) {
         i.label = i.label.replace("&", "");
       }
     }
+
     // build and set the menu
     const m = Menu.buildFromTemplate(menu);
     if (process.platform === "darwin") {
@@ -457,6 +459,7 @@ const win = {
       help: "QS / Hilfe",
       pv: "QS / " + xml.file,
     };
+
     // open window
     const bwOptions = {
       title: title[type],
@@ -502,10 +505,12 @@ const win = {
       bwOptions.webPreferences.webviewTag = true;
     }
     const bw = new BrowserWindow(bwOptions);
+
     // maximize window?
     if (data.maximized) {
       bw.maximize();
     }
+
     // memorize window
     win.data.push({
       bw,
@@ -513,6 +518,7 @@ const win = {
       type,
       xml: xml.file || "",
     });
+
     // set menu
     if (process.platform === "darwin") {
       bw.on("focus", function () {
@@ -521,6 +527,7 @@ const win = {
     } else {
       winMenu.set(bw, type);
     }
+
     // load html
     const html = {
       about: path.join(__dirname, "html", "about.html"),
@@ -536,27 +543,33 @@ const win = {
     } else {
       bw.loadFile(html[type]);
     }
+
     // focus window (otherwise it might not be in the foreground)
     win.focus(bw);
+
     // show window (this prevents flickering on startup)
     bw.once("ready-to-show", () => bw.show());
+
     // send XML data if necessary
     if (type === "pv") {
       bw.webContents.once("did-finish-load", function () {
         const bw = BrowserWindow.fromWebContents(this);
         win.pvSend(bw, xml);
       });
+
     // make the window show a section
     } else if (show) {
       bw.webContents.once("did-finish-load", function () {
         setTimeout(() => this.send("show", show), 500);
       });
     }
+
     // window is about to be closed
     bw.on("close", async function (evt) {
       // search window
       const idx = win.data.findIndex(i => i.id === this.id);
       const { type } = win.data[idx];
+
       // close every other window and
       // save preferences when the main window is about to be closed
       if (type === "app" && typeof prefs.saved === "undefined") {
@@ -577,6 +590,7 @@ const win = {
         this.close();
         return;
       }
+
       // save window size and state
       if (type !== "about") {
         const data = prefs.data.win[type];
@@ -587,6 +601,7 @@ const win = {
         data.height = bounds.height;
         data.maximized = win.data[idx].bw.isMaximized();
       }
+
       // dereference window
       win.data.splice(idx, 1);
     });
@@ -695,8 +710,10 @@ const win = {
         appWin.bw.webContents.send("update-file", xmlFiles);
       }
     }
+
     // send data
     bw.webContents.send("update", args);
+
     // focus window
     // (this is important in case the window already exists)
     bw.focus();
@@ -748,6 +765,7 @@ const worker = {
           nodeIntegration: true,
         },
       });
+
       // memorize window
       win.data.push({
         bw,
@@ -755,6 +773,7 @@ const worker = {
         type: "worker",
         xml: "",
       });
+
       // load html
       const html = path.join(__dirname, "html", "worker.html");
       if (dev) {
@@ -765,17 +784,20 @@ const worker = {
       } else {
         bw.loadFile(html);
       }
+
       // window is going to be closed
       bw.on("close", () => {
         const idx = win.data.findIndex(i => i.type === "worker");
         win.data.splice(idx, 1);
       });
+
       // send data
       bw.webContents.once("did-finish-load", function () {
         const bw = BrowserWindow.fromWebContents(this);
         bw.webContents.send("work", data);
       });
     }
+
     // wait for worker to finish
     worker.data = null;
     await new Promise(resolve => {

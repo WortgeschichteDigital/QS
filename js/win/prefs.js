@@ -21,6 +21,7 @@ const prefs = {
         prefs.initSorting();
         continue;
       }
+
       // option within the preferences overlay
       const ele = document.querySelector(`#prefs-${k}`);
       if (!ele) {
@@ -31,6 +32,7 @@ const prefs = {
         ele.value = v;
       }
     }
+
     // read Zeitstrahl data if file path present
     if (prefs.data.zeitstrahl) {
       await prefs.zeitstrahlRead(prefs.data.zeitstrahl);
@@ -87,10 +89,13 @@ const prefs = {
     // fill in filter data
     prefs.data.filters = bars.filtersGetData();
     prefs.data.filters["bar-visible"] = document.querySelector("#fun-filters").classList.contains("active");
+
     // fill in sorting data
     prefs.data.sorting = win.sortingGetData();
+
     // fill in search data
     prefs.data.search = viewSearch.getAdvancedData();
+
     // save preferences
     shared.ipc.invoke("prefs-save", prefs.data);
   },
@@ -219,6 +224,7 @@ const prefs = {
       duration: new Date() - start,
       type,
     });
+
     // sort entries
     prefs.statsData.sort((a, b) => {
       if (a.type === b.type) {
@@ -231,6 +237,7 @@ const prefs = {
       }
       return -1;
     });
+
     // update prefs page
     const typeSwitch = {
       clusters: "Cluster",

@@ -48,7 +48,7 @@ input[type="button"][value="Suchen"] {
   background-image: url(../../img/win/search.svg);
 }
 
-input[type="button"][value^="Vorschau"] {
+input[type="button"][value="Vorschau"] {
   background-image: url(../../img/win/preview.svg);
 }
 
