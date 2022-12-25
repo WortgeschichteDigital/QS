@@ -9,6 +9,7 @@ const viewHints = {
     diasystemic_value: "Diasystematik ergänzen",
     ez_link: "Objektsprache mit Artikel verlinken",
     ez_stichwort: "Stichwort falsch ausgezeichnet",
+    hidx_missing: "Homographen-Index ergänzen",
     link_duplicate: "Duplikat entfernen",
     link_error: "Artikel-Link korrigieren",
     literature_error: "Literatur-Tag korrigieren",
@@ -152,6 +153,7 @@ const viewHints = {
         case "tagging_error":
           hintTypes = hintTypes.concat([
             "ez_stichwort",
+            "hidx_missing",
             "literature_error",
             "sprache_superfluous",
             "stichwort_ez",
@@ -452,9 +454,8 @@ const viewHints = {
   markIcons: [ "mark-unchecked-small.svg", "button-yes.svg", "button-no.svg" ],
 
   // toggle a hint's mark
-  //   ele = node (clicked link)
   //   ident = string (identification hash)
-  toggleMark ({ ele, ident }) {
+  toggleMark ({ ident }) {
     if (!prefs.data.marks) {
       prefs.data.marks = {};
     }
@@ -469,7 +470,9 @@ const viewHints = {
     } else {
       delete prefs.data.marks[ident];
     }
-    ele.firstChild.src = `img/win/${viewHints.markIcons[state]}`;
+    document.querySelectorAll(`.hint-block[data-ident="${ident}"] a[data-fun="toggleMark"] img`).forEach(i => {
+      i.src = `img/win/${viewHints.markIcons[state]}`;
+    });
   },
 
   // erase marks for hints that no longer exist
@@ -487,6 +490,18 @@ const viewHints = {
       if (!idents.has(ident)) {
         delete prefs.data.marks[ident];
       }
+    }
+  },
+
+  // erase all marks
+  eraseMarks () {
+    prefs.data.marks = {};
+    prefs.save();
+    shared.feedback("okay");
+    // force an update of the view by resetting the content state
+    viewHints.contentState.xmlDate = "";
+    if (win.view === "hints") {
+      viewHints.populate("updated");
     }
   },
 

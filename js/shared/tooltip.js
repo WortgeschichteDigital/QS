@@ -97,6 +97,19 @@ const tooltip = {
         <p>Alle Verweise, die ein Typ-Attribut mit dem Wert „Cluster“ haben, werden für die Berechnung der Vorschau ignoriert.</p>
         <p>Mit dieser Option können Sie also bereits vorgenommene Modulierungen temporär zurücksetzen.</p>
       `,
+      "prefs-help-data": `
+        Die Einstellungen können exportiert werden, um sie auf einem anderen Rechner wieder zu importieren. Sie umfassen auch die in der Ansicht <i>Hinweise</i> gesetzten Markierungen. Vom Export ausgenommen sind die Git-Konfiguration und der Pfad zu den Zeitstrahldaten.
+      `,
+      "prefs-help-data-cache": `
+        Beim Start und immer dann, wenn Sie auf <i>Update</i> drücken, werden die XML-Dateien analysiert. Mit den dabei zusammengetragenen Daten arbeitet die App. Da das Erstellen der Daten sehr rechenintensiv ist, wird das Ergebnis in einem Cache gespeichert, den Sie mit dieser Funktion zurücksetzen können.
+      `,
+      "prefs-help-data-marks": `
+        Mit dieser Funktion können Sie alle Markierungen löschen, die Sie in der Ansicht <i>Hinweise</i> vorgenommen haben.
+      `,
+      "prefs-help-data-zeitstrahl": `
+        <p>Die Zeitstrahldaten werden für den Export der Datei Artikel.json (Funktionen&nbsp;&gt; Artikel.json), einer für die Webseite unverzichtbaren Datendatei, verwendet. Anders als die übrigen Inhalte können Zeitstrahldaten nicht von QS berechnet werden. Exportieren Sie die Datei ohne Zeitstrahldaten, kann auf der Webseite kein Zeitstrahl angezeigt werden.</p>
+        <p>Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das <b>W:\\Software\\<wbr>Entwicklungsumgebung WGd\\<wbr>wgd.local\\<wbr>scr\\<wbr>Zeitstrahl\\<wbr>data\\<wbr>data.json</b>.</p>
+      `,
       "search-help": `
         <p>Suchwörter sind durch <b>Leerzeichen</b> getrennt. Beim Suchen werden die einzelnen Wörter durch ein <b>logisches Und</b> miteinander verknüpft:<span class="example">alternative Fakten<br>= Suche nach „alternative“ UND „Fakten“.</span></p>
         <p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird bei der Suche für dieses Wort zwischen Groß- und Kleinschreibung unterschieden.</p>

@@ -36,8 +36,20 @@ input[type="button"]:disabled {
   pointer-events: none;
 }
 
+input[type="button"][value="Exportieren"] {
+  background-image: url(../../img/win/export.svg);
+}
+
+input[type="button"][value="Importieren"] {
+  background-image: url(../../img/win/import.svg);
+}
+
 input[type="button"][value="Konfiguration"] {
   background-image: url(../../img/win/preferences.svg);
+}
+
+input[type="button"][value="Löschen"] {
+  background-image: url(../../img/win/cleanup.svg);
 }
 
 input[type="button"][value="Nein"] {

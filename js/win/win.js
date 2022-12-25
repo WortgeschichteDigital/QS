@@ -42,6 +42,9 @@ var win = {
       case "app-updates":
         updates.check(false);
         break;
+      case "artikel-json":
+        artikel.show();
+        break;
       case "clusters":
         document.querySelector("#view-clusters").click();
         break;
@@ -260,7 +263,8 @@ var win = {
         if (p.hasChildNodes()) {
           p.appendChild(document.createElement("br"));
         }
-        p.appendChild(document.createTextNode(l));
+        const lemma = shared.hidxPrint(l);
+        p.appendChild(document.createTextNode(lemma));
       }
     }
   },

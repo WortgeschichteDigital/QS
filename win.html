@@ -26,6 +26,7 @@
     <script src="js/shared/shared.js"></script>
     <script src="js/shared/tooltip.js"></script>
 
+    <script src="js/win/artikel.js"></script>
     <script src="js/win/bars.js"></script>
     <script src="js/win/clustersCheck.js"></script>
     <script src="js/win/clustersComp.js"></script>
@@ -114,7 +115,7 @@
         ><a href="#" id="clusters-nav-preview" class="icon" title="Vorschau berechnen"
           ><img src="img/win/preview.svg" width="30" height="30" alt=""
         ></a
-        ><a href="#" id="clusters-nav-new" class="icon active off" title="durch neue oder geänderte Cluster springen"
+        ><a href="#" id="clusters-nav-new" class="icon off" title="durch neue oder geänderte Cluster springen"
           ><img src="img/win/jump.svg" width="30" height="30" alt=""
         ></a
         ><span id="clusters-nav-filters"></span
@@ -337,6 +338,31 @@
       ><img src="img/icon/icon.svg" width="96" height="96" alt=""
     ></div>
 
+    <!-- OVERLAY: ARTIKEL.JSON -->
+    <div id="artikel" class="overlay hide off">
+      <div>
+        <h1>Artikel.json<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <div id="artikel-zeitstrahl">
+          <p
+            ><img src="img/win/button-yes.svg" width="30" height="30" alt=""
+            ><i>Zeitstrahldaten</i
+          ></p>
+          <p><i>Empfehlung:</i> Die Datei mit den Zeit&shy;strahl&shy;daten sollte mit der App verknüpft sein: <a href="#">Einstellungen öffnen</a>.</p>
+        </div>
+        <div id="artikel-branch">
+          <p
+            ><img src="img/win/button-yes.svg" width="30" height="30" alt=""><i>Branch „master“</i
+          ></p>
+          <p><i>Empfehlung:</i> Die Berechnung sollte auf Basis von „master“ stattfinden: <a href="#">Branch wechseln</a>.</p>
+        </div>
+        <div id="artikel-calculating" class="invisible"
+          ><img src="img/win/loading.svg" width="30" height="30" alt=""
+          ><span></span
+        ></div>
+        <p><input type="button" value="Exportieren" id="artikel-calculate"></p>
+      </div>
+    </div>
+
     <!-- OVERLAY: GIT CONFIGURATION -->
     <div id="git" class="overlay hide off">
       <div>
@@ -378,22 +404,39 @@
         <h1>Einstellungen<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
         <div>
           <ul
-            ><li><a href="#data" class="active">Datendateien</a></li
+            ><li><a href="#data" class="active">Daten</a></li
             ><li><a href="#git">Git</a></li
             ><li><a href="#statistics">Statistik</a></li
           ></ul>
           <div>
-            <!-- Datendateien -->
+            <!-- Daten -->
             <div id="prefs-data" class="prefs-section">
-              <h2>Analyse-Cache</h2>
-              <p
-                ><input type="button" value="Zurücksetzen" id="prefs-cache-leeren"
-              ></p>
-              <h2>Zeitstrahldaten</h2>
+              <h2>Zeitstrahldaten<a href="#einstellungen-datenZeitstrahl" id="prefs-help-data-zeitstrahl" class="icon"
+                ><img src="img/win/help.svg" width="24" height="24" alt=""
+              ></a></h2>
               <p
                 ><input type="text" value="" placeholder="Pfad zur data.json" id="prefs-zeitstrahl" readonly tabindex="-1"
                 ><a href="#" id="prefs-zeitstrahl-open" class="icon" title="Datei auswählen"><img src="img/win/open-file.svg" width="30" height="30" alt=""></a
                 ><a href="#" id="prefs-zeitstrahl-remove" class="icon" title="Datei entkoppeln"><img src="img/win/delete.svg" width="30" height="30" alt=""></a
+              ></p>
+              <h2>Einstellungsdaten<a href="#einstellungen-datenExport" id="prefs-help-data" class="icon"
+                ><img src="img/win/help.svg" width="24" height="24" alt=""
+              ></a></h2>
+              <p
+                ><input type="button" value="Exportieren" id="prefs-data-export"
+                ><input type="button" value="Importieren" id="prefs-data-import"
+              ></p>
+              <h2>Markierungsdaten<a href="#einstellungen-datenMarks" id="prefs-help-data-marks" class="icon"
+                ><img src="img/win/help.svg" width="24" height="24" alt=""
+              ></a></h2>
+              <p
+                ><input type="button" value="Löschen" id="prefs-marks"
+              ></p>
+              <h2>Analyse-Cache<a href="#einstellungen-datenCache" id="prefs-help-data-cache" class="icon"
+                ><img src="img/win/help.svg" width="24" height="24" alt=""
+              ></a></h2>
+              <p
+                ><input type="button" value="Zurücksetzen" id="prefs-cache-leeren"
               ></p>
             </div>
 

@@ -403,7 +403,7 @@ const viewClusters = {
         } else if (xml.data.files[values.file].nlJoined.includes(lemma)) {
           span.title = "Nebenlemma";
         }
-        lemma = shared.hidxClear(lemma);
+        lemma = shared.hidxPrint(lemma);
         if (lemma.length > 30 &&
             /\//.test(lemma)) {
           span.classList.add("wrap");
@@ -529,49 +529,14 @@ const viewClusters = {
 
     // prepare data
     viewClusters.data.previewStatsStart = new Date();
-    const domains = [];
-    for (const v of Object.values(bars.filtersData.domains)) {
-      domains.push(v.value);
-    }
-    const files = {};
     const removeTypeCluster = document.querySelector("#clusters-preview-no-type-cluster:checked") !== null;
-    for (const [ k, v ] of Object.entries(xml.data.files)) {
-      files[k] = {};
-      files[k].domains = [ ...v.domains ];
-      files[k].hl = [ ...v.hlJoined ];
-      files[k].nl = [ ...v.nlJoined ];
-      files[k].links = structuredClone(v.links);
-      // remove links of type "Cluster"
-      if (removeTypeCluster) {
-        for (let i = files[k].links.length - 1; i >= 0; i--) {
-          if (files[k].links[i].type.includes("Cluster")) {
-            files[k].links.splice(i, 1);
-          }
-        }
-      }
-    }
-
-    // add links if modulation shall be included
-    if (document.querySelector("#clusters-preview-modulate-check").checked) {
-      document.querySelectorAll("#clusters-modulate-files .file-block").forEach(block => {
-        const { file } = block.dataset;
-        block.querySelectorAll(".proposals a").forEach(link => {
-          const { lemma } = link.dataset;
-          files[file].links.push({
-            lemma: {
-              file: clustersMod.data.center[lemma].file,
-              spelling: lemma,
-            },
-            points: 3,
-          });
-        });
-      });
-    }
+    const addModulation = document.querySelector("#clusters-preview-modulate-check").checked;
+    const workerData = viewClusters.gleanWorkerData(removeTypeCluster, addModulation);
 
     // start the calculation
     viewClusters.worker.postMessage({
-      domains,
-      files,
+      domains: workerData.domains,
+      files: workerData.files,
     });
   },
 
@@ -618,5 +583,57 @@ const viewClusters = {
     } else {
       button.classList.remove("active");
     }
+  },
+
+  // glean data for the cluster worker
+  //   removeTypeCluster = boolean
+  //   addModulation = boolean
+  gleanWorkerData (removeTypeCluster, addModulation) {
+    // collect domains
+    const domains = [];
+    for (const v of Object.values(bars.filtersData.domains)) {
+      domains.push(v.value);
+    }
+
+    // create files data
+    const files = {};
+    for (const [ k, v ] of Object.entries(xml.data.files)) {
+      files[k] = {};
+      files[k].domains = [ ...v.domains ];
+      files[k].hl = [ ...v.hlJoined ];
+      files[k].nl = [ ...v.nlJoined ];
+      files[k].links = structuredClone(v.links);
+      // remove links of type "Cluster" (if requested)
+      if (removeTypeCluster) {
+        for (let i = files[k].links.length - 1; i >= 0; i--) {
+          if (files[k].links[i].type.includes("Cluster")) {
+            files[k].links.splice(i, 1);
+          }
+        }
+      }
+    }
+
+    // add links proposed in the modulation (if requested)
+    if (addModulation) {
+      document.querySelectorAll("#clusters-modulate-files .file-block").forEach(block => {
+        const { file } = block.dataset;
+        block.querySelectorAll(".proposals a").forEach(link => {
+          const { lemma } = link.dataset;
+          files[file].links.push({
+            lemma: {
+              file: clustersMod.data.center[lemma].file,
+              spelling: lemma,
+            },
+            points: 3,
+          });
+        });
+      });
+    }
+
+    // return data
+    return {
+      domains,
+      files,
+    };
   },
 };

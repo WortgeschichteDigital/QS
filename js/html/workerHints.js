@@ -57,8 +57,74 @@ const hints = {
   // hints that can be derived from already present file data
   // (no parsing of XML files needed)
   parseData () {
+    // HIDX_MISSING: detect relevant articles and hint <Schreibung> with missing @hidx
+    const hidxLemmas = new Set();
+    const hidxReg = / \([1-9]\)$/;
+    for (const values of Object.values(hints.lemmas)) {
+      // lemma apperas only in one file
+      if (values.xml.length === 1) {
+        continue;
+      }
+
+      // detect all lemmas with @hidx
+      for (const file of values.xml) {
+        const data = xml.data.files[file];
+        if (data.fa) {
+          continue;
+        }
+        for (const l of data.hl.concat(data.nl)) {
+          if (hidxReg.test(l)) {
+            hidxLemmas.add(l.replace(hidxReg, ""));
+          }
+        }
+      }
+
+      // detect <Schreibung> without @hidx
+      for (const file of values.xml) {
+        const data = xml.data.files[file];
+        if (data.fa) {
+          continue;
+        }
+        for (const l of data.hl.concat(data.nl)) {
+          if (hidxLemmas.has(l)) {
+            const xmlSplitted = xml.files[file].split(`<Schreibung>${l}</Schreibung>`)[0];
+            hints.add(data.hints, file, {
+              line: xmlSplitted.split("\n").length,
+              linkCount: 0,
+              scope: "Artikel",
+              textErr: [ `<Schreibung>${l}</Schreibung>` ],
+              textHint: [
+                {
+                  text: `<Schreibung hidx="1">${l}</Schreibung>`,
+                  type: "copy",
+                },
+              ],
+              type: "hidx_missing",
+            });
+          }
+        }
+      }
+    }
+
     for (const [ file, data ] of Object.entries(xml.data.files)) {
       for (const i of data.links) {
+        // HIDX_MISSING: hint all <Verweisziel> with missing @hidx
+        if (hidxLemmas.has(i.lemma.spelling)) {
+          hints.add(data.hints, file, {
+            line: i.line,
+            linkCount: 0,
+            scope: i.scope,
+            textErr: [ `<Verweisziel>${i.verweisziel}</Verweisziel>` ],
+            textHint: [
+              {
+                text: `<Verweisziel hidx="1">${i.verweisziel}</Verweisziel>`,
+                type: "copy",
+              },
+            ],
+            type: "hidx_missing",
+          });
+        }
+
         // LINK_DUPLICATE
         if (i.scope === "Verweise") {
           for (const x of data.links) {
@@ -66,9 +132,11 @@ const hints = {
               break;
             }
             if (x.scope === "Verweise" &&
+                x.lemma.file &&
                 x.lemma.file === i.lemma.file &&
                 x.lemma.spelling === i.lemma.spelling &&
                 (!x.verweistext && !i.verweistext || x.verweistext === i.verweistext)) {
+              const hidx = hints.hidxAttribute(i.verweisziel);
               hints.add(data.hints, file, {
                 line: i.line,
                 linkCount: 0,
@@ -78,7 +146,7 @@ const hints = {
                     text: "identischer Verweis bereits in Wortinformationen",
                     type: "hint_text",
                   },
-                  `<Verweisziel>${i.verweisziel}</Verweisziel>`,
+                  `<Verweisziel${hidx}>${shared.hidxClear(i.verweisziel)}</Verweisziel>`,
                 ],
                 textHint: [],
                 type: "link_duplicate",
@@ -89,8 +157,9 @@ const hints = {
 
         // LINK_ERROR: target not found
         if (i.lemma.file && /#/.test(i.verweisziel)) {
-          const target = i.verweisziel.split("#")[1];
+          const target = shared.hidxClear(i.verweisziel.split("#")[1]);
           if (!xml.data.files[i.lemma.file].targets.includes(target)) {
+            const hidx = hints.hidxAttribute(i.verweisziel);
             hints.add(data.hints, file, {
               line: i.line,
               linkCount: 0,
@@ -100,7 +169,7 @@ const hints = {
                   text: "Sprungziel nicht gefunden",
                   type: "hint_text",
                 },
-                `<Verweisziel>${i.verweisziel}</Verweisziel>`,
+                `<Verweisziel${hidx}>${shared.hidxClear(i.verweisziel)}</Verweisziel>`,
               ],
               textHint: [],
               type: "link_error",
@@ -110,33 +179,35 @@ const hints = {
 
         // LINK_ERROR: <Verweisziel> does not match <Verweistext>
         // (only regards multi lemma articles)
+        const vzCleared = shared.hidxClear(i.verweisziel);
         if (i.lemma.file &&
             i.verweistext &&
-            i.verweistext !== i.verweisziel &&
+            i.verweistext !== vzCleared &&
             !/^-|-$/.test(i.verweistext) &&
-            !/#/.test(i.verweisziel)) {
+            !/#/.test(vzCleared)) {
           const targetData = xml.data.files[i.lemma.file];
           if (targetData.hlJoined.length > 1 ||
               targetData.nl.length) {
             let bogus = true;
             for (let text of i.verweistext.split("/")) {
-              if (i.verweisziel === text) {
+              if (vzCleared === text) {
                 bogus = false;
                 break;
               }
-              if (!shared.artReg.test(i.verweisziel)) {
+              if (!shared.artReg.test(vzCleared)) {
                 text = text.replace(shared.artReg, "");
               }
-              let { source: regText } = hints.lemmas[i.verweisziel].reg;
+              let { source: regText } = hints.lemmas[vzCleared].reg;
               regText = regText.substring(0, regText.length - 1);
               const reg = new RegExp(regText, "i");
               if (reg.test(text) &&
-                  text.length <= i.verweisziel.length + 2) {
+                  text.length <= vzCleared.length + 2) {
                 bogus = false;
                 break;
               }
             }
             if (bogus) {
+              const hidx = hints.hidxAttribute(i.verweisziel);
               hints.add(data.hints, file, {
                 line: i.line,
                 linkCount: 0,
@@ -146,7 +217,7 @@ const hints = {
                     text: "Verweistext passt nicht zum Verweisziel",
                     type: "hint_text",
                   },
-                  `<Verweistext>${i.verweistext}</Verweistext>\n<Verweisziel>${i.verweisziel}</Verweisziel>`,
+                  `<Verweistext>${i.verweistext}</Verweistext>\n<Verweisziel${hidx}>${vzCleared}</Verweisziel>`,
                 ],
                 textHint: [],
                 type: "link_error",
@@ -178,6 +249,7 @@ const hints = {
               type: "link_error",
             });
           } else {
+            const hidx = hints.hidxAttribute(i.verweisziel);
             hints.add(data.hints, file, {
               line: i.line,
               linkCount: 0,
@@ -187,7 +259,7 @@ const hints = {
                   text: "Lemma nicht gefunden",
                   type: "hint_text",
                 },
-                `<Verweisziel>${i.verweisziel}</Verweisziel>`,
+                `<Verweisziel${hidx}>${shared.hidxClear(i.verweisziel)}</Verweisziel>`,
               ],
               textHint: [
                 {
@@ -200,8 +272,8 @@ const hints = {
           }
 
         // LINK_ERROR: link text is missing
-        } else if (/#/.test(i.verweisziel) &&
-            !i.verweistext) {
+        } else if (/#/.test(i.verweisziel) && !i.verweistext) {
+          const hidx = hints.hidxAttribute(i.verweisziel);
           hints.add(data.hints, file, {
             line: i.line,
             linkCount: 0,
@@ -211,11 +283,11 @@ const hints = {
                 text: "Verweistext nicht angegeben",
                 type: "hint_text",
               },
-              `<Verweistext/>\n<Verweisziel>${i.verweisziel}</Verweisziel>`,
+              `<Verweistext/>\n<Verweisziel${hidx}>${shared.hidxClear(i.verweisziel)}</Verweisziel>`,
             ],
             textHint: [
               {
-                text: `<Verweistext>${i.lemma.spelling}</Verweistext>`,
+                text: `<Verweistext>${shared.hidxClear(i.lemma.spelling)}</Verweistext>`,
                 type: "copy",
               },
             ],
@@ -226,6 +298,7 @@ const hints = {
         } else if (i.lemma.spelling === i.verweisziel &&
             xml.data.files[i.lemma.file].nl.includes(i.verweisziel)) {
           const targetData = xml.data.files[i.lemma.file];
+          const hidx = hints.hidxAttribute(i.verweisziel);
           hints.add(data.hints, file, {
             line: i.line,
             linkCount: 0,
@@ -235,11 +308,11 @@ const hints = {
                 text: "Nebenlemma anstelle von Hauptlemma",
                 type: "hint_text",
               },
-              `<Verweisziel>${i.verweisziel}</Verweisziel>`,
+              `<Verweisziel${hidx}>${shared.hidxClear(i.verweisziel)}</Verweisziel>`,
             ],
             textHint: [
               {
-                text: `<Verweisziel>${targetData.hl[0]}#${targetData.nlTargets[i.verweisziel]}</Verweisziel>`,
+                text: `<Verweisziel${hidx}>${targetData.hl[0]}#${targetData.nlTargets[i.verweisziel]}</Verweisziel>`,
                 type: "copy",
               },
             ],
@@ -260,6 +333,7 @@ const hints = {
                 hintText = `<Verweis Typ="${x.type.join(" ")}">`;
               }
               const verweistext = x.verweistext ? `<Verweistext>${x.verweistext}</Verweistext>` : "<Verweistext/>";
+              const hidx = hints.hidxAttribute(x.verweisziel);
               hints.add(data.hints, file, {
                 line: x.line,
                 linkCount: 0,
@@ -270,7 +344,7 @@ const hints = {
                     type: "hint_text",
                   },
                   {
-                    text: `${verweistext}\n<Verweisziel>${x.verweisziel}</Verweisziel>`,
+                    text: `${verweistext}\n<Verweisziel${hidx}>${shared.hidxClear(x.verweisziel)}</Verweisziel>`,
                     type: "context",
                   },
                 ],
@@ -309,6 +383,7 @@ const hints = {
                 hintText = `<Verweis Typ="${x.type.join(" ")}">`;
               }
               const verweistext = x.verweistext ? `<Verweistext>${x.verweistext}</Verweistext>` : "<Verweistext/>";
+              const hidx = hints.hidxAttribute(x.verweisziel);
               hints.add(target.hints, i.lemma.file, {
                 line: x.line,
                 linkCount: 0,
@@ -319,7 +394,7 @@ const hints = {
                     type: "hint_text",
                   },
                   {
-                    text: `${verweistext}\n<Verweisziel>${x.verweisziel}</Verweisziel>`,
+                    text: `${verweistext}\n<Verweisziel${hidx}>${shared.hidxClear(x.verweisziel)}</Verweisziel>`,
                     type: "context",
                   },
                 ],
@@ -337,20 +412,27 @@ const hints = {
       }
 
       // ARTICLE_ID: hint erroneous article ID
+      let hidx = "";
       const hl = [];
       for (let i of data.hlJoined) {
+        hidx = i.match(/ \(([1-9])\)/)?.[1];
         [ i ] = i.split("/");
         i = shared.hidxClear(i);
         i = i.replace(/[\s’]/g, "_");
         hl.push(i);
       }
+      if (hidx && data.hlJoined.length > 1) {
+        hidx = "";
+      }
       const fa = data.fa ? "Wortfeldartikel_" : "";
       const base = `WGd-${fa}${hl.join("-")}-`;
-      const reg = new RegExp(`^${base}([0-9])$`);
+      const reg = new RegExp(`^${base}${hidx || "[1-9]"}$`);
       if (!reg.test(data.id)) {
-        const numMatch = data.id.match(/[0-9]$/);
+        const numMatch = data.id.match(/[1-9]$/);
         let num = "1";
-        if (numMatch) {
+        if (hidx) {
+          num = hidx;
+        } else if (numMatch) {
           [ num ] = numMatch;
         }
         hints.add(data.hints, file, {
@@ -375,7 +457,7 @@ const hints = {
       }
 
       // ARTICLE_FILE: hint erroneous file name
-      const fileName = articleFileName(fa, hl);
+      const fileName = articleFileName(fa, hl, hidx);
       if (file !== fileName) {
         hints.add(data.hints, file, {
           line: 0,
@@ -475,7 +557,8 @@ const hints = {
     // ARTICLE_FILE: create correct file name
     //   fa = string
     //   hl = array
-    function articleFileName (fa, hl) {
+    //   hidx = string
+    function articleFileName (fa, hl, hidx) {
       const rep = new Map([
         [ /[\s’']/g, "_" ],
         [ /Ä/g, "Ae" ],
@@ -491,6 +574,9 @@ const hints = {
       let name = fa + hl.join("-");
       for (const [ k, v ] of rep) {
         name = name.replace(k, v);
+      }
+      if (hidx) {
+        name += "-" + hidx;
       }
       name += ".xml";
       return name;
@@ -537,7 +623,8 @@ const hints = {
       "Wortgeschichte_kompakt erwaehntes_Zeichen",
       "Wortgeschichte erwaehntes_Zeichen",
     ];
-    const currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl);
+    let currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl);
+    currentArtLemmas = shared.hidxClear([ ...currentArtLemmas ], true);
     forX: for (const i of doc.querySelectorAll(scopes.join(", "))) {
       if (i.getAttribute("Sprache") &&
           i.getAttribute("Sprache") !== "dt") {
@@ -578,15 +665,21 @@ const hints = {
           continue;
         }
         for (const x of values.xml) {
-          // count how often the lemma was already linked
-          const linkCount = hints.getLinkCount(data.links, x, lemma);
           // detect target
           const target = hints.detectTarget(x, lemma);
+          // count how often the lemma was already linked
+          const linkCount = hints.getLinkCount({
+            file: x,
+            hidx: target.hidx,
+            lemma,
+            links: data.links,
+          });
           // detect whether the lemma was already linked in the current block
           if (linkCount && hints.detectVerweisInBlock(i, target)) {
             continue;
           }
           // add hint
+          const hidx = target.hidx ? ` hidx="${target.hidx}"` : "";
           hints.add(data.hints, file, {
             line: xml.getLineNumber({
               doc,
@@ -598,7 +691,7 @@ const hints = {
             textErr: [ `<erwaehntes_Zeichen>${textOri}</erwaehntes_Zeichen>` ],
             textHint: [
               {
-                text: `<Verweisziel>${target}</Verweisziel>`,
+                text: `<Verweisziel${hidx}>${target.target}</Verweisziel>`,
                 type: "copy",
               },
             ],
@@ -620,7 +713,8 @@ const hints = {
       "Wortgeschichte_kompakt Stichwort",
       "Wortgeschichte Stichwort",
     ];
-    const currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl);
+    let currentArtLemmas = data.fa ? data.faLemmas : data.hl.concat(data.nl);
+    currentArtLemmas = shared.hidxClear([ ...currentArtLemmas ], true);
     const regExp = [];
     for (const lemma of currentArtLemmas) {
       const { source } = hints.lemmas[lemma].reg;
@@ -729,6 +823,7 @@ const hints = {
       } else if (hints.lemmas[text]) {
         for (const x of hints.lemmas[text].xml) {
           const newTarget = hints.detectTarget(x, text);
+          const hidx = newTarget.hidx ? ` hidx="${newTarget.hidx}"` : "";
           hints.add(data.hints, file, {
             line: xml.getLineNumber({
               doc,
@@ -741,7 +836,7 @@ const hints = {
             textHint: [
               `<Verweistext>${text}</Verweistext>`,
               {
-                text: `<Verweisziel>${newTarget}</Verweisziel>`,
+                text: `<Verweisziel${hidx}>${newTarget.target}</Verweisziel>`,
                 type: "copy",
               },
             ],
@@ -833,15 +928,21 @@ const hints = {
           continue;
         }
         for (const x of hints.lemmas[lemma].xml) {
-          // count how often the lemma was already linked
-          const linkCount = hints.getLinkCount(data.links, x, lemma);
           // detect target
           const target = hints.detectTarget(x, lemma);
+          // count how often the lemma was already linked
+          const linkCount = hints.getLinkCount({
+            file: x,
+            hidx: target.hidx,
+            lemma,
+            links: data.links,
+          });
           // detect whether the lemma was already linked in the current block
           if (linkCount && hints.detectVerweisInBlock(i, target)) {
             continue;
           }
           // add hint
+          const hidx = target.hidx ? ` hidx="${target.hidx}"` : "";
           hints.add(data.hints, file, {
             line: xml.getLineNumber({
               doc,
@@ -853,7 +954,7 @@ const hints = {
             textErr: [ `<URL>${url}</URL>` ],
             textHint: [
               {
-                text: `<Verweisziel>${target}</Verweisziel>`,
+                text: `<Verweisziel${hidx}>${target.target}</Verweisziel>`,
                 type: "copy",
               },
             ],
@@ -1082,6 +1183,14 @@ const hints = {
     }
   },
 
+  // return an @hidx if the given text ends on " (n)"
+  //   text = string
+  hidxAttribute (text) {
+    const match = text.match(/ \(([1-9])\)$/)?.[1];
+    const hidx = match ? ` hidx="${match}"` : "";
+    return hidx;
+  },
+
   // detect scope
   //   node = element node | comment node
   detectScope (node) {
@@ -1112,21 +1221,45 @@ const hints = {
   //   lemma = string
   detectTarget (file, lemma) {
     const data = xml.data.files[file];
-    // main lemma
-    let target = lemma;
-    // sub lemma
-    if (data.nl.includes(lemma)) {
-      target = data.hl[0] + "#" + data.nlTargets[lemma];
-    // lemma is title of field article
-    } else if (!data.hl.includes(lemma)) {
-      target = "Wortfeld-" + lemma;
+
+    // field article
+    if (data.fa) {
+      return {
+        hidx: "",
+        target: "Wortfeld-" + lemma,
+      };
     }
-    return target;
+
+    // normal article
+    for (const lemmaType of [ "hl", "nl" ]) {
+      for (const l of data[lemmaType]) {
+        const target = shared.hidxClear(l);
+        if (target === lemma) {
+          const hidx = l.match(/ \(([1-9])\)$/)?.[1] || "";
+          if (lemmaType === "nl") {
+            return {
+              hidx,
+              target: data.hl[0] + "#" + data.nlTargets[l],
+            };
+          }
+          return {
+            hidx,
+            target,
+          };
+        }
+      }
+    }
+
+    // only in case of an error
+    return {
+      hidx: "",
+      target: "",
+    };
   },
 
   // detect whether there is already a matching internal link in the same block
   //   ele = node
-  //   target = string (string of <Verweisziel>)
+  //   target = object (contains .hidx and .target, both strings)
   detectVerweisInBlock (ele, target) {
     let container;
     for (const b of [ "Textblock", "Blockzitat", "Liste" ]) {
@@ -1137,7 +1270,10 @@ const hints = {
     }
     const verweise = container.querySelectorAll("Verweis");
     for (const v of verweise) {
-      if (v.querySelector("Verweisziel").textContent === target) {
+      const vz = v.querySelector("Verweisziel");
+      const hidx = vz.getAttribute("hidx") || "";
+      if (hidx === target.hidx &&
+          vz.textContent === target.target) {
         return true;
       }
     }
@@ -1145,15 +1281,18 @@ const hints = {
   },
 
   // count how often a certain link is already present within the article's text
-  //   links = array
   //   file = string (XML file name)
+  //   hidx = string
   //   lemma = string
-  getLinkCount (links, file, lemma) {
+  //   links = array
+  getLinkCount ({ file, hidx, lemma, links }) {
     let count = 0;
     for (const i of links) {
+      const hidxLemma = i.lemma.spelling.match(/ \(([1-9])\)$/)?.[1] || "";
       if (i.scope !== "Verweise" &&
           i.lemma.file === file &&
-          shared.hidxClear(i.lemma.spelling) === lemma) {
+          shared.hidxClear(i.lemma.spelling) === lemma &&
+          hidxLemma === hidx) {
         count++;
       }
     }

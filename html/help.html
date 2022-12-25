@@ -95,6 +95,7 @@
           ></li>
           <li><i>Tagging: Fehler</i><br
             ><a href="#hinweise-ez_stichwort"><i>Stichwort falsch ausgezeichnet</i></a
+            >, <a href="#hinweise-hidx_missing"><i>Homographen-Index ergänzen</i></a
             >, <a href="#hinweise-literature_error"><i>Literatur-Tag korrigieren</i></a
             >, <a href="#hinweise-sprache_superfluous"><i>Sprach-Attribut entfernen</i></a
             >, <a href="#hinweise-stichwort_ez"><i>Objektsprache falsch ausgezeichnet</i></a
@@ -398,6 +399,23 @@
 
         <p class="indent-hint">Wurde der Tag <code>&lt;erwaehntes_Zeichen&gt;</code> um ein <code>@Sprache</code> ergänzt, das nicht den Wert <i>dt</i> (für deutsch) hat, wird der Tag für diese Analyse ignoriert.</p>
 
+      <p id="hinweise-hidx_missing" class="hint">Homographen-Index ergänzen</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Artikel&gt;</code>, <code>&lt;Verweis&gt;</code></p>
+
+        <p class="tag"><i>Tags:</i><code>&lt;Schreibung&gt;</code>, <code>&lt;Verweisziel&gt;</code></p>
+
+        <p class="indent-hint">Sobald ein zweiter Artikel zu einem Lemma erscheint, muss in Bezug auf das erste Lemma das Attribut <code>@hidx</code> ergänzt werden. Dies betrifft zum einen den Tag <code>&lt;Schreibung&gt;</code> im Kopf des älteren Artikels. Zum anderen müssen alle Verweise, die auf das ältere Lemma zeigen, angepasst werden. Dort muss <code>&lt;Verweisziel&gt;</code> entsprechend ergänzt werden.</p>
+
+        <pre class="indent-hint">&lt;Lemma <span class="xml-attr-key">Typ=</span><span class="xml-attr-val">&quot;Hauptlemma&quot;</span>&gt;
+  &lt;Schreibung <b><span class="xml-attr-key">hidx=</span><span class="xml-attr-val">&quot;1&quot;</span></b>&gt;Masse&lt;/Schreibung&gt;
+&lt;/Lemma&gt;</pre>
+
+        <pre class="indent-hint">&lt;Verweis&gt;
+  &lt;Verweistext/&gt;
+  &lt;Verweisziel <b><span class="xml-attr-key">hidx=</span><span class="xml-attr-val">&quot;1&quot;</span></b>&gt;Masse&lt;/Verweisziel&gt;
+&lt;/Verweis&gt;</pre>
+
       <p id="hinweise-literature_error" class="hint">Literatur-Tag korrigieren</p>
 
         <p class="scope"><i>Skopus:</i><code>&lt;Literatur&gt;</code></p>
@@ -553,7 +571,13 @@
 
     <!-- PREFERENCES -->
     <section id="einstellungen">
-      <mark>TODO Einstellungen</mark>
+      <p id="einstellungen-datenZeitstrahl"><mark>TODO Zeitstrahldaten</mark></p>
+
+      <p id="einstellungen-datenExport"><mark>TODO Export und Import der Einstellungen</mark></p>
+
+      <p id="einstellungen-datenMarks"><mark>TODO Markierungsdaten</mark></p>
+
+      <p id="einstellungen-datenCache"><mark>TODO Analyse-Cache</mark></p>
     </section>
 
     <!-- SHORTCUTS -->

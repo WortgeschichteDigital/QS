@@ -5,8 +5,11 @@ const prefs = {
   data: {},
 
   // initialize preferences at startup
-  async init () {
-    prefs.data = await shared.ipc.invoke("prefs");
+  //   dataLoaded = boolean
+  async init (dataLoaded) {
+    if (!dataLoaded) {
+      prefs.data = await shared.ipc.invoke("prefs");
+    }
     for (const [ k, v ] of Object.entries(prefs.data)) {
       // option not within the preferences overlay
       if (/app-version|marks/.test(k)) {
@@ -60,13 +63,25 @@ const prefs = {
   // initialize sorting options at startup
   initSorting () {
     for (const [ k, v ] of Object.entries(prefs.data.sorting)) {
-      if (k === "ascending" && !v) {
-        document.querySelector("#sorting-dir img").src = "img/win/sort-descending.svg";
-        document.querySelector("#sorting-dir").dataset.tooltip = "<i>Sortierung:</i> absteigend";
+      if (k === "ascending") {
+        const dir = document.querySelector("#sorting-dir");
+        const img = dir.querySelector("img");
+        if (v) {
+          img.src = "img/win/sort-ascending.svg";
+          dir.dataset.tooltip = "<i>Sortierung:</i> aufsteigend";
+        } else {
+          img.src = "img/win/sort-descending.svg";
+          dir.dataset.tooltip = "<i>Sortierung:</i> absteigend";
+        }
       } else if (k === "filter") {
         document.querySelector("#sorting-filter").value = v;
-      } else if (k === "ignore" && !v) {
-        document.querySelector("#sorting-ignore").classList.remove("active");
+      } else if (k === "ignore") {
+        const ignore = document.querySelector("#sorting-ignore");
+        if (v) {
+          ignore.classList.add("active");
+        } else {
+          ignore.classList.remove("active");
+        }
       } else if (k === "type") {
         document.querySelector(`#sorting-${v}`).classList.add("active");
         document.querySelector(`#sorting-${v === "alpha" ? "time" : "alpha"}`).classList.remove("active");
@@ -166,6 +181,7 @@ const prefs = {
     document.querySelector("#prefs-zeitstrahl").value = path;
     prefs.data.zeitstrahl = path;
     prefs.save();
+    artikel.messages();
   },
 
   // Zeistrahl: read data file
@@ -210,6 +226,86 @@ const prefs = {
     prefs.save();
     xml.zeitstrahl = {};
     xml.resetCache();
+    artikel.messages();
+  },
+
+  // export preferences data
+  async exportData () {
+    const [ today ] = new Date().toISOString().split("T");
+    const options = {
+      title: "Einstellungen speichern",
+      defaultPath: shared.path.join(shared.info.documents, "resources", `QS_Einstellungen_${today}.json`),
+      filters: [
+        {
+          name: "JSON",
+          extensions: [ "json" ],
+        },
+      ],
+    };
+    const result = await shared.ipc.invoke("file-dialog", false, options);
+    if (result.canceld || !result.filePath) {
+      return;
+    }
+    try {
+      const data = structuredClone(prefs.data);
+      data.zeitstrahl = "";
+      data["app-version"] = "";
+      await shared.fsp.writeFile(result.filePath, JSON.stringify(data));
+    } catch (err) {
+      shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+    }
+  },
+
+  // import preferences data
+  async importData () {
+    // open data file
+    const options = {
+      title: "Einstellungen wiederherstellen",
+      defaultPath: shared.info.documents,
+      filters: [
+        {
+          name: "JSON",
+          extensions: [ "json" ],
+        },
+      ],
+      properties: [ "openFile" ],
+    };
+    const result = await shared.ipc.invoke("file-dialog", true, options);
+    if (result.canceld || !result?.filePaths?.length) {
+      return;
+    }
+    const [ path ] = result.filePaths;
+    let json;
+    try {
+      const content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      json = JSON.parse(content);
+      if (!json.filters || !json.sorting || !json.search) {
+        shared.error("Datei enthält keine QS-Einstellungen");
+        return;
+      }
+    } catch (err) {
+      shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+      return;
+    }
+
+    // apply data
+    prefs.zeitstrahlRemove();
+    prefs.data = json;
+    prefs.data["app-version"] = shared.info.version;
+    await prefs.init(true);
+    prefs.save();
+
+    // update filters
+    document.querySelectorAll(".select-filter").forEach(i => bars.selectFill(i));
+    bars.filtersActive();
+    viewSearch.toggleAdvancedIcon();
+
+    // update active view and show feedback
+    viewClusters.contentState.xmlDate = "";
+    viewHints.contentState.xmlDate = "";
+    viewXml.contentState.xmlDate = "";
+    win.viewPopulate("update");
+    shared.feedback("okay");
   },
 
   // statistical data

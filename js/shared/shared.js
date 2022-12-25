@@ -25,9 +25,35 @@ const shared = {
   path: typeof window !== "undefined" ? require("path") : null,
 
   // clear text of homograph or field article markers
-  //   text = string
-  hidxClear (text) {
+  //   text = string | array (array only if g == true)
+  //   g = true | undefined (replace all parens wherever they are)
+  hidxClear (text, g = false) {
+    if (g) {
+      if (Array.isArray(text)) {
+        for (let i = 0, len = text.length; i < len; i++) {
+          text[i] = text[i].replace(/ \(.+?\)/g, "");
+        }
+        return text;
+      }
+      return text.replace(/ \(.+?\)/g, "");
+    }
     return text.replace(/ \(.+?\)$/, "");
+  },
+
+  // switch suffixed @hidx to prefixed superscript
+  //   text = string
+  hidxPrint (text) {
+    const superscripts = [ "", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹" ];
+    const spellings = [];
+    for (const s of text.split("/")) {
+      const hidx = s.match(/ \(([1-9])\)$/)?.[1];
+      if (hidx) {
+        spellings.push(superscripts[parseInt(hidx, 10)] + shared.hidxClear(s));
+      } else {
+        spellings.push(shared.hidxClear(s));
+      }
+    }
+    return spellings.join("/");
   },
 
   // detect pressed modifiers
@@ -173,6 +199,7 @@ const shared = {
   async feedback (type) {
     const fb = document.createElement("div");
     fb.classList.add("feedback", "type-" + type);
+    fb.style.zIndex = ++overlay.zIndex;
     document.body.appendChild(fb);
     void fb.offsetWidth;
     fb.classList.add("visible");

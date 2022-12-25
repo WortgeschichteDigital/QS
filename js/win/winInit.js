@@ -81,7 +81,7 @@ window.addEventListener("load", async () => {
     i.addEventListener("change", () => viewClusters.previewPopupState());
   });
   document.querySelector("#clusters-preview-choose").addEventListener("click", () => viewClusters.previewChoose());
-  document.querySelector("#clusters-nav-new").addEventListener("click", function(evt) {
+  document.querySelector("#clusters-nav-new").addEventListener("click", function (evt) {
     evt.preventDefault();
     this.dispatchEvent(new Event("mouseout"));
     clustersCheck.jump();
@@ -210,7 +210,6 @@ window.addEventListener("load", async () => {
       prefs.changeSection(this);
     });
   });
-  document.querySelector("#prefs-cache-leeren").addEventListener("click", () => xml.resetCache(true));
   document.querySelector("#prefs-zeitstrahl-open").addEventListener("click", evt => {
     evt.preventDefault();
     prefs.zeitstrahlOpen();
@@ -219,6 +218,10 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     prefs.zeitstrahlRemove();
   });
+  document.querySelector("#prefs-data-export").addEventListener("click", () => prefs.exportData());
+  document.querySelector("#prefs-data-import").addEventListener("click", () => prefs.importData());
+  document.querySelector("#prefs-marks").addEventListener("click", () => viewHints.eraseMarks());
+  document.querySelector("#prefs-cache-leeren").addEventListener("click", () => xml.resetCache(true));
   document.querySelector("#prefs-git-config").addEventListener("click", () => prefs.gitConfig());
   document.querySelectorAll("#dialog input").forEach(i => {
     i.addEventListener("click", function () {
@@ -239,9 +242,19 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     win.openEditor(this.parentNode.dataset.file);
   });
+  document.querySelector("#artikel-zeitstrahl a").addEventListener("click", evt => {
+    evt.preventDefault();
+    artikel.appendZeitstrahl();
+  });
+  document.querySelector("#artikel-branch a").addEventListener("click", evt => {
+    evt.preventDefault();
+    artikel.changeBranch();
+  });
+  document.querySelector("#artikel-calculate").addEventListener("click", () => artikel.calculate());
 
   // LISTEN TO IPC MESSAGES
   shared.ipc.on("menu-app-updates", () => win.menuCommand("app-updates"));
+  shared.ipc.on("menu-artikel-json", () => win.menuCommand("artikel-json"));
   shared.ipc.on("menu-clusters", () => win.menuCommand("clusters"));
   shared.ipc.on("menu-error-log", () => win.menuCommand("error-log"));
   shared.ipc.on("menu-filters", () => win.menuCommand("filters"));
@@ -271,7 +284,7 @@ window.addEventListener("load", async () => {
   tooltip.addLongHelp();
   tooltip.init();
   document.querySelector("#bar").style.height = "60px";
-  await prefs.init();
+  await prefs.init(false);
   viewSearch.toggleAdvancedIcon();
   await git.configCheck();
   await xml.update();

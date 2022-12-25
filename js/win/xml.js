@@ -45,6 +45,7 @@ const xml = {
   //                              diasystemic_value   = add diasystemic value
   //                              ez_link             = <erwaehntes_Zeichen>: link to matching article
   //                              ez_stichwort        = <erwaehntes_Zeichen>: change tag to <Stichwort>
+  //                              hidx_missing        = @hidx is missing on <Verweisziel> or <Schreibung>
   //                              link_duplicate      = erase duplicate link in <Verweise>
   //                              link_error          = correct internal link
   //                              literature_error    = correct literature tag
@@ -58,7 +59,8 @@ const xml = {
   //                              www_error           = correct external link
   //                              www_link            = change external link into internal
   //       hl             = []  //Artikel/Lemma[@Typ = "Hauptlemma"]/Schreibung;
-  //                              field articles have the string " (Wortfeld)" attached to them
+  //                              field articles have the string " (Wortfeld)" attached to them;
+  //                              the @hidx is also suffixed in parens: " (n)" (n = number)
   //       hlJoined       = []  same as "hl", but the spellings of each lemma are joined with a slash
   //       id             = ""  //Artikel/@xml:id
   //       links          = []  //Verweis
@@ -71,10 +73,13 @@ const xml = {
   //         type         = []  semantic types attached to this link
   //         verweistext  = ""  original text content of //Verweis/Verweistext
   //         verweisziel  = ""  original content of //Verweis/Verweisziel
-  //       name           = ""  article name with all lemmas and the attached " (Wortfeld)" if applicable
+  //       name           = ""  article name with suffixed "Artikel" or "Wortfeldartikel";
+  //                              it has the citing form that can be found on the website;
+  //                              @hidx is printed as superscript: ¹Masse ²Masse
   //       published      = ""  date the article was published (YYYY-MM-DD),
   //                              derived from the first occurence of //Revision/Datum
-  //       nl             = []  //Artikel/Lemma[@Typ = "Nebenlemma"]/Schreibung
+  //       nl             = []  //Artikel/Lemma[@Typ = "Nebenlemma"]/Schreibung;
+  //                              the @hidx is suffixed in parens: " (n)" (n = number)
   //       nlJoined       = []  same as "nl", but the spellings of each lemma are joined with a slash
   //       nlTargets      = {}  each slot in "nl" is a key in "nlTargets"
   //         [NEBENLEMMA] = ""  //Artikel/Lemma[@Typ = "Nebenlemma"]/Textreferenz/@Ziel

@@ -87,7 +87,7 @@ var clustersMod = {
       }
       a.dataset.file = item.file;
       a.href = "#";
-      a.innerHTML = `${shared.hidxClear(item.hl)} <span>${item.file}</span>`;
+      a.innerHTML = `${shared.hidxPrint(item.hl)} <span>${item.file}</span>`;
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
         clustersMod.add(this.dataset.file);
@@ -300,7 +300,7 @@ var clustersMod = {
         a.classList.add("nl");
       }
       a.href = "#";
-      a.textContent = shared.hidxClear(lemma);
+      a.textContent = shared.hidxPrint(lemma);
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
         this.nextSibling.classList.toggle("off");
@@ -424,7 +424,7 @@ var clustersMod = {
       for (const lemma of arr) {
         const span = document.createElement("span");
         div.appendChild(span);
-        span.textContent = shared.hidxClear(lemma);
+        span.textContent = shared.hidxPrint(lemma);
       }
     }
   },
@@ -476,7 +476,7 @@ var clustersMod = {
         }
         a.dataset.lemma = lemma;
         a.href = "#";
-        a.textContent = shared.hidxClear(lemma.split("/")[0]);
+        a.textContent = shared.hidxPrint(lemma.split("/")[0]);
         a.addEventListener("click", function (evt) {
           evt.preventDefault();
           clustersMod.proposalsCopy(this);
@@ -510,7 +510,8 @@ var clustersMod = {
   // make XML string with a proposal
   //   lemma = string
   proposalsXml (lemma) {
-    const hl = shared.hidxClear(lemma.split("/")[0]);
+    const hidx = lemma.match(/ \(([1-9])\)$/)?.[1];
+    const hl = shared.hidxClear(lemma);
     let fa = "";
     if (clustersMod.data.center[lemma].isFa) {
       fa = "Wortfeld-";
@@ -521,7 +522,11 @@ var clustersMod = {
     } else {
       xml += "\n  <Verweistext/>";
     }
-    xml += `\n  <Verweisziel>${fa + hl}</Verweisziel>`;
+    if (hidx) {
+      xml += `\n  <Verweisziel hidx="${hidx}">${hl}</Verweisziel>`;
+    } else {
+      xml += `\n  <Verweisziel>${fa + hl}</Verweisziel>`;
+    }
     xml += "\n</Verweis>";
     return xml;
   },

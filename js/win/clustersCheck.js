@@ -28,7 +28,7 @@ const clustersCheck = {
     const repoHashes = new Set();
     const repoLemmas = new Set();
     if (data.active === "preview") {
-      const cRepo = data.repo[viewClusters.filters["select-domains"]];
+      const cRepo = data.repo?.[viewClusters.filters["select-domains"]] || [];
       for (const cluster of cRepo) {
         repoHashes.add(clustersCheck.hash(cluster));
         for (const circle of [ "z", "s", "u" ]) {

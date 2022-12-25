@@ -57,7 +57,12 @@ const xml = {
         doc.querySelectorAll('Artikel > Lemma[Typ="Hauptlemma"]').forEach(i => {
           const schreibungen = [];
           i.querySelectorAll("Schreibung").forEach(s => {
-            schreibungen.push(s.textContent);
+            const hidx = s.getAttribute("hidx");
+            let schreibung = s.textContent;
+            if (hidx) {
+              schreibung += ` (${hidx})`;
+            }
+            schreibungen.push(schreibung);
           });
           if (data.fa) {
             schreibungen[0] += " (Wortfeld)";
@@ -73,7 +78,12 @@ const xml = {
         doc.querySelectorAll('Artikel > Lemma[Typ="Nebenlemma"]').forEach(i => {
           const schreibungen = [];
           i.querySelectorAll("Schreibung").forEach(s => {
-            schreibungen.push(s.textContent);
+            const hidx = s.getAttribute("hidx");
+            let schreibung = s.textContent;
+            if (hidx) {
+              schreibung += ` (${hidx})`;
+            }
+            schreibungen.push(schreibung);
           });
           data.nl = data.nl.concat(schreibungen);
           data.nlJoined.push(schreibungen.join("/"));
@@ -133,7 +143,12 @@ const xml = {
         data.links = [];
         doc.querySelectorAll("Verweis").forEach(i => {
           const verweistext = i.querySelector("Verweistext").textContent.trim();
-          const verweisziel = i.querySelector("Verweisziel").textContent.trim();
+          const vz = i.querySelector("Verweisziel");
+          let verweisziel = vz.textContent.trim();
+          const hidx = vz.getAttribute("hidx");
+          if (hidx) {
+            verweisziel += ` (${hidx})`;
+          }
           const scopePoints = xml.getScopePoints(i);
           data.links.push({
             lemma: {},
@@ -151,10 +166,20 @@ const xml = {
         });
 
         // article name
-        data.name = data.hlJoined.join(", ");
-        if (data.nlJoined.length) {
-          data.name += ` (${data.nlJoined.join(", ")})`;
+        data.name = data.fa ? "Wortfeldartikel" : "Artikel";
+        data.name += " „";
+        for (const lemmaType of [ "hl", "nl" ]) {
+          const name = [];
+          for (const lemma of data[lemmaType + "Joined"]) {
+            name.push(shared.hidxPrint(lemma));
+          }
+          if (name.length && lemmaType === "nl") {
+            data.name += ` (${name.join(", ")})`;
+          } else if (name.length) {
+            data.name += name.join(", ");
+          }
         }
+        data.name += "“";
 
         // publication date
         const published = doc.querySelector("Revision Datum").textContent.split(".");
@@ -253,9 +278,28 @@ const xml = {
 
   // get the actual lemma a <Verweisziel> points to
   //   vt = string (text contents of <Verweistext>)
-  //   vz = string (contents of <Verweisziel>)
+  //   vz = string (contents of <Verweisziel> + @hidx in parens if present)
   getLemma (vt, vz) {
     let [ lemma, hash ] = vz.split("#");
+    if (/ \([1-9]\)$/.test(hash)) {
+      // this hashed lemma has an @hidx
+      const hidx = hash.match(/ \(([1-9])\)$/)[1];
+      hash = shared.hidxClear(hash);
+      // dirty hack: if <Verweisziel> addresses a main lemma and the purpose of the hash
+      // is solely to jump to a certain position, the @hidx must at any rate be added to "lemma";
+      // on the other hand, if <Verweisziel> adresse a sub lemma, the @hidx must never be added
+      // to "lemma"; and that is the whole purpose of this loop (which is of course prone to misdetections)
+      let hashPointsToNl = false;
+      for (const values of Object.values(xml.data.files)) {
+        if (Object.values(values.nlTargets).includes(hash)) {
+          hashPointsToNl = true;
+          break;
+        }
+      }
+      if (!hashPointsToNl) {
+        lemma += ` (${hidx})`;
+      }
+    }
     if (/^Wortfeld-/.test(lemma)) {
       lemma = lemma.replace(/^Wortfeld-/, "");
       lemma += " (Wortfeld)";
@@ -277,7 +321,7 @@ const xml = {
               // we need to detect which sub lemma the link actually points to
               const similarCount = Object.values(values.nlTargets).filter(i => i === hash).length;
               if (similarCount > 1) {
-                const reg = new RegExp(shared.escapeRegExp(nl));
+                const reg = new RegExp(shared.escapeRegExp(shared.hidxClear(nl)));
                 if (reg.test(vt)) {
                   possibleLemma = "";
                   lemma = nl;

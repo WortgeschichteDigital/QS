@@ -1,5 +1,51 @@
 @charset "utf-8";
 
+/* ARTIKEL.JSON --------------------------------- */
+
+#artikel > div {
+  width: 400px;
+}
+
+#artikel div img {
+  vertical-align: top;
+  margin-right: 10px;
+}
+
+#artikel div div {
+  margin: 10px;
+}
+
+#artikel p {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.2rem;
+}
+
+#artikel div p:first-child {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+#artikel div p:last-child {
+  margin-left: 40px;
+}
+
+#artikel > div > p {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#artikel-calculating {
+  overflow: hidden;
+  height: 30px;
+  transition: height .1s linear;
+}
+
+#artikel-calculating.invisible {
+  height: 0;
+}
+
+
 /* GIT CONFIGURATION ---------------------------- */
 
 #git > div {
@@ -60,7 +106,7 @@
 
 #prefs > div > div {
   display: grid;
-  grid-template-columns: 190px 1fr;
+  grid-template-columns: 150px 1fr;
   column-gap: 15px;
 }
 
@@ -100,6 +146,22 @@
 
 #prefs h2:first-child {
   margin-top: 0;
+}
+
+#prefs h2 a {
+  position: relative;
+  top: 2px;
+  margin-left: 5px;
+  width: 24px;
+  height: 24px;
+}
+
+#prefs input[type="button"] {
+  width: 200px;
+}
+
+#prefs input[type="button"] + input[type="button"] {
+  margin-left: 10px;
 }
 
 #prefs p {
