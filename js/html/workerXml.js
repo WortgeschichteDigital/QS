@@ -96,11 +96,17 @@ const xml = {
 
         // diasystemic information
         data.diasys = [];
-        let [ lemma ] = data.hl;
+        let [ lemma ] = data.hlJoined;
         doc.querySelectorAll("Lesarten").forEach(l => {
-          const schreibung = l.querySelectorAll("Lemma Schreibung")?.textContent;
+          const schreibung = l.querySelector("Lemma Schreibung")?.textContent;
           if (schreibung) {
-            lemma = schreibung;
+            const hlReg = new RegExp(`(^|/)${schreibung}(/|$)`);
+            for (const hl of data.hlJoined) {
+              if (hlReg.test(hl)) {
+                lemma = hl;
+                break;
+              }
+            }
           }
           l.querySelectorAll("Diasystematik > *").forEach(i => {
             data.diasys.push({
@@ -116,21 +122,6 @@ const xml = {
         doc.querySelectorAll("Artikel > Diasystematik Themenfeld").forEach(i => {
           data.domains.push(i.textContent);
         });
-
-        // first lemma quotation
-        data.first = {};
-        for (const lemma of data.hl.concat(data.nl)) {
-          let year = 0;
-          if (xml.zeitstrahl.lemmas) {
-            for (const v of Object.values(xml.zeitstrahl.lemmas)) {
-              if (v.xml === file && v.spelling === lemma) {
-                ({ year } = v);
-                break;
-              }
-            }
-          }
-          data.first[lemma] = year;
-        }
 
         // create array for hints
         // (filled in hints.glean())
@@ -164,22 +155,6 @@ const xml = {
             verweisziel,
           });
         });
-
-        // article name
-        data.name = data.fa ? "Wortfeldartikel" : "Artikel";
-        data.name += " „";
-        for (const lemmaType of [ "hl", "nl" ]) {
-          const name = [];
-          for (const lemma of data[lemmaType + "Joined"]) {
-            name.push(shared.hidxPrint(lemma));
-          }
-          if (name.length && lemmaType === "nl") {
-            data.name += ` (${name.join(", ")})`;
-          } else if (name.length) {
-            data.name += name.join(", ");
-          }
-        }
-        data.name += "“";
 
         // publication date
         const published = doc.querySelector("Revision Datum").textContent.split(".");

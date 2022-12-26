@@ -25,6 +25,7 @@ const artikel = {
     }
     await artikel.messages();
     overlay.show("artikel");
+    document.querySelector("#artikel-calculate").focus();
   },
 
   // update the messages
@@ -67,7 +68,8 @@ const artikel = {
   },
 
   // calculate the file contents
-  async calculate () {
+  //   cli = true | undefined
+  async calculate (cli = false) {
     if (artikel.data.calculating) {
       dialog.open({
         type: "alert",
@@ -76,7 +78,6 @@ const artikel = {
       return;
     }
     artikel.data.calculating = true;
-    await xml.updateWait();
 
     // initialize visual feedback
     const calc = document.querySelector("#artikel-calculating");
@@ -85,6 +86,9 @@ const artikel = {
     calcImg.src = "img/win/loading.svg";
     calcImg.classList.add("rotate");
     calc.classList.remove("invisible");
+
+    // wait for pending updates
+    await xml.updateWait();
 
     // calculate clusters
     calcText.textContent = "Berechne Cluster …";
@@ -100,7 +104,12 @@ const artikel = {
     calcImg.classList.remove("rotate");
     calcText.textContent = "Artikel.json erstellt!";
 
-    // export file
+    // exit if called via CLI
+    if (cli) {
+      return;
+    }
+
+    // save file
     const options = {
       title: "Arikel.json speichern",
       defaultPath: shared.path.join(git.config.dir, "resources", "Artikel.json"),
@@ -119,8 +128,9 @@ const artikel = {
       await shared.fsp.writeFile(result.filePath, JSON.stringify(artikel.data.json));
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+    } finally {
+      artikel.data.calculating = false;
     }
-    artikel.data.calculating = false;
   },
 
   // calculate the cross-reference clusters
@@ -140,6 +150,7 @@ const artikel = {
       prefs.stats("clusters", data.clustersStatsStart);
       data.clustersInProgress = false;
     });
+
     // start the calculation
     const workerData = viewClusters.gleanWorkerData(false, false);
     artikel.worker.postMessage({
@@ -159,9 +170,320 @@ const artikel = {
   },
 
   // make Artikel.json
+  // (documentation of the file's structure: https://www.zdl.org/wb/wgd/api#Artikeldaten)
   makeJSON () {
     const { data } = artikel;
     data.json = {};
-    // TODO
+
+    // prepare values
+    data.json.articles = {};
+    data.json.clusters = {};
+    data.json.values = {
+      // list of authors
+      au: [],
+      // diasystemic values
+      ds: [],
+      // years/centuries of the lemma's first quotation
+      eb: [],
+      // lemma list (spellings in their joined form as in "hlJoined" or "nlJoined")
+      le: [],
+      // article positions of sub lemmas (keys refer to the indices in "le")
+      nl: {},
+      // publication dates
+      on: [],
+      // semantics
+      se: [],
+      // topic domains
+      tf: [],
+      // word fields
+      wf: {},
+    };
+
+    // fill in values
+    const { values: v } = data.json;
+
+    // values.au
+    for (const i of bars.filtersData.authors) {
+      v.au.push(i.value);
+    }
+
+    // values.eb
+    const { zeitstrahl: zs } = xml;
+    if (zs.lemmas) {
+      const years = new Set();
+      for (const i of Object.values(zs.lemmas)) {
+        years.add(i.year);
+      }
+      v.eb = [ ...years ];
+      v.eb.sort((a, b) => a - b);
+    }
+
+    // values.tf
+    for (const i of bars.filtersData.domains) {
+      v.tf.push(i.value);
+    }
+
+    // scan files for further values
+    for (const i of Object.values(xml.data.files)) {
+      // values.ds
+      for (const d of i.diasys) {
+        let cat = v.ds.find(i => i[d.category]);
+        if (!cat) {
+          v.ds.push({
+            [d.category]: [],
+          });
+          cat = v.ds.at(-1);
+        }
+        if (!cat[d.category].includes(d.value)) {
+          cat[d.category].push(d.value);
+        }
+      }
+
+      // values.le
+      for (const l of i.hlJoined.concat(i.nlJoined)) {
+        if (!v.le.includes(l)) {
+          v.le.push(l);
+        }
+      }
+
+      // values.nl
+      for (let nl of i.nlJoined) {
+        const idx = v.le.indexOf(nl);
+        [ nl ] = nl.split("/");
+        v.nl[idx] = i.nlTargets[nl];
+      }
+
+      // values.on
+      if (!v.on.includes(i.published)) {
+        v.on.push(i.published);
+      }
+
+      // values.se
+      for (const l of i.links) {
+        for (const t of l.type) {
+          if (!/Cluster|Kontext/.test(t) &&
+              !v.se.includes(t)) {
+            v.se.push(t);
+          }
+        }
+      }
+    }
+    v.on.sort();
+    v.se.sort();
+
+    // values.wf
+    if (zs.fields) {
+      for (const [ domain, fields ] of Object.entries(zs.fields)) {
+        v.wf[domain] = {};
+        for (let [ field, lemmas ] of Object.entries(fields)) {
+          if (/^(Lebensformen|sozialräumliche Segregation)$/.test(field)) {
+            // TODO eraser later (temporary fix for old lemma values)
+            field += " (Wortfeld)";
+          }
+          v.wf[domain][field] = [];
+          for (const lemma of lemmas) {
+            const idx = v.le.indexOf(lemma);
+            v.wf[domain][field].push(idx);
+          }
+        }
+      }
+    }
+
+    // fill in clusters
+    const { clusters: cs } = data;
+    const { clusters: ct } = data.json;
+    for (const [ domain, clusters ] of Object.entries(cs)) {
+      ct[domain] = [];
+      for (const c of clusters) {
+        const nc = {};
+        ct[domain].push(nc);
+        for (const circle of [ "z", "s", "u" ]) {
+          nc[circle] = {};
+          for (const [ lemma, values ] of Object.entries(c[circle])) {
+            const idx = v.le.indexOf(lemma);
+            nc[circle]["_" + idx] = values.points;
+          }
+        }
+      }
+    }
+
+    // fill articles
+    const { articles: a } = data.json;
+    for (const file of Object.values(xml.data.files)) {
+      a[file.id] = {};
+      const art = a[file.id];
+
+      // articles.au
+      art.au = [];
+      for (const i of file.authors) {
+        const idx = v.au.indexOf(i);
+        art.au.push(idx);
+      }
+
+      // articles.ds (filled at the end)
+      art.ds = [];
+
+      // articles.eb
+      art.eb = [];
+      if (zs.lemmas && !file.fa) {
+        for (let lemma of file.hl.concat(file.nl)) {
+          lemma = shared.hidxClear(lemma);
+          const id = lemma + "|" + file.id;
+          if (!zs.lemmas[id]) {
+            continue;
+          }
+          const idx = v.eb.indexOf(zs.lemmas[id].year);
+          art.eb.push(idx);
+        }
+      }
+
+      // articles.le
+      art.le = [];
+      for (const i of file.hlJoined.concat(file.nlJoined)) {
+        const idx = v.le.indexOf(i);
+        art.le.push(idx);
+      }
+
+      // articles.on
+      art.on = v.on.indexOf(file.published);
+
+      // articles.se
+      art.se = [];
+      // [LEMMA] = object
+      //   slot  = number (slot of art.se)
+      //   types = set (filled with already added types)
+      const seLemmas = {};
+      for (const link of file.links) {
+        if (!link.lemma.file) {
+          continue;
+        }
+        const types = link.type.filter(i => !/Cluster|Kontext/.test(i));
+        if (!types.length) {
+          continue;
+        }
+        const target = xml.data.files[link.lemma.file];
+        const reg = new RegExp(`(^|/)${link.lemma.spelling}(/|$)`);
+        let lemma;
+        for (const l of target.hlJoined.concat(target.nlJoined)) {
+          if (reg.test(l)) {
+            lemma = l;
+            break;
+          }
+        }
+        const idx = v.le.indexOf(lemma);
+        for (const type of types) {
+          if (seLemmas?.[lemma]?.types?.has(type)) {
+            continue;
+          }
+          if (!seLemmas[lemma]) {
+            seLemmas[lemma] = {
+              slot: art.se.length,
+              types: new Set(),
+            };
+            art.se.push([ idx ]);
+          }
+          seLemmas[lemma].types.add(type);
+          art.se[seLemmas[lemma].slot].push(v.se.indexOf(type));
+        }
+      }
+
+      // articles.tf
+      art.tf = [];
+      for (const i of file.domains) {
+        const idx = v.tf.indexOf(i);
+        art.tf.push(idx);
+      }
+
+      // articles.wa
+      art.wa = file.fa ? 1 : 0;
+
+      // articles.ds
+      // [idxCat + "-" + idxVal] = object
+      //   lemmas = set (already added lemmas)
+      //   slot   = number (slot of art.ds)
+      const dsSlots = {};
+      for (const dia of file.diasys) {
+        const idxCat = v.ds.findIndex(i => i[dia.category]);
+        const idxVal = v.ds[idxCat][dia.category].indexOf(dia.value);
+        const id = idxCat + "-" + idxVal;
+        const hlLen = file.hlJoined.length;
+        if (dsSlots[id] && hlLen === 1) {
+          continue;
+        }
+        if (!dsSlots[id]) {
+          dsSlots[id] = {
+            lemmas: new Set(),
+            slot: art.ds.length,
+          };
+          art.ds.push([ idxCat, idxVal ]);
+        }
+        if (hlLen > 1 &&
+            !dsSlots[id].lemmas.has(dia.lemma)) {
+          dsSlots[id].lemmas.add(dia.lemma);
+          const { slot } = dsSlots[id];
+          if (!art.ds[slot][2]) {
+            art.ds[slot].push([]);
+          }
+          const idxLemma = v.le.indexOf(dia.lemma);
+          const idx = art.le.indexOf(idxLemma);
+          art.ds[slot][2].push(idx);
+        }
+      }
+    }
+  },
+
+  // app was startet via CLI and is requesting in export of the Artikel.json
+  //   path = string
+  async cliExport (path) {
+    // wait until the app is ready
+    await new Promise(resolve => {
+      const interval = setInterval(() => {
+        if (win.ready) {
+          clearInterval(interval);
+          resolve(true);
+        }
+      }, 50);
+    });
+
+    // on branch master?
+    const branch = await git.branchCurrent();
+    if (branch !== "master") {
+      shared.ipc.invoke("cli-export-artikel-json", 1);
+      return;
+    }
+
+    // Zeitstrahl data present?
+    if (!Object.keys(xml.zeitstrahl).length) {
+      shared.ipc.invoke("cli-export-artikel-json", 2);
+      return;
+    }
+
+    // absolute path?
+    if (!shared.path.isAbsolute(path)) {
+      shared.ipc.invoke("cli-export-artikel-json", 3);
+      return;
+    }
+
+    // directory writable?
+    const parseDir = shared.path.dirname(path);
+    try {
+      await shared.fsp.access(parseDir, shared.fsp.constants.W_OK);
+    } catch {
+      shared.ipc.invoke("cli-export-artikel-json", 4);
+      return;
+    }
+
+    // Okay, let's export the data!
+    try {
+      // calculate the data
+      await artikel.calculate(true);
+      // write file
+      await shared.fsp.writeFile(path, JSON.stringify(artikel.data.json));
+      // exit code 0
+      shared.ipc.invoke("cli-export-artikel-json", 0);
+    } catch {
+      // return exit code for unspecified errors
+      shared.ipc.invoke("cli-export-artikel-json", 10);
+    }
   },
 };

@@ -101,7 +101,7 @@ const tooltip = {
         Die Einstellungen können exportiert werden, um sie auf einem anderen Rechner wieder zu importieren. Sie umfassen auch die in der Ansicht <i>Hinweise</i> gesetzten Markierungen. Vom Export ausgenommen sind die Git-Konfiguration und der Pfad zu den Zeitstrahldaten.
       `,
       "prefs-help-data-cache": `
-        Beim Start und immer dann, wenn Sie auf <i>Update</i> drücken, werden die XML-Dateien analysiert. Mit den dabei zusammengetragenen Daten arbeitet die App. Da das Erstellen der Daten sehr rechenintensiv ist, wird das Ergebnis in einem Cache gespeichert, den Sie mit dieser Funktion zurücksetzen können.
+        Beim Programmstart und immer dann, wenn Sie auf <i>Update</i> drücken, werden die XML-Dateien analysiert. Mit den dabei zusammengetragenen Daten arbeitet die App. Da das Erstellen der Daten sehr rechenintensiv ist, wird das Ergebnis in einem Cache gespeichert, den Sie mit dieser Funktion zurücksetzen können.
       `,
       "prefs-help-data-marks": `
         Mit dieser Funktion können Sie alle Markierungen löschen, die Sie in der Ansicht <i>Hinweise</i> vorgenommen haben.

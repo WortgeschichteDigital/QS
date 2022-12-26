@@ -64,10 +64,6 @@ input[type="button"][value="Vorschau"] {
   background-image: url(../../img/win/preview.svg);
 }
 
-input[type="button"][value="Zurücksetzen"] {
-  background-image: url(../../img/win/cleanup.svg);
-}
-
 label + input[type="text"] {
   margin-left: 10px;
 }

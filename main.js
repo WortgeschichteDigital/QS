@@ -16,6 +16,7 @@ const xml = require("./js/main/xml");
 
 
 /* VARIABLES ------------------------------------ */
+
 const dev = !app.isPackaged;
 
 
@@ -54,14 +55,6 @@ const error = {
 
 process.on("uncaughtException", err => error.register(err));
 process.on("unhandledRejection", err => error.register(err));
-
-
-/* SINGLE INSTANCE LOCK ------------------------- */
-
-if (!app.requestSingleInstanceLock()) {
-  app.quit();
-  process.exit(0);
-}
 
 
 /* WINDOW MENU ---------------------------------- */
@@ -429,18 +422,18 @@ const win = {
   // data of currently open windows; filled with objects:
   //   bw = object (browser window)
   //   id = integer (window ID)
-  //   type = string (about | app | help | pv | worker)
+  //   type = string (about | app | cli | help | pv | worker)
   //   xml = string (name of XML file shown in pv window, otherwise empty string)
   data: [],
 
   // open new window
-  //   type = string (about | app | help | pv)
-  //   xml = object | undefined (see win.pvOpen())
   //   show = object | undefined (show section in help window)
-  open ({ type, xml = {}, show = null }) {
+  //   type = string (about | app | cli | help | pv)
+  //   xml = object | undefined (see win.pvOpen())
+  open ({ show = null, type, xml = {} }) {
     // define window dimensions
     const { workArea } = display.getPrimaryDisplay();
-    const data = prefs.data.win[type];
+    const data = prefs.data.win[type] || {};
     const x = data.x >= 0 ? data.x : undefined;
     const y = data.y >= 0 ? data.y : undefined;
     const width = data.width ? data.width : defaults().width;
@@ -461,6 +454,7 @@ const win = {
     const title = {
       about: "QS / Über",
       app: "QS",
+      cli: "QS",
       help: "QS / Hilfe",
       pv: "QS / " + xml.file,
     };
@@ -525,18 +519,21 @@ const win = {
     });
 
     // set menu
-    if (process.platform === "darwin") {
-      bw.on("focus", function () {
-        winMenu.set(this, win.data.find(i => i.id === this.id).type);
-      });
-    } else {
-      winMenu.set(bw, type);
+    if (type !== "cli") {
+      if (process.platform === "darwin") {
+        bw.on("focus", function () {
+          winMenu.set(this, win.data.find(i => i.id === this.id).type);
+        });
+      } else {
+        winMenu.set(bw, type);
+      }
     }
 
     // load html
     const html = {
       about: path.join(__dirname, "html", "about.html"),
       app: path.join(__dirname, "win.html"),
+      cli: path.join(__dirname, "win.html"),
       help: path.join(__dirname, "html", "help.html"),
       pv: path.join(__dirname, "html", "pv.html"),
     };
@@ -550,20 +547,33 @@ const win = {
     }
 
     // focus window (otherwise it might not be in the foreground)
-    win.focus(bw);
+    if (type !== "cli") {
+      win.focus(bw);
+    }
 
     // show window (this prevents flickering on startup)
-    bw.once("ready-to-show", () => bw.show());
+    if (type !== "cli") {
+      bw.once("ready-to-show", () => bw.show());
+    }
 
     // send XML data if necessary
-    if (type === "pv") {
+    if (type === "cli") {
+      // export Artikel.json
+      bw.webContents.once("did-finish-load", function () {
+        setTimeout(() => {
+          // timeout makes absolutely sure that the window is already listening
+          const bw = BrowserWindow.fromWebContents(this);
+          bw.webContents.send("export-artikel-json", cliExportTo);
+        }, 100);
+      });
+    } else if (type === "pv") {
+      // load file into preview
       bw.webContents.once("did-finish-load", function () {
         const bw = BrowserWindow.fromWebContents(this);
         win.pvSend(bw, xml);
       });
-
-    // make the window show a section
     } else if (show) {
+      // make the window show a section
       bw.webContents.once("did-finish-load", function () {
         setTimeout(() => this.send("show", show), 500);
       });
@@ -597,7 +607,7 @@ const win = {
       }
 
       // save window size and state
-      if (type !== "about") {
+      if (!/about|cli/.test(type)) {
         const data = prefs.data.win[type];
         const bounds = win.data[idx].bw.getBounds();
         data.x = bounds.x;
@@ -825,50 +835,121 @@ const worker = {
 
 /* APP EVENTS ----------------------------------- */
 
-// focus existing app window in case a second instance is opened
-app.on("second-instance", () => {
-  for (const i of win.data) {
-    if (i.type === "app") {
-      i.bw.focus();
-      break;
-    }
+// parse CLI options
+let cliReturnCode = -1;
+let cliExportTo = "";
+for (let i = 0, len = process.argv.length; i < len; i++) {
+  const arg = process.argv[i].match(/^--([^\s]+)=(.+)/);
+  if (!arg) {
+    continue;
   }
-});
+  if (arg[1] === "exportTo") {
+    cliExportTo = arg[2].replace(/^"|"$/g, "");
+  }
+}
 
-// app initialized => open app window
-app.on("ready", async () => {
-  // read preferences
-  await prefs.read();
-  // open app window
-  win.open({ type: "app" });
-});
+// single instance lock
+const locked = app.requestSingleInstanceLock({ cliExport: !!cliExportTo });
 
-// quit app when every window is closed
-app.on("window-all-closed", async () => {
-  // write preferences
-  await prefs.write();
-  // on macOS an app typically remains active
-  // until the user quits it explicitly
-  if (process.platform !== "darwin") {
+if (cliExportTo || !locked) {
+  // CLI COMMAND OR SECOND INSTANCE
+  (async function () {
+    // quit immediately if second instance without CLI command
+    if (!cliExportTo) {
+      app.quit();
+      process.exit(0);
+    }
+
+    // wait until app is ready
+    await app.whenReady();
+
+    // read preferences
+    await prefs.read();
+
+    // open hidden app window
+    win.open({ type: "cli" });
+
+    // wait until there is a valid return code
+    await new Promise(resolve => {
+      const interval = setInterval(() => {
+        if (cliReturnCode >= 0) {
+          clearInterval(interval);
+          resolve(true);
+        }
+      }, 100);
+    });
+
+    // quit app
+    let message = "";
+    switch (cliReturnCode) {
+      case 1:
+        message = "not on branch master";
+        break;
+      case 2:
+        message = "Zeitstrahl data missing";
+        break;
+      case 3:
+        message = "path not absolute";
+        break;
+      case 4:
+        message = "directory not writable";
+        break;
+      case 10:
+        message = "unspecified program error";
+        break;
+    }
+    if (message) {
+      console.log("Error: " + message);
+    }
     app.quit();
-  }
-});
-
-// reactivate app
-app.on("activate", () => {
-  // on macOS the window object might already exist;
-  // in this case, we don't need to create the app window
-  let appWinExists = false;
-  for (const i of win.data) {
-    if (i.type === "app") {
-      appWinExists = true;
-      break;
+    process.exit(cliReturnCode);
+  }());
+} else {
+  // NORMAL APP BEHAVIOR
+  // focus existing app window in case a second instance is opened
+  app.on("second-instance", (...args) => {
+    if (args[3].cliExport) {
+      return;
     }
-  }
-  if (!appWinExists) {
+    const app = win.data.find(i => i.type === "app");
+    app.bw.focus();
+  });
+
+  // app initialized => open app window
+  app.on("ready", async () => {
+    // read preferences
+    await prefs.read();
+    // open app window
     win.open({ type: "app" });
-  }
-});
+  });
+
+  // quit app when every window is closed
+  app.on("window-all-closed", async () => {
+    // write preferences
+    await prefs.write();
+    // on macOS an app typically remains active
+    // until the user quits it explicitly
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  });
+
+  // reactivate app
+  app.on("activate", () => {
+    // on macOS the window object might already exist;
+    // in this case, we don't need to create the app window
+    let appWinExists = false;
+    for (const i of win.data) {
+      if (i.type === "app") {
+        appWinExists = true;
+        break;
+      }
+    }
+    if (!appWinExists) {
+      win.open({ type: "app" });
+    }
+  });
+}
 
 
 /* RENDERER REQUESTS ---------------------------- */
@@ -884,6 +965,10 @@ ipcMain.handle("app-info", evt => {
     version: app.getVersion(),
     winId: bw.id,
   };
+});
+
+ipcMain.handle("cli-export-artikel-json", (evt, returnCode) => {
+  cliReturnCode = returnCode;
 });
 
 ipcMain.handle("close", evt => {

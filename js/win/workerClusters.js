@@ -170,7 +170,7 @@ const clusters = {
             comb[0][0].push(lemma);
           }
         }
-        if (comb[0][0].length > 2 && comb[0][0].length < 11) { // TODO 13!
+        if (comb[0][0].length > 2 && comb[0][0].length < 13) {
           // create all possible unique combinations
           // (max. of 12 lemmas, otherwise the calculation takes much too long)
           for (let i = comb[0][0].length - 1; i >= 2; i--) {

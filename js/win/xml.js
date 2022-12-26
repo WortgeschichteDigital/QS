@@ -10,16 +10,11 @@ const xml = {
   //       diasys         = []  diasystemic information
   //         category     = ""
   //         value        = ""
-  //         lemma        = ""  "hl" this value pertains to
+  //         lemma        = ""  "hlJoined" this value pertains to
   //       dir            = ""  articles | ignore
   //       domains        = []  topic domains of this article
   //       fa             = |   article is field article
   //       faLemmas       = []  lemmas this field article deals with
-  //       first          = {}  dates of first lemma quotations
-  //         [LEMMA]      = 1   lemma as in "hl" and "nl", integers:
-  //                              4 digits = year
-  //                              2 digits = century
-  //                              0        = unknown (no quotation for this lemma)
   //       hash           = ""  SHA1 hash, derived from XML file content
   //       hints          = []  all hints regarding this file
   //         ident        = ""  identifier hash (10 hex digits, sometimes not unique)
@@ -73,9 +68,6 @@ const xml = {
   //         type         = []  semantic types attached to this link
   //         verweistext  = ""  original text content of //Verweis/Verweistext
   //         verweisziel  = ""  original content of //Verweis/Verweisziel
-  //       name           = ""  article name with suffixed "Artikel" or "Wortfeldartikel";
-  //                              it has the citing form that can be found on the website;
-  //                              @hidx is printed as superscript: ¹Masse ²Masse
   //       published      = ""  date the article was published (YYYY-MM-DD),
   //                              derived from the first occurence of //Revision/Datum
   //       nl             = []  //Artikel/Lemma[@Typ = "Nebenlemma"]/Schreibung;
