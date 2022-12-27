@@ -531,7 +531,11 @@ const viewClusters = {
     viewClusters.data.previewStatsStart = new Date();
     const removeTypeCluster = document.querySelector("#clusters-preview-no-type-cluster:checked") !== null;
     const addModulation = document.querySelector("#clusters-preview-modulate-check").checked;
-    const workerData = viewClusters.gleanWorkerData(removeTypeCluster, addModulation);
+    const workerData = viewClusters.gleanWorkerData({
+      addModulation,
+      noNewFiles: false,
+      removeTypeCluster,
+    });
 
     // start the calculation
     viewClusters.worker.postMessage({
@@ -586,9 +590,10 @@ const viewClusters = {
   },
 
   // glean data for the cluster worker
-  //   removeTypeCluster = boolean
   //   addModulation = boolean
-  gleanWorkerData (removeTypeCluster, addModulation) {
+  //   noNewFiles = boolean
+  //   removeTypeCluster = boolean
+  gleanWorkerData ({ addModulation, noNewFiles, removeTypeCluster }) {
     // collect domains
     const domains = [];
     for (const v of Object.values(bars.filtersData.domains)) {
@@ -598,6 +603,10 @@ const viewClusters = {
     // create files data
     const files = {};
     for (const [ k, v ] of Object.entries(xml.data.files)) {
+      // skip new files (if requested)
+      if (noNewFiles && v.status === 2) {
+        continue;
+      }
       files[k] = {};
       files[k].domains = [ ...v.domains ];
       files[k].hl = [ ...v.hlJoined ];

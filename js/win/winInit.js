@@ -250,7 +250,12 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     artikel.changeBranch();
   });
-  document.querySelector("#artikel-calculate").addEventListener("click", () => artikel.calculate());
+  document.querySelector("#artikel-calculate").addEventListener("click", () => {
+    artikel.calculate({
+      cli: false,
+      noNew: true,
+    });
+  });
 
   // LISTEN TO IPC MESSAGES
   shared.ipc.on("menu-app-updates", () => win.menuCommand("app-updates"));
@@ -264,7 +269,7 @@ window.addEventListener("load", async () => {
   shared.ipc.on("menu-teaser-tags", () => win.menuCommand("teaser-tags"));
   shared.ipc.on("menu-update", () => win.menuCommand("update"));
   shared.ipc.on("menu-xml", () => win.menuCommand("xml"));
-  shared.ipc.on("export-artikel-json", (evt, path) => artikel.cliExport(path));
+  shared.ipc.on("cli-command", (evt, command) => artikel.cliExport(command));
   shared.ipc.on("save-prefs", () => prefs.save());
   shared.ipc.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
 

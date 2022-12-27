@@ -563,7 +563,7 @@ const win = {
         setTimeout(() => {
           // timeout makes absolutely sure that the window is already listening
           const bw = BrowserWindow.fromWebContents(this);
-          bw.webContents.send("export-artikel-json", cliExportTo);
+          bw.webContents.send("cli-command", cliCommand);
         }, 100);
       });
     } else if (type === "pv") {
@@ -836,26 +836,25 @@ const worker = {
 /* APP EVENTS ----------------------------------- */
 
 // parse CLI options
+const cliCommand = {};
 let cliReturnCode = -1;
-let cliExportTo = "";
 for (let i = 0, len = process.argv.length; i < len; i++) {
-  const arg = process.argv[i].match(/^--([^\s]+)=(.+)/);
-  if (!arg) {
+  const arg = process.argv[i].match(/^--([^\s=]+)(?:=(.+))?/);
+  if (!arg ||
+      !/^(export-to|no-new)$/.test(arg[1])) {
     continue;
   }
-  if (arg[1] === "exportTo") {
-    cliExportTo = arg[2].replace(/^"|"$/g, "");
-  }
+  cliCommand[arg[1]] = arg[2]?.replace(/^"|"$/g, "") || true;
 }
 
 // single instance lock
-const locked = app.requestSingleInstanceLock({ cliExport: !!cliExportTo });
+const locked = app.requestSingleInstanceLock(cliCommand);
 
-if (cliExportTo || !locked) {
+if (typeof cliCommand["export-to"] !== "undefined" || !locked) {
   // CLI COMMAND OR SECOND INSTANCE
   (async function () {
     // quit immediately if second instance without CLI command
-    if (!cliExportTo) {
+    if (typeof cliCommand["export-to"] === "undefined") {
       app.quit();
       process.exit(0);
     }
@@ -889,10 +888,13 @@ if (cliExportTo || !locked) {
         message = "Zeitstrahl data missing";
         break;
       case 3:
-        message = "path not absolute";
+        message = "path not specified";
         break;
       case 4:
-        message = "directory not writable";
+        message = "path not absolute";
+        break;
+      case 5:
+        message = "target directory not writable";
         break;
       case 10:
         message = "unspecified program error";
@@ -908,7 +910,7 @@ if (cliExportTo || !locked) {
   // NORMAL APP BEHAVIOR
   // focus existing app window in case a second instance is opened
   app.on("second-instance", (...args) => {
-    if (args[3].cliExport) {
+    if (typeof args[3]["export-to"] !== "undefined") {
       return;
     }
     const app = win.data.find(i => i.type === "app");
@@ -967,7 +969,7 @@ ipcMain.handle("app-info", evt => {
   };
 });
 
-ipcMain.handle("cli-export-artikel-json", (evt, returnCode) => {
+ipcMain.handle("cli-return-code", (evt, returnCode) => {
   cliReturnCode = returnCode;
 });
 

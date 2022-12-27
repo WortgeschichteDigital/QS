@@ -68,13 +68,16 @@ const artikel = {
   },
 
   // calculate the file contents
-  //   cli = true | undefined
-  async calculate (cli = false) {
+  //   cli = boolean
+  //   noNew = boolean
+  async calculate ({ cli, noNew }) {
     if (artikel.data.calculating) {
-      dialog.open({
-        type: "alert",
-        text: "Die letzte Berechnung ist noch nicht abgeschlossen.",
-      });
+      if (!cli) {
+        dialog.open({
+          type: "alert",
+          text: "Die letzte Berechnung ist noch nicht abgeschlossen.",
+        });
+      }
       return;
     }
     artikel.data.calculating = true;
@@ -92,12 +95,12 @@ const artikel = {
 
     // calculate clusters
     calcText.textContent = "Berechne Cluster …";
-    await artikel.makeClusters();
+    await artikel.makeClusters(noNew);
 
     // make Artikel.json
     calcText.textContent = "Erstelle Artikel.json …";
     await shared.wait(250);
-    artikel.makeJSON();
+    artikel.makeJSON(noNew);
 
     // done
     calcImg.src = "img/win/button-yes.svg";
@@ -133,7 +136,8 @@ const artikel = {
   },
 
   // calculate the cross-reference clusters
-  async makeClusters () {
+  //   noNew = boolean
+  async makeClusters (noNew) {
     const { data } = artikel;
     data.clusters = {};
     data.clustersInProgress = true;
@@ -151,7 +155,11 @@ const artikel = {
     });
 
     // start the calculation
-    const workerData = viewClusters.gleanWorkerData(false, false);
+    const workerData = viewClusters.gleanWorkerData({
+      addModulation: false,
+      noNewFiles: noNew,
+      removeTypeCluster: false,
+    });
     artikel.worker.postMessage({
       domains: workerData.domains,
       files: workerData.files,
@@ -170,7 +178,8 @@ const artikel = {
 
   // make Artikel.json
   // (documentation of the file's structure: https://www.zdl.org/wb/wgd/api#Artikeldaten)
-  makeJSON () {
+  //   noNew = boolean
+  makeJSON (noNew) {
     const { data } = artikel;
     data.json = {};
 
@@ -201,29 +210,35 @@ const artikel = {
     // fill in values
     const { values: v } = data.json;
 
-    // values.au
-    for (const i of bars.filtersData.authors) {
-      v.au.push(i.value);
-    }
-
     // values.eb
     const { zeitstrahl: zs } = xml;
     if (zs.lemmas) {
       const years = new Set();
       for (const i of Object.values(zs.lemmas)) {
+        const file = xml.data.files[i.xml];
+        if (!file ||
+            noNew && file.status === 2) {
+          continue;
+        }
         years.add(i.year);
       }
       v.eb = [ ...years ];
       v.eb.sort((a, b) => a - b);
     }
 
-    // values.tf
-    for (const i of bars.filtersData.domains) {
-      v.tf.push(i.value);
-    }
-
-    // scan files for further values
     for (const i of Object.values(xml.data.files)) {
+      // skip new files (if requested)
+      if (noNew && i.status === 2) {
+        continue;
+      }
+
+      // values.au
+      for (const au of i.authors) {
+        if (!v.au.includes(au)) {
+          v.au.push(au);
+        }
+      }
+
       // values.ds
       for (const d of i.diasys) {
         let cat = v.ds.find(i => i[d.category]);
@@ -266,6 +281,13 @@ const artikel = {
           }
         }
       }
+
+      // values.tf
+      for (const tf of i.domains) {
+        if (!v.tf.includes(tf)) {
+          v.tf.push(tf);
+        }
+      }
     }
     v.on.sort();
     v.se.sort();
@@ -273,6 +295,9 @@ const artikel = {
     // values.wf
     if (zs.fields) {
       for (const [ domain, fields ] of Object.entries(zs.fields)) {
+        if (!v.tf.includes(domain)) {
+          continue;
+        }
         v.wf[domain] = {};
         for (let [ field, lemmas ] of Object.entries(fields)) {
           if (/^(Lebensformen|sozialräumliche Segregation)$/.test(field)) {
@@ -281,8 +306,14 @@ const artikel = {
           }
           v.wf[domain][field] = [];
           for (const lemma of lemmas) {
+            if (!v.le.includes(lemma)) {
+              continue;
+            }
             const idx = v.le.indexOf(lemma);
             v.wf[domain][field].push(idx);
+          }
+          if (!v.wf[domain][field].length) {
+            delete v.wf[domain][field];
           }
         }
       }
@@ -309,6 +340,11 @@ const artikel = {
     // fill articles
     const { articles: a } = data.json;
     for (const file of Object.values(xml.data.files)) {
+      // skip new files (if requested)
+      if (noNew && file.status === 2) {
+        continue;
+      }
+
       a[file.id] = {};
       const art = a[file.id];
 
@@ -432,8 +468,11 @@ const artikel = {
   },
 
   // app was startet via CLI and is requesting in export of the Artikel.json
-  //   path = string
-  async cliExport (path) {
+  //   command = object
+  async cliExport (command) {
+    const path = command["export-to"];
+    const noNew = command["no-new"];
+
     // wait until the app is ready
     await new Promise(resolve => {
       const interval = setInterval(() => {
@@ -447,19 +486,25 @@ const artikel = {
     // on branch master?
     const branch = await git.branchCurrent();
     if (branch !== "master") {
-      shared.ipc.invoke("cli-export-artikel-json", 1);
+      shared.ipc.invoke("cli-return-code", 1);
       return;
     }
 
     // Zeitstrahl data present?
     if (!Object.keys(xml.zeitstrahl).length) {
-      shared.ipc.invoke("cli-export-artikel-json", 2);
+      shared.ipc.invoke("cli-return-code", 2);
+      return;
+    }
+
+    // is path a string?
+    if (typeof path !== "string") {
+      shared.ipc.invoke("cli-return-code", 3);
       return;
     }
 
     // absolute path?
     if (!shared.path.isAbsolute(path)) {
-      shared.ipc.invoke("cli-export-artikel-json", 3);
+      shared.ipc.invoke("cli-return-code", 4);
       return;
     }
 
@@ -468,21 +513,24 @@ const artikel = {
     try {
       await shared.fsp.access(parseDir, shared.fsp.constants.W_OK);
     } catch {
-      shared.ipc.invoke("cli-export-artikel-json", 4);
+      shared.ipc.invoke("cli-return-code", 5);
       return;
     }
 
     // Okay, let's export the data!
     try {
       // calculate the data
-      await artikel.calculate(true);
+      await artikel.calculate({
+        cli: true,
+        noNew,
+      });
       // write file
       await shared.fsp.writeFile(path, JSON.stringify(artikel.data.json));
       // exit code 0
-      shared.ipc.invoke("cli-export-artikel-json", 0);
+      shared.ipc.invoke("cli-return-code", 0);
     } catch {
       // return exit code for unspecified errors
-      shared.ipc.invoke("cli-export-artikel-json", 10);
+      shared.ipc.invoke("cli-return-code", 10);
     }
   },
 };
