@@ -108,7 +108,6 @@ a.overlay-close:focus {
 
 a[href^="http"]::after {
   content: "";
-  margin-left: 5px;
   padding-right: 24px;
   background-image: url(../../img/win/external-link.svg);
   background-size: contain;
