@@ -226,64 +226,64 @@ const artikel = {
       v.eb.sort((a, b) => a - b);
     }
 
-    for (const i of Object.values(xml.data.files)) {
+    for (const file of Object.values(xml.data.files)) {
       // skip new files (if requested)
-      if (noNew && i.status === 2) {
+      if (noNew && file.status === 2) {
         continue;
       }
 
       // values.au
-      for (const au of i.authors) {
+      for (const au of file.authors) {
         if (!v.au.includes(au)) {
           v.au.push(au);
         }
       }
 
       // values.ds
-      for (const d of i.diasys) {
-        let cat = v.ds.find(i => i[d.category]);
+      for (const ds of file.diasys) {
+        let cat = v.ds.find(i => i[ds.category]);
         if (!cat) {
           v.ds.push({
-            [d.category]: [],
+            [ds.category]: [],
           });
           cat = v.ds.at(-1);
         }
-        if (!cat[d.category].includes(d.value)) {
-          cat[d.category].push(d.value);
+        if (!cat[ds.category].includes(ds.value)) {
+          cat[ds.category].push(ds.value);
         }
       }
 
       // values.le
-      for (const l of i.hlJoined.concat(i.nlJoined)) {
-        if (!v.le.includes(l)) {
-          v.le.push(l);
+      for (const le of file.hlJoined.concat(file.nlJoined)) {
+        if (!v.le.includes(le)) {
+          v.le.push(le);
         }
       }
 
       // values.nl
-      for (let nl of i.nlJoined) {
+      for (let nl of file.nlJoined) {
         const idx = v.le.indexOf(nl);
         [ nl ] = nl.split("/");
-        v.nl[idx] = i.nlTargets[nl];
+        v.nl[idx] = file.nlTargets[nl];
       }
 
       // values.on
-      if (!v.on.includes(i.published)) {
-        v.on.push(i.published);
+      if (!v.on.includes(file.published)) {
+        v.on.push(file.published);
       }
 
       // values.se
-      for (const l of i.links) {
-        for (const t of l.type) {
-          if (!/Cluster|Kontext/.test(t) &&
-              !v.se.includes(t)) {
-            v.se.push(t);
+      for (const i of file.links) {
+        for (const se of i.type) {
+          if (!/Cluster|Kontext/.test(se) &&
+              !v.se.includes(se)) {
+            v.se.push(se);
           }
         }
       }
 
       // values.tf
-      for (const tf of i.domains) {
+      for (const tf of file.domains) {
         if (!v.tf.includes(tf)) {
           v.tf.push(tf);
         }
