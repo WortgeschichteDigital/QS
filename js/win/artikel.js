@@ -103,6 +103,7 @@ const artikel = {
     calcImg.src = "img/win/button-yes.svg";
     calcImg.classList.remove("rotate");
     calcText.textContent = "Artikel.json erstellt!";
+    artikel.data.calculating = false;
 
     // exit if called via CLI
     if (cli) {
@@ -128,8 +129,6 @@ const artikel = {
       await shared.fsp.writeFile(result.filePath, JSON.stringify(artikel.data.json));
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
-    } finally {
-      artikel.data.calculating = false;
     }
   },
 
