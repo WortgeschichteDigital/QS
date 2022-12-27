@@ -184,7 +184,7 @@ const clusters = {
             combFill(i, 0);
           }
         } else if (comb[0][0].length > 10) {
-          // too much lemmas, let's analyze them as chunks
+          // too much lemmas, let's analyse them as chunks
           // 1. form chunks
           const lemmas = [ ...comb[0][0] ];
           lemmas.shift();
@@ -219,7 +219,8 @@ const clusters = {
         }
 
         // check the possible combinations of cluster centers
-        for (const combinations of comb) {
+        x: for (let combI = 0, len = comb.length; combI < len; combI++) {
+          const combinations = comb[combI];
           for (const combination of combinations) {
             // speed up the process by skipping already checked combinations
             combination.sort();
@@ -373,6 +374,15 @@ const clusters = {
               s,
               u,
             });
+
+            // if the first combination resulted as an unaltered cluster center
+            // every following combination can be nothing more than a subset
+            // of this first combination; therefore, we can cut it short and break
+            // the test now
+            if (combI === 0 &&
+                combinationJoined === Object.keys(z).sort().join()) {
+              break x;
+            }
           }
         }
       }
