@@ -8,6 +8,9 @@ const clusters = {
     // set of cluster centers that were already checked
     // (this is vital to speed up the calculation)
     checked: new Set(),
+    // set of cluster centers that were already detected
+    // (this is vital to speed up the calculation)
+    detected: new Set(),
     // list of currently available domains
     domains: [],
     // file data for calculation
@@ -105,6 +108,7 @@ const clusters = {
   calculate () {
     const { data: d } = clusters;
     d.checked = new Set();
+    d.detected = new Set();
     d.result = {};
 
     // structured array with all lemma combinations of a possible cluster center;
@@ -264,9 +268,19 @@ const clusters = {
             }
 
             // the possible combination forms no center => check next combination
-            if (Object.keys(z).length < 2) {
+            const zKeys = Object.keys(z);
+            if (zKeys.length < 2) {
               continue;
             }
+
+            // ditch this combination if its already been detected as a cluster center
+            // (for speed reasons we have to discard duplicates ASAP)
+            zKeys.sort();
+            const zKeysJoined = zKeys.join();
+            if (d.detected.has(zKeysJoined)) {
+              continue;
+            }
+            d.detected.add(zKeysJoined);
 
             // add main and sub lemmas to the center
             // if they pertain to the same multi lemma article
@@ -363,12 +377,15 @@ const clusters = {
         }
       }
 
-      // erase duplicats
-      // (due to the system, many cluster centers are calculated that are duplicats
-      // of already pushed clusters; one could prevent that at first hand, but this way
+      // erase duplicates and subsets
+      // (due to the system, many cluster centers are calculated that are duplicates
+      // of already pushed clusters; duplicates are ditched ASAP, but due to the fact
+      // that after that lemmas with no points are erased from the center
+      // some duplicates might still exist at this point; other centers are merely
+      // a subset of larger centers; one could prevent that at first hand, but this way
       // a lemma can be part of several different cluster centers at once, what seems
-      // to be a good idea in general; but we have to make sure that there are no
-      // small cluster centers that are a subset of bigger centers)
+      // to be a good idea in general; in the end, we have to make sure that there
+      // are no duplicates and small cluster centers that are subsets of bigger centers)
       const centers = [];
       for (let i = 0, len = c.length; i < len; i++) {
         const center = Object.keys(c[i].z).sort();
@@ -386,6 +403,7 @@ const clusters = {
           }
 
           // Are the centers identical?
+          // (this rarely happens, but it does)
           if (centers[j].join() === centers[i].join()) {
             centersDel.add(i);
             continue;
