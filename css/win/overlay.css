@@ -38,6 +38,7 @@
 #artikel-calculating {
   overflow: hidden;
   height: 30px;
+  font-style: italic;
   transition: height .1s linear;
 }
 
