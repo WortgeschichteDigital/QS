@@ -67,6 +67,19 @@ const bars = {
     }
     bars.filtersData.authors.sort((a, b) => shared.sort(a.value, b.value));
     bars.filtersData.domains.sort((a, b) => shared.sort(a.value, b.value));
+
+    // check whether the current filter values still exists
+    document.querySelectorAll(".select-filter").forEach(filter => {
+      const { value } = filter.dataset;
+      if (!value) {
+        return;
+      }
+      const type = filter.id.replace("select-", "");
+      if (!bars.filtersData[type].some(i => i.value === value)) {
+        filter.dataset.value = "";
+        bars.selectFill(filter);
+      }
+    });
   },
 
   // filters: visualize that filters are active
