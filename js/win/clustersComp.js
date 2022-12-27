@@ -25,9 +25,16 @@ const clustersComp = {
     const cont = document.querySelector("#clusters-compare");
     cont.replaceChildren();
 
-    // search for similar clusters
+    // check if the files still exist
     const { data } = viewClusters;
     const c = data[data.active][viewClusters.filters["select-domains"]];
+    const someFilesAreMissing = viewClusters.checkFiles(c);
+    if (someFilesAreMissing) {
+      cont.appendChild(someFilesAreMissing);
+      return;
+    }
+
+    // search for similar clusters
     const similarityThreshold = 75;
     clustersComp.similar = {};
     const { similar } = clustersComp;

@@ -18,6 +18,13 @@ const clustersCheck = {
       return;
     }
 
+    // check if the files still exist
+    const someFilesAreMissing = viewClusters.checkFiles(c);
+    if (someFilesAreMissing) {
+      cont.appendChild(someFilesAreMissing);
+      return;
+    }
+
     // create grid columns
     for (let i = 0; i < 2; i++) {
       const div = document.createElement("div");

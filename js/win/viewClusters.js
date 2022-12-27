@@ -232,6 +232,22 @@ const viewClusters = {
     };
   },
 
+  // check whether the files of a cluster still exist
+  // (after an update some XML files might not be present anymore)
+  //   clusters = array
+  checkFiles (clusters) {
+    for (const cluster of clusters) {
+      for (const circle of [ "z", "s", "u" ]) {
+        for (const values of Object.values(cluster[circle])) {
+          if (!xml.data.files[values.file]) {
+            return win.nothingToShow("Cluster auffrischen!", "In der aktuellen Berechnung befinden sich Dateien, die mittlerweile gelöscht wurden.");
+          }
+        }
+      }
+    }
+    return false;
+  },
+
   // load the file Artikel.json from the repo
   async loadArtikelJSON () {
     // load file
