@@ -108,12 +108,11 @@ const file = process.argv[2] || path.join(__dirname, "Artikel.json");
   }
 
   // write out data
-  const inputName = file.split(path.sep).at(-1);
-  const [ base, ext ] = inputName.split(".");
-  const outputName = `${base}_hr.${ext}`;
-  await fsp.writeFile(path.join(__dirname, outputName), JSON.stringify(json, null, 2));
+  const input = path.parse(file);
+  const output = `${input.name}_hr${input.ext}`;
+  await fsp.writeFile(path.join(input.dir, output), JSON.stringify(json, null, 2));
 
   // print result and exit
-  console.log(`File converted to output file "${outputName}"!`);
+  console.log(`File converted to output file "${output}"!`);
   process.exit(0);
 }());
