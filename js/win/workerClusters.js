@@ -170,14 +170,47 @@ const clusters = {
             comb[0][0].push(lemma);
           }
         }
-        if (comb[0][0].length > 2 && comb[0][0].length < 13) {
+        if (comb[0][0].length > 2 && comb[0][0].length < 11) {
           // create all possible unique combinations
-          // (max. of 12 lemmas, otherwise the calculation takes much too long)
+          // (max. of 10 lemmas, otherwise the calculation takes much too long)
           for (let i = comb[0][0].length - 1; i >= 2; i--) {
             comb.push([]);
             combCurrent = [];
             combCurrentNo = i;
             combFill(i, 0);
+          }
+        } else if (comb[0][0].length > 10) {
+          // too much lemmas, let's analyze them as chunks
+          // 1. form chunks
+          const lemmas = [ ...comb[0][0] ];
+          lemmas.shift();
+          const chunkSize = Math.round(lemmas.length / 2) > 10 ? 9 : Math.round(lemmas.length / 2);
+          const chunks = [];
+          for (let i = 0, len = lemmas.length; i < len; i++) {
+            if (i % chunkSize === 0) {
+              chunks.push([ target ]);
+            }
+            chunks.at(-1).push(lemmas[i]);
+          }
+
+          // 2. create all possible combinations for every chunk
+          const combinations = [];
+          for (const chunk of chunks) {
+            comb = [ [ [ ...chunk ] ] ];
+            for (let i = comb[0][0].length - 1; i >= 2; i--) {
+              comb.push([]);
+              combCurrent = [];
+              combCurrentNo = i;
+              combFill(i, 0);
+            }
+            combinations.push(structuredClone(comb));
+          }
+
+          // 3. recreate the array with combinations
+          lemmas.unshift(target);
+          comb = [ [ [ ...lemmas ] ] ];
+          for (const i of combinations) {
+            comb = comb.concat(i);
           }
         }
 
@@ -358,21 +391,21 @@ const clusters = {
             continue;
           }
 
-          // Is the smaller center a subset of the bigger center?
-          let big = i;
+          // Is the smaller center a subset of the larger center?
+          let large = i;
           let small = j;
           if (centers[j].length > centers[i].length) {
-            big = j;
+            large = j;
             small = i;
           }
           const matches = Array(centers[small].length).fill(false);
           for (let k = 0, len = centers[small].length; k < len; k++) {
-            if (centers[big].includes(centers[small][k])) {
+            if (centers[large].includes(centers[small][k])) {
               matches[k] = true;
             }
           }
           if (!matches.some(i => !i)) {
-            // no false in array => all lemmas are part of the bigger center => delete the smaller center
+            // no false in array => all lemmas are part of the larger center => delete the smaller center
             centersDel.add(small);
           }
         }
