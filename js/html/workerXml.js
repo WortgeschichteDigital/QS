@@ -13,9 +13,6 @@ const xml = {
   // errors that occured during the update process
   updateErrors: [],
 
-  // contents of data.json with Zeitstrahl data (see app/xml.js)
-  zeitstrahl: {},
-
   // fill file data
   //   updated = array (names of files that were updated)
   fillData (updated) {
@@ -397,7 +394,6 @@ const xml = {
     xml.files = data.files;
     xml.gitDir = data.gitDir;
     xml.updateErrors = [];
-    xml.zeitstrahl = data.zeitstrahl;
     const { changed } = data;
     const { untracked } = data;
     const { xmlFiles } = data;

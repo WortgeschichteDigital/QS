@@ -159,7 +159,7 @@ const prefs = {
   // Zeistrahl: choose data.json
   async zeitstrahlOpen () {
     const options = {
-      title: "Zeitstrahldatei auswählen",
+      title: "Zeitstrahldaten auswählen",
       defaultPath: shared.info.documents,
       filters: [
         {
@@ -209,10 +209,7 @@ const prefs = {
       }
       return false;
     }
-    xml.zeitstrahl = zsData;
-    if (!passive) {
-      xml.resetCache();
-    }
+    artikel.zeitstrahl = zsData;
     return true;
   },
 
@@ -224,8 +221,7 @@ const prefs = {
     document.querySelector("#prefs-zeitstrahl").value = "";
     delete prefs.data.zeitstrahl;
     prefs.save();
-    xml.zeitstrahl = {};
-    xml.resetCache();
+    artikel.zeitstrahl = {};
     artikel.messages();
   },
 

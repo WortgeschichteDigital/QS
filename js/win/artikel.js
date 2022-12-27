@@ -18,6 +18,17 @@ const artikel = {
   // worker that calculates the clusters
   worker: null,
 
+  // contents of data.json with Zeitstrahl data (see preferences); important keys:
+  //   zeitstrahl.lemmas
+  //     [LEMMA|XML-ID] = {}
+  //       spelling     = ""  spelling of the lemma
+  //       xml          = ""  xml file name
+  //       year         = 1   date of first lemma quotation
+  //                            4 digits = year
+  //                            2 digits = century
+  //                            0        = unknown (no quotation for this lemma)
+  zeitstrahl: {},
+
   // open the overlay
   async show () {
     if (!artikel.data.calculating) {
@@ -211,7 +222,7 @@ const artikel = {
     const { values: v } = data.json;
 
     // values.eb
-    const { zeitstrahl: zs } = xml;
+    const { zeitstrahl: zs } = artikel;
     if (zs.lemmas) {
       const years = new Set();
       for (const i of Object.values(zs.lemmas)) {

@@ -91,17 +91,6 @@ const xml = {
   //   [FILENAME] = string (complete XML file)
   files: {},
 
-  // contents of data.json with Zeitstrahl data (see preferences); important keys:
-  //   zeitstrahl.lemmas
-  //     [LEMMA|XML-ID] = {}
-  //       spelling     = ""  spelling of the lemma
-  //       xml          = ""  xml file name
-  //       year         = 1   date of first lemma quotation
-  //                            4 digits = year
-  //                            2 digits = century
-  //                            0        = unknown (no quotation for this lemma)
-  zeitstrahl: {},
-
   // load cache file
   async loadCache () {
     let json;
@@ -196,7 +185,6 @@ const xml = {
       data: xml.data,
       files: xml.files,
       gitDir: git.config.dir,
-      zeitstrahl: xml.zeitstrahl,
       changed,
       untracked,
       newAppVersion: prefs.data["app-version"] !== shared.info.version,
