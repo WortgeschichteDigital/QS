@@ -122,6 +122,8 @@ const viewClusters = {
         sect.replaceChildren();
         sect.appendChild(result.message.cloneNode(true));
       }
+      // deactivate jump icon in comparison section
+      document.querySelector("#clusters-nav-new").classList.remove("active");
     }
   },
 

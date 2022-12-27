@@ -9,6 +9,8 @@ const clustersCheck = {
     // prepare section
     const cont = document.querySelector("#clusters-check");
     cont.replaceChildren();
+    const jump = document.querySelector("#clusters-nav-new");
+    jump.classList.remove("active");
 
     // no clusters for the current topic domain
     const { data } = viewClusters;
@@ -107,12 +109,9 @@ const clustersCheck = {
       });
     });
 
-    // toggle jump icon
-    const jump = document.querySelector("#clusters-nav-new");
+    // activate jump icon
     if (cont.querySelector(".changed-cluster")) {
       jump.classList.add("active");
-    } else {
-      jump.classList.remove("active");
     }
   },
 
