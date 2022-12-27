@@ -43,30 +43,44 @@
     <section id="allgemeines">
       <h1><span>Aufgabe der App</span></h1>
 
-      <p id="allgemeines-aufgabe"></p>
+      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd), einem Teilprojekt des <a href="https://www.zdl.org/">ZDL</a>. Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wortgeschichten/#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
+
+      <p>Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#verschiedenes-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
+
+      <ul>
+        <li>die Suchfilter der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a>,</li>
+
+        <li>die Liste der neuen Artikel in der Artikelübersicht,</li>
+
+        <li>die Cluster (in der Artikelübersicht und in den Wortgeschichten),</li>
+
+        <li>die Suchleiste in den Wortgeschichten und</li>
+
+        <li>die automatischen Verknüpfungen mit WGd-Artikeln im Belegnavigator.</li>
+      </ul>
 
       <h1><span>Überblick</span></h1>
 
-      <p id="allgemeines-ueberblick"></p>
+      <p id="allgemeines-ueberblick">Die App hat vier Ansichten, die über den Kopf des Hauptfensters angesteuert werden können: <a href="#xml"><i>XML</i></a>, <a href="#hinweise"><i>Hinweise</i></a>, <a href="#clusterei"><i>Clusterei</i></a> und <a href="#suche"><i>Suche</i></a>. Die Operationen und Anzeigen dieser Ansichten beruhen darauf, dass die App Zugriff auf einen lokalen <a href="#git-repository">Klon des Wortgeschichten-Repositorys</a> hat. Darum werden beim ersten Start auch der Ort und der Benutzername für dieses Repository erfragt. Ohne Repository im Hintergrund ist die App nicht lauffähig.</p>
 
-      <h1><span>Funktionen</span></h1>
+      <p>Alle <a href="#git-operationen">Git-Operationen</a>, die für die Benutzer*innen relevant sind, können ausnahmslos über die App ausgeführt werden. Sie lassen sich über den Kopf des Hauptfensters anstoßen.</p>
 
-      <p id="allgemeines-funktionen"></p>
+      <p>Um <i>QS</i> zu nutzen, muss niemand in der Lage sein, Commits mit Git zu erstellen. Man kann einfach neue XML-Dateien in den <a href="#git">Ordner <code>ignore</code></a> legen, auf <b><i>Update</i></b> drücken und die App frischt ihre Daten unter Berücksichtung der geänderten oder ergänzten Dateien auf. Die Analyse der XML-Dateien, auf deren Ergebnis alle vier Ansichten zurückgreifen, ist rechenintensiv, weswegen sie in einem Cache zwischengespeichert wird, auf den auch nach dem Neustart des Programms zurückgegriffen wird. XML-Dateien werden nur dann neu analysiert, wenn die App feststellt, dass sie verändert oder neu hinzugefügt wurden. Und nur dann, wenn einer dieser Fälle zutrifft, werden auch die <a href="#hinweise">Hinweise</a> zu den Dateien neu berechnet. Eine Ausnahme stellt hier die Installation einer neuen Programmversion dar. In diesem Fall werden der Cache zurückgesetzt, die XML-Dateien komplett neu eingelesen und alle Daten neu berechnet.</p>
 
       <h1><span>Filterleiste</span></h1>
 
-      <p id="allgemeines-filterleiste">Die Filterleiste kan auch mit dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>Umsch</kbd>&nbsp;+ <kbd>F</kbd> geöffnet <abbr title="beziehungsweise">bzw.</abbr> geschlossen werden. Der Inhalt der Filterleiste passte sich an die aktuelle Ansicht an. Filter, die für eine Ansicht nicht relevant sind, werden ausgeblendet.</p>
+      <p id="allgemeines-filterleiste">Die Filterleiste kann über den Button im Fensterkopf oder auch mit dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>Umsch</kbd>&nbsp;+ <kbd>F</kbd> geöffnet <abbr title="beziehungsweise">bzw.</abbr> geschlossen werden. Der Inhalt der Filterleiste passte sich an die aktuelle Ansicht an. Filter, die für eine Ansicht nicht relevant sind, werden ausgeblendet.</p>
 
       <p>Die <b>Funktion <i>zurücksetzen</i></b> im Kopf der Filterleiste setzt zwar alle Werte auf ihren Standard zurück. Es werden aber nur diejenigen Werte geändert, die in der aktuellen Ansicht sichtbar sind.</p>
 
       <p>Die Filter im Einzelnen:</p>
 
       <div class="item">
-        <p><i>Autor*innen</i><br>Es werden nur XML-Dateien der ausgewählten Autor*in berücksichtigt. Für die <a href="#clusterei">Clusterei</a> bedeutet dies, dass in den Funktionen <i>vergleichen</i> und <i>überprüfen</i> nur Cluster sichtbar sind, deren Zentrum mindestens ein Lemma hat, das von der ausgewählten Autor*in behandelt wurde.</p>
+        <p><i>Autor*innen</i><br>Es werden nur XML-Dateien der ausgewählten Autor*in berücksichtigt. Für die <a href="#clusterei">Clusterei</a> bedeutet dies, dass in den Funktionen <i>vergleichen</i> und <i>überprüfen</i> nur Cluster sichtbar sind, deren Zentrum mindestens ein Lemma hat, das von der ausgewählten Autor*in behandelt wurde. Die <a href="#clusterei-berechnung">Berechnung der Vorschau</a> bezieht immer die Lemmata aller XML-Dateien ein.</p>
       </div>
 
       <div class="item">
-        <p><i>Themenfelder</i><br>Die Analyse <abbr title="beziehungsweise">bzw.</abbr> Anzeige der XML-Dateien wird in allen Ansichten auf das ausgewählte Themenfeld begrenzt. Für die Funktionen <i>vergleichen</i> und <i>überprüfen</i> in der <a href="#clusterei">Clusterei</a> muss zwingend ein Themenfeld ausgewählt werden.</p>
+        <p><i>Themenfelder</i><br>Die Analyse <abbr title="beziehungsweise">bzw.</abbr> Anzeige der XML-Dateien wird in allen Ansichten auf das ausgewählte Themenfeld begrenzt. Um die Funktionen <i>vergleichen</i> und <i>überprüfen</i> in der <a href="#clusterei">Clusterei</a> nutzen zu können, müssen Sie zwingend ein Themenfeld auswählen.</p>
       </div>
 
       <div class="item">
@@ -74,11 +88,11 @@
       </div>
 
       <div class="item">
-        <p id="allgemeines-filterleisteMarkierungen"><i>Markierungen</i><br>Diese Filterkategorie ist nur in der <a href="#hinweise">Ansicht Hinweise</a> sichtbar. Die Filter können dafür genutzt werden entsprechend markierte Hinweise ein- oder auszublenden.</p>
+        <p id="allgemeines-filterleisteMarkierungen"><i>Markierungen</i><br>Diese Filterkategorie ist nur in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> sichtbar. Die Filter können dafür genutzt werden, entsprechend markierte Hinweise ein- oder auszublenden.</p>
       </div>
 
       <div class="item">
-        <p><i>Hinweistypen</i><br>Diese Filterkategorie ist nur in der <a href="#hinweise">Ansicht Hinweise</a> sichtbar. Sie können die Hinweise nach Typen filtern. Die einzelnen Hinweise wurden nach Kategorien gruppiert:</p>
+        <p><i>Hinweistypen</i><br>Diese Filterkategorie ist nur in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> sichtbar. Sie können die Hinweise nach Typen filtern. Die einzelnen Hinweise wurden nach Kategorien gruppiert:</p>
 
         <ul>
           <li><i>Verweise: Fehler</i><br
@@ -119,7 +133,7 @@
 
       <h1><span>Ergebnisleiste</span></h1>
 
-      <p id="allgemeines-ergebnisleiste">Die Ergebnisleiste steht nur in den Ansichten <a href="#hinweise">Hinweise</a> und <a href="#suche">Suche</a> zur Verfügung. Sie wird automatisch eingeblendet, wenn Hinweise angezeigt werden oder eine Suche Treffer produzierte. Voraussetzung ist allerdings, dass das Programmfenster breit genug ist.</p>
+      <p id="allgemeines-ergebnisleiste">Die Ergebnisleiste steht nur in den Ansichten <a href="#hinweise"><i>Hinweise</i></a> und <a href="#suche"><i>Suche</i></a> zur Verfügung. Sie wird automatisch eingeblendet, wenn Hinweise angezeigt werden oder eine Suche Treffer produziert. Voraussetzung ist allerdings, dass das Programmfenster breit genug ist.</p>
 
       <p>Manuell ein- oder ausgeblendet werden kann die Leiste jederzeit über das Rechtsklickmenü oder das Icon <img src="../img/win/sidebar.svg" width="30" height="30" alt=""> im Textfeld der <a href="#allgemeines-kopfleiste">Kopfleiste</a>.</p>
 
@@ -134,7 +148,11 @@
 
     <!-- GIT -->
     <section id="git">
-      <mark>TODO Git</mark>
+      <p id="git-repository"><mark>TODO Einrichtung Reposiory</mark></p>
+
+      <p id="git-operationen"><mark>TODO Git-Operationen beschreiben</mark></p>
+
+      <p><mark>irgendwo kurz erklären, was ein Commit ist</mark></p>
     </section>
 
     <!-- XML -->
@@ -168,13 +186,13 @@
 
       <p>Funktion der <b>Icons unterhalb der</b> <b class="blue">Zeilenangabe</b>:</p>
 
-      <p class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu markieren, um sie nicht immer wieder aufs Neue überprüfen zu müssen.</p>
+      <p class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu markieren, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
 
-      <p class="indent-icon"><img src="../img/win/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein.</p>
+      <p class="indent-icon"><img src="../img/win/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein. Da die Zeilennummer aber dynamisch ist (weil davor jederzeit Zeilen hinzugefügt oder entfernt werden könnten), kann diese nicht für die Berechnung der Indentifizierung mit herangezogen werden.</p>
 
       <p class="indent-icon"><img src="../img/win/context.svg" width="30" height="30" alt="">Ein Klick auf das Icon öffnet ein Popup-Fenster, in dem Sie den Hinweis im <b>Kontext des Originalquellcodes</b> einsehen können, ohne dafür eigens die XML-Datei öffnen zu müssen. Im Popup-Fenster wird der XML-Quelltext zeilenweise dargestellt. Am linken Rand finden Sie die Zeilenzählung. Die Zeile, in der das Element zu finden ist, auf das sich der Hinweis bezieht, ist <b class="blue">blau</b> dargestellt. In vielen Fällen wird sogar die genaue <mark>Stelle im Quelltext</mark> markiert, um die es geht. (Es kann passieren, dass auch andere Stellen mit einem ähnlichen Phänomen hervorgehoben werden.) Der dargestellte Quelltext kann mal mehr, mal weniger umfangreich sein. Findet sich ein Phänomen im Autor*innentext der Wortgeschichte, wird immer ein kompletter Codeblock gedruckt.</p>
 
-      <p>Die Hinweise beziehen sich – natürlich – immer auf eine bestimmte <b>XML-Datei</b>. Die XML-Datei, auf die sich der aktuelle Hinweis bezieht, ist immer am oberen Rand der Ansicht zu sehen. Neben dem Dateinamen finden Sie drei <b>Icons</b>:</p>
+      <p>Die Hinweise beziehen sich – natürlich – immer auf eine bestimmte <b>XML-Datei</b>. Der Name der XML-Datei, auf die sich ein Hinweis bezieht, bleibt am oberen Rand der Ansicht immer sichtbar. Neben dem Dateinamen finden Sie drei <b>Icons</b>:</p>
 
       <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Das Icon schickt den XML-Code der Datei an ein neues Programmfenster. In diesem wird die <b>Vorschau</b> auf zdl.org aufgerufen (<a href="#xml-vorschaufenster">mehr zum Vorschaufenster</a>).</p>
 
@@ -338,7 +356,7 @@
 
         <p class="tag"><i>Tag:</i><code>&lt;Textreferenz&gt;</code></p>
 
-        <p class="indent-hint">Für das Wort, das in <code>&lt;Textreferenz&gt;</code> eingeschlossen ist, gibt es eine eigene Wortgeschichte. Um es den Benutzer*innen leichter zu machen, wäre es sinnvoll, diese durch einen Verweis auf die entsprechende Wortgeschichte zu ersetzen. So müssen sie nicht erst in den Artikeltext springen, um den Link zu finden.</p>
+        <p class="indent-hint">Für das Wort, das in <code>&lt;Textreferenz&gt;</code> eingeschlossen ist, gibt es eine eigene Wortgeschichte. Um es den Benutzer*innen leichter zu machen, wäre es sinnvoll, den Tag durch einen Verweis auf die entsprechende Wortgeschichte zu ersetzen. So muss man nicht erst in den Artikeltext springen, um den Link zu finden.</p>
 
         <pre class="indent-hint bogus">&lt;Verweise&gt;
   &lt;Textreferenz <span class="xml-attr-key">Ziel=</span><span class="xml-attr-val">&quot;Zur_Massenhysterie&quot;</span>&gt;Massenhysterie
@@ -393,7 +411,7 @@
 
         <p class="indent-hint">Dieser Hinweis erscheint, wenn <code>&lt;erwaehntes_Zeichen&gt;</code> ein Lemma (Haupt- oder Nebenlemma) des aktuellen Artikels auszeichnet. In diesem Fall sollte für die Auszeichnung unbedingt <code>&lt;Stichwort&gt;</code> genutzt werden.</p>
 
-        <p class="indent-hint">Es gibt natürlich Grenzfälle, in denen <code>&lt;erwaehntes_Zeichen&gt;</code> unbedingt sinnvoll ist, z.&nbsp;B. wenn die Interjektion <i>Yippie</i> im Artikel zur Sozialfigur <i>Yippie</i> erwähnt wird. Denn die Interjektion ist kein Lemma des Artikels.</p>
+        <p class="indent-hint">Es gibt natürlich Grenzfälle, in denen <code>&lt;erwaehntes_Zeichen&gt;</code> sinnvoll ist, <abbr title="zum Beispiel">z.&nbsp;B.</abbr> wenn die Interjektion <i>Yippie</i> im Artikel zur Sozialfigur <i>Yippie</i> erwähnt wird. Die Interjektion ist kein Lemma des Artikels.</p>
 
         <p class="indent-hint">Wie im Falle von <a href="#hinweise-ez_link"><i>Objektsprache mit Artikel verlinken</i></a> wird für die Erkennung der Wörter auf Formvarianten des DTA zurückgegriffen, was entsprechend zu falschpositiven Hinweisen führen kann, die getrost ignoriert werden dürfen.</p>
 
@@ -559,6 +577,8 @@
 
     <!-- CLUSTERS -->
     <section id="clusterei">
+      <p id="clusterei-vorschau"><mark>TODO Vorschau</mark></p>
+
       <p id="clusterei-vorschauOptionModulierung"><mark>TODO Option: Modulierung mit einbeziehen</mark></p>
 
       <p id="clusterei-vorschauOptionClusterVerweise"><mark>TODO Option: Cluster-Verweise ignorieren</mark></p>
@@ -587,7 +607,9 @@
 
     <!-- MISCELLANEOUS -->
     <section id="verschiedenes">
-      <mark>TODO Verschiedenes (Teaser-Tags)</mark>
+      <p id="verschiedenes-artikelJSON"><mark>TODO Artikel.json</mark></p>
+
+      <p><mark>TODO Teaser-Tags</mark>
     </section>
 
     <!-- OVERLAY: LOADING -->
