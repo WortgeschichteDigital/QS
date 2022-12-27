@@ -161,6 +161,7 @@ const help = {
       help.switchSection(section, false);
     }
     if (hash.includes("-")) {
+      window.location.hash = ""
       window.location.hash = hash;
     }
   },
