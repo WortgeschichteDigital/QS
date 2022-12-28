@@ -13,7 +13,7 @@ const help = {
     });
 
     // color code XML
-    document.querySelectorAll("code, pre").forEach(i => {
+    document.querySelectorAll("code, pre:not(.no-highlight)").forEach(i => {
       let code = shared.xmlColorCode(i.innerHTML, false);
       code = code.replace(/(@[a-zA-Z:_]+=?)(".+?")?/g, (m, p1, p2) => {
         if (!p2) {

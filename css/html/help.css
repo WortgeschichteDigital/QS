@@ -153,7 +153,7 @@ p.tag,
 p.option {
   padding-left: 40px;
   background-image: url(../../img/win/location.svg);
-  background-position: top left;
+  background-position: bottom left;
   background-repeat: no-repeat;
   background-size: 30px 30px;
 }
@@ -221,9 +221,17 @@ pre.correct::before {
   background-image: url(../../img/win/button-yes.svg);
 }
 
-section ul {
+section :is(ol, ul) {
   margin: 0 0 10px;
   padding: 0 0 0 30px;
+}
+
+section ul {
+  list-style-type: circle;
+}
+
+section ul ul {
+  margin-bottom: 0;
 }
 
 section li {

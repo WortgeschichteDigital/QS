@@ -43,9 +43,9 @@
     <section id="allgemeines">
       <h1><span>Aufgabe der App</span></h1>
 
-      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd), einem Teilprojekt des <a href="https://www.zdl.org/">ZDL</a>. Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wortgeschichten/#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
+      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wortgeschichten/#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
 
-      <p>Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#verschiedenes-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
+      <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#verschiedenes-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
 
       <ul>
         <li>die Suchfilter der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a>,</li>
@@ -54,6 +54,8 @@
 
         <li>die Cluster (in der Artikelübersicht und in den Wortgeschichten),</li>
 
+        <li>den <a href="https://www.zdl.org/wb/wortgeschichten/#Zeitstrahl">Zeitstrahl</a>,</li>
+
         <li>die Suchleiste in den Wortgeschichten und</li>
 
         <li>die automatischen Verknüpfungen mit WGd-Artikeln im Belegnavigator.</li>
@@ -61,22 +63,22 @@
 
       <h1><span>Überblick</span></h1>
 
-      <p id="allgemeines-ueberblick">Die App hat vier Ansichten, die über den Kopf des Hauptfensters angesteuert werden können: <a href="#xml"><i>XML</i></a>, <a href="#hinweise"><i>Hinweise</i></a>, <a href="#clusterei"><i>Clusterei</i></a> und <a href="#suche"><i>Suche</i></a>. Die Operationen und Anzeigen dieser Ansichten beruhen darauf, dass die App Zugriff auf einen lokalen <a href="#git-repository">Klon des Wortgeschichten-Repositorys</a> hat. Darum werden beim ersten Start auch der Ort und der Benutzername für dieses Repository erfragt. Ohne Repository im Hintergrund ist die App nicht lauffähig.</p>
+      <p id="allgemeines-ueberblick">Die App hat <b>vier Ansichten</b>, die über den Kopf des Hauptfensters angesteuert werden können: <a href="#xml"><i>XML</i></a>, <a href="#hinweise"><i>Hinweise</i></a>, <a href="#clusterei"><i>Clusterei</i></a> und <a href="#suche"><i>Suche</i></a>. Die Daten für die Operationen und Anzeigen dieser Ansichten speisen sich aus einem lokalen <a href="#git-einrichtung">Klon des Wortgeschichten-Repositorys</a>, der zunächst eingerichtet werden muss. Ohne Repository im Hintergrund ist die App nicht lauffähig. Darum werden beim ersten Start auch der Ort und der Benutzername für dieses Repository erfragt.</p>
 
-      <p>Alle <a href="#git-operationen">Git-Operationen</a>, die für die Benutzer*innen relevant sind, können ausnahmslos über die App ausgeführt werden. Sie lassen sich über den Kopf des Hauptfensters anstoßen.</p>
+      <p>Alle <a href="#git-befehle">Git-Operationen</a>, die für die Benutzer*innen relevant sind, können ausnahmslos über die App ausgeführt werden. Wie die Ansichten befinden sie sich im Kopf des Hauptfensters.</p>
 
-      <p>Um <i>QS</i> zu nutzen, muss niemand in der Lage sein, Commits mit Git zu erstellen. Man kann einfach neue XML-Dateien in den <a href="#git">Ordner <code>ignore</code></a> legen, auf <b><i>Update</i></b> drücken und die App frischt ihre Daten unter Berücksichtung der geänderten oder ergänzten Dateien auf. Die Analyse der XML-Dateien, auf deren Ergebnis alle vier Ansichten zurückgreifen, ist rechenintensiv, weswegen sie in einem Cache zwischengespeichert wird, auf den auch nach dem Neustart des Programms zurückgegriffen wird. XML-Dateien werden nur dann neu analysiert, wenn die App feststellt, dass sie verändert oder neu hinzugefügt wurden. Und nur dann, wenn einer dieser Fälle zutrifft, werden auch die <a href="#hinweise">Hinweise</a> zu den Dateien neu berechnet. Eine Ausnahme stellt hier die Installation einer neuen Programmversion dar. In diesem Fall werden der Cache zurückgesetzt, die XML-Dateien komplett neu eingelesen und alle Daten neu berechnet.</p>
+      <p id="allgemeines-update">Um <i>QS</i> zu nutzen, muss niemand in der Lage sein, Commits mit Git zu erstellen. Man kann einfach neue XML-Dateien in den <a href="#git-ignore">Ordner <code>ignore</code></a> legen, auf <b><i>Update</i></b> drücken (Tastaturkürzel <kbd>F5</kbd>) und die App frischt ihre Daten unter Berücksichtung der geänderten oder ergänzten Dateien auf. Die Analyse der XML-Dateien, auf deren Ergebnis alle vier Ansichten zurückgreifen, ist rechenintensiv, weswegen sie in einem Cache zwischengespeichert wird, auf den auch nach dem Neustart des Programms zurückgegriffen wird. XML-Dateien werden nur dann neu analysiert, wenn die App feststellt, dass sie verändert oder neu hinzugefügt wurden. Und nur dann, wenn einer dieser Fälle zutrifft, werden auch die <a href="#hinweise">Hinweise</a> zu den Dateien neu berechnet. Eine Ausnahme stellt hier die Installation einer neuen Programmversion dar. In diesem Fall werden der Cache zurückgesetzt, die XML-Dateien komplett neu eingelesen und alle Daten neu berechnet.</p>
 
       <h1><span>Filterleiste</span></h1>
 
-      <p id="allgemeines-filterleiste">Die Filterleiste kann über den Button im Fensterkopf oder auch mit dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>Umsch</kbd>&nbsp;+ <kbd>F</kbd> geöffnet <abbr title="beziehungsweise">bzw.</abbr> geschlossen werden. Der Inhalt der Filterleiste passte sich an die aktuelle Ansicht an. Filter, die für eine Ansicht nicht relevant sind, werden ausgeblendet.</p>
+      <p id="allgemeines-filterleiste">Die Filterleiste kann über den Button im Fensterkopf oder auch mit dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>Umsch</kbd>&nbsp;+ <kbd>F</kbd> geöffnet <abbr title="beziehungsweise">bzw.</abbr> geschlossen werden. Der Inhalt der Filterleiste passte sich an die aktuelle Ansicht an. Filter, die für eine Ansicht nicht relevant sind, werden ausgeblendet. Die Auswahl der Filter wird beim Beenden der App gespeichert und beim Start wiederhergestellt.</p>
 
-      <p>Die <b>Funktion <i>zurücksetzen</i></b> im Kopf der Filterleiste setzt zwar alle Werte auf ihren Standard zurück. Es werden aber nur diejenigen Werte geändert, die in der aktuellen Ansicht sichtbar sind.</p>
+      <p>Die <b>Funktion <i>zurücksetzen</i></b> im Kopf der Filterleiste setzt zwar alle Filter auf ihren Standardwert zurück. Es werden aber nur diejenigen Filter geändert, die in der aktuellen Ansicht sichtbar sind.</p>
 
       <p>Die Filter im Einzelnen:</p>
 
       <div class="item">
-        <p><i>Autor*innen</i><br>Es werden nur XML-Dateien der ausgewählten Autor*in berücksichtigt. Für die <a href="#clusterei">Clusterei</a> bedeutet dies, dass in den Funktionen <i>vergleichen</i> und <i>überprüfen</i> nur Cluster sichtbar sind, deren Zentrum mindestens ein Lemma hat, das von der ausgewählten Autor*in behandelt wurde. Die <a href="#clusterei-berechnung">Berechnung der Vorschau</a> bezieht immer die Lemmata aller XML-Dateien ein.</p>
+        <p><i>Autor*innen</i><br>Es werden nur XML-Dateien der ausgewählten Autor*in berücksichtigt. Für die <a href="#clusterei">Clusterei</a> bedeutet dies, dass in den Funktionen <i>vergleichen</i> und <i>überprüfen</i> nur Cluster sichtbar sind, deren Zentrum mindestens ein Lemma hat, das von der ausgewählten Autor*in behandelt wurde. Die <a href="#clusterei-berechnung">Berechnung der Vorschau</a> hingegen berücksichtigt immer alle Lemmata.</p>
       </div>
 
       <div class="item">
@@ -84,7 +86,7 @@
       </div>
 
       <div class="item">
-        <p><i>Dateistatus</i><br>Liegt eine XML-Datei im Ordner <code>ignore</code>, hat sie nur dann den Status <i>geändert</i>, wenn sie von einer Datei gleichen Namens im Ordner <code>articles</code> inhaltlich abweicht. <i>Neu</i> sind Dateien, die im Ordner <code>ignore</code> liegen, aber nicht im Ordner <code>articles</code> oder sogenannte <q lang="en">untracked files</q> im Ordner <code>articles</code>. Dies sind Dateien, die noch nie <a href="#git">committet</a> wurden.</p>
+        <p><i>Dateistatus</i><br>Liegt eine XML-Datei im Ordner <code>ignore</code>, hat sie nur dann den Status <i>geändert</i>, wenn sie von einer Datei gleichen Namens im Ordner <code>articles</code> inhaltlich abweicht. <i>Neu</i> sind Dateien, die im Ordner <code>ignore</code> liegen, aber nicht im Ordner <code>articles</code> oder sogenannte <q lang="en"><a href="#git-dateien">untracked files</a></q> im Ordner <code>articles</code>. Dies sind Dateien, die noch nie committet wurden, deren Existenz von Git wahrgenommen, die ansonsten aber ignoriert werden.</p>
       </div>
 
       <div class="item">
@@ -92,7 +94,7 @@
       </div>
 
       <div class="item">
-        <p><i>Hinweistypen</i><br>Diese Filterkategorie ist nur in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> sichtbar. Sie können die Hinweise nach Typen filtern. Die einzelnen Hinweise wurden nach Kategorien gruppiert:</p>
+        <p><i>Hinweistypen</i><br>Diese Filterkategorie ist nur in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> sichtbar. Sie können die Hinweise nach Typen filtern. Die Hinweistypen wurden folgendermaßen gruppiert:</p>
 
         <ul>
           <li><i>Verweise: Fehler</i><br
@@ -137,29 +139,310 @@
 
       <p>Manuell ein- oder ausgeblendet werden kann die Leiste jederzeit über das Rechtsklickmenü oder das Icon <img src="../img/win/sidebar.svg" width="30" height="30" alt=""> im Textfeld der <a href="#allgemeines-kopfleiste">Kopfleiste</a>.</p>
 
-      <p>Sowohl in der Such- als auch in der Hinweiseansicht enthält die Leiste eine <b>Dateiliste</b>, um schnell zu den entsprechenden Treffern navigieren zu können. Die Reihenfolge der Dateien richtet sich nach den Sortiereinstellungen in der Kopfleiste (Hinweise) <abbr title="beziehungsweise">bzw.</abbr> der Gewichtung der Dateien (Suche).</p>
+      <p>Sowohl in der Such- als auch in der Hinweiseansicht enthält die Leiste eine <b>Dateiliste</b>, um schnell zu den entsprechenden Treffern navigieren zu können. Die Reihenfolge der Dateien richtet sich nach den Sortiereinstellungen in der Kopfleiste (Hinweise) <abbr title="beziehungsweise">bzw.</abbr> der Gewichtung nach Anzahl der Treffer (Suche).</p>
 
       <p>In der Suchansicht werden zusätzlich die einzelnen Teile des Suchausdrucks farbkodiert eingeblendet. Diese sind klicksensitiv. Mit ihnen kann man zum nächsten passenden Treffer navigieren.</p>
 
       <h1><span>Kopfleiste</span></h1>
 
-      <p id="allgemeines-kopfleiste"></p>
+      <p id="allgemeines-kopfleiste">Die Kopfleiste ist die weiße, immer sichtbare Leiste im Hauptfenster. Sie ist je nach Ansicht unterschiedlich gefüllt.</p>
+
+      <h2><span><i>XML</i> und <i>Hinweise</i></span></h2>
+
+      <p id="allgemeines-kopfleisteXMLHinweise">Alle in dieser Konfiguration sichtbaren Elemente sind Optionen. Ihr Status wird beim Beenden der App gesichert und beim Start wiederhergestellt.</p>
+
+      <p>Das <b>Textfeld</b> am rechten Rand ist ein Pfad-Filter. Mit seiner Hilfe kann die Anzeige auf bestimmte XML-Dateien beschränkt werden. Zum Pfad gehören die Ordner <code>articles</code> <abbr title="beziehungsweise">bzw.</abbr> <code>ignore</code> und der Name der XML-Datei. Am rechten Rand des Textfeldes finden sich je nachdem ein oder zwei Icons:</p>
+
+      <p class="indent-icon"><img src="../img/win/clear-text.svg" width="30" height="30" alt="">Text im Textfeld löschen</p>
+
+      <p class="indent-icon"><img src="../img/win/sidebar.svg" width="30" height="30" alt="">Ergebnisleiste öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen (nur in der Ansicht <i>Hinweise</i>)</p>
+
+      <p>Die anderen Icons dienen zur Sortierung der XML-Dateien:</p>
+
+      <p class="indent-icon"><img src="../img/win/sort-ascending.svg" width="30" height="30" alt="">Sortierrichtung der Dateien (auf- oder absteigend)</p>
+
+      <p class="indent-icon"><img src="../img/win/open-dir.svg" width="30" height="30" alt="">Dateien im Ordner <code>ignore</code> oben in der Liste anzeigen. Intern werden diese Dateien zwar auch je nach Einstellung auf- oder absteigend sortiert, sie werden bei aktiviertem Icon aber immer vor allen anderen Dateien angezeigt.</p>
+
+      <p class="indent-icon"><img src="../img/win/alpha.svg" width="30" height="30" alt="">Alphanumerische Sortierung nach Namen der XML-Dateien</p>
+
+      <p class="indent-icon"><img src="../img/win/time.svg" width="30" height="30" alt="">Sortierung nach Datum der Erstpublikation</p>
+
+      <h2><span><i>Clusterei</i></span></h2>
+
+      <p id="allgemeines-kopfleisteClusterei">Mithilfe der <b>ersten drei Icons</b> lassen sich die drei Ansichten der Clusterei ansteuern:</p>
+
+      <p class="indent-icon"><img src="../img/win/preferences.svg" width="30" height="30" alt="">Ansicht zum Modulieren der Cluster</p>
+
+      <p class="indent-icon"><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">Ansicht zum Vergleichen einander ähnlicher Cluster</p>
+
+      <p class="indent-icon"><img src="../img/win/clusters.svg" width="30" height="30" alt="">Ansicht zum Überprüfen der Cluster</p>
+
+      <p>Am rechten Rand werden die <b>aktiven Filter</b> angezeigt, also das Themenfeld und <abbr title="gegebenenfalls">ggf.</abbr> die Initialen der ausgewählten Autor*in.</p>
+
+      <p>Davor befinden sich noch zwei Icons:</p>
+
+      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Vorschauansicht umschalten. Ist das Icon aktiv wird es deaktiviert; ist es nicht aktiv erscheint ein <a href="#clusterei-vorschau">Konfigurationsfenster</a>.</p>
+
+      <p class="indent-icon"><img src="../img/win/jump.svg" width="30" height="30" alt="">Zum nächsten neuen oder geänderten Cluster springen. Dieses Icon ist nur in der Überprüfen-Ansicht sichtbar.</p>
+
+      <h2><span><i>Suche</i></span></h2>
+
+      <p id="allgemeines-kopfleisteSuche">Die Suche lässt sich über den Button am rechten Rand oder durch <kbd>Enter</kbd> im <b>Suchfeld</b> anstoßen. Die Icons am rechten Rand des Suchfelds haben diese Funktionen:</p>
+
+      <p class="indent-icon"><img src="../img/win/clear-text.svg" width="30" height="30" alt="">Text im Textfeld löschen</p>
+
+      <p class="indent-icon"><img src="../img/win/preferences.svg" width="30" height="30" alt="">Erweiterte Sucheinstellungen öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen</p>
+
+      <p class="indent-icon"><img src="../img/win/sidebar.svg" width="30" height="30" alt="">Ergebnisleiste öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen</p>
+
+      <p class="indent-icon"><img src="../img/win/help.svg" width="30" height="30" alt="">Hilfe zur Suchsyntax. Ein ausführlicher Tooltip wird angezeigt, wenn die Maus über dem Icon schwebt oder es (mithilfe von <kbd>Tab</kbd>) fokussiert wird.</p>
     </section>
 
     <!-- GIT -->
     <section id="git">
-      <p id="git-repository"><mark>TODO Einrichtung Reposiory</mark></p>
+      <h1><span>Allgemeines</span></h1>
 
-      <p id="git-operationen"><mark>TODO Git-Operationen beschreiben</mark></p>
+      <p id="git-allgemeines"><b>Git</b> ist ein verteiltes Versionskontrollsystem, das 2005 von Linus Torvalds, dem <q>Erfinder</q> von Linux, entwickelt wurde. Geschrieben wurde es für die Quellcodeverwaltung des Linux-Kernels. Es soll sukzessive Änderungen an Dateien nachvollziehbar machen und es jederzeit ermöglichen, ältere Versionen dieser Dateien wiederherzustellen.</p>
 
-      <p><mark>irgendwo kurz erklären, was ein Commit ist</mark></p>
+      <p>Git ist ein <b>verteiltes Versionskontrollsystem</b>. Im Gegensatz zu einem zentralen System gibt es keine Instanz, von der man abhängig oder an die man gebunden ist. Es ist vielmehr so, dass jede Benutzer*in eines Projekts einen lokalen Klon des kompletten Quelltexts dieses Projekts inklusive seiner Geschichte auf dem eigenen Rechner speichert. Die einzelnen, unabhängig voneinander arbeitenden Instanzen von Git können sich dann über einen Austauschknoten miteinander koordinieren. Im Falle von WGd ist dieser Knoten ein Klon des Repositorys, der bei <a href="https://git.zdl.org/">ZDL Git</a> liegt. Der Austausch findet über sogenannte Pushes und Pulls statt. Für die WGd-Miterarbeiter*innen ist in der Regel nur der <a href="#git-pull">Befehl <i>pull</i></a> interessant, für den es eine Funktion im Kopf des Hauptfensters von <i>QS</i> gibt.</p>
+
+      <p>Git speichert die Versionsgeschichte der verwalteten Dateien in einem sogenannten <b>Repository</b>. Ein Repository ist nichts anderes als eine Datenbank, in der die Zustände der verwalteten Dateien aufbewahrt und aus der die unterschiedlichen Zustände der Dateien bei Bedarf wieder abgerufen werden können. Für Benutzer*innen gibt es eine einfache, jedermann zugänglich Bedienoberfläche: Bei ihr handelt es sich um nichts anderes als einen ganz gewöhnlichen Ordner mit Dateien, der an einem selbstgewählten Ort auf dem eigenen Betriebssystem liegt. Wenn man tiefer in die Materie einsteigt, muss man zwar Textbefehle tippen können, das ist für die Benutzung von <i>QS</i> aber ganz und gar unnötig.</p>
+
+      <p id="git-allgemeinesBranch">Wie eigentlich jedes Versionskontrollsystem kennt auch Git sogenannte <b>Branches</b>. Branches sind nichts anderes als Abzweigungen in der Codebasis. Mithilfe von Branches kann man mehrere Features einer Software parallel entwickeln. Für WGd sind Branches deswegen wichtig, weil wir auf diese Weise das Repository in publizierte und noch nicht publizierte Artikel auftrennen können.</p>
+
+      <p id="git-allgemeinesBranchesWGd">Für die Mitarbeiter*innen von WGd sind darum <b>zwei Branches</b> relevant: <q>master</q> und <q>preprint</q>. Die XML-Dateien, die unter <q>master</q> liegen, sind publiziert. Die Inhalte dieser Dateien werden in den <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichten auf zdl.org</a> angezeigt. Der Branch <q>preprint</q> hingegen ist für die Vorbereitung von Publikationen gedacht. Die XML-Dateien neuer Artikel werden zunächste nach <q>preprint</q> geladen und erst später, wenn <q>ein Imprimatur erteilt wurde</q>, nach <q>master</q> gemergt, also in den anderen Branch übertragen. Steht keine Publikation an, sind die Inhalte von <q>master</q> und <q>preprint</q> vollkommen identisch. (Dafür sorgen die Mitarbeiter*innen, die sich genauer mit Git auskennen.)</p>
+
+      <p>Es ist nie so, dass in einem Branch nur die Dateien der einen und im anderen nur die Dateien der anderen Kategorie liegen. Die <b>Dateien der Branches</b> <q>master</q> und <q>preprint</q> teilen immer eine gemeinsame Basis. Und diese Basis ist der Punkt, an dem die Abzweigung im Code vorgenommen wurde. Darum finden Sie in <q>preprint</q> auch bereits publizierte XML-Dateien. Aber Vorsicht! Diese können unter Umständen inhaltlich von denen in <q>master</q> abweichen, was immer dann passiert, wenn eine Mitarbeiterin nach dem Erstellen der Abzweigung an den Dateien in <q>master</q> Änderungen vorgenommen hat. Auf denselben Stand gebracht werden die beiden Branches erst dann, wenn <q>preprint</q> nach <q>master</q> gemergt wird, wenn die beiden Branches also miteinander verschmolzen werden. Dies passiert – normalerweise – dann, wenn Artikel publiziert werden.</p>
+
+      <p>Mit dem <a href="#git-checkout">Befehl <i>checkout</i></a> können Sie jederzeit den <b>Branch wechseln</b>. Git sorgt dann automatisch dafür, dass die Dateien im <a href="#git-dateien">Ordner Ihres Repositorys</a> an die im jeweiligen Branch zu findende Version angepassst werden. Dies kann unter Umständen auch bedeuten, dass Dateien neu erscheinen oder verschwinden.</p>
+
+      <h1><span>Git installieren</span></h1>
+
+      <p id="git-installation"><i>Windows:</i> Installationsmedien kann man von der <a href="https://git-scm.com/download/win">Git-Webseite</a> herunterladen.</p>
+
+      <p><i>macOS:</i> Git ist wahrscheinlich schon installiert. Ob dem wirklich der Fall ist, kann man überprüfen, indem man das Programm <i>Terminal</i> öffnet und diesen Befehl ausführt: <code>git --version</code>. Wird eine Versionsnummer angezeigt, ist git installiert. Ist Git nicht installiert, muss man die <i>Xcode Command Line Tools</i> installieren. Dazu müssen Sie in <i>Terminal</i> diesen Code ausführen: <code>xcode-select --install</code>.</p>
+
+      <p><i>Linux:</i> Git ist wahrscheinlich schon installiert. Wenn nicht führen Sie <code>sudo apt-get git</code> aus (oder den für Ihr System passenden Code). Auch hier kann natürlich mit <code>git --version</code> überprüft werden, ob Git bereits installiert ist.</p>
+
+      <h1><span>Respository einrichten</span></h1>
+
+
+      <ol id="git-einrichtung">
+        <li>Sie benötigen einen Zugang zu <a href="https://git.zdl.org/">ZDL Git</a>.</li>
+
+        <li><i>Git Bash</i> (unter Windows) oder <i>Terminal</i> (unter macOS) an der Stelle öffnen, an der das Repository erstellt werden soll.</li>
+
+        <li>
+          <p>Wortgeschichten-Repository klonen:</p>
+          <pre>git clone https://git.zdl.org/zdl/wortgeschichten.git</pre>
+        </li>
+
+        <li>
+          <p>In den Repository-Ordner wechseln:</p>
+          <pre>cd wortgeschichten</pre>
+        </li>
+
+        <li>
+          <p>Git konfigurieren. Dafür die folgenden Befehle nacheinander ausführen; den gefetteten Text entsprechend anpassen:</p>
+          <pre class="no-highlight">git config user.name "<b>Petra Pan</b>"
+git config user.email <b>ppan@gwdg.de</b>
+git config pull.rebase false
+git config credential.helper cache
+git config core.editor nano</pre>
+        </li>
+
+        <li>
+          <p><strong>Nur unter Windows:</strong></p>
+          <pre>git config core.autocrlf true</pre>
+        </li>
+
+        <li>
+          <p>Preprint-Branch einrichten:</p>
+          <pre>git switch --track origin/preprint</pre>
+          <p>Sollte <code>switch</code> in Ihrer Git-Version nicht zur Verfügung stehen, geht auch dieser Befehl:</p>
+          <pre>git checkout -b preprint --track origin/preprint</pre>
+        </li>
+
+        <li>
+          <p>Ordner <code>ignore</code> erzeugen:</p>
+          <pre>mkdir ignore</pre>
+        </li>
+
+        <li>
+          <p>Ordner <code>ignore</code> vor Git verstecken:</p>
+          <p>Hierzu müssen Sie folgende Konfigurationsdatei öffnen: <code>.git/info/exclude</code>.</p>
+          <p>Am Ende der Datei, hinter der letzten Zeile, die mit <code>#</code> beginnt, ergänzen Sie diese Zeile:</p>
+          <pre>/ignore</pre>
+        </li>
+
+        <li>
+          <p>Status anzeigen lassen:</p>
+          <pre>git status</pre>
+          <p>Der Befehl sollte den folgenden Text auswerfen. Ist dem der Fall, hat alles geklappt.</p>
+          <pre>On branch preprint
+Your branch is up to date with 'origin/preprint'.
+
+nothing to commit, working tree clean</pre>
+        </li>
+      </ol>
+
+      <h1><span>Dateien und Ordner</span></h1>
+
+      <p id="git-dateien">Das Repository befindet sich nach der <a href="#git-einrichtung">Einrichtung</a> im Ordner <code>wortgeschichten</code>. Sie können den Ordner jederzeit umbenennen und verschieben. Dafür sind keine Git-Befehle nötig. Die Konfiguration von Git wird in dem versteckten Ordner <code>.git</code> gespeichert. Umbenennen und/oder Verschieben des übergeordneten Ordners tangiert die Konfiguration nicht.</p>
+
+      <p>Das Repository besteht aus folgenden Dateien und Ordnern:</p>
+
+      <ul>
+        <li><code>.git</code> versteckter Ordner mit der Git-Konfiguration und dem Repository im engeren Sinne</li>
+
+        <li><code>articles</code> Ordner mit XML-Dateien</li>
+
+        <li><code>resources</code> Datendateien und Abbildungen
+          <ul>
+            <li><code>resources/images</code> Abbildungen</li>
+
+            <li><code>resources/images/qrc</code> QR-Codes für den Footer der Wortgeschichten</li>
+
+            <li><code>resources/images/thumbs</code> Vorschaubilder für JPEG-Abbildungen</li>
+
+            <li><code>resources/Artikel.json</code> Datendatei mit <a href="#allgemeines-artikelJSON">Artikeldaten</a></li>
+
+            <li><code>resources/Quiz.json</code> Datendatei fürs <a href="https://www.zdl.org/wb/wgd/Quiz">Wort-Quiz</a></li>
+
+            <li><code>resources/Register.json</code> Datendatei mit <a href="https://www.zdl.org/wb/wortgeschichten/#Register">Registerwörtern</a></li>
+
+            <li><code>resources/Terminologie.json</code> Datendatei mit den Texten des <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologischen Kerninventars</a></li>
+          </ul>
+        </li>
+
+        <li><code>share</code> Ordner mit Schema, Musterdateien und Literaturliste
+          <ul>
+            <li><code>share/rnc</code> das RelaxNG-Schema für die XML-Dateien</li>
+
+            <li><code>share/tei</code> Musterdateien im WGd-XML-Format und in <a href="https://tei-c.org/">TEI</a></li>
+
+            <li><code>share/Literaturliste.xml</code> XML-Dateien mit allen Titeln aus der Literaturdatenbank von <a href="https://github.com/WortgeschichteDigital/ZettelsTraum">Zettel’s Traum</a></li>
+          </ul>
+        </li>
+
+        <li><code>README.md</code> Lies-mich-Datei mit Infos zum Repository</li>
+      </ul>
+
+      <p>Der Ordner <code>ignore</code> gehört im eigentlichen Sinne nicht zum Repository, weil seine Inhalte von Git nicht beobachtet und somit auch nicht verwaltet werden.</p>
+
+      <p id="git-beobachtet">Die Ordner <code>articles</code>, <code>resources</code>, <code>share</code> und die Datei <code>README.md</code> hingegen werden von Git beobachtet. Diese Ordner und die in ihnen enthaltenen Dateien können mit dem <a href="#git-restore">Befehl <i>restore</i></a> zurückgesetzt werden. Denn Git kümmert sich um die bereits bekannten Dateien in diesen Ordnern. Außerdem werden die Ordner von Git, wie gesagt, beobachtet: Legt man neue Dateien in einen der beobachteten Ordner oder direkt in den Ordner <code>wortgeschichten</code>, wird Git dies registrieren, sich um diese Dateien erst einmal aber nicht weiter kümmern. Wenn Git eine Datei aber bereits bekannt ist, macht es einen durch den <a href="#git-status">Befehl <i>status</i></a> <abbr title="ggf.">gegebenenfalls</abbr> darauf aufmerksam, dass sie geändert wurde.</p>
+
+      <p>Wurde <abbr title="beispieslweise">bspw.</abbr> die Datei <i>Abgehaengter.xml</i> geändert, erscheint dieser Status-Text:</p>
+
+      <pre lang="en" class="no-highlight">On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        <b class="red">modified:   articles/Abgehaengter.xml</b>
+
+no changes added to commit (use "git add" and/or "git commit -a")</pre>
+
+      <p>Wenn Sie in einem der <a href="#git-beobachtet">von Git beobachteten Ordner</a> eine neue, Git noch unbekannte Datei ablegen, handelt es sich dabei um eine sogenannte <q lang="en">untracked file</q>. Git registriert zwar, dass es eine neue Datei gibt, macht mit dieser aber erst einmal nichts. Darum werden <q lang="en">untracked files</q> durch den <a href="#git-restore">Befehl <i>restore</i></a> auch nicht zurückgesetzt – Git sieht diese Dateien, fühlt sich für sie aber (noch) nicht zuständig.</p>
+
+      <p>Im folgenden Fall wurde im Ordner <code>articles</code> die neue Datei <i>Handtasche.xml</i> erstellt:</p>
+
+      <pre lang="en" class="no-highlight">On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        <b class="red">articles/Handtasche.xml</b>
+
+nothing added to commit but untracked files present (use "git add" to track)</pre>
+
+      <p id="git-ignore"><b>Was heißt das alles für Sie in der Praxis?</b> Ganz einfach: Arbeiten Sie niemals in den von Git beobachteten Ordnern! Wenn Sie eine XML-Datei bearbeiten möchten, kopieren Sie diese und legen Sie die Kopie im Ordner <code>ignore</code> ab. Denn dieser Ordner und seine Inhalte werden von Git <em>nicht</em> beobachtet. Da der Ordner <code>ignore</code> aber im Repository relativ dieselbe Position wie der Ordner <code>articles</code> hat, erreichen die dort befindlichen XML-Dateien trotzdem das Schema, das im Ordner <code>share/rnc</code> liegt. So kann das XML dieser Dateien beim Bearbeiten automatisch validiert werden. Für den Ordner <code>ignore</code> gilt übrigens dasselbe wie für die <q lang="en">untracked files</q>: Der <a href="#git-restore">Befehl <i>restore</i></a> entfaltet in ihm keine Wirkung.</p>
+
+      <h1><span>Befehle</span></h1>
+
+      <p id="git-befehle">Für die Mitarbeiter*innen von WGd sind im Arbeitsalltag nur <b>vier Git-Befehle</b> relevant:</p>
+
+      <ul>
+        <li><i>checkout</i> (Wechseln des Branches),</li>
+
+        <li><i>status</i> (Anzeige des Zustands, in dem sich das Repository befindet),</li>
+
+        <li><i>pull</i> (neuste Dateiversionen herunterladen) und</li>
+
+        <li><i>restore</i> (Repository zurücksetzen).</li>
+      </ul>
+
+      <p>Die Befehle lassen sich alle über die klicksensitiven Texte im Kopf des Hauptfensters bedienen. Nach dem Anstoßen der Befehle <i>checkout</i>, <i>pull</i> und <i>restore</i> stößt die App automatisch ein <a href="#allgemeines-update">Update</a> an, wodurch die Daten, mit denen <i>QS</i> arbeitet, auf dem neusten Stand gebracht werden.</p>
+
+      <div class="item">
+        <p id="git-checkout"><i>Befehl <q>checkout</q></i><br>Der Befehl dient zum Wechseln des Branches. In der Anzeige steht in diesem Fall nicht der Name des Befehls, sondern der Name des Branches, in dem sich das Repository gerade befindet: <q>master</q> oder <q>preprint</q>. Durch Klick auf den Text wird in den anderen Branch, also den anderen <a href="#git-allgemeinesBranch">Zweig im Code</a> gewechselt.</p>
+
+        <p><b>Welchen Branch soll ich nutzen?</b> Faustregel: Für das Bearbeiten neuer, noch nicht publizierter XML-Dateien, sollten Sie immer <q>preprint</q> nutzen. Für das älterer, bereits publizierter XML-Dateien hingegen <q>master</q>.</p>
+      </div>
+
+      <div class="item">
+        <p id="git-status"><i>Befehl <q>status</q></i><br>Der Befehl öffnet ein Meldungsfenster, das den aktuellen Status des Repositorys anzeigt. Mitarbeiter*innen brauchen diesen Befehl normalerweise nicht. Benötigt man aber Hilfe, weil irgendetwas mit dem Repository nicht zu stimmen scheint, ist es gut, den im Meldungsfenster angezeigten Text zu kopieren und an eine kompetente Mitarbeiter*in zu schicken.</p>
+
+        <p>Endet die Statusanzeige mit der Zeile <q lang="en">nothing to commit, working tree clean</q>, ist alles in Ordnung.</p>
+      </div>
+
+      <div class="item">
+        <p id="git-pull"><i>Befehl <q>pull</q></i><br>Mit diesem Befehl kann man sich die neusten Versionen der XML-Dateien von WGd herunterladen. Genauer gesagt werden beim Pullen vom zentralen Austauschknoten sogenannte Commits heruntergeladen. Diese Commits sind kleine Päckchen, die Änderungen am Quelltext des Projekts speichern. Konkret: In ihnen stehen Änderungen, die irgendjemand an einer XML-Datei vorgenommen hat, oder sogar komplette, neu hinzugefügte Dateien. Um den eigenen Klon des Repositorys, sprich: den Ordner mit XML-Dateien auf dem eigenen Computer immer auf dem neusten Stand zu halten, sollten Sie öfter mal einen Pull ausführen.</p>
+
+        <p>Das RelaxNG-Schema, das die XML-Dateien auf Validität überprüft, liegt auch im Repository (im Ordner <code>share/rnc</code>). Beim Pullen werden nicht nur die XML-Dateien, sondern auch das Schema automatisch auf den neusten Stand gebracht. Vor dem Bearbeiten von XML-Dateien sollten Sie darum <em>immer</em> pullen, weil Sie sonst Gefahr laufen, nicht-valide Dateien zu produzieren.</p>
+
+        <p>Führen Sie den Pull-Befehl aus, erscheint ein Dialog, der Ihr Passwort für das <a href="https://git.zdl.org/">ZDL Git</a> erfragt. Das Passwort wird zwischengespeichert, sodass Sie es nur einmal pro Programmsession eingeben müssen. Beim Schließen der App wird es allerdings gelöscht, aus Sicherheitsgründen.</p>
+      </div>
+
+      <div class="item">
+        <p id="git-restore"><i>Befehl <q>restore</q></i><br>Mit diesem Befehl können Sie das Repository zurücksetzen. Zurücksetzen bedeutet, dass alle Dateien auf den Stand des jüngsten Commits gebracht werden. Das heißt nichts anderes als dies: Haben Sie Änderungen an XML-Dateien vorgenommen und setzen sie das Repository zurück, <strong class="red">gehen die Änderungen unwiederbringlich verloren</strong>. Dabei werden Dateien im Ordner <code>ignore</code> allerdings <strong class="red">niemals</strong> angetastet. Diese sind vor den Konsequenzen von <i>restore</i> in jedem Fall geschützt.</p>
+
+        <p><b>Warum gibt es diese Funktion?</b> Wenn Sie eine XML-Datei bearbeiten möchten, sieht der Workflow normalerweise so aus: Sie kopieren die Datei aus dem Ordner <code>articles</code> und legen eine Kopie im Ordner <code>ignore</code> ab. Diese Kopie im Ordner <code>ignore</code> öffnen Sie dann zum Bearbeiten. Sind Sie mit der Arbeit fertig, reichen Sie die Kopie an eine kompetente Mitarbeiter*in weiter, die die Änderungen committet und pusht, sodass sie allen Mitarbeiter*innen nach einem <a href="#git-pull">Pull</a> zur Verfügung stehen.</p>
+
+        <p>Wenn Sie die XML-Datei aber aus Versehen nicht etwa kopieren, sondern ausschneiden oder verschieben, entfernen Sie dadurch die Originaldatei aus dem Ordner <code>articles</code>. Da <code>articles</code> ein von Git beobachteter Ordner ist, nimmt Git das Fehlen der Datei als Änderung am Repository wahr und Sie bekommen früher oder später Probleme mit dem Pullen, weil sich der Status Ihres Repositorys geändert hat. Kopieren Sie die nunmehr fehlende Datei einfach wieder zurück, ist diese von Ihnen vielleicht schon geändert worden, was die Lage nicht besser macht: Git wird sie immer noch als verändert registrieren und der Pull könnte zum Problem werden. Die einfachste Lösung ist in so einem Fall ein Restore. Durch den Befehl wird die fehlende Datei von Git im Ordner <code>articles</code> neu erzeugt, und zwar mit denselben Inhalten, die sie zuvor auch hatte. Aber Vorsicht! Haben Sie eine Datei vor dem Bearbeiten nicht verschoben, sondern direkt im Ordner <code>articles</code> bearbeitet, gehen die Änderungen an dieser Datei durch Klick auf <i>restore</i> unwiederbringlich verloren!</p>
+
+        <p>Weil <i>restore</i> gravierende Folgen haben kann, fragt <i>QS</i> vor dem Ausführen des Befehls immer noch einmal nach, ob Sie ihn wirklich aufrufen möchten.</p>
+      </div>
     </section>
 
     <!-- XML -->
     <section id="xml">
+      <h1><span>Aufbau der Ansicht</span></h1>
+
+      <p id="xml-aufbau">Bei dieser Ansicht handelt es sich um nichts anderes als eine Liste der im Repository befindlichen XML-Dateien. Eingelesen werden sowohl die <a href="#git-beobachtet">Git bereits bekannten Dateien</a> aus dem Ordner <code>articles</code> als auch die XML-Dateien aus dem Ordner <code>ignore</code>. Neue XML-Dateien müssen also nicht erst durch einen Commit in das Repository eingespeist werden. Es genügt, wenn Sie diese im Ordner <code>ignore</code> ablegen. <i>QS</i> kann mit diesen Dateien all das machen, was es auch mit Dateien aus <code>articles</code> machen kann.</p>
+
+      <p>Sie können die Liste nach drei Kategorein <a href="#allgemeines-filterleiste">filtern</a>: <i>Autor*in</i>, <i>Themenfeld</i> und <i>Dateistatus</i>. Zusätzlich können sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> noch den Pfad-Filter nutzen.</p>
+
+      <p>Für jede Datei stehen Ihnen <b>drei Operationen</b> zur Verfügung:</p>
+
+      <ul>
+        <li>Ein <b>Klick auf den Dateinamen</b> öffnet die Datei im <a href="#xml-vorschaufenster">Vorschaufenster</a>;</li>
+
+        <li>mit dem Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> können Sie sich das Kurz-Gefasst der Datei anzeigen lassen, und zwar in der Form, in der es in den Suchergebnissen von <a href="https://www.zdl.org/">zdl.org</a> erscheint;</li>
+
+        <li>mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> können Sie die Datei im Standard-XML-Editor Ihres Betriebssystems öffnen.</li>
+      </ul>
+
       <h1><span>Vorschaufenster</span></h1>
 
-      <p id="xml-vorschaufenster"></p>
+      <p id="xml-vorschaufenster">Das Vorschaufenster ruft die <a href="https://www.zdl.org/wb/wortgeschichten/pv">XML-Vorschaufunktion von zdl.org</a> auf, die Sie auch im Browser nutzen können. Was im Browser viele einzelne Handgriffe erfordert, geht in <i>QS</i> freilich automatisch: Die App holt sich den XML-Code der gewünschen Datei von der Festplatte, und schickt ihn direkt an die XML-Vorschau auf zdl.org, wo er dann nach HTML transformiert wird. Sie können im Vorschaufenster beliebig navigieren, also auch im Artikel verlinkte Webseiten außerhalb von zdl.org aufrufen.</p>
+
+      <p>Es können beliebig viele Vorschaufenster geöffnet werden. Klicken Sie allerdings auf eine Datei, für die bereits ein Vorschaufenster existiert, wird kein neues Fenster erzeugt, sondern das bestehende genutzt.</p>
+
+      <p>Im Kopf des Vorschaufensters gibt es mehrere Icons, die für die verschiedenen <b>Funktionen</b> des Fensters stehen:</p>
+
+      <p class="indent-icon"><img src="../img/win/view-refresh.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>F5</kbd>) können Sie die Vorschauansicht neu aufbauen. Dabei wird der XML-Code der Datei erneut von Ihrer Festplatte eingelesen und an zdl.org geschickt. Außerdem wird im Hauptfenster der App die Funktion <a href="#allgemeines-update">Update</a> angestoßen. Die Idee hinter dieser Funktion ist, dass Sie parallel das Vorschaufenster und die zugehörige XML-Datei offen haben. Nehmen Sie Änderungen an der XML-Datei vor, müssen Sie im Vorschaufenster nur noch das Update-Icon klicken und Sie sehen den Artikel in just der Fassung, an der Sie gerade arbeiten. Außerdem werden <span lang="fr">en passant</span> die Daten im Hauptfenster auf dem neusten Stand gehalten.</p>
+
+      <p class="indent-icon"><img src="../img/win/window-new.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>N</kbd>) können Sie dieselbe Datei in einem weiteren Vorschaufenster öffnen. Dies bietet sich immer dann an, wenn Sie <abbr title="zum Beispiel">z.&nbsp;B.</abbr> in einem Vorschaufenster den Belegtext sehen und im anderen die Belegquelle ansteuern möchten. Mit dem Icon lassen sich beliebig viele Vorschaufenster mit ein und derselben XML-Datei öffnen.</p>
+
+      <p>Die anderen Icons dienen zur Navigation:</p>
+
+      <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>Home</kbd>) kehren Sie zur XML-Datei zurück. Das Icon führt allerdings <em>kein</em> Update durch, wodurch es sich von der Funktion <img src="../img/win/view-refresh.svg" width="30" height="30" alt=""> unterscheidet.</p>
+
+      <p class="indent-icon"><img src="../img/win/nav-back.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>←</kbd>) navogieren zur vorherigen Seite</p>
+
+      <p class="indent-icon"><img src="../img/win/nav-forward.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>→</kbd>) navigieren zur nächsten Seite</p>
     </section>
 
     <!-- HINTS -->
@@ -186,7 +469,7 @@
 
       <p>Funktion der <b>Icons unterhalb der</b> <b class="blue">Zeilenangabe</b>:</p>
 
-      <p class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu markieren, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
+      <p id="hinweise-markierungen" class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu markieren, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
 
       <p class="indent-icon"><img src="../img/win/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein. Da die Zeilennummer aber dynamisch ist (weil davor jederzeit Zeilen hinzugefügt oder entfernt werden könnten), kann diese nicht für die Berechnung der Indentifizierung mit herangezogen werden.</p>
 
@@ -577,39 +860,265 @@
 
     <!-- CLUSTERS -->
     <section id="clusterei">
-      <p id="clusterei-vorschau"><mark>TODO Vorschau</mark></p>
+      <h1><span>Aufbau der Ansicht</span></h1>
 
-      <p id="clusterei-vorschauOptionModulierung"><mark>TODO Option: Modulierung mit einbeziehen</mark></p>
+      <p id="clusterei-aufbau">Mithilfe der Clusterei können Sie die WGd-Verweiscluster verwalten. Die Ansicht besteht aus drei Sektionen, die über Icons in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> angesteuert werden:</p>
 
-      <p id="clusterei-vorschauOptionClusterVerweise"><mark>TODO Option: Cluster-Verweise ignorieren</mark></p>
+      <ul>
+        <li><img src="../img/win/preferences.svg" width="30" height="30" alt="">In der <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> können Sie Clusterzentren modulieren, also ermitteln, welche Verlinkungen in welchen XML-Dateien ergänzt werden müssen, um ein gewünschtes Clusterzentrum zu erhalten.</li>
+
+        <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-vergleichen">Sektion <i>Vergleichen</i></a> werden einander ähnliche Cluster aufgeführt. Die XML-Dateien, die zu den Lemmata der Clusterzentren gehören, können von dort mit einem Klick zur Modulieren-Sektion hinzugefügt werden.</li>
+
+        <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> werden alle Cluster eines Themenfeldes so dargestellt wie in der <a href="https://www.zdl.org/wb/wortgeschichten/">WGd-Artikelübersicht auf zdl.org</a>. Im Unterschied zur Online-Übersicht kann man hier jedoch leicht sehen, welche Cluster sich geändert haben und in welchen neue Lemmata hinzugekommen sind.</li>
+      </ul>
+
+      <h2><span>Sektion Modulieren</span></h2>
+
+      <p id="clusterei-modulieren">Diese Sektion ist auch ohne <a href="#allgemeines-filterleiste">Filter</a> voll nutzbar. Werden Filter ausgewählt, beziehen sich diese nur auf das Suchformular. Die zum Suchwort passenden Ergebnisse werden dann nach Autor*in und/oder Themenfeld gefiltert.</p>
+
+      <p>Das <b>Grundprinzip</b> eines jeden Clusterzentrums ist, dass die in ihm stehenden Hauptlemmata eine rekursive Beziehung zueinander haben: Jedes Lemma muss auf jedes andere Lemma im selben Zentrum verweisen. Nur wenn dies der Fall ist, bildet sich ein Clusterzentrum.</p>
+
+      <p>Wenn Sie ein <b>Zentrum modulieren</b> wollen, gehen Sie wie folgt vor:</p>
+
+      <ol>
+        <li>Über das Suchfeld <b>suchen Sie die Lemmata</b>, die dem Zentrum angehören sollen.</li>
+
+        <li>Klicken Sie auf die passenden Vorschläge in der <b>Trefferliste</b>.</li>
+
+        <li>
+          <p>Unter der Vorschau des Zentrums sammeln sich nun nach und nach <b>Artikelblöcke</b> an. Denn das, was Sie zur Modulieren-Ansicht hinzufügen, sind nicht etwa Lemmata, sondern XML-Dateien. Alle in ihnen behandelten Hauptlemmata werden für die Modulierung herangezogen.</p>
+
+          <p>(Nebenlemmata spielen für die Modulierung keine Rolle, da sie keine rekursiven Verweise erzeugen können. Man kann zwar auf Nebenlemmata verweisen, aber nicht von Nebenlemmata zu anderen Lemmata.)</p>
+
+          <p>Oben im Artikelblock steht der Name der XML-Datei, daneben finden Sie drei Icons:</p>
+
+          <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im <a href="#xml-vorschaufenster">Vorschaufenster</a></p>
+
+          <p class="indent-icon"><img src="../img/win/open-file.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor Ihres Betriebssystems</p>
+
+          <p class="indent-icon"><img src="../img/win/close.svg" width="30" height="30" alt="">Entfernt den Artikelblock aus der Modulierung</p>
+
+          <p>Auf die im Artikelblock alphabetisch aufgelisteten Lemmata wird in der Datei verwiesen. Klicken Sie auf einen der blauen Links, öffnet sich eine Tabelle, in der Sie sehen, in welcher Zeile sich ein Verweis auf das genannte Lemma befindet.</p>
+        </li>
+
+        <li>
+          <p>Im Kopf der Artikelblöcke werden sich nach und nach <b>rote Links</b> sammeln. Befinden sich in einem Artikelblock rote Links, wird auch der Dateiname dieses Blocks in einen roten Link verwandelt. Diese roten Links stehen für die Lemmata, die in der XML-Datei ergänzt werden müssen, um das Clusterzentrum zu erhalten, das Sie gerade modulieren.</p>
+
+          <p>Durch Klick auf einen roten Link, wird der XML-Code des Verweises in die Zwischenablage kopiert. Sie können den Code dann direkt in die XML-Datei unterhalb von <code>&lt;Verweise <span class="xml-attr-key">Typ=</span><span class="xml-attr-val">&quot;Wortfeld&quot;</span>&gt;</code> einfügen. Klicken Sie auf den roten Link in der Überschrift, werden alle für den Artikel vorgeschlagenen Verweise <span lang="fr">en bloc</span> kopiert.</p>
+        </li>
+
+        <li>
+          <p>Noch bevor Sie die vorgeschlagenen Verweise in den XML-Dateien ergänzen, können Sie sich eine <b>Vorschau berechnen</b> lassen, um zu sehen, ob Ihnen das Ergebnis auch zusagt.</p>
+
+          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modulierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn der Sektion <i>Modulieren</i> Artikelblöcke hinzugefügt wurden. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
+        </li>
+      </ol>
+
+      <p>Um eine <b>Modulierung zurückzusetzen</b> können Sie auf das Icon <img src="../img/win/cleanup.svg" width="30" height="30" alt=""> im Suchfeld klicken. Es entfernt alle Artikelblöcke aus der Modulierung.</p>
+
+      <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
+
+      <p>Clusterzentren können sinnvoll <b>nur in eine Richtung moduliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgten, dass ein Clusterzentrum entstand. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modulieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
+
+      <h2><span>Sektion Vergleichen</span></h2>
+
+      <p id="clusterei-vergleichen">Für diese Sektion muss zwingend ein Themfeld-<a href="#allgemeines-filterleiste">Filter</a> eingestellt werden. Zusätzlich kann auch der Autor*innen-Filter genutzt werden. Mit seiner Hilfe kann man sich nur diejenigen Cluster anzeigen lassen, in deren Zentrum mindestens ein Lemma der ausgewählten Autor*in zu finden ist.</p>
+
+      <p>In der Sektion werden einander sehr ähnlich Cluster aufgelistet und nebeneinander gestellt. Je ähnlicher sich die Cluster sind, umso eher bieten sie sich zum Verschmelzen an. Der angegebene <b>Prozentwert</b> bezieht sich auf das Verhältnis des kleineren zum größeren Cluster: 100&nbsp;% bedeutet, dass 100&nbsp;% der Lemmata des kleineren Clusters auch im größeren Cluster auftauchen, bei 75&nbsp;% wären dies nur drei Viertel der Lemmata. Die Anzeige hat einen Schwellenwert von 75&nbsp;%. Cluster, die eine geringere Ähnlichkeit haben, werden ignoriert.</p>
+
+      <p>Klicken Sie auf das Icon <img src="../img/win/plus.svg" width="30" height="30" alt=""> werden alle XML-Dateien, in denen sich die Hauptlemmata der nebeinander stehenden Cluster finden, zur <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> hinzugefügt. Die hinzugefügten Hauptlemmata werden dann <mark class="color5">blau hinterlegt</mark>. (Nebenlemmata spielen für die Modulierung keine Rolle, weswegen sie in dieser Ansicht ausgegraut sind.)</p>
+
+      <p>Das Icon hat sich nun geändert: <img src="../img/win/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! ´Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modulieren</i> entfernt.</p>
+
+      <p>Eine weitere Funktion gibt es noch: Wenn Sie ein bestimmtes Lemma interessiert und Sie sehen wollen, in welchen Clustern es sich jeweils befindet, können Sie es anklicken. Es wird dann in allen sichtbaren Clustern <mark>orange hinterlegt</mark>.</p>
+
+      <h2><span>Sektion Überprüfen</span></h2>
+
+      <p id="clusterei-ueberpruefen">Für diese Sektion muss zwingend ein Themfeld-<a href="#allgemeines-filterleiste">Filter</a> eingestellt werden. Zusätzlich kann auch der Autor*innen-Filter genutzt werden. Mit seiner Hilfe kann man sich nur diejenigen Cluster anzeigen lassen, in deren Zentrum mindestens ein Lemma der ausgewählten Autor*in zu finden ist.</p>
+
+      <p>In der Sektion <i>Überprüfen</i> werden die Cluster analog zur <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> aufgelistet. Interessant ist diese Sektion <abbr title="vor allem">v.&nbsp;a.</abbr> im Zusammenhang mit der <a href="#clusterei-vorschau">Funktion zur Berechnung der Vorschau</a>. Haben Sie eine Vorschau berechnet, werden Cluster, die zuvor nicht existiert oder sich verändert haben, rot umrandet. Und Lemmata, die zuvor in keinem Cluster zu finden waren, werden sogar <mark class="color4">rot hinterlegt</mark>.</p>
+
+      <p>Mithilfe des Icons <img src="../img/win/jump.svg" width="30" height="30" alt=""> in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> können Sie durch die geänderten <abbr title="beziehungsweise">bzw.</abbr> neuen Cluster springen. Dieses Icon ist nur sichtbar, wenn die Sektion <i>Überprüfen</i> aktiv ist.</p>
+
+      <p>Mitunter werden Sie auf <b>rot umrandete Cluster</b> stoßen, bei denen Sie überhaupt keine visuelle Differenz zu einem bereits zuvor bestehenden Cluster erkennen können. Dies liegt daran, dass der Unterschied sehr subtiler Natur ist. In einem solchen Fall hat sich nämlich die Anzahl der Clusterpunkte geändert, mit deren Hilfe die Lemmata im Cluster gewichtet und sortiert werden. Die Änderung hatte dann aber einen so geringen Umfang, dass sie für die Visualisierung des Clusters keine Rolle spielte.</p>
+
+      <h1><span>Vorschau berechnen</span></h1>
+
+      <p id="clusterei-vorschau">Normalerweise arbeitet die Clusterei mit den WGd-Verweisclustern, wie sie in der aktuellen Version der Datei <a href="#allgemeines-artikelJSON">Artikel.json</a> zu finden sind. Dazu wird die Artikel.json aus dem Repository eingelesen. Die in ihr zu findenden Cluster werden dann für die Darstellung in der Clusterei genutzt.</p>
+
+      <p>Mithilfe des Icons <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie sich aber eine Cluster-Vorschau berechnen lassen, auf die dann in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> zurückgegriffen wird. (Für die Sektion <i>Modulieren</i> spielen die bestehenden Cluster keine Rolle. In ihr geht es nur darum, was wirklich in den XML-Dateien steht.)</p>
+
+      <p>Bei der Berechnung werden die Lemmata aller XML-Dateien, von denen <i>QS</i> derzeit Kenntnis hat, mit einbezogen. Das heißt, dass auch Dateien berücksichtigt werden, die im <a href="#git-ignore">Ordner <code>ignore</code></a> liegen.</p>
+
+      <p>Klicken Sie auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> erscheint ein Popup-Fenster, in dem Sie die Berechnung durch ein paar Einstellungen beeinflussen können:</p>
+
+      <p id="clusterei-vorschauOptionModulierung" class="option">Modulierung mit einbeziehen</p>
+
+      <p class="indent-hint">Ist diese Einstellung aktiv, tut <i>QS</i> so, als hätten Sie die rot eingefärbten Lemmata, die in der <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> vorgeschlagen werden, bereits in den XML-Dateien ergänzt. Für die Verweise wird dabei von einem Gewicht von 3 Punkten ausgegangen. Bei der Berechnung wird also simuliert, dass die Verweise bereits zu den Wortinformationen hinzugefügt wurden.</p>
+
+      <p id="clusterei-vorschauOptionClusterVerweise" class="option">Cluster-Verweise ignorieren</p>
+
+      <p class="indent-hint">Ist diese Einstellung aktiv, werden in allen XML-Dateien die Verweise mit dem Attribut <code>@Typ=&quot;Cluster&quot;</code> bei der Berechnung der Vorschau ignoriert. Mit dieser Option können Sie also bereits vorgenommene Modulierungen temporär zurücksetzen. Ob das sinnvoll ist, steht auf einem anderen Blatt.</p>
+
+      <p>Die Berechnung der Cluster-Vorschau ist trotz diverser Optimierungen im Programmcode ziemlich rechenintensiv. Darum können Sie zwischen der Cluster-Vorschau und den im Repository zu findenden Clustern hin und her schalten, ohne jedes Mal eine Neuberechnung anstoßen zu müssen. Wählen Sie hierfür diese Option aus:</p>
+
+      <p class="option">alte Berechnung von HH:MM Uhr anzeigen</p>
     </section>
 
     <!-- SEARCH -->
     <section id="suche">
-      <p id="suche-syntax"><mark>TODO Suchsyntax</mark></p>
+      <h1><span>Allgemeines zur Suche</span></h1>
+
+      <p>Standardmäßig werden alle XML-Dateien durchsucht, ganz gleich ob sie im Ordner <code>articles</code> oder <code>ignore</code> liegen. Die Suchwörter werden dabei einzeln behandelt, sprich anhand der Leerzeichen aufgetrennt. Anstoßen können Sie die Suche über den Suchbutton oder <kbd>Enter</kbd> im Suchfeld.</p>
+
+      <p>Die Suche ist auf 5000 Treffer beschränkt. Das klingt nach viel. Wenn Sie allerdings sehr unspezifische, kurze Suchwörter eingeben, ist diese Zahle rasch erreicht, da in den XML-Dateien jede Zeile, in der eines der Suchwörter zu finden ist, einen Treffer produziert, egal ob eines oder mehrere der Suchwörter auftauchen. Suchen Sie nach <code>die das</code> werden Sie darum niemals ein Ergebnis bekommen.</p>
+
+      <p>Normalerweise wird nur im Autor*innen-Text der XML-Dateien gesucht. Verwenden Sie in einem Suchausdruck aber die Zeichen &lt; oder &gt; werden auch die XML-Tags durchsucht. In der Trefferliste erscheint dann nicht der um Tags bereinigte Autor*innentext, sondern XML-Code.</p>
+
+      <p>Sie können den Umfang der Suche einschränken, indem Sie die Anzahl der XML-Dateien mithilfe der <a href="#allgemeines-filterleiste">Filter</a> einschränken, sich der Möglichkeiten der <a href="#suche-syntax">Suchsyntax</a> bedienen und/oder Einstellungen aus der <a href="#suche-erweitert">erweiterten Suche</a> nutzen.</p>
+
+      <h1><span>Erweiterte Suche</span></h1>
+
+      <p id="suche-erweitert">Die erweiterte Suche können Sie mit dem Icon <img src="../img/win/preferences.svg" width="30" height="30" alt=""> rechts im Suchfeld öffnen (<abbr title="siehe">s.</abbr> zu den anderen Icons den Abschnitt <a href="#allgemeines-kopfleisteSuche">Kopfleiste</a>). Die Einstellungen für die erweitere Suche öffnen sich außerdem automatisch, wenn Sie das globale Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>F</kbd> benutzen. Sobald Sie eine Suche anstoßen, schließen sich die erweiterten Einstellungen.</p>
+
+      <p>Die vorgenommenen Einstellungen werden gespeichert und nach dem Neustart des Programms wiederhergestellt. Sind Einstellungen aktiv, die zu einer Verringerung der Trefferzahl führen, wird das Icon zum Öffnen der erweiterten Suche rot dargestellt: <img src="../img/win/preferences-red.svg" width="30" height="30" alt="">.</p>
+
+      <p>Die <b>Einstellungen</b>:</p>
+
+      <p class="option">alle Suchwörter in derselben Zeile</p>
+
+      <p class="indent-hint">Ist die Einstellung aktiviert, produzieren nur Zeilen in den XML-Dateien Treffer, in denen <em>alle</em> eingegebenen Suchwörter zu finden sind. Aktivieren Sie die Einstellung und suchen Sie nach <code>die das</code>, werden Sie (Stand Dezember 2022) zwar immer noch mehr als 3000 Treffer bekommen. Da dies die Maximalschwelle von 5000 Treffern klar unterschreitet, werden diese aber angezeigt.</p>
+
+      <p class="option">Suche immer auch im XML-Code</p>
+
+      <p class="indent-hint">Normalerweise wird nur dann im XML-Code gesucht, wenn in den Suchwörtern die Zeichen &lt; oder &gt; auftauchen. Aktivieren Sie diese Eintellung können Sie die Suche im XML-Code erzwingen.</p>
+
+      <p class="option">nächste Suche nur in zuletzt gefundenen Dateien</p>
+
+      <p class="indent-hint">Mit dieser Option können Sie die Suchtreffer sukzessive einschränken, denn für die nächste Suche werden nicht mehr alle XML-Dateien durchsucht, sondern nur noch diejenigen, die nach der aktuellen Suche einen Treffer produzierten. Welche Dateien dies sind, sehen Sie in der <a href="#allgemeines-ergebnisleiste">Ergebnisleiste</a>. <i>QS</i> deaktiviert diese Einstellung nach der nächsten Suche automatisch.</p>
+
+      <p>Darüber hinaus können Sie den <b>Suchbereich</b> einstellen. Normalerweise werden die XML-Dateien von der ersten bis zur letzten Zeile durchsucht. Sie können die Suche aber auch auf bestimmte Abschnitte in den XML-Dateien einschränken. Mehrfachauswahl ist möglich.</p>
+
+      <ul>
+        <li><i>Wortgeschichte:</i> Durchsucht den Texte innerhalb von <code>&lt;Wortgeschichte&gt;</code> und <code>&lt;Wortgeschichte_kompakt&gt;</code></li>
+
+        <li><i>Belege:</i> Durchsucht den Texte innerhalb von <code>&lt;Belegreihe&gt;</code></li>
+
+        <li><i>Bedeutungsgerüst:</i> Durchsucht den Texte innerhalb von <code>&lt;Lesarten&gt;</code></li>
+
+        <li><i>Wortinformationen:</i> Durchsucht den Texte innerhalb von <code>&lt;Verweise&gt;</code></li>
+      </ul>
+
+      <h1><span>Suchsyntax</span></h1>
+
+      <p id="suche-syntax"><i>QS</i> geht davon aus, dass Sie Suchwörter, die durch <b>Leerzeichen</b> voneinander getrennt sind, einzeln behandeln möchten. Darum wird nach diesen Wörtern standardmäßig auch einzeln gesucht. Die Wörter werden beim Suchen durch ein <b>logisches Und</b> miteinander verknüpft.</p>
+
+      <p>Geben Sie also <code>alternative Fakten</code> ein, sucht <i>QS</i> nach <q>alternative</q> <em>und</em> <q>Fakten</q>. Nur wenn in einer XML-Datei beide Wörter einen Treffer produzieren, wird die Datei in den Suchtreffern gelistet.</p>
+
+      <p>Die Suche ist immer <b>trunkiert</b>. Gesucht wird also nicht nach ganzen Wörtern, sondern nach Buchstabenfolgen, die links und rechts erweitert sein können.</p>
+
+      <p>Geben Sie als Suchwörter <code>alternativ fakten</code> ein, findet das erste Wort auch die Formen <q>alternative</q>, <q>alternativen</q>, <q>alternativer</q> <abbr title="und so weiter">usw.</abbr></p>
+
+      <p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird für dieses Wort zwischen Groß- und Kleinschreibung unterschieden. Ansonsten werden Groß- und Kleinschreibung ignoriert.</p>
+
+      <p>Eine Suche nach <code>fakt</code> produziert darum mehr Treffer als eine nach <code>Fakt</code>. Im zweiten Fall werden nur Wörter wie <q>Fakten</q>, <q>Faktum</q> oder <q>Faktor</q> gefunden, wohingegen im ersten Fall zusätzlich auch <q>faktuell</q>, <q>faktisch</q>, aber auch <q>kontrafaktisch</q> gefunden werden.</p>
+
+      <p>Als <b>Phrase</b> können mehrere Wörter mithilfe von nicht-typographischen Anführungseichen gesucht werden.</p>
+
+      <p>Eine Suche nach <code>&quot;alternative Fakten&quot;</code> oder <code>&apos;alternative Fakten&apos;</code> sucht die durch Leerzeichen voneinander getrennten Wörter dann nicht mehr einzeln, sondern als Phrase. Es werden nur Treffer ausgeworfen, in denen <q>alternative Fakten</q> steht. Aber auch in diesem Fall wird das Ergebnis links und rechts erweitert. Der Suchausdruck würde also auch auf <q>alternative Faktenhuberei</q> passen.</p>
+
+      <p>Suchen Sie im XML-Code ein Attribut mit einem bestimmten Wert, müssen Sie sich der einfachen Anführungszeichen bedienen, da die doppelten Anführungszeichen Teil des Suchtexts sind. Wenn Sie alle als englisch markierten Textteile finden wollen, suchen Sie also nach <code>&apos;Typ=&quot;engl&quot;&apos;</code>.</p>
+
+      <p>Spezialisten können auch <b>reguläre Ausdrücke</b> verwenden. Die Ausdrücke müssen mit / beginnen und enden. Hinter dem schließenden / darf zusätzlich noch der optionale i-Schalter stehen. Mit dem i-Schalter weist man den Ausdruck an, nicht auf Groß- oder Kleinschreibung zu achten.</p>
+
+      <p>Eine Suche mit einem regulären Ausdruck wie <code>/alternativen? fakt(en)?/i</code> ist immer eine Phrasensuche. In diesem Fall besteht aber eine gewisse Variabilität hinsichtlich der Schreibung von <q>alternativen</q>, das mit oder ohne <q>n</q> geschrieben sein darf. Außerdem trifft der Ausdruck auf <q>fakt</q> oder <q>fakten</q> zu. Durch den i-Schalter am Ende wird icht auf Groß- oder Kleinschreibung geachtet. Aber auch hier gilt: Die Suche ist trunkiert.</p>
+
+      <p>Suchen Sie nach einem ganzen Wort, können Sie einen regulären Ausdruck mit sogenannten <q lang="en">string boundaries</q> verwenden. Eine Suche nach <code>/\bFakt\b/</code> findet das Wort <q>Fakt</q> nur dann, wenn davor und dahinter <abbr title="zum Beispiel">z.&nbsp;B.</abbr> Leer- oder Satzzeichen stehen. Aber Vorsicht! Die Eszett-Ligatur und die Umlaute gelten als Wortgrenze. (Die Definition von <q lang="en">string boundaries</q> ist auf niedrige ASCII-Zeichen beschränkt.) Eine Suche nach <code>/\bMaß\b/</code> wird darum nicht das gewünschte Ergebnis bringen: Sie werden auch <q>Maßnahme</q> finden. Dies gilt für solche Suchen umso mehr, als <i>QS</i> automatisch gewisse Standardvarianten in die Suchausdrücke einbaut. Wird <code>ß</code> eingegeben, wird <abbr title="zum Beispiel">z.&nbsp;B.</abbr> automatisch nach <code>(ß|ss)</code> (<q>ß</q> oder <q>ss</q>) gesucht.</p>
+
+      <p>Sie können reguläre Ausdrücke frei mit anderen Suchausdrücken kombinieren. Eine Suche nach <code>Trump Lüge /alternativen? fakt(en)?/i</code> stellt kein Problem dar und produziert sogar Treffer.</p>
+
+      <p>In der Trefferliste werden die Stellen, an denen das Suchwort gefunden wurde, normalerweise hervorgehoben. Verwenden Sie einen regulären Ausdruck und Suchen Sie im XML-Code kann dies aber mitunter scheitern.</p>
     </section>
 
     <!-- PREFERENCES -->
     <section id="einstellungen">
-      <p id="einstellungen-datenZeitstrahl"><mark>TODO Zeitstrahldaten</mark></p>
+      <h1><span>Einstellungen: Daten</span></h1>
 
-      <p id="einstellungen-datenExport"><mark>TODO Export und Import der Einstellungen</mark></p>
+      <p id="einstellungen-datenZeitstrahl" class="option">Zeitstrahldaten</p>
 
-      <p id="einstellungen-datenMarks"><mark>TODO Markierungsdaten</mark></p>
+      <p class="indent-hint">Die Zeitstrahldaten spielen für Ihren Arbeitsalltag normalerweise keine Rolle. Sie können diese Einstellung also im Prinzip ignorieren. Benötigt werden die Zeistrahldaten allerdings für den <a href="#verschiedenes-artikelJSON">Export der Artikel.json</a>, um den sich die nicht spezialisierten Mitarbeiter*innen dann kümmern müssen, wenn die Techniker*in längerfristig ausfällt.</p>
 
-      <p id="einstellungen-datenCache"><mark>TODO Analyse-Cache</mark></p>
+      <p class="indent-hint">Bei der Artikel.json handelt es sich um eine für die Webseite unverzichtbare Datendatei, ohne die eine Publikation neuer Wortgeschichten nur eingeschränkt sinnvoll ist, weil <a href="#allgemeines-artikelJSON">viele Funktionen auf der Webseite</a> von ihren Inhalten abhängen. Sie liegt im Repository unter <code>resources/Artikel.json</code>.</p>
+
+      <p class="indent-hint"><i>QS</i> kann diese Datei zwar erzeugen, aber anders als ihre übrigen Inhalte können die Zeitstrahldaten nicht von der App berechnet werden. Wird die Datei ohne Zeitstrahldaten exportiert, kann auf der Webseite kein <a href="https://www.zdl.org/wb/wortgeschichten/#Zeitstrahl">Zeitstrahl</a> angezeigt werden.</p>
+
+      <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
+
+      <p id="einstellungen-datenExport" class="option">Einstellungsdaten</p>
+
+      <p class="indent-hint">Mithilfe der Buttons <i>Exportieren</i> und <i>Importieren</i> können Sie – Sie ahnen es schon – die Programmeinstellungen ex- oder importieren.</p>
+
+      <p class="indent-hint">Dies ist immer dann nützlich, wenn Sie abwechselnd an mehreren Rechnern arbeiten und Ihre Daten zwischen den Rechnern synchronisieren möchten. Denn die Einstellungen umfassen nicht nur die Konfiguration in der <a href="#allgemeines-filterleiste">Filter-</a> oder <a href="#allgemeines-kopfleiste">Kopfleiste</a>. Zu ihnen gehören auch die in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> gesetzten Markierungen. Vom Export ausgenommen sind die <a href="#einstellungen-git">Git-Konfiguration</a> und der <a href="#einstellungen-datenZeitstrahl">Pfad zu den Zeitstrahldaten</a>.</p>
+
+      <p id="einstellungen-datenMarks" class="option">Markierungsdaten</p>
+
+      <p class="indent-hint">Mit dem Button <i>Löschen</i> können Sie alle Markierungsdaten entfernen. Markierungen können Sie <a href="#hinweise-markierungen">links neben den Hinweisen</a> setzen, um sich so <abbr title="zum Beispiel">z.&nbsp;B.</abbr> zu merken, dass Sie einen Hinweis bereits überprüft haben und nicht weiterverfolgen wollen. So markierte Hinweise lassen sich mit dem Abwählen der entsprechenden <a href="#allgemeines-filterleiste">Filter</a> ausblenden.</p>
+
+      <p class="indent-hint">Die Markierungen gehören zu den <a href="#einstellungen-datenExport">Einstellungsdaten</a> und können mit diesen ex- und importiert werden.</p>
+
+      <p id="einstellungen-datenCache" class="option">Analyse-Cache</p>
+
+      <p class="indent-hint">Die Funktionen von <i>QS</i> beruhen alle auf Daten, die im Rahmen einer Analyse der im <a href="#git-dateien">Repository</a> liegenden XML-Dateien erhoben werden. Diese Analyse ist rechenintensiv, weswegen die App ihr Ergebnis in einem Cache speichert, um sie möglichst selten durchführen zu müssen. (Genauer gesagt gibt es zwei verschiedene Caches: einen für den <a href="#git-allgemeinesBranchesWGd">Branch</a> <q>master</q> und einen für <q>preprint</q>.)</p>
+
+      <p class="indent-hint">Wurde der Cache einmal erstellt, wird die Analyse nur noch für neue oder geänderte XML-Dateien durchgeführt. Eine Ausnahme stellt allerdings die Berechnung der Hinweise dar. Diese werden jedes Mal komplett neu erstellt, wenn sich eine einzige XML-Datei geändert hat. (Dieses Verhalten wurde deswegen programmiert, weil die Hinweise sich auf dateiübergreifende Phänomene beziehen. Änderungen in einer Datei können Auswirkungen auf ein Vielzahl von Hinweisen in vielen verschiedenen Dateien haben.)</p>
+
+      <p class="indent-hint">Komplett neu erstellt wird der Cache auch, wenn Sie eine neue Programmversion zum ersten Mal starten.</p>
+
+      <p class="indent-hint">Klicken Sie auf den Button <i>Löschen</i> wird der Cache gelöscht und umgehend neu berechnet. Die Option ist eher für Entwickler gedacht und sollte für Ihren Arbeitsalltag nicht von Bedeutung sein.</p>
+
+      <h1><span>Einstellungen: Git</span></h1>
+
+      <p id="einstellungen-git">Klicken Sie auf den Button <i>Konfiguration</i> wird das Einstellungsfenster für Git geöffnet. Es ist dasselbe Fenster, dass Sie beim ersten Start der App bereits gesehen haben. Dieses Einstellungsfenster können Sie nur schließen, indem Sie auf <i>Okay</i> klicken. Sollte die Konfiguration fehlerhaft sein, weigert <i>QS</i> sich, das Fenster zu schließen.</p>
+
+      <p>Diese Funktion ist dann nützlich, wenn Sie im laufenden Betrieb Ihr Repository an einen anderen Ort verschieben. Sollten Sie dies bei geschlossener App tun, wird <i>QS</i> dies beim nächsten Start merken und das Einstellungsfenster automatisch öffnen.</p>
+
+      <h1><span>Einstellungen: Statistik</span></h1>
+
+      <p id="einstellungen-statistik">In dieser Ansicht werden statistische Daten zu aufwendigen Berechnungen angezeigt. Rechenintensiv sind die <a href="#allgemeines-update">Update-Funktion</a>, bei der die XML-Dateien und Hinweise neu analysiert werden, die <a href="#suche">Suche</a> und ganz besonders die Erstellung der <a href="#clusterei-vorschau">Cluster-Vorschau</a>.</p>
+
+      <p>Die Daten dienen zur Evaluation der App und spielen für Ihren Arbeitsalltag keine Rolle. Sie werden nicht gespeichert, sondern bei jedem Start von <i>QS</i> aufs Neue gesammelt.</p>
     </section>
 
     <!-- SHORTCUTS -->
     <section id="tastatur">
-      <mark>TODO Tatsturkürzel</mark>
+      <h1><span>Alle Fenster</span></h1>
+
+      <p id="tastatur-alle"><mark>TODO (Esc, Enter)</mark></p>
+
+      <h1><span>Hauptfenster</span></h1>
+
+      <p id="tastatur-hauptfenster"><mark>TODO</mark></p>
+
+      <h1><span>Vorschaufenster</span></h1>
+
+      <p id="tastatur-vorschaufenster"><mark>TODO</mark></p>
+
+      <h1><span>Hilfefenster</span></h1>
+
+      <p id="tastatur-hilfefenster"><mark>TODO</mark></p>
     </section>
 
     <!-- MISCELLANEOUS -->
     <section id="verschiedenes">
+      <p><mark>TODO Updates</mark></p>
+
+      <p><mark>TODO Fehlerlog</mark></p>
+
       <p id="verschiedenes-artikelJSON"><mark>TODO Artikel.json</mark></p>
 
       <p><mark>TODO Teaser-Tags</mark>
+
+      <p><mark>TODO hrArtikel.js</mark></p>
     </section>
 
     <!-- OVERLAY: LOADING -->
