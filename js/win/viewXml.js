@@ -76,7 +76,12 @@ const viewXml = {
       {
         event: "CopyToFolder",
         icon: "to-folder.svg",
-        title: "Datei nach „ignore“ kopieren",
+        title: "Datei in Ordner „ignore“ kopieren",
+      },
+      {
+        event: "CopyToClipboard",
+        icon: "edit-copy.svg",
+        title: "XML in Zwischenablage kopieren",
       },
       {
         event: "Teaser",
@@ -130,7 +135,7 @@ const viewXml = {
       }
 
       // copy, teaser & open
-      for (let j = 0; j < 3; j++) {
+      for (let j = 0, len = icons.length; j < len; j++) {
         const td = document.createElement("td");
         tr.appendChild(td);
         if (j === 0 && i.dir === "ignore") {
@@ -276,6 +281,15 @@ const viewXml = {
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
     }
+  },
+
+  // copy file to "ignore"
+  //   a = node (clicked link)
+  funCopyToClipboard (a) {
+    const { file } = a.closest("tr").dataset;
+    navigator.clipboard.writeText(xml.files[file])
+      .then(() => shared.feedback("copied"))
+      .catch(() => shared.feedback("error"));
   },
 
   // open file in default editor

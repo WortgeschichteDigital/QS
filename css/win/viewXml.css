@@ -70,6 +70,7 @@
 }
 
 #xml tr[data-status="0"] td:first-child img,
+#xml tr td:nth-last-child(4) a,
 #xml tr td:nth-last-child(3) a,
 #xml tr td:nth-last-child(2) a,
 #xml tr td:last-child a {
@@ -77,6 +78,8 @@
 }
 
 #xml tr[data-status="0"]:hover td:first-child img,
+#xml tr:hover td:nth-last-child(4) a,
+#xml tr td:nth-last-child(4) a:focus,
 #xml tr:hover td:nth-last-child(3) a,
 #xml tr td:nth-last-child(3) a:focus,
 #xml tr:hover td:nth-last-child(2) a,
