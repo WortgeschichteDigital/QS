@@ -63,13 +63,22 @@
   color: var(--colorBlue);
 }
 
+#xml .placeholder {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
 #xml tr[data-status="0"] td:first-child img,
+#xml tr td:nth-last-child(3) a,
 #xml tr td:nth-last-child(2) a,
 #xml tr td:last-child a {
   opacity: 0;
 }
 
 #xml tr[data-status="0"]:hover td:first-child img,
+#xml tr:hover td:nth-last-child(3) a,
+#xml tr td:nth-last-child(3) a:focus,
 #xml tr:hover td:nth-last-child(2) a,
 #xml tr td:nth-last-child(2) a:focus,
 #xml tr:hover td:last-child a,

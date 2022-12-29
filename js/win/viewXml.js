@@ -72,7 +72,12 @@ const viewXml = {
         title: "Datei neu",
       },
     ];
-    const teaserOpen = [
+    const icons = [
+      {
+        event: "CopyToFolder",
+        icon: "to-folder.svg",
+        title: "Datei nach „ignore“ kopieren",
+      },
       {
         event: "Teaser",
         icon: "preview.svg",
@@ -124,19 +129,25 @@ const viewXml = {
         td.textContent = `${published[2]}.\u00A0${published[1]}.\u00A0${published[0]}`;
       }
 
-      // teaser & open
-      for (let j = 0; j < 2; j++) {
+      // copy, teaser & open
+      for (let j = 0; j < 3; j++) {
         const td = document.createElement("td");
         tr.appendChild(td);
+        if (j === 0 && i.dir === "ignore") {
+          const span = document.createElement("span");
+          td.appendChild(span);
+          span.classList.add("placeholder");
+          continue;
+        }
         const a = document.createElement("a");
         td.appendChild(a);
         a.classList.add("icon");
-        a.dataset.event = teaserOpen[j].event;
+        a.dataset.event = icons[j].event;
         a.href = "#";
-        a.title = teaserOpen[j].title;
+        a.title = icons[j].title;
         const img = document.createElement("img");
         a.appendChild(img);
-        img.src = `img/win/${teaserOpen[j].icon}`;
+        img.src = `img/win/${icons[j].icon}`;
         img.width = "30";
         img.height = "30";
         img.alt = "";
@@ -242,6 +253,29 @@ const viewXml = {
       code.appendChild(document.createTextNode(`<${i}>`));
     }
     overlay.show("summary");
+  },
+
+  // copy file to "ignore"
+  //   a = node (clicked link)
+  async funCopyToFolder (a) {
+    const { file } = a.closest("tr").dataset;
+    const pathSrc = shared.path.join(git.config.dir, "articles", file);
+    const pathDest = shared.path.join(git.config.dir, "ignore", file);
+    try {
+      await shared.fsp.copyFile(pathSrc, pathDest, shared.fsp.constants.COPYFILE_EXCL);
+      const xmlFiles = {};
+      xmlFiles[file] = {
+        dir: "ignore",
+        // hash has to be empty, otherwise the update process won't start as the file is unchanged
+        hash: "",
+        status: 0,
+        xml: xml.files[file],
+      };
+      await xml.update(xmlFiles);
+      shared.feedback("okay");
+    } catch (err) {
+      shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+    }
   },
 
   // open file in default editor
