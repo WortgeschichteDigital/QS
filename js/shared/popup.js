@@ -40,7 +40,8 @@ const popup = {
 
     // add copy icon if click is on selection
     const sel = window.getSelection();
-    if (sel.toString() &&
+    if (target !== "text_field_readonly" &&
+        sel.toString() &&
         path.includes(sel.getRangeAt(0).commonAncestorContainer.parentNode)) {
       items.unshift("editCopy", "sep");
     }
@@ -63,6 +64,11 @@ const popup = {
           return "text_field_readonly";
         }
         return "text_field";
+      }
+      // code
+      if (path[i].nodeName === "P" && path[i].closest("#dialog.code #dialog-text") ||
+          path[i].nodeName === "PRE" && path[i].closest("#error")) {
+        return "text_field_readonly";
       }
       // ID
       const { id } = path[i];

@@ -96,6 +96,7 @@
   font-size: .7rem;
   line-height: 1.1rem;
   white-space: pre-wrap;
+  user-select: text;
 }
 
 
