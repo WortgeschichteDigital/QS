@@ -181,8 +181,9 @@ const shared = {
   },
 
   // open links in external program
-  externalLinks () {
-    document.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
+  //   scope = node | undefined
+  externalLinks (scope = document) {
+    scope.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
       i.addEventListener("click", function (evt) {
         evt.preventDefault();
         // prevent double-clicks

@@ -112,6 +112,14 @@
   margin-right: 15px;
 }
 
+#dialog-text a {
+  text-decoration: none;
+}
+
+#dialog-text a:is(:hover, :focus) {
+  text-decoration: underline;
+}
+
 #dialog-text p:first-child {
   margin-right: 30px;
 }

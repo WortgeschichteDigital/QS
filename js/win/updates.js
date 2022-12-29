@@ -54,8 +54,10 @@ const updates = {
     if (updates.verToInt(versionOnline) > updates.verToInt(shared.info.version)) {
       dialog.open({
         type: "alert",
-        text: `Es gibt ein <b>Update</b>!\n<span class="update">installiert:</span>v${shared.info.version}<br><span class="update">online:</span>v${versionOnline}`,
+        text: `Es gibt ein <b>Update</b>!\n<span class="update">installiert:</span>v${shared.info.version}<br><span class="update">online:</span>v${versionOnline}\n<a href="https://github.com/WortgeschichteDigital/ZettelsTraum/releases">Download-Seite</a>`,
       });
+      await shared.wait(100);
+      shared.externalLinks(document.querySelector("#dialog-text"));
     } else if (!auto) {
       dialog.open({
         type: "alert",
