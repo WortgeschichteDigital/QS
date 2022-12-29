@@ -116,6 +116,10 @@
   margin-right: 30px;
 }
 
+#dialog-text .selectable {
+  user-select: text;
+}
+
 #dialog-text .update {
   display: inline-block;
   width: 95px;

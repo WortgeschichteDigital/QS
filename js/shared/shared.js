@@ -94,6 +94,7 @@ const shared = {
     await dialog.open({
       type: "alert",
       text: `Es ist ein <b class="warn">Fehler</b> aufgetreten!\n<i>Fehlermeldung:</i><br>${error}`,
+      error: true,
     });
   },
 

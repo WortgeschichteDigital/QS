@@ -12,7 +12,8 @@ const dialog = {
   //   type = string (alert | confirm | pass)
   //   text = string
   //   wait = true | undefined (wait 3 sec to activate the yes button)
-  async open ({ type, text, wait = false }) {
+  //   error = true | undefined (make last p selectable)
+  async open ({ type, text, wait = false, error = false }) {
     // already open dialogs should stop waiting for response
     const win = document.querySelector("#dialog");
     if (!win.classList.contains("hide")) {
@@ -30,6 +31,9 @@ const dialog = {
       const p = document.createElement("p");
       t.appendChild(p);
       p.innerHTML = i;
+    }
+    if (error) {
+      t.lastChild.classList.add("selectable");
     }
 
     // print password field if requested

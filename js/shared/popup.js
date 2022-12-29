@@ -66,7 +66,8 @@ const popup = {
         return "text_field";
       }
       // code
-      if (path[i].nodeName === "P" && path[i].closest("#dialog.code #dialog-text") ||
+      if (path[i].nodeName === "P" &&
+            (path[i].closest("#dialog.code #dialog-text") || path[i].classList.contains("selectable")) ||
           path[i].nodeName === "PRE" && path[i].closest("#error")) {
         return "text_field_readonly";
       }
