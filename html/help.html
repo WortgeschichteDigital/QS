@@ -432,7 +432,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Im Kopf des Vorschaufensters gibt es mehrere Icons, die für die verschiedenen <b>Funktionen</b> des Fensters stehen:</p>
 
-      <p class="indent-icon"><img src="../img/win/view-refresh.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>F5</kbd>) können Sie die Vorschauansicht neu aufbauen. Dabei wird der XML-Code der Datei erneut von Ihrer Festplatte eingelesen und an zdl.org geschickt. Außerdem wird im Hauptfenster der App die Funktion <a href="#allgemeines-update">Update</a> angestoßen. Die Idee hinter dieser Funktion ist, dass Sie parallel das Vorschaufenster und die zugehörige XML-Datei offen haben. Nehmen Sie Änderungen an der XML-Datei vor, müssen Sie im Vorschaufenster nur noch das Update-Icon klicken und Sie sehen den Artikel in just der Fassung, an der Sie gerade arbeiten. Außerdem werden <span lang="fr">en passant</span> die Daten im Hauptfenster auf dem neusten Stand gehalten.</p>
+      <p id="xml-vorschaufensterUpdate" class="indent-icon"><img src="../img/win/view-refresh.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>F5</kbd>) können Sie die Vorschauansicht neu aufbauen. Dabei wird der XML-Code der Datei erneut von Ihrer Festplatte eingelesen und an zdl.org geschickt. Außerdem wird im Hauptfenster der App die Funktion <a href="#allgemeines-update">Update</a> angestoßen. Die Idee hinter dieser Funktion ist, dass Sie parallel das Vorschaufenster und die zugehörige XML-Datei offen haben. Nehmen Sie Änderungen an der XML-Datei vor, müssen Sie im Vorschaufenster nur noch das Update-Icon klicken und Sie sehen den Artikel in just der Fassung, an der Sie gerade arbeiten. Außerdem werden <span lang="fr">en passant</span> die Daten im Hauptfenster auf dem neusten Stand gehalten.</p>
 
       <p class="indent-icon"><img src="../img/win/window-new.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>N</kbd>) können Sie dieselbe Datei in einem weiteren Vorschaufenster öffnen. Dies bietet sich immer dann an, wenn Sie <abbr title="zum Beispiel">z.&nbsp;B.</abbr> in einem Vorschaufenster den Belegtext sehen und im anderen die Belegquelle ansteuern möchten. Mit dem Icon lassen sich beliebig viele Vorschaufenster mit ein und derselben XML-Datei öffnen.</p>
 
@@ -1093,32 +1093,301 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
     <section id="tastatur">
       <h1><span>Alle Fenster</span></h1>
 
-      <p id="tastatur-alle"><mark>TODO (Esc, Enter)</mark></p>
+      <div id="tastatur-alle">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>Enter</kbd></td>
+            <td>stößt in allen Textfeldern die jeweilige Funktion an</td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>Esc</kbd></td>
+            <td>schließt Dialoge und Popups</td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>F11</kbd></td>
+            <td>Vollbildmodus umschalten</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>+</kbd></td>
+            <td>Anzeige vergrößern</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>-</kbd></td>
+            <td>Anzeige verkleinern</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>0</kbd></td>
+            <td>Anzeige Standardgröße</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>A</kbd></td>
+            <td>Text auswählen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>C</kbd></td>
+            <td>Text kopieren</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>V</kbd></td>
+            <td>Text einfügen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>X</kbd></td>
+            <td>Text ausschneiden</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>Y</kbd></td>
+            <td><i>Windows:</i> Texteingabe wiederherstellen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>Z</kbd></td>
+            <td>Texteingabe rückgängig machen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td><kbd>Umsch</kbd> +</td>
+            <td><kbd>Z</kbd></td>
+            <td><i>Linux/macOS:</i> Texteingabe wiederherstellen</td>
+          </tr>
+        </table>
+      </div>
 
       <h1><span>Hauptfenster</span></h1>
 
-      <p id="tastatur-hauptfenster"><mark>TODO</mark></p>
+      <div id="tastatur-hauptfenster">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>↑</kbd> / <kbd>↓</kbd></td>
+            <td><i>Fokus im Suchfeld der Clusterei:</i> durch die Ergebnisse navigieren</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>↑</kbd> / <kbd>↓</kbd></td>
+            <td><i>Einstellungen:</i> durch die Menüpunkte navigieren</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>←</kbd> / <kbd>→</kbd></td>
+            <td><i>Teaser-Tags:</i> durch die Treffer navigieren</td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>F1</kbd></td>
+            <td>Hilfefenster öffnen</td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>F5</kbd></td>
+            <td><a href="#allgemeines-update">Update</a> anstoßen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>F</kbd></td>
+            <td>zur Suche wechseln und/oder die erweiterten Sucheinstellungen öffnen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td><kbd>Umsch</kbd> +</td>
+            <td><kbd>F</kbd></td>
+            <td><a href="#allgemeines-filterleiste">Filter</a> ein- oder ausblenden</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>Q</kbd></td>
+            <td>Programm beenden</td>
+          </tr>
+        </table>
+      </div>
 
       <h1><span>Vorschaufenster</span></h1>
 
-      <p id="tastatur-vorschaufenster"><mark>TODO</mark></p>
+      <div id="tastatur-vorschaufenster">
+        <table>
+          <tr>
+            <td><kbd>Alt</kbd> +</td>
+            <td></td>
+            <td></td>
+            <td><kbd>←</kbd></td>
+            <td>Navigation zurück</td>
+          </tr><tr>
+            <td><kbd>Alt</kbd> +</td>
+            <td></td>
+            <td></td>
+            <td><kbd>→</kbd></td>
+            <td>Navigation vorwärts</td>
+          </tr><tr>
+            <td><kbd>Alt</kbd> +</td>
+            <td></td>
+            <td></td>
+            <td><kbd>Home</kbd></td>
+            <td>Zurück zur XML-Vorschau</td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>F5</kbd></td>
+            <td><a href="#xml-vorschaufensterUpdate">XML-Update</a> anstoßen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>N</kbd></td>
+            <td>neues Fenster öffnen</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>W</kbd></td>
+            <td>Fenster schließen</td>
+          </tr>
+        </table>
+      </div>
 
       <h1><span>Hilfefenster</span></h1>
 
-      <p id="tastatur-hilfefenster"><mark>TODO</mark></p>
+      <div id="tastatur-hilfefenster">
+        <table>
+          <tr>
+            <td><kbd>Alt</kbd> +</td>
+            <td></td>
+            <td></td>
+            <td><kbd>←</kbd></td>
+            <td>Navigation zurück</td>
+          </tr><tr>
+            <td><kbd>Alt</kbd> +</td>
+            <td></td>
+            <td></td>
+            <td><kbd>→</kbd></td>
+            <td>Navigation vorwärts</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>↑</kbd> / <kbd>↓</kbd></td>
+            <td>Durch die Kapitel navigieren</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>W</kbd></td>
+            <td>Fenster schließen</td>
+          </tr>
+        </table>
+      </div>
     </section>
 
     <!-- MISCELLANEOUS -->
     <section id="verschiedenes">
-      <p><mark>TODO Updates</mark></p>
+      <h1><span>Funktionen</span></h1>
 
-      <p><mark>TODO Fehlerlog</mark></p>
+      <p id="verschiedenes-funktionen">Die folgenden Funktionen sind über den App-Menüpunkt <i>Funktionen</i> erreichbar.</p>
 
-      <p id="verschiedenes-artikelJSON"><mark>TODO Artikel.json</mark></p>
+      <h2><span>Artikel.json</span></h2>
 
-      <p><mark>TODO Teaser-Tags</mark>
+      <p id="verschiedenes-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmern sich normalerweise die Techniker*innen. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
 
-      <p><mark>TODO hrArtikel.js</mark></p>
+      <p><b>Update-Prozedere</b></p>
+
+      <ol>
+        <li><a href="#einstellungen-datenZeitstrahl">Zeistrahldaten</a> mit <i>QS</i> verknüpfen</li>
+
+        <li>Nach <a href="#git-allgemeinesBranchesWGd">Branch <q>master</q></a> wechseln</li>
+
+        <li>
+          <p>Funktionen &gt; Artikel.json &gt; Exportieren</p>
+
+          <p>Die App schlägt als Ziel bereits den richtigen Ordner im Repository vor. Die ältere Version der Artikel.json einfach ersetzen.</p>
+        </li>
+
+        <li><i>Git Bash</i> (unter Windows), <i>Terminal</i> (unter macOS) oder einen beliebigen Terminal-Emulator (unter Linux) im Repository-Ordner öffnen</li>
+
+        <li>
+          <p>Commit erstellen und pushen:</p>
+
+          <pre>git pull
+git add resources/Artikel.json
+git commit -m "Artikeldaten-Update"
+git push</pre>
+        </li>
+      </ol>
+
+      <p>Für Techniker*innen zur Evaluation: <i>QS</i> liefert ein <b>Node-Script</b> mit, mit dessen Hilfe man die Artikel.json in menschenlesbares JSON verwandeln kann. Die Datei ist im Original <a href="https://www.zdl.org/wb/wgd/api#Artikeldaten">stark größenoptimiert</a>, weswegen viele Werte nur Indizes sind, die auf ein Objekt namens <code>values</code> zeigen. Das Script liegt im Installationsordner von <i>QS</i> im Unterordner <code>resources</code>:</p>
+
+      <pre>node hrArtikel.js /PFAD/ZUM/WORTGESCHICHTEN-REPOSITORY/resources/Artikel.json</pre>
+
+      <p>Die Output-Datei wird in dem Ordner erzeugt, in dem die Artikel.json liegt.</p>
+
+      <p>Der Installationsordner von <i>QS</i> ist abhängig vom Betriebssystem:</p>
+
+      <ul>
+        <li><i>Windows:</i> <code>C:\Users\BENUTZERNAME\AppData\Local\Programs\QS\</code></li>
+
+        <li><i>Linux:</i> <code>/opt/QS/</code></li>
+      </ul>
+
+      <h2><span>Teaser-Tags</span></h2>
+
+      <p id="verschiedenes-teaser">Diese Funktion ist eher für Techniker*innen gedacht. Sie dient zur Evaluation des XML-Codes im Kurz-Gefasst. Für die Transformation des Kurz-Gefasst gibt es auf zdl.org zwei verschiedene XSLT: Das eine ist in die Transformationsroutine der Artikel integriert; das andere macht eine technisch reduzierte Vorschau-Version für die Suchfunktion und die Startseite. Diese zweite Version des Scripts gerät gerne aus dem Blick.</p>
+
+      <p>Die Funktion listet alle <b>Tags</b> auf, die innerhalb von <code>&lt;Wortgeschichte_kompakt&gt;</code> verwendet werden. Die Tags sind klicksensitiv. Auf Klick werden alle <b>Attribute</b> aufgelistet, die im Zusammenhang mit dem gewählten Tag genutzt werden. Im unteren Teil des Fensters kann man durch den XML-Code der Kurz-Gefasst browsen, auf die die Auswahl zutrifft.</p>
+
+      <p>Über dem XML-Code gibt zwei <b>Icons</b>:</p>
+
+      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Zeigt das Kurz-Gefasst in der gerenderten HTML-Fassung an</p>
+
+      <p class="indent-icon"><img src="../img/win/open-file.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-Editor des Betriebssystems</p>
+
+      <h1><span>Hilfe-Menü</span></h1>
+
+      <p id="verschiedenes-hilfe">Die folgenden Funktionen sind über den App-Menüpunkt <i>Hilfe</i> erreichbar.</p>
+
+      <h2><span>Updates</span></h2>
+
+      <p id="verschiedenes-udpates">Die App sucht bei jedem Start automatisch nach Programm-Updates. Wenn es eins gibt, wird ein Meldungsfenster geöffnet, in dem ein Link zur GitHub-Seite mit den Downloads zu finden ist.</p>
+
+      <p>Sie können die Funktion über diesen Menüpunkt jederzeit selbst anstoßen.</p>
+
+      <h2><span>Fehlerlog</span></h2>
+
+      <p id="verschiedenes-fehlerlog">Das Fehlerlog ist persistent, es wird also nicht bei jedem Programmstart neu erstellt, sondern immer weiter gefüllt. Tritt ein Programmfehler auf, der keine explizite Meldung für die Benutzer*in auslöst, wird dieser im Log protokolliert. Stoßen Sie auf einen Fehler, benötigt die Techniker*in genauere Informationen, um ihn zu beheben. Das Log stellt diese unter Umständen bereit.</p>
+
+      <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
+
+      <p>Mit dem Icon <img src="../img/win/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
     </section>
 
     <!-- OVERLAY: LOADING -->

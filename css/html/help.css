@@ -180,6 +180,10 @@ p.tag i:first-child {
   text-indent: 0;
 }
 
+li p {
+  margin-bottom: 0;
+}
+
 pre {
   position: relative;
   margin: 0 0 10px;
@@ -219,6 +223,34 @@ pre.correct::before {
 
 pre.correct::before {
   background-image: url(../../img/win/button-yes.svg);
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: .8rem;
+  line-height: 1.2rem;
+}
+
+td {
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+  padding: 5px;
+  white-space: nowrap;
+}
+
+td:last-child {
+  padding-left: 15px;
+  white-space: normal;
+}
+
+td:empty {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+tr:first-child td {
+  border-top: 1px solid var(--line);
 }
 
 section :is(ol, ul) {
