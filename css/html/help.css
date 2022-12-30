@@ -80,7 +80,6 @@ code {
   border-radius: 5px;
   padding: 0 5px;
   font-size: .8rem;
-  word-break: break-all;
 }
 
 h1,
@@ -182,6 +181,10 @@ p.tag i:first-child {
 
 li p {
   margin-bottom: 0;
+}
+
+li p:has( + pre) {
+  margin-bottom: 10px;
 }
 
 pre {

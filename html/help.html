@@ -65,9 +65,9 @@
 
       <p id="allgemeines-ueberblick">Die App hat <b>vier Ansichten</b>, die über den Kopf des Hauptfensters angesteuert werden können: <a href="#xml"><i>XML</i></a>, <a href="#hinweise"><i>Hinweise</i></a>, <a href="#clusterei"><i>Clusterei</i></a> und <a href="#suche"><i>Suche</i></a>. Die Daten für die Operationen und Anzeigen dieser Ansichten speisen sich aus einem lokalen <a href="#git-einrichtung">Klon des Wortgeschichten-Repositorys</a>, der zunächst eingerichtet werden muss. Ohne Repository im Hintergrund ist die App nicht lauffähig. Darum werden beim ersten Start auch der Ort und der Benutzername für dieses Repository erfragt.</p>
 
-      <p>Alle <a href="#git-befehle">Git-Operationen</a>, die für die Benutzer*innen relevant sind, können ausnahmslos über die App ausgeführt werden. Wie die Ansichten befinden sie sich im Kopf des Hauptfensters.</p>
+      <p>Alle <a href="#git-befehle">Git-Befehle</a>, die für die Benutzer*innen relevant sind, können ausnahmslos über die App ausgeführt werden. Wie die Ansichten können sie über den Kopf des Hauptfensters aufgerufen werden.</p>
 
-      <p id="allgemeines-update">Um <i>QS</i> zu nutzen, muss niemand in der Lage sein, Commits mit Git zu erstellen. Man kann einfach neue XML-Dateien in den <a href="#git-ignore">Ordner <code>ignore</code></a> legen, auf <b><i>Update</i></b> drücken (Tastaturkürzel <kbd>F5</kbd>) und die App frischt ihre Daten unter Berücksichtung der geänderten oder ergänzten Dateien auf. Die Analyse der XML-Dateien, auf deren Ergebnis alle vier Ansichten zurückgreifen, ist rechenintensiv, weswegen sie in einem Cache zwischengespeichert wird, auf den auch nach dem Neustart des Programms zurückgegriffen wird. XML-Dateien werden nur dann neu analysiert, wenn die App feststellt, dass sie verändert oder neu hinzugefügt wurden. Und nur dann, wenn einer dieser Fälle zutrifft, werden auch die <a href="#hinweise">Hinweise</a> zu den Dateien neu berechnet. Eine Ausnahme stellt hier die Installation einer neuen Programmversion dar. In diesem Fall werden der Cache zurückgesetzt, die XML-Dateien komplett neu eingelesen und alle Daten neu berechnet.</p>
+      <p id="allgemeines-update">Um <i>QS</i> zu nutzen, muss niemand in der Lage sein, Commits mit Git zu erstellen. Man kann einfach neue XML-Dateien in den <a href="#git-ignore">Ordner <code>ignore</code></a> legen, auf <b><i>Update</i></b> drücken (Tastaturkürzel <kbd>F5</kbd>) und die App frischt ihre Daten unter Berücksichtung der geänderten oder ergänzten Dateien auf. Die Analyse der XML-Dateien, auf deren Ergebnis alle vier Ansichten zurückgreifen, ist rechenintensiv, weswegen sie in einem Cache zwischengespeichert wird, auf den auch nach dem Neustart des Programms zurückgegriffen wird. XML-Dateien werden nur dann neu analysiert, wenn die App feststellt, dass sie verändert oder neu hinzugefügt wurden. Und nur dann, wenn eine XML-Datei neu analysiert wurde, werden auch die <a href="#hinweise">Hinweise</a> zu den Dateien neu berechnet. Eine Ausnahme stellt hier die Installation einer neuen Programmversion dar. In diesem Fall werden der Cache zurückgesetzt, die XML-Dateien komplett neu eingelesen und alle Daten neu berechnet.</p>
 
       <h1><span>Filterleiste</span></h1>
 
@@ -78,15 +78,15 @@
       <p>Die Filter im Einzelnen:</p>
 
       <div class="item">
-        <p><i>Autor*innen</i><br>Es werden nur XML-Dateien der ausgewählten Autor*in berücksichtigt. Für die <a href="#clusterei">Clusterei</a> bedeutet dies, dass in den Funktionen <i>vergleichen</i> und <i>überprüfen</i> nur Cluster sichtbar sind, deren Zentrum mindestens ein Lemma hat, das von der ausgewählten Autor*in behandelt wurde. Die <a href="#clusterei-berechnung">Berechnung der Vorschau</a> hingegen berücksichtigt immer alle Lemmata.</p>
+        <p><i>Autor*innen</i><br>Es werden nur XML-Dateien der ausgewählten Autor*in berücksichtigt. Für die <a href="#clusterei">Clusterei</a> bedeutet dies, dass in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> nur Cluster sichtbar sind, deren Zentrum mindestens ein Lemma hat, das von der ausgewählten Autor*in behandelt wurde. Die <a href="#clusterei-vorschau">Berechnung der Vorschau</a> hingegen berücksichtigt immer alle Lemmata.</p>
       </div>
 
       <div class="item">
-        <p><i>Themenfelder</i><br>Die Analyse <abbr title="beziehungsweise">bzw.</abbr> Anzeige der XML-Dateien wird in allen Ansichten auf das ausgewählte Themenfeld begrenzt. Um die Funktionen <i>vergleichen</i> und <i>überprüfen</i> in der <a href="#clusterei">Clusterei</a> nutzen zu können, müssen Sie zwingend ein Themenfeld auswählen.</p>
+        <p><i>Themenfelder</i><br>Die Analyse <abbr title="beziehungsweise">bzw.</abbr> Anzeige der XML-Dateien wird in allen Ansichten auf das ausgewählte Themenfeld begrenzt. Um die Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> in der <a href="#clusterei">Clusterei</a> nutzen zu können, müssen Sie zwingend ein Themenfeld auswählen.</p>
       </div>
 
       <div class="item">
-        <p><i>Dateistatus</i><br>Liegt eine XML-Datei im Ordner <code>ignore</code>, hat sie nur dann den Status <i>geändert</i>, wenn sie von einer Datei gleichen Namens im Ordner <code>articles</code> inhaltlich abweicht. <i>Neu</i> sind Dateien, die im Ordner <code>ignore</code> liegen, aber nicht im Ordner <code>articles</code> oder sogenannte <q lang="en"><a href="#git-dateien">untracked files</a></q> im Ordner <code>articles</code>. Dies sind Dateien, die noch nie committet wurden, deren Existenz von Git wahrgenommen, die ansonsten aber ignoriert werden.</p>
+        <p><i>Dateistatus</i><br>Liegt eine XML-Datei im Ordner <code>ignore</code>, hat sie nur dann den Status <i>geändert</i>, wenn sie von einer Datei gleichen Namens im Ordner <code>articles</code> inhaltlich abweicht. <i>Neu</i> sind Dateien, die im Ordner <code>ignore</code> liegen, aber nicht im Ordner <code>articles</code> oder sogenannte <q lang="en"><a href="#git-untracked">untracked files</a></q> im Ordner <code>articles</code>. Dies sind Dateien, die noch nie committet wurden, deren Existenz von Git wahrgenommen, die ansonsten aber ignoriert werden.</p>
       </div>
 
       <div class="item">
@@ -163,7 +163,7 @@
 
       <p class="indent-icon"><img src="../img/win/open-dir.svg" width="30" height="30" alt="">Dateien im Ordner <code>ignore</code> oben in der Liste anzeigen. Intern werden diese Dateien zwar auch je nach Einstellung auf- oder absteigend sortiert, sie werden bei aktiviertem Icon aber immer vor allen anderen Dateien angezeigt.</p>
 
-      <p class="indent-icon"><img src="../img/win/alpha.svg" width="30" height="30" alt="">Alphanumerische Sortierung nach Namen der XML-Dateien</p>
+      <p class="indent-icon"><img src="../img/win/alpha.svg" width="30" height="30" alt="">Sortierung nach Namen der XML-Dateien</p>
 
       <p class="indent-icon"><img src="../img/win/time.svg" width="30" height="30" alt="">Sortierung nach Datum der Erstpublikation</p>
 
@@ -171,11 +171,11 @@
 
       <p id="allgemeines-kopfleisteClusterei">Mithilfe der <b>ersten drei Icons</b> lassen sich die drei Ansichten der Clusterei ansteuern:</p>
 
-      <p class="indent-icon"><img src="../img/win/preferences.svg" width="30" height="30" alt="">Ansicht zum Modulieren der Cluster</p>
+      <p class="indent-icon"><img src="../img/win/preferences.svg" width="30" height="30" alt="">Sektion zum Modulieren der Cluster</p>
 
-      <p class="indent-icon"><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">Ansicht zum Vergleichen einander ähnlicher Cluster</p>
+      <p class="indent-icon"><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">Sektion zum Vergleichen einander ähnlicher Cluster</p>
 
-      <p class="indent-icon"><img src="../img/win/clusters.svg" width="30" height="30" alt="">Ansicht zum Überprüfen der Cluster</p>
+      <p class="indent-icon"><img src="../img/win/clusters.svg" width="30" height="30" alt="">Sektion zum Überprüfen der Cluster</p>
 
       <p>Am rechten Rand werden die <b>aktiven Filter</b> angezeigt, also das Themenfeld und <abbr title="gegebenenfalls">ggf.</abbr> die Initialen der ausgewählten Autor*in.</p>
 
@@ -183,7 +183,7 @@
 
       <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Vorschauansicht umschalten. Ist das Icon aktiv wird es deaktiviert; ist es nicht aktiv erscheint ein <a href="#clusterei-vorschau">Konfigurationsfenster</a>.</p>
 
-      <p class="indent-icon"><img src="../img/win/jump.svg" width="30" height="30" alt="">Zum nächsten neuen oder geänderten Cluster springen. Dieses Icon ist nur in der Überprüfen-Ansicht sichtbar.</p>
+      <p class="indent-icon"><img src="../img/win/jump.svg" width="30" height="30" alt="">Zum nächsten neuen oder geänderten Cluster springen. Dieses Icon ist nur in der Sektion <i>Überprüfen</i> sichtbar.</p>
 
       <h2><span><i>Suche</i></span></h2>
 
@@ -202,13 +202,13 @@
     <section id="git">
       <h1><span>Allgemeines</span></h1>
 
-      <p id="git-allgemeines"><b>Git</b> ist ein verteiltes Versionskontrollsystem, das 2005 von Linus Torvalds, dem <q>Erfinder</q> von Linux, entwickelt wurde. Geschrieben wurde es für die Quellcodeverwaltung des Linux-Kernels. Es soll sukzessive Änderungen an Dateien nachvollziehbar machen und es jederzeit ermöglichen, ältere Versionen dieser Dateien wiederherzustellen.</p>
+      <p id="git-allgemeines">Git ist ein verteiltes <b>Versionskontrollsystem</b>, das 2005 von Linus Torvalds, dem <q>Erfinder</q> von Linux, entwickelt wurde. Geschrieben wurde es für die Quellcodeverwaltung des Linux-Kernels. Es soll sukzessive Änderungen an Dateien nachvollziehbar machen und es jederzeit ermöglichen, ältere Versionen dieser Dateien wiederherzustellen.</p>
 
-      <p>Git ist ein <b>verteiltes Versionskontrollsystem</b>. Im Gegensatz zu einem zentralen System gibt es keine Instanz, von der man abhängig oder an die man gebunden ist. Es ist vielmehr so, dass jede Benutzer*in eines Projekts einen lokalen Klon des kompletten Quelltexts dieses Projekts inklusive seiner Geschichte auf dem eigenen Rechner speichert. Die einzelnen, unabhängig voneinander arbeitenden Instanzen von Git können sich dann über einen Austauschknoten miteinander koordinieren. Im Falle von WGd ist dieser Knoten ein Klon des Repositorys, der bei <a href="https://git.zdl.org/">ZDL Git</a> liegt. Der Austausch findet über sogenannte Pushes und Pulls statt. Für die WGd-Miterarbeiter*innen ist in der Regel nur der <a href="#git-pull">Befehl <i>pull</i></a> interessant, für den es eine Funktion im Kopf des Hauptfensters von <i>QS</i> gibt.</p>
+      <p>Git ist insofern ein <b>verteiltes</b> Versionskontrollsystem, als es im Gegensatz zu einem zentralen System keine Instanz gibt, von der man abhängig oder an die man gebunden ist. Es ist vielmehr so, dass jede Benutzer*in eines Projekts einen lokalen Klon des kompletten Quelltexts dieses Projekts inklusive seiner Geschichte auf dem eigenen Rechner speichert. Die einzelnen, unabhängig voneinander arbeitenden Instanzen von Git können sich dann über einen Austauschknoten miteinander synchronisieren. Im Falle von WGd ist dieser Knoten ein Klon des Repositorys, der bei <a href="https://git.zdl.org/">ZDL Git</a> liegt. Der Austausch findet über sogenannte Pushes und Pulls statt. Für die WGd-Miterarbeiter*innen ist in der Regel nur der <a href="#git-pull">Befehl <i>pull</i></a> interessant, für den es eine Funktion im Kopf des Hauptfensters von <i>QS</i> gibt.</p>
 
       <p>Git speichert die Versionsgeschichte der verwalteten Dateien in einem sogenannten <b>Repository</b>. Ein Repository ist nichts anderes als eine Datenbank, in der die Zustände der verwalteten Dateien aufbewahrt und aus der die unterschiedlichen Zustände der Dateien bei Bedarf wieder abgerufen werden können. Für Benutzer*innen gibt es eine einfache, jedermann zugänglich Bedienoberfläche: Bei ihr handelt es sich um nichts anderes als einen ganz gewöhnlichen Ordner mit Dateien, der an einem selbstgewählten Ort auf dem eigenen Betriebssystem liegt. Wenn man tiefer in die Materie einsteigt, muss man zwar Textbefehle tippen können, das ist für die Benutzung von <i>QS</i> aber ganz und gar unnötig.</p>
 
-      <p id="git-allgemeinesBranch">Wie eigentlich jedes Versionskontrollsystem kennt auch Git sogenannte <b>Branches</b>. Branches sind nichts anderes als Abzweigungen in der Codebasis. Mithilfe von Branches kann man mehrere Features einer Software parallel entwickeln. Für WGd sind Branches deswegen wichtig, weil wir auf diese Weise das Repository in publizierte und noch nicht publizierte Artikel auftrennen können.</p>
+      <p id="git-allgemeinesBranch">Wie eigentlich jedes Versionskontrollsystem kennt auch Git sogenannte <b>Branches</b>. Branches sind Abzweigungen in der Codebasis. Mithilfe von Branches kann man mehrere Features einer Software parallel entwickeln. Für WGd sind Branches deswegen wichtig, weil wir auf diese Weise das Repository in publizierte und noch nicht publizierte Artikel auftrennen können.</p>
 
       <p id="git-allgemeinesBranchesWGd">Für die Mitarbeiter*innen von WGd sind darum <b>zwei Branches</b> relevant: <q>master</q> und <q>preprint</q>. Die XML-Dateien, die unter <q>master</q> liegen, sind publiziert. Die Inhalte dieser Dateien werden in den <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichten auf zdl.org</a> angezeigt. Der Branch <q>preprint</q> hingegen ist für die Vorbereitung von Publikationen gedacht. Die XML-Dateien neuer Artikel werden zunächste nach <q>preprint</q> geladen und erst später, wenn <q>ein Imprimatur erteilt wurde</q>, nach <q>master</q> gemergt, also in den anderen Branch übertragen. Steht keine Publikation an, sind die Inhalte von <q>master</q> und <q>preprint</q> vollkommen identisch. (Dafür sorgen die Mitarbeiter*innen, die sich genauer mit Git auskennen.)</p>
 
@@ -220,9 +220,9 @@
 
       <p id="git-installation"><i>Windows:</i> Installationsmedien kann man von der <a href="https://git-scm.com/download/win">Git-Webseite</a> herunterladen.</p>
 
-      <p><i>macOS:</i> Git ist wahrscheinlich schon installiert. Ob dem wirklich der Fall ist, kann man überprüfen, indem man das Programm <i>Terminal</i> öffnet und diesen Befehl ausführt: <code>git --version</code>. Wird eine Versionsnummer angezeigt, ist git installiert. Ist Git nicht installiert, muss man die <i>Xcode Command Line Tools</i> installieren. Dazu müssen Sie in <i>Terminal</i> diesen Code ausführen: <code>xcode-select --install</code>.</p>
+      <p><i>macOS:</i> Git ist wahrscheinlich schon installiert. Ob dem wirklich der Fall ist, kann man überprüfen, indem man das Programm <i>Terminal</i> öffnet und diesen Befehl ausführt: <code>$ git --version</code>. Wird eine Versionsnummer angezeigt, ist git installiert. Ist Git nicht installiert, muss man die <i>Xcode Command Line Tools</i> installieren. Dazu müssen Sie in <i>Terminal</i> diesen Code ausführen: <code>$ xcode-select --install</code>.</p>
 
-      <p><i>Linux:</i> Git ist wahrscheinlich schon installiert. Wenn nicht führen Sie <code>sudo apt-get git</code> aus (oder den für Ihr System passenden Code). Auch hier kann natürlich mit <code>git --version</code> überprüft werden, ob Git bereits installiert ist.</p>
+      <p><i>Linux:</i> Git ist wahrscheinlich schon installiert. Wenn nicht führen Sie <code>$ sudo apt-get git</code> aus (oder den für Ihr System passenden Code). Auch hier kann natürlich mit <code>$ git --version</code> überprüft werden, ob Git bereits installiert ist.</p>
 
       <h1><span>Respository einrichten</span></h1>
 
@@ -234,38 +234,38 @@
 
         <li>
           <p>Wortgeschichten-Repository klonen:</p>
-          <pre>git clone https://git.zdl.org/zdl/wortgeschichten.git</pre>
+          <pre>$ git clone https://git.zdl.org/zdl/wortgeschichten.git</pre>
         </li>
 
         <li>
           <p>In den Repository-Ordner wechseln:</p>
-          <pre>cd wortgeschichten</pre>
+          <pre>$ cd wortgeschichten</pre>
         </li>
 
         <li>
           <p>Git konfigurieren. Dafür die folgenden Befehle nacheinander ausführen; den gefetteten Text entsprechend anpassen:</p>
-          <pre class="no-highlight">git config user.name "<b>Petra Pan</b>"
-git config user.email <b>ppan@gwdg.de</b>
-git config pull.rebase false
-git config credential.helper cache
-git config core.editor nano</pre>
+          <pre class="no-highlight">$ git config user.name "<b>Petra Pan</b>"
+$ git config user.email <b>ppan@gwdg.de</b>
+$ git config pull.rebase false
+$ git config credential.helper cache
+$ git config core.editor nano</pre>
         </li>
 
         <li>
           <p><strong>Nur unter Windows:</strong></p>
-          <pre>git config core.autocrlf true</pre>
+          <pre>$ git config core.autocrlf true</pre>
         </li>
 
         <li>
           <p>Preprint-Branch einrichten:</p>
-          <pre>git switch --track origin/preprint</pre>
+          <pre>$ git switch --track origin/preprint</pre>
           <p>Sollte <code>switch</code> in Ihrer Git-Version nicht zur Verfügung stehen, geht auch dieser Befehl:</p>
-          <pre>git checkout -b preprint --track origin/preprint</pre>
+          <pre>$ git checkout -b preprint --track origin/preprint</pre>
         </li>
 
         <li>
           <p>Ordner <code>ignore</code> erzeugen:</p>
-          <pre>mkdir ignore</pre>
+          <pre>$ mkdir ignore</pre>
         </li>
 
         <li>
@@ -277,7 +277,7 @@ git config core.editor nano</pre>
 
         <li>
           <p>Status anzeigen lassen:</p>
-          <pre>git status</pre>
+          <pre>$ git status</pre>
           <p>Der Befehl sollte den folgenden Text auswerfen. Ist dem der Fall, hat alles geklappt.</p>
           <pre>On branch preprint
 Your branch is up to date with 'origin/preprint'.
@@ -288,22 +288,22 @@ nothing to commit, working tree clean</pre>
 
       <h1><span>Dateien und Ordner</span></h1>
 
-      <p id="git-dateien">Das Repository befindet sich nach der <a href="#git-einrichtung">Einrichtung</a> im Ordner <code>wortgeschichten</code>. Sie können den Ordner jederzeit umbenennen und verschieben. Dafür sind keine Git-Befehle nötig. Die Konfiguration von Git wird in dem versteckten Ordner <code>.git</code> gespeichert. Umbenennen und/oder Verschieben des übergeordneten Ordners tangiert die Konfiguration nicht.</p>
+      <p id="git-dateien">Das Repository befindet sich nach der <a href="#git-einrichtung">Einrichtung</a> im Ordner <code>wortgeschichten</code>. Sie können den Ordner jederzeit umbenennen oder verschieben. Dafür sind keine Git-Befehle nötig. Die Konfiguration von Git wird in dem versteckten Ordner <code>.git</code> gespeichert. Umbenennen und/oder Verschieben des übergeordneten Ordners tangiert die Konfiguration nicht.</p>
 
       <p>Das Repository besteht aus folgenden Dateien und Ordnern:</p>
 
       <ul>
         <li><code>.git</code> versteckter Ordner mit der Git-Konfiguration und dem Repository im engeren Sinne</li>
 
-        <li><code>articles</code> Ordner mit XML-Dateien</li>
+        <li><code>articles/</code> Ordner mit XML-Dateien</li>
 
-        <li><code>resources</code> Datendateien und Abbildungen
+        <li><code>resources/</code> Datendateien und Abbildungen
           <ul>
-            <li><code>resources/images</code> Abbildungen</li>
+            <li><code>resources/images/</code> Abbildungen</li>
 
-            <li><code>resources/images/qrc</code> QR-Codes für den Footer der Wortgeschichten</li>
+            <li><code>resources/images/qrc/</code> QR-Codes für den Footer der Wortgeschichten</li>
 
-            <li><code>resources/images/thumbs</code> Vorschaubilder für JPEG-Abbildungen</li>
+            <li><code>resources/images/thumbs/</code> Vorschaubilder für JPEG-Abbildungen</li>
 
             <li><code>resources/Artikel.json</code> Datendatei mit <a href="#allgemeines-artikelJSON">Artikeldaten</a></li>
 
@@ -317,9 +317,9 @@ nothing to commit, working tree clean</pre>
 
         <li><code>share</code> Ordner mit Schema, Musterdateien und Literaturliste
           <ul>
-            <li><code>share/rnc</code> das RelaxNG-Schema für die XML-Dateien</li>
+            <li><code>share/rnc/</code> das RelaxNG-Schema für die XML-Dateien</li>
 
-            <li><code>share/tei</code> Musterdateien im WGd-XML-Format und in <a href="https://tei-c.org/">TEI</a></li>
+            <li><code>share/tei/</code> Musterdateien im WGd-XML-Format und in <a href="https://tei-c.org/">TEI</a></li>
 
             <li><code>share/Literaturliste.xml</code> XML-Dateien mit allen Titeln aus der Literaturdatenbank von <a href="https://github.com/WortgeschichteDigital/ZettelsTraum">Zettel’s Traum</a></li>
           </ul>
@@ -332,7 +332,7 @@ nothing to commit, working tree clean</pre>
 
       <p id="git-beobachtet">Die Ordner <code>articles</code>, <code>resources</code>, <code>share</code> und die Datei <code>README.md</code> hingegen werden von Git beobachtet. Diese Ordner und die in ihnen enthaltenen Dateien können mit dem <a href="#git-restore">Befehl <i>restore</i></a> zurückgesetzt werden. Denn Git kümmert sich um die bereits bekannten Dateien in diesen Ordnern. Außerdem werden die Ordner von Git, wie gesagt, beobachtet: Legt man neue Dateien in einen der beobachteten Ordner oder direkt in den Ordner <code>wortgeschichten</code>, wird Git dies registrieren, sich um diese Dateien erst einmal aber nicht weiter kümmern. Wenn Git eine Datei aber bereits bekannt ist, macht es einen durch den <a href="#git-status">Befehl <i>status</i></a> <abbr title="ggf.">gegebenenfalls</abbr> darauf aufmerksam, dass sie geändert wurde.</p>
 
-      <p>Wurde <abbr title="beispieslweise">bspw.</abbr> die Datei <i>Abgehaengter.xml</i> geändert, erscheint dieser Status-Text:</p>
+      <p>Wurde <abbr title="beispielsweise">bspw.</abbr> die Datei <i>Abgehaengter.xml</i> geändert, erscheint dieser Status-Text:</p>
 
       <pre lang="en" class="no-highlight">On branch master
 Your branch is up to date with 'origin/master'.
@@ -344,7 +344,7 @@ Changes not staged for commit:
 
 no changes added to commit (use "git add" and/or "git commit -a")</pre>
 
-      <p>Wenn Sie in einem der <a href="#git-beobachtet">von Git beobachteten Ordner</a> eine neue, Git noch unbekannte Datei ablegen, handelt es sich dabei um eine sogenannte <q lang="en">untracked file</q>. Git registriert zwar, dass es eine neue Datei gibt, macht mit dieser aber erst einmal nichts. Darum werden <q lang="en">untracked files</q> durch den <a href="#git-restore">Befehl <i>restore</i></a> auch nicht zurückgesetzt – Git sieht diese Dateien, fühlt sich für sie aber (noch) nicht zuständig.</p>
+      <p id="git-untracked">Wenn Sie in einem der <a href="#git-beobachtet">von Git beobachteten Ordner</a> eine neue, Git noch unbekannte Datei ablegen, handelt es sich dabei um eine sogenannte <q lang="en">untracked file</q>. Git registriert zwar, dass es eine neue Datei gibt, macht mit dieser aber erst einmal nichts. Darum werden <q lang="en">untracked files</q> durch den <a href="#git-restore">Befehl <i>restore</i></a> auch nicht zurückgesetzt – Git sieht diese Dateien, fühlt sich für sie aber (noch) nicht zuständig.</p>
 
       <p>Im folgenden Fall wurde im Ordner <code>articles</code> die neue Datei <i>Handtasche.xml</i> erstellt:</p>
 
@@ -357,7 +357,7 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)</pre>
 
-      <p id="git-ignore"><b>Was heißt das alles für Sie in der Praxis?</b> Ganz einfach: Arbeiten Sie niemals in den von Git beobachteten Ordnern! Wenn Sie eine XML-Datei bearbeiten möchten, kopieren Sie diese und legen Sie die Kopie im Ordner <code>ignore</code> ab. Denn dieser Ordner und seine Inhalte werden von Git <em>nicht</em> beobachtet. Da der Ordner <code>ignore</code> aber im Repository relativ dieselbe Position wie der Ordner <code>articles</code> hat, erreichen die dort befindlichen XML-Dateien trotzdem das Schema, das im Ordner <code>share/rnc</code> liegt. So kann das XML dieser Dateien beim Bearbeiten automatisch validiert werden. Für den Ordner <code>ignore</code> gilt übrigens dasselbe wie für die <q lang="en">untracked files</q>: Der <a href="#git-restore">Befehl <i>restore</i></a> entfaltet in ihm keine Wirkung.</p>
+      <p id="git-ignore"><b>Was heißt das alles für Sie in der Praxis?</b> Ganz einfach: Arbeiten Sie niemals in den von Git beobachteten Ordnern! Wenn Sie eine XML-Datei bearbeiten möchten, kopieren Sie diese und legen Sie die Kopie im Ordner <code>ignore</code> ab. In der XML-Ansicht gibt es hierfür mit dem Icon <img src="../img/win/to-folder.svg" width="30" height="30" alt=""> eine <a href="#xml-operationen">Möglichkeit, dies mit einem Klick zu tun</a>. Denn der Ordner <code>ignore</code> und seine Inhalte werden von Git <em>nicht</em> beobachtet. Da er aber im Repository relativ dieselbe Position wie der Ordner <code>articles</code> hat, erreichen die dort befindlichen XML-Dateien trotzdem das Schema, das im Ordner <code>share/rnc</code> liegt. So kann das XML dieser Dateien beim Bearbeiten automatisch validiert werden. Für den Ordner <code>ignore</code> gilt übrigens dasselbe wie für die <q lang="en">untracked files</q>: Der <a href="#git-restore">Befehl <i>restore</i></a> entfaltet in ihm keine Wirkung.</p>
 
       <h1><span>Befehle</span></h1>
 
@@ -373,12 +373,12 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <li><i>restore</i> (Repository zurücksetzen).</li>
       </ul>
 
-      <p>Die Befehle lassen sich alle über die klicksensitiven Texte im Kopf des Hauptfensters bedienen. Nach dem Anstoßen der Befehle <i>checkout</i>, <i>pull</i> und <i>restore</i> stößt die App automatisch ein <a href="#allgemeines-update">Update</a> an, wodurch die Daten, mit denen <i>QS</i> arbeitet, auf dem neusten Stand gebracht werden.</p>
+      <p>Die Befehle lassen sich alle über die klicksensitiven Texte im Kopf des Hauptfensters bedienen. Nach dem Absetzen der Befehle <i>checkout</i>, <i>pull</i> und <i>restore</i> stößt die App automatisch ein <a href="#allgemeines-update">Update</a> an, wodurch die Daten, mit denen <i>QS</i> arbeitet, auf dem neusten Stand gebracht werden.</p>
 
       <div class="item">
         <p id="git-checkout"><i>Befehl <q>checkout</q></i><br>Der Befehl dient zum Wechseln des Branches. In der Anzeige steht in diesem Fall nicht der Name des Befehls, sondern der Name des Branches, in dem sich das Repository gerade befindet: <q>master</q> oder <q>preprint</q>. Durch Klick auf den Text wird in den anderen Branch, also den anderen <a href="#git-allgemeinesBranch">Zweig im Code</a> gewechselt.</p>
 
-        <p><b>Welchen Branch soll ich nutzen?</b> Faustregel: Für das Bearbeiten neuer, noch nicht publizierter XML-Dateien, sollten Sie immer <q>preprint</q> nutzen. Für das älterer, bereits publizierter XML-Dateien hingegen <q>master</q>.</p>
+        <p><b>Welchen Branch soll ich nutzen?</b> Faustregel: Für das Bearbeiten neuer, noch nicht publizierter XML-Dateien, sollten Sie immer <q>preprint</q> nutzen. Für das Bearbeiten älterer, bereits publizierter XML-Dateien hingegen <q>master</q>.</p>
       </div>
 
       <div class="item">
@@ -400,7 +400,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <p><b>Warum gibt es diese Funktion?</b> Wenn Sie eine XML-Datei bearbeiten möchten, sieht der Workflow normalerweise so aus: Sie kopieren die Datei aus dem Ordner <code>articles</code> und legen eine Kopie im Ordner <code>ignore</code> ab. Diese Kopie im Ordner <code>ignore</code> öffnen Sie dann zum Bearbeiten. Sind Sie mit der Arbeit fertig, reichen Sie die Kopie an eine kompetente Mitarbeiter*in weiter, die die Änderungen committet und pusht, sodass sie allen Mitarbeiter*innen nach einem <a href="#git-pull">Pull</a> zur Verfügung stehen.</p>
 
-        <p>Wenn Sie die XML-Datei aber aus Versehen nicht etwa kopieren, sondern ausschneiden oder verschieben, entfernen Sie dadurch die Originaldatei aus dem Ordner <code>articles</code>. Da <code>articles</code> ein von Git beobachteter Ordner ist, nimmt Git das Fehlen der Datei als Änderung am Repository wahr und Sie bekommen früher oder später Probleme mit dem Pullen, weil sich der Status Ihres Repositorys geändert hat. Kopieren Sie die nunmehr fehlende Datei einfach wieder zurück, ist diese von Ihnen vielleicht schon geändert worden, was die Lage nicht besser macht: Git wird sie immer noch als verändert registrieren und der Pull könnte zum Problem werden. Die einfachste Lösung ist in so einem Fall ein Restore. Durch den Befehl wird die fehlende Datei von Git im Ordner <code>articles</code> neu erzeugt, und zwar mit denselben Inhalten, die sie zuvor auch hatte. Aber Vorsicht! Haben Sie eine Datei vor dem Bearbeiten nicht verschoben, sondern direkt im Ordner <code>articles</code> bearbeitet, gehen die Änderungen an dieser Datei durch Klick auf <i>restore</i> unwiederbringlich verloren!</p>
+        <p>Wenn Sie die XML-Datei aber aus Versehen nicht etwa kopieren, sondern ausschneiden oder verschieben, entfernen Sie dadurch die Originaldatei aus dem Ordner <code>articles</code>. Da <code>articles</code> ein von Git beobachteter Ordner ist, nimmt Git das Fehlen der Datei als Änderung am Repository wahr und Sie bekommen früher oder später Probleme mit dem Pullen, weil sich der Status Ihres Repositorys geändert hat. Außerdem wird sich <i>QS</i> weigern, den Branch zu wechseln, weil der <q lang="en">working tree</q> nicht mehr <q lang="en">clean</q> ist. Kopieren Sie die nunmehr fehlende Datei einfach wieder zurück, ist diese von Ihnen vielleicht schon geändert worden, was die Lage nicht besser macht: Git wird sie immer noch als verändert registrieren und der Pull könnte zum Problem werden. Die einfachste Lösung ist in so einem Fall ein Restore. Durch den Befehl wird die fehlende Datei von Git im Ordner <code>articles</code> neu erzeugt, und zwar mit denselben Inhalten, die sie zuvor auch hatte. Aber Vorsicht! Haben Sie eine Datei vor dem Bearbeiten nicht verschoben, sondern direkt im Ordner <code>articles</code> bearbeitet, gehen die Änderungen an dieser Datei durch Klick auf <i>restore</i> unwiederbringlich verloren!</p>
 
         <p>Weil <i>restore</i> gravierende Folgen haben kann, fragt <i>QS</i> vor dem Ausführen des Befehls immer noch einmal nach, ob Sie ihn wirklich aufrufen möchten.</p>
       </div>
@@ -414,7 +414,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Sie können die Liste nach drei Kategorein <a href="#allgemeines-filterleiste">filtern</a>: <i>Autor*in</i>, <i>Themenfeld</i> und <i>Dateistatus</i>. Zusätzlich können sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> noch den Pfad-Filter nutzen.</p>
 
-      <p>Für jede Datei stehen Ihnen <b>drei Operationen</b> zur Verfügung:</p>
+      <p id="xml-operationen">Für jede Datei stehen Ihnen mehrere <b>Operationen</b> zur Verfügung:</p>
 
       <ul>
         <li>Ein <b>Klick auf den Dateinamen</b> öffnet die Datei im <a href="#xml-vorschaufenster">Vorschaufenster</a>;</li>
@@ -444,7 +444,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>Home</kbd>) kehren Sie zur XML-Datei zurück. Das Icon führt allerdings <em>kein</em> Update durch, wodurch es sich von der Funktion <img src="../img/win/view-refresh.svg" width="30" height="30" alt=""> unterscheidet.</p>
 
-      <p class="indent-icon"><img src="../img/win/nav-back.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>←</kbd>) navogieren zur vorherigen Seite</p>
+      <p class="indent-icon"><img src="../img/win/nav-back.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>←</kbd>) navigieren zur vorherigen Seite</p>
 
       <p class="indent-icon"><img src="../img/win/nav-forward.svg" width="30" height="30" alt="">Mit diesem Icon (oder dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>→</kbd>) navigieren zur nächsten Seite</p>
     </section>
@@ -473,13 +473,13 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Funktion der <b>Icons unterhalb der</b> <b class="blue">Zeilenangabe</b>:</p>
 
-      <p id="hinweise-markierungen" class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu markieren, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
+      <p id="hinweise-markierungen" class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu taggen, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
 
-      <p class="indent-icon"><img src="../img/win/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein. Da die Zeilennummer aber dynamisch ist (weil davor jederzeit Zeilen hinzugefügt oder entfernt werden könnten), kann diese nicht für die Berechnung der Indentifizierung mit herangezogen werden.</p>
+      <p class="indent-icon"><img src="../img/win/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein. Da die Zeilennummer aber dynamisch ist (weil davor jederzeit Zeilen hinzugefügt oder entfernt werden könnten), kann diese nicht für die Berechnung der Indentifizierung herangezogen werden.</p>
 
       <p class="indent-icon"><img src="../img/win/context.svg" width="30" height="30" alt="">Ein Klick auf das Icon öffnet ein Popup-Fenster, in dem Sie den Hinweis im <b>Kontext des Originalquellcodes</b> einsehen können, ohne dafür eigens die XML-Datei öffnen zu müssen. Im Popup-Fenster wird der XML-Quelltext zeilenweise dargestellt. Am linken Rand finden Sie die Zeilenzählung. Die Zeile, in der das Element zu finden ist, auf das sich der Hinweis bezieht, ist <b class="blue">blau</b> dargestellt. In vielen Fällen wird sogar die genaue <mark>Stelle im Quelltext</mark> markiert, um die es geht. (Es kann passieren, dass auch andere Stellen mit einem ähnlichen Phänomen hervorgehoben werden.) Der dargestellte Quelltext kann mal mehr, mal weniger umfangreich sein. Findet sich ein Phänomen im Autor*innentext der Wortgeschichte, wird immer ein kompletter Codeblock gedruckt.</p>
 
-      <p>Die Hinweise beziehen sich – natürlich – immer auf eine bestimmte <b>XML-Datei</b>. Der Name der XML-Datei, auf die sich ein Hinweis bezieht, bleibt am oberen Rand der Ansicht immer sichtbar. Neben dem Dateinamen finden Sie drei <b>Icons</b>:</p>
+      <p>Die Hinweise beziehen sich – natürlich – immer auf eine bestimmte <b>XML-Datei</b>. Der Name der XML-Datei, auf die sich ein Hinweis bezieht, bleibt am oberen Rand der Ansicht sichtbar. Neben dem Dateinamen finden Sie drei <b>Icons</b>:</p>
 
       <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Das Icon schickt den XML-Code der Datei an ein neues Programmfenster. In diesem wird die <b>Vorschau</b> auf zdl.org aufgerufen (<a href="#xml-vorschaufenster">mehr zum Vorschaufenster</a>).</p>
 
@@ -491,7 +491,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="hinweise-typen">Die Hinweise sind so gruppiert, wie sie in der <a href="#allgemeines-filterleiste">Filterleiste</a> zu finden sind.</p>
 
-      <p>Mit <i>Skopus</i> werden im Folgenden die Bereiche bezeichnet, in denen nach dem Phänomen gesucht wurde. <i>Tag</i> gibt an, welcher Tag für diesen Hinweis analysiert wurde.</p>
+      <p>Mit <i>Skopus</i> werden im Folgenden die Bereiche bezeichnet, in denen nach dem Phänomen gesucht wurde. <i>Tag</i> gibt an, welcher XML-Tag für diesen Hinweis analysiert wurde.</p>
 
       <h2><span>Verweise: Fehler</span></h2>
 
@@ -698,7 +698,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <p class="indent-hint">Dieser Hinweis erscheint, wenn <code>&lt;erwaehntes_Zeichen&gt;</code> ein Lemma (Haupt- oder Nebenlemma) des aktuellen Artikels auszeichnet. In diesem Fall sollte für die Auszeichnung unbedingt <code>&lt;Stichwort&gt;</code> genutzt werden.</p>
 
-        <p class="indent-hint">Es gibt natürlich Grenzfälle, in denen <code>&lt;erwaehntes_Zeichen&gt;</code> sinnvoll ist, <abbr title="zum Beispiel">z.&nbsp;B.</abbr> wenn die Interjektion <i>Yippie</i> im Artikel zur Sozialfigur <i>Yippie</i> erwähnt wird. Die Interjektion ist kein Lemma des Artikels.</p>
+        <p class="indent-hint">Es gibt natürlich Grenzfälle, in denen <code>&lt;erwaehntes_Zeichen&gt;</code> trotzdem sinnvoll ist, <abbr title="zum Beispiel">z.&nbsp;B.</abbr> wenn die Interjektion <i>Yippie</i> im Artikel zur Sozialfigur <i>Yippie</i> erwähnt wird. Die Interjektion ist kein Lemma des Artikels.</p>
 
         <p class="indent-hint">Wie im Falle von <a href="#hinweise-ez_link"><i>Objektsprache mit Artikel verlinken</i></a> wird für die Erkennung der Wörter auf Formvarianten des DTA zurückgegriffen, was entsprechend zu falschpositiven Hinweisen führen kann, die getrost ignoriert werden dürfen.</p>
 
@@ -765,7 +765,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <p class="tag"><i>Tags:</i>alle <em class="red">außer</em> <code>&lt;Abkuerzung&gt;</code>, <code>&lt;Diasystematik&gt;</code>, <code>&lt;Textreferenz&gt;</code></p>
 
-        <p class="indent-hint">Für diesen Hinweis werden alle diasystematischen Angaben eingelesen, die im RelaxNG-Schema zu finden sind. Wird im Text einer <code>&lt;Lesart&gt;</code> eine Zeichenfolge gefunden, auf die eine der möglichen diasystematischen Angaben passt, wird ein Hinweis diesen Typs ausgegeben.</p>
+        <p class="indent-hint">Für diesen Hinweis werden alle diasystematischen Angaben eingelesen, die im <a href="#git-dateien">RelaxNG-Schema</a> zu finden sind. Wird im Text einer <code>&lt;Lesart&gt;</code> eine Zeichenfolge gefunden, auf die eine der möglichen diasystematischen Angaben passt, wird ein Hinweis diesen Typs ausgegeben.</p>
 
         <p class="indent-hint">Sie können den Vorschlag in zweierlei Weise umsetzen. Zum einen können Sie die Angabe im dafür vorgesehen Tag am Anfang einer Lesart einfügen. Auf der Webseite wird die diasystematische Angabe in diesem Fall nachgestellt:</p>
 
@@ -804,7 +804,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <p class="indent-hint">Solche Auszeichnungen eröffnen die Möglichkeit, korrespondierende Semantiken für Verweise auf andere Artikel zu berechnen. Das Gros der Hinweise diesen Typs speist sich aus einer solchen Berechnung, die einer ganz einfachen Logik folgt: Wenn im Artikel <i>Bourgeois</i> ein Verweis auf das Wort <i>Kleinbürger</i> als Gegensatz markiert wurde, muss im Artikel <i>Kleinbürger</i> ein Verweis auf <i>Bourgeois</i> ebenfalls einen Gegensatz markieren. (Asymmetrische Relationen werden bei dieser Berechnung natürlich entsprechend behandelt. Wird im Artikel <i>Schiff</i> das Wort <i>Segelschiff</i> als Hyponym markiert, wird für den Artikel <i>Segelschiff</i> vorgeschlagen, <i>Schiff</i> als Hyperonym zu kennzeichnen.)</p>
 
-        <p class="indent-hint">Da die Semantiken bei <i>Wortgeschichte digital</i> nicht mit den Bedeutungen, sondern mit den Lemmata verknüpft sind, kann es Grenzfälle geben, auf die diese Umkehrlogik nicht zutrifft. Darum müssen die Vorschläge von den Autor*innen manuell gesichtet und umgesetzt werden.</p>
+        <p class="indent-hint">Da die Semantiken bei WGd nicht mit den Bedeutungen, sondern mit den Lemmata verknüpft sind, kann es Grenzfälle geben, auf die diese Umkehrlogik nicht zutrifft. Darum müssen die Vorschläge von den Autor*innen manuell gesichtet und umgesetzt werden.</p>
 
         <p class="indent-hint">Die besondere Form des Paarartikels und der Umstand, dass die Semantiken nicht mit einzelnen Bedeutungen, sondern mit den Lemmata verknüpft sind, kann zu dem seltenen Fall führen, dass es sinnvoll ist, zwei verschiedene, einander normalerweise ausschließende Semantiken an ein und denselben Verweis zu hängen. So wird das Wort <i>Kleinbürger</i> zusammen mit dem Wort <i>Großbürger</i> in ein und demselben Artikel behandelt. Da sich <i>Bourgeois</i>, das in einem eigenen Artikel behandelt wird, in unterschiedlicher Weise auf diese beiden Wörter bezieht, kann ein Link aus dem Artikel <i>Großbürger/Kleinbürger</i> auf <i>Bourgeois</i> sowohl als Gegensatz als auch als Synonym gekennzeichnet werden, denn in Bezug auf <i>Großbürger</i> ist <i>Bourgeois</i> synonym, in Bezug auf <i>Kleinbürger</i> aber ein Gegensatz. Darum wird mitunter vorgeschlagen, mehr als eine Semantik an ein und denselben Verweis zu hängen:</p>
 
@@ -837,7 +837,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
           <p><i>ID bereits vergeben</i><br>IDs müssen zwingend einmalig sein. Darum darf ein und dieselbe ID auch nicht für mehrere Artikel genutzt werden. Passiert dies dennoch, muss eine der IDs zwingend geändert werden.</p>
         </div>
 
-        <p class="indent-hint">Die Vergabe korrekter Artikel-IDs ist von größter Wichtigkeit, da die Artikel von <i>Wortgeschichte digital</i> automatisch in die <a href="https://gso.gbv.de/DB=1.71/SET=1/TTL=1/">Wortforschungsdatenbank</a> des GBV eingespeist werden. Fehlermeldungen diesen Typs sollten darum <em>umgehend</em> und <em>unbedingt</em> korrigiert werden, denn es handelt sich in diesem Fall wirklich und wahrhaftig um Fehler.</p>
+        <p class="indent-hint">Die Vergabe korrekter Artikel-IDs ist von größter Wichtigkeit, da die Artikel von WGd automatisch in die <a href="https://gso.gbv.de/DB=1.71/SET=1/TTL=1/">Wortforschungsdatenbank</a> des GBV eingespeist werden. Fehlermeldungen diesen Typs sollten darum <em>umgehend</em> und <em>unbedingt</em> korrigiert werden, denn es handelt sich in diesem Fall wirklich und wahrhaftig um Fehler.</p>
 
       <p id="hinweise-literature_missing" class="hint">Literaturtitel ergänzen</p>
 
@@ -845,7 +845,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <p class="tag"><i>Tag:</i><code>&lt;Literaturtitel&gt;</code></p>
 
-        <p class="indent-hint">Der Literaturtitel wurde in der Datei <code>share/Literaturliste.xml</code> nicht gefunden. Wurde der Titel unter der genannten ID bereits in die Literaturdatenbank von <i>Zettel’s Traum</i> übertragen, kann dieser Fehler getrost ignoriert werden.</p>
+        <p class="indent-hint">Der Literaturtitel wurde in der Datei <code>share/<wbr>Literaturliste.xml</code> nicht gefunden. Wurde der Titel unter der genannten ID bereits in die Literaturdatenbank von <i>Zettel’s Traum</i> übertragen, kann dieser Fehler getrost ignoriert werden.</p>
 
       <h2><span>Kommentare</span></h2>
 
@@ -880,7 +880,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="clusterei-modulieren">Diese Sektion ist auch ohne <a href="#allgemeines-filterleiste">Filter</a> voll nutzbar. Werden Filter ausgewählt, beziehen sich diese nur auf das Suchformular. Die zum Suchwort passenden Ergebnisse werden dann nach Autor*in und/oder Themenfeld gefiltert.</p>
 
-      <p>Das <b>Grundprinzip</b> eines jeden Clusterzentrums ist, dass die in ihm stehenden Hauptlemmata eine rekursive Beziehung zueinander haben: Jedes Lemma muss auf jedes andere Lemma im selben Zentrum verweisen. Nur wenn dies der Fall ist, bildet sich ein Clusterzentrum.</p>
+      <p>Das <b>Grundprinzip</b> eines jeden Clusterzentrums ist, dass die in ihm stehenden Hauptlemmata eine rekursive Beziehung zueinander haben: Jedes Lemma muss auf jedes andere Lemma im selben Zentrum verweisen. Nur wenn dies der Fall ist, bildet sich ein Clusterzentrum. Um den Saum und das Umfeld müssen Sie sich nicht kümmern; schauen Sie nur auf das Clusterzentrum!</p>
 
       <p>Wenn Sie ein <b>Zentrum modulieren</b> wollen, gehen Sie wie folgt vor:</p>
 
@@ -902,7 +902,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
           <p class="indent-icon"><img src="../img/win/close.svg" width="30" height="30" alt="">Entfernt den Artikelblock aus der Modulierung</p>
 
-          <p>Auf die im Artikelblock alphabetisch aufgelisteten Lemmata wird in der Datei verwiesen. Klicken Sie auf einen der blauen Links, öffnet sich eine Tabelle, in der Sie sehen, in welcher Zeile sich ein Verweis auf das genannte Lemma befindet.</p>
+          <p>Auf die im Artikelblock alphabetisch aufgelisteten Lemmata wird in der Datei bereits verwiesen. Klicken Sie auf einen der blauen Links, öffnet sich eine Tabelle, in der Sie sehen, in welcher Zeile sich ein Verweis auf das genannte Lemma befindet.</p>
         </li>
 
         <li>
@@ -914,7 +914,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <li>
           <p>Noch bevor Sie die vorgeschlagenen Verweise in den XML-Dateien ergänzen, können Sie sich eine <b>Vorschau berechnen</b> lassen, um zu sehen, ob Ihnen das Ergebnis auch zusagt.</p>
 
-          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modulierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn der Sektion <i>Modulieren</i> Artikelblöcke hinzugefügt wurden. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
+          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modulierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn in der Sektion <i>Modulieren</i> neue Verweise vorgeschlagen werden, sprich: wenn dort irgendwo ein roter Link erscheint. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
         </li>
       </ol>
 
@@ -922,17 +922,17 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
 
-      <p>Clusterzentren können sinnvoll <b>nur in eine Richtung moduliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgten, dass ein Clusterzentrum entstand. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modulieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
+      <p>Clusterzentren können sinnvoll <b>nur in eine Richtung moduliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgen, dass ein Clusterzentrum entsteht. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modulieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
 
       <h2><span>Sektion Vergleichen</span></h2>
 
       <p id="clusterei-vergleichen">Für diese Sektion muss zwingend ein Themfeld-<a href="#allgemeines-filterleiste">Filter</a> eingestellt werden. Zusätzlich kann auch der Autor*innen-Filter genutzt werden. Mit seiner Hilfe kann man sich nur diejenigen Cluster anzeigen lassen, in deren Zentrum mindestens ein Lemma der ausgewählten Autor*in zu finden ist.</p>
 
-      <p>In der Sektion werden einander sehr ähnlich Cluster aufgelistet und nebeneinander gestellt. Je ähnlicher sich die Cluster sind, umso eher bieten sie sich zum Verschmelzen an. Der angegebene <b>Prozentwert</b> bezieht sich auf das Verhältnis des kleineren zum größeren Cluster: 100&nbsp;% bedeutet, dass 100&nbsp;% der Lemmata des kleineren Clusters auch im größeren Cluster auftauchen, bei 75&nbsp;% wären dies nur drei Viertel der Lemmata. Die Anzeige hat einen Schwellenwert von 75&nbsp;%. Cluster, die eine geringere Ähnlichkeit haben, werden ignoriert.</p>
+      <p>In der Sektion werden einander sehr ähnlich Cluster aufgelistet und nebeneinandergestellt. Je ähnlicher sich die Cluster sind, umso eher bieten sie sich zum Verschmelzen an. Der angegebene <b>Prozentwert</b> bezieht sich auf das Verhältnis des kleineren zum größeren Cluster: 100&nbsp;% bedeutet, dass 100&nbsp;% der Lemmata des kleineren Clusters auch im größeren Cluster auftauchen, bei 75&nbsp;% wären dies nur drei Viertel der Lemmata. Die Anzeige hat einen Schwellenwert von 75&nbsp;%. Cluster, die im Vergleich eine geringere Ähnlichkeit haben, werden nicht gelistet.</p>
 
       <p>Klicken Sie auf das Icon <img src="../img/win/plus.svg" width="30" height="30" alt=""> werden alle XML-Dateien, in denen sich die Hauptlemmata der nebeinander stehenden Cluster finden, zur <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> hinzugefügt. Die hinzugefügten Hauptlemmata werden dann <mark class="color5">blau hinterlegt</mark>. (Nebenlemmata spielen für die Modulierung keine Rolle, weswegen sie in dieser Ansicht ausgegraut sind.)</p>
 
-      <p>Das Icon hat sich nun geändert: <img src="../img/win/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! ´Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modulieren</i> entfernt.</p>
+      <p>Das Icon hat sich nun geändert: <img src="../img/win/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modulieren</i> entfernt.</p>
 
       <p>Eine weitere Funktion gibt es noch: Wenn Sie ein bestimmtes Lemma interessiert und Sie sehen wollen, in welchen Clustern es sich jeweils befindet, können Sie es anklicken. Es wird dann in allen sichtbaren Clustern <mark>orange hinterlegt</mark>.</p>
 
@@ -944,11 +944,11 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Mithilfe des Icons <img src="../img/win/jump.svg" width="30" height="30" alt=""> in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> können Sie durch die geänderten <abbr title="beziehungsweise">bzw.</abbr> neuen Cluster springen. Dieses Icon ist nur sichtbar, wenn die Sektion <i>Überprüfen</i> aktiv ist.</p>
 
-      <p>Mitunter werden Sie auf <b>rot umrandete Cluster</b> stoßen, bei denen Sie überhaupt keine visuelle Differenz zu einem bereits zuvor bestehenden Cluster erkennen können. Dies liegt daran, dass der Unterschied sehr subtiler Natur ist. In einem solchen Fall hat sich nämlich die Anzahl der Clusterpunkte geändert, mit deren Hilfe die Lemmata im Cluster gewichtet und sortiert werden. Die Änderung hatte dann aber einen so geringen Umfang, dass sie für die Visualisierung des Clusters keine Rolle spielte.</p>
+      <p>Mitunter werden Sie auf <b>rot umrandete Cluster</b> stoßen, bei denen Sie keine visuelle Differenz zu einem bereits zuvor bestehenden Cluster erkennen können. Dies liegt daran, dass der Unterschied sehr subtiler Natur ist. In einem solchen Fall hat sich nämlich die Anzahl der Clusterpunkte geändert, mit deren Hilfe die Lemmata im Cluster gewichtet und sortiert werden. Die Änderung hatte dann aber einen so geringen Umfang, dass sie für die Visualisierung des Clusters keine Rolle spielte.</p>
 
       <h1><span>Vorschau berechnen</span></h1>
 
-      <p id="clusterei-vorschau">Normalerweise arbeitet die Clusterei mit den WGd-Verweisclustern, wie sie in der aktuellen Version der Datei <a href="#allgemeines-artikelJSON">Artikel.json</a> zu finden sind. Dazu wird die Artikel.json aus dem Repository eingelesen. Die in ihr zu findenden Cluster werden dann für die Darstellung in der Clusterei genutzt.</p>
+      <p id="clusterei-vorschau">Normalerweise arbeitet die Clusterei mit den WGd-Verweisclustern, wie sie in der aktuellen Version der Datei <a href="#allgemeines-artikelJSON">Artikel.json</a> zu finden sind. Dazu wird die Artikel.json aus dem <a href="#git-dateien">Repository</a> eingelesen. Die in ihr zu findenden Cluster werden dann für die Darstellung in der Clusterei genutzt.</p>
 
       <p>Mithilfe des Icons <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie sich aber eine Cluster-Vorschau berechnen lassen, auf die dann in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> zurückgegriffen wird. (Für die Sektion <i>Modulieren</i> spielen die bestehenden Cluster keine Rolle. In ihr geht es nur darum, was wirklich in den XML-Dateien steht.)</p>
 
@@ -973,11 +973,11 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
     <section id="suche">
       <h1><span>Allgemeines zur Suche</span></h1>
 
-      <p>Standardmäßig werden alle XML-Dateien durchsucht, ganz gleich ob sie im Ordner <code>articles</code> oder <code>ignore</code> liegen. Die Suchwörter werden dabei einzeln behandelt, sprich anhand der Leerzeichen aufgetrennt. Anstoßen können Sie die Suche über den Suchbutton oder <kbd>Enter</kbd> im Suchfeld.</p>
+      <p>Standardmäßig werden <b>alle XML-Dateien</b> durchsucht, ganz gleich ob sie im Ordner <code>articles</code> oder <code>ignore</code> liegen. Die Suchwörter werden dabei einzeln behandelt, sprich anhand der Leerzeichen aufgetrennt. Anstoßen können Sie die Suche über den Suchbutton oder <kbd>Enter</kbd> im Suchfeld.</p>
 
-      <p>Die Suche ist auf 5000 Treffer beschränkt. Das klingt nach viel. Wenn Sie allerdings sehr unspezifische, kurze Suchwörter eingeben, ist diese Zahle rasch erreicht, da in den XML-Dateien jede Zeile, in der eines der Suchwörter zu finden ist, einen Treffer produziert, egal ob eines oder mehrere der Suchwörter auftauchen. Suchen Sie nach <code>die das</code> werden Sie darum niemals ein Ergebnis bekommen.</p>
+      <p>Die Suche ist auf <b>5000 Treffer beschränkt</b>. Das klingt nach viel. Wenn Sie allerdings sehr unspezifische, kurze Suchwörter eingeben, ist diese Zahle rasch erreicht, da in den XML-Dateien jede Zeile, in der eines der Suchwörter zu finden ist, einen Treffer produziert, egal ob eines oder mehrere der Suchwörter auftauchen. Suchen Sie nach <code>die das</code> werden Sie darum niemals ein Ergebnis bekommen.</p>
 
-      <p>Normalerweise wird nur im Autor*innen-Text der XML-Dateien gesucht. Verwenden Sie in einem Suchausdruck aber die Zeichen &lt; oder &gt; werden auch die XML-Tags durchsucht. In der Trefferliste erscheint dann nicht der um Tags bereinigte Autor*innentext, sondern XML-Code.</p>
+      <p>Normalerweise wird nur im <b>Autor*innen-Text</b> der XML-Dateien gesucht. Verwenden Sie in einem Suchausdruck aber die Zeichen &lt; oder &gt; werden auch die <b>XML-Tags</b> durchsucht. In der Trefferliste erscheint dann nicht der um Tags bereinigte Autor*innentext, sondern XML-Code.</p>
 
       <p>Sie können den Umfang der Suche einschränken, indem Sie die Anzahl der XML-Dateien mithilfe der <a href="#allgemeines-filterleiste">Filter</a> einschränken, sich der Möglichkeiten der <a href="#suche-syntax">Suchsyntax</a> bedienen und/oder Einstellungen aus der <a href="#suche-erweitert">erweiterten Suche</a> nutzen.</p>
 
@@ -1035,7 +1035,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Spezialisten können auch <b>reguläre Ausdrücke</b> verwenden. Die Ausdrücke müssen mit / beginnen und enden. Hinter dem schließenden / darf zusätzlich noch der optionale i-Schalter stehen. Mit dem i-Schalter weist man den Ausdruck an, nicht auf Groß- oder Kleinschreibung zu achten.</p>
 
-      <p>Eine Suche mit einem regulären Ausdruck wie <code>/alternativen? fakt(en)?/i</code> ist immer eine Phrasensuche. In diesem Fall besteht aber eine gewisse Variabilität hinsichtlich der Schreibung von <q>alternativen</q>, das mit oder ohne <q>n</q> geschrieben sein darf. Außerdem trifft der Ausdruck auf <q>fakt</q> oder <q>fakten</q> zu. Durch den i-Schalter am Ende wird icht auf Groß- oder Kleinschreibung geachtet. Aber auch hier gilt: Die Suche ist trunkiert.</p>
+      <p>Eine Suche mit einem regulären Ausdruck wie <code>/alternativen? fakt(en)?/i</code> ist immer eine Phrasensuche. In diesem Fall besteht aber eine gewisse Variabilität hinsichtlich der Schreibung von <q>alternativen</q>, das mit oder ohne <q>n</q> geschrieben sein darf. Außerdem trifft der Ausdruck auf <q>fakt</q> oder <q>fakten</q> zu. Durch den i-Schalter am Ende wird nicht auf Groß- oder Kleinschreibung geachtet. Aber auch hier gilt: Die Suche ist trunkiert.</p>
 
       <p>Suchen Sie nach einem ganzen Wort, können Sie einen regulären Ausdruck mit sogenannten <q lang="en">string boundaries</q> verwenden. Eine Suche nach <code>/\bFakt\b/</code> findet das Wort <q>Fakt</q> nur dann, wenn davor und dahinter <abbr title="zum Beispiel">z.&nbsp;B.</abbr> Leer- oder Satzzeichen stehen. Aber Vorsicht! Die Eszett-Ligatur und die Umlaute gelten als Wortgrenze. (Die Definition von <q lang="en">string boundaries</q> ist auf niedrige ASCII-Zeichen beschränkt.) Eine Suche nach <code>/\bMaß\b/</code> wird darum nicht das gewünschte Ergebnis bringen: Sie werden auch <q>Maßnahme</q> finden. Dies gilt für solche Suchen umso mehr, als <i>QS</i> automatisch gewisse Standardvarianten in die Suchausdrücke einbaut. Wird <code>ß</code> eingegeben, wird <abbr title="zum Beispiel">z.&nbsp;B.</abbr> automatisch nach <code>(ß|ss)</code> (<q>ß</q> oder <q>ss</q>) gesucht.</p>
 
@@ -1052,7 +1052,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-hint">Die Zeitstrahldaten spielen für Ihren Arbeitsalltag normalerweise keine Rolle. Sie können diese Einstellung also im Prinzip ignorieren. Benötigt werden die Zeistrahldaten allerdings für den <a href="#verschiedenes-artikelJSON">Export der Artikel.json</a>, um den sich die nicht spezialisierten Mitarbeiter*innen dann kümmern müssen, wenn die Techniker*in längerfristig ausfällt.</p>
 
-      <p class="indent-hint">Bei der Artikel.json handelt es sich um eine für die Webseite unverzichtbare Datendatei, ohne die eine Publikation neuer Wortgeschichten nur eingeschränkt sinnvoll ist, weil <a href="#allgemeines-artikelJSON">viele Funktionen auf der Webseite</a> von ihren Inhalten abhängen. Sie liegt im Repository unter <code>resources/Artikel.json</code>.</p>
+      <p class="indent-hint">Bei der Artikel.json handelt es sich um eine für die Webseite unverzichtbare Datendatei, ohne die eine Publikation neuer Wortgeschichten nur eingeschränkt sinnvoll ist, weil <a href="#allgemeines-artikelJSON">viele Funktionen auf der Webseite</a> von ihren Inhalten abhängen. Sie liegt im Repository unter <code>resources/<wbr>Artikel.json</code>.</p>
 
       <p class="indent-hint"><i>QS</i> kann diese Datei zwar erzeugen, aber anders als ihre übrigen Inhalte können die Zeitstrahldaten nicht von der App berechnet werden. Wird die Datei ohne Zeitstrahldaten exportiert, kann auf der Webseite kein <a href="https://www.zdl.org/wb/wortgeschichten/#Zeitstrahl">Zeitstrahl</a> angezeigt werden.</p>
 
@@ -1134,7 +1134,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
             <td><kbd>Strg</kbd> +</td>
             <td></td>
             <td><kbd>0</kbd></td>
-            <td>Anzeige Standardgröße</td>
+            <td>Anzeige auf Standardgröße zurücksetzen</td>
           </tr><tr>
             <td></td>
             <td><kbd>Strg</kbd> +</td>
@@ -1190,7 +1190,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
             <td></td>
             <td></td>
             <td><kbd>↑</kbd> / <kbd>↓</kbd></td>
-            <td><i>Fokus im Suchfeld der Clusterei:</i> durch die Ergebnisse navigieren</td>
+            <td><i>Fokus im Suchfeld der Clusterei:</i> durch die Suchergebnisse navigieren</td>
           </tr><tr>
             <td></td>
             <td><kbd>Strg</kbd> +</td>
@@ -1226,7 +1226,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
             <td><kbd>Strg</kbd> +</td>
             <td><kbd>Umsch</kbd> +</td>
             <td><kbd>F</kbd></td>
-            <td><a href="#allgemeines-filterleiste">Filter</a> ein- oder ausblenden</td>
+            <td><a href="#allgemeines-filterleiste">Filterleiste</a> ein- oder ausblenden</td>
           </tr><tr>
             <td></td>
             <td><kbd>Strg</kbd> +</td>
@@ -1281,9 +1281,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         </table>
       </div>
 
-      <h1><span>Hilfefenster</span></h1>
+      <h1><span>Handbuchfenster</span></h1>
 
-      <div id="tastatur-hilfefenster">
+      <div id="tastatur-handbuchfenster">
         <table>
           <tr>
             <td><kbd>Alt</kbd> +</td>
@@ -1322,7 +1322,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <h2><span>Artikel.json</span></h2>
 
-      <p id="verschiedenes-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmern sich normalerweise die Techniker*innen. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
+      <p id="verschiedenes-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmert sich normalerweise die Techniker*in. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
 
       <p><b>Update-Prozedere</b></p>
 
@@ -1342,30 +1342,30 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <li>
           <p>Commit erstellen und pushen:</p>
 
-          <pre>git pull
-git add resources/Artikel.json
-git commit -m "Artikeldaten-Update"
-git push</pre>
+          <pre>$ git pull
+$ git add resources/Artikel.json
+$ git commit -m "Artikeldaten-Update"
+$ git push</pre>
         </li>
       </ol>
 
-      <p>Für Techniker*innen zur Evaluation: <i>QS</i> liefert ein <b>Node-Script</b> mit, mit dessen Hilfe man die Artikel.json in menschenlesbares JSON verwandeln kann. Die Datei ist im Original <a href="https://www.zdl.org/wb/wgd/api#Artikeldaten">stark größenoptimiert</a>, weswegen viele Werte nur Indizes sind, die auf ein Objekt namens <code>values</code> zeigen. Das Script liegt im Installationsordner von <i>QS</i> im Unterordner <code>resources</code>:</p>
+      <p>Für Techniker*innen zur Evaluation: <i>QS</i> liefert ein <b>Node-Script</b> mit, mit dessen Hilfe man die Artikel.json in menschenlesbares JSON verwandeln kann. Die Datei ist im Original <a href="https://www.zdl.org/wb/wgd/api#Artikeldaten">stark größenoptimiert</a>, weswegen viele Werte nur Indizes sind, die auf ein Objekt namens <code>values</code> zeigen. Das Script erzeugt eine Datei mit Einrückungen, in der die Indizes durch die tatsächlichen Werte ersetzt wurden. Es liegt im Installationsordner von <i>QS</i> im Unterordner <code>resources</code>:</p>
 
-      <pre>node hrArtikel.js /PFAD/ZUM/WORTGESCHICHTEN-REPOSITORY/resources/Artikel.json</pre>
+      <pre>$ node hrArtikel.js /PFAD/ZUM/INSTALLATIONSORDNER/resources/Artikel.json</pre>
 
       <p>Die Output-Datei wird in dem Ordner erzeugt, in dem die Artikel.json liegt.</p>
 
       <p>Der Installationsordner von <i>QS</i> ist abhängig vom Betriebssystem:</p>
 
       <ul>
-        <li><i>Windows:</i> <code>C:\Users\BENUTZERNAME\AppData\Local\Programs\QS\</code></li>
+        <li><i>Windows:</i> <code>C:\<wbr>Users\<wbr>BENUTZERNAME\<wbr>AppData\<wbr>Local\<wbr>Programs\<wbr>QS\</code></li>
 
-        <li><i>Linux:</i> <code>/opt/QS/</code></li>
+        <li><i>Linux:</i> <code>/opt/<wbr>QS/</code></li>
       </ul>
 
       <h2><span>Teaser-Tags</span></h2>
 
-      <p id="verschiedenes-teaser">Diese Funktion ist eher für Techniker*innen gedacht. Sie dient zur Evaluation des XML-Codes im Kurz-Gefasst. Für die Transformation des Kurz-Gefasst gibt es auf zdl.org zwei verschiedene XSLT: Das eine ist in die Transformationsroutine der Artikel integriert; das andere macht eine technisch reduzierte Vorschau-Version für die Suchfunktion und die Startseite. Diese zweite Version des Scripts gerät gerne aus dem Blick.</p>
+      <p id="verschiedenes-teaser">Diese Funktion ist eher für Techniker*innen gedacht. Sie dient zur Evaluation des XML-Codes im Kurz-Gefasst. Für die Transformation des Kurz-Gefasst gibt es auf zdl.org zwei verschiedene XSLT: Das eine ist in die Transformationsroutine der Artikel integriert; das andere erzeugt eine technisch reduzierte Vorschau-Version für die Suchfunktion und die Startseite. Diese zweite Version des Scripts gerät gerne aus dem Blick.</p>
 
       <p>Die Funktion listet alle <b>Tags</b> auf, die innerhalb von <code>&lt;Wortgeschichte_kompakt&gt;</code> verwendet werden. Die Tags sind klicksensitiv. Auf Klick werden alle <b>Attribute</b> aufgelistet, die im Zusammenhang mit dem gewählten Tag genutzt werden. Im unteren Teil des Fensters kann man durch den XML-Code der Kurz-Gefasst browsen, auf die die Auswahl zutrifft.</p>
 
@@ -1373,7 +1373,7 @@ git push</pre>
 
       <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Zeigt das Kurz-Gefasst in der gerenderten HTML-Fassung an</p>
 
-      <p class="indent-icon"><img src="../img/win/open-file.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-Editor des Betriebssystems</p>
+      <p class="indent-icon"><img src="../img/win/open-file.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor des Betriebssystems</p>
 
       <h1><span>Hilfe-Menü</span></h1>
 
