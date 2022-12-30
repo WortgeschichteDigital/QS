@@ -10,6 +10,11 @@ const keyboard = {
       if (typeof help !== "undefined") {
         help.tocClose();
       }
+    // Key "F3"
+    } else if (!m && evt.key === "F3") {
+      help.search(true);
+    } else if (m === "Shift" && evt.key === "F3") {
+      help.search(false);
     // Arrows
     } else if (m === "Alt" && /^Arrow(Left|Right)$/.test(evt.key) && typeof help !== "undefined") {
       help.historyNav(evt.key === "ArrowLeft");

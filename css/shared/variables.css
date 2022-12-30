@@ -26,6 +26,7 @@
   /* special styles */
   --gradient: linear-gradient(90deg, var(--colorBlueDark) 40%, var(--colorBlue) 90%);
   --shadow: 5px 5px 15px rgb(33 37 41 / 30%);
+  --shadowUp: 0 -5px 15px rgb(33 37 41 / 30%);
   --shadowDown: 0 5px 15px rgb(33 37 41 / 30%);
   --shadowLeft: -5px 0 15px rgb(33 37 41 / 30%);
   --shadowRight: 5px 0 15px rgb(33 37 41 / 30%);

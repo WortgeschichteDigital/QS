@@ -1305,6 +1305,24 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
             <td>Durch die Kapitel navigieren</td>
           </tr><tr>
             <td></td>
+            <td></td>
+            <td></td>
+            <td><kbd>F3</kbd></td>
+            <td>Suche anzeigen oder zum nächsten Suchtreffer</td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td><kbd>Umsch</kbd> +</td>
+            <td><kbd>F3</kbd></td>
+            <td>Suche anzeigen oder zum vorherigen Suchtreffer</td>
+          </tr><tr>
+            <td></td>
+            <td><kbd>Strg</kbd> +</td>
+            <td></td>
+            <td><kbd>F</kbd></td>
+            <td>Suche anzeigen</td>
+          </tr><tr>
+            <td></td>
             <td><kbd>Strg</kbd> +</td>
             <td></td>
             <td><kbd>W</kbd></td>
@@ -1397,6 +1415,15 @@ $ git push</pre>
     <!-- OVERLAY: LOADING -->
     <div id="loading" class="overlay"
       ><img src="../img/icon/icon.svg" width="96" height="96" alt=""
+    ></div>
+
+    <!-- SEARCH BAR -->
+    <div id="search-bar" class="invisible"
+      ><input type="text" value="" placeholder="Suchtext" id="search-field"
+      ><a href="#" id="search-up" class="icon"><img src="../img/win/search-up.svg" width="30" height="30" alt=""></a
+      ><a href="#" id="search-down" class="icon"><img src="../img/win/search-down.svg" width="30" height="30" alt=""></a
+      ><input type="checkbox" id="search-global"><label for="search-global">in allen Kapiteln suchen</label
+      ><a href="#" id="search-close" class="icon"><img src="../img/win/close.svg" width="30" height="30" alt=""></a
     ></div>
   </body>
 </html>

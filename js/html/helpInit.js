@@ -14,14 +14,30 @@ window.addEventListener("load", async () => {
       help.switchSection(this.getAttribute("href").substring(1));
     });
   });
-  document.querySelectorAll('section a[href^="#"]').forEach(i => {
+  help.initInternalLinks();
+
+  // SEARCH BAR
+  document.querySelector("#search-bar").addEventListener("keydown", evt => {
+    const m = shared.detectKeyboardModifiers(evt);
+    if (!m && evt.key === "Enter" && /search-field|search-global/.test(document.activeElement.id)) {
+      help.search(true);
+    } else if (!m && evt.key === "Escape") {
+      help.searchToggle(false);
+    }
+  });
+  document.querySelectorAll("#search-up, #search-down").forEach(i => {
     i.addEventListener("click", function (evt) {
       evt.preventDefault();
-      help.internalLink(this.getAttribute("href"));
+      help.search(this.id === "search-down");
     });
+  });
+  document.querySelector("#search-close").addEventListener("click", evt => {
+    evt.preventDefault();
+    help.searchToggle(false);
   });
 
   // LISTEN TO IPC MESSAGES
+  shared.ipc.on("menu-search", () => help.searchToggle(true));
   shared.ipc.on("show", (evt, data) => help.show(data));
 
   // GET APP INFO

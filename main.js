@@ -197,6 +197,19 @@ const winMenu = {
       ],
     },
   ],
+  menuWinHelp: [
+    {
+      label: "&Funktionen",
+      submenu: [
+        {
+          label: "Suchen",
+          icon: path.join(__dirname, "img", "main", "search.png"),
+          click: () => winMenu.execute("search"),
+          accelerator: "CommandOrControl+F",
+        },
+      ],
+    },
+  ],
   menuAll: [
     {
       label: "&Bearbeiten",
@@ -323,6 +336,10 @@ const winMenu = {
       }
     } else if (type === "pv") {
       for (const i of [ winMenu.menuPv, winMenu.menuAll ]) {
+        menu = menu.concat(i);
+      }
+    } else if (type === "help") {
+      for (const i of [ winMenu.menuWin, winMenu.menuWinHelp, winMenu.menuAll ]) {
         menu = menu.concat(i);
       }
     } else {
