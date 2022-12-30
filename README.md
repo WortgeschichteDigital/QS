@@ -18,7 +18,7 @@ Die App dient zur formalen Qualitätssicherung der mithilfe von *[Zettel’s Tra
 
 ## Bauanleitung
 
-*QS* ist eine [Electron](https://electronjs.org/)-App. Es ist sehr einfach, sie für die Betriebssysteme Windows, macOS und Linux zu paketieren. Kurzanleitung:
+*QS* ist eine [Electron](https://electronjs.org/)-App. Man kann sie leicht für die Betriebssysteme Windows, macOS und Linux paketieren. Kurzanleitung:
 
 Repository klonen:
 
@@ -41,7 +41,7 @@ $ sudo apt-get install nodejs
 Electron installieren:
 
 ```
-$ cd QS_1.0.0
+$ cd QS
 $ npm install --save-dev electron
 ```
 
@@ -73,4 +73,4 @@ Die mitgelieferten *[Noto Fonts](https://www.google.com/get/noto/)* stehen unter
 
 ## Kontakt
 
-[Nico Dorn](https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/mitarbeiterinnen-und-mitarbeiter/nico-dorn/), Akademie der Wissenschaften zu Göttingen
+[Nico Dorn](https://adw-goe.de/forschung/weitere-forschungsprojekte/wortgeschichte-digital-teilprojekt-im-zdl/mitarbeiterinnen-und-mitarbeiter/nico-dorn/), Niedersächsische Akademie der Wissenschaften zu Göttingen
