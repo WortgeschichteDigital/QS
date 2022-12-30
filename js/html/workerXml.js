@@ -406,7 +406,7 @@ const xml = {
       xml.files[k] = v.xml;
       // update file data?
       if (xml.data.files?.[k]?.hash !== v.hash ||
-          xml.data.files?.[k]?.dir !== files.dir ||
+          xml.data.files?.[k]?.dir !== v.dir ||
           data.newAppVersion) {
         updated.push(k);
         xml.data.files[k] = {};
