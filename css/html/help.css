@@ -58,6 +58,7 @@ section {
 /* DESCRIPTION ---------------------------------- */
 
 section a {
+  outline: none;
   color: var(--colorBlue);
   text-decoration: none;
 }
