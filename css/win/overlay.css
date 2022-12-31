@@ -89,6 +89,7 @@
   margin: 10px;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 10px;
   max-height: 330px;
   background-color: var(--colorGreyLight);
