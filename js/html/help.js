@@ -453,10 +453,18 @@ const help = {
     data.scroll = window.scrollY;
 
     // highlight next mark
-    marks[idx].addEventListener("transitionend", function () {
-      this.classList.remove("highlight");
-    });
+    resetHighlight(marks[idx]);
     marks[idx].classList.add("highlight");
+    while (marks[idx].classList.contains("search-no-end")) {
+      data.idx = ++idx;
+      resetHighlight(marks[idx]);
+      marks[idx].classList.add("highlight");
+    }
+    function resetHighlight (mark) {
+      mark.addEventListener("transitionend", function () {
+        this.classList.remove("highlight");
+      }, { once: true });
+    }
   },
 
   // remove all search results
