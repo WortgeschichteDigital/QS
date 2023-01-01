@@ -240,10 +240,12 @@ const help = {
     // get text
     const field = document.querySelector("#search-field");
     const glob = document.querySelector("#search-global").checked;
+    const resultsCont = document.querySelector("#search-results");
     let text = field.value.trim();
     text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     if (!text) {
-      field.classList.remove("no-hit");
+      field.classList.remove("no-results");
+      resultsCont.textContent = "";
       return;
     }
     if (data.glob === glob &&
@@ -282,11 +284,10 @@ const help = {
       `${sections} > ul > li`,
       `${sections} > div > ul > li`,
     ];
-    let hit = false;
+    let results = 0;
     document.querySelectorAll(selectors.join(", ")).forEach(e => {
       let html = e.innerHTML;
       if (reg.test(html)) {
-        hit = true;
         html = html.replace(reg, (...args) => {
           // prepare match
           let [ m ] = args;
@@ -331,17 +332,20 @@ const help = {
         // insert HTML with <mark> tags
         e.innerHTML = html;
         help.initInternalLinks(e);
+        results += e.querySelectorAll("mark.search:not(.search-no-start)").length;
       }
     });
 
-    // update search field color
-    if (!hit) {
+    // update search field color and results
+    if (!results) {
       data.text = "";
-      field.classList.add("no-hit");
+      field.classList.add("no-results");
       field.select();
+      resultsCont.textContent = "";
       return;
     }
-    field.classList.remove("no-hit");
+    field.classList.remove("no-results");
+    resultsCont.textContent = `(${shared.bigNumber(results)} Treffer)`;
 
     // jump to next result
     help.searchJump(forward);
@@ -461,7 +465,8 @@ const help = {
       help.searchData.text = "";
       const field = document.querySelector("#search-field");
       field.value = "";
-      field.classList.remove("no-hit");
+      field.classList.remove("no-results");
+      document.querySelector("#search-results").textContent = "";
     }
 
     // reset marks

@@ -411,18 +411,18 @@ section li {
   width: 250px;
 }
 
-#search-field.no-hit {
+#search-field.no-results {
   outline-color: var(--colorRed);
   border-color: var(--colorRed);
   background-color: var(--colorRed);
   color: #fff;
 }
 
-#search-field.no-hit::placeholder {
+#search-field.no-results::placeholder {
   color: #fff;
 }
 
-#search-field.no-hit::selection {
+#search-field.no-results::selection {
   background-color: #fff;
   color: var(--colorRed);
 }
@@ -431,6 +431,18 @@ section li {
   position: relative;
   top: 4px;
   margin-left: 30px;
+}
+
+#search-results {
+  display: inline-block;
+  margin-left: 30px;
+  color: var(--textGrey);
+}
+
+@media (max-width: 850px) {
+  #search-results {
+    display: none;
+  }
 }
 
 #search-close {

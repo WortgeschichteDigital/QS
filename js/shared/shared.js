@@ -24,6 +24,18 @@ const shared = {
   fsp: typeof window !== "undefined" ? require("fs").promises : null,
   path: typeof window !== "undefined" ? require("path") : null,
 
+  // make a big number human readable
+  //   num = integer
+  bigNumber (num) {
+    const trans = [];
+    let str = "" + num;
+    while (str.length) {
+      trans.unshift(str.substring(str.length - 3, str.length));
+      str = str.substring(0, str.length - 3);
+    }
+    return trans.join(".");
+  },
+
   // clear text of homograph or field article markers
   //   text = string | array (array only if g == true)
   //   g = true | undefined (replace all parens wherever they are)
