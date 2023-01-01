@@ -438,14 +438,18 @@ const help = {
     if (marks[idx].closest("h1, h2")) {
       scrollTarget = marks[idx].closest("h1, h2").nextElementSibling;
     }
-    const { top } = scrollTarget.getBoundingClientRect();
-    window.scrollTo({
-      // add 2 * 60px for heading height and two text lines
-      top: window.scrollY + top - 2 * 60,
-      left: 0,
-      behavior: "smooth",
-    });
-    await shared.scrollEnd();
+    const barTop = document.querySelector("#search-bar").getBoundingClientRect().top;
+    const targetRect = scrollTarget.getBoundingClientRect();
+    if (targetRect.bottom + 10 > barTop ||
+        targetRect.top < 62) {
+      window.scrollTo({
+        // add 2 * 60px for heading height and two text lines
+        top: window.scrollY + targetRect.top - 2 * 60,
+        left: 0,
+        behavior: "smooth",
+      });
+      await shared.scrollEnd();
+    }
     data.scroll = window.scrollY;
 
     // highlight next mark
