@@ -129,8 +129,8 @@ prepare() {
       rmLines 1
       echo -e "Version: \033[1;33m${version}\033[0m"
       # inject version into package.json
-      local line="\t\"version\": \"${version}\","
-      sed -i "s/\t\"version\".*/${line}/" "package.json"
+      local line="  \"version\": \"${version}\","
+      sed -i "s/  \"version\".*/${line}/" "package.json"
       echo ""
       break
     fi
