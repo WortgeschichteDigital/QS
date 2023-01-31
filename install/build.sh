@@ -285,7 +285,7 @@ makeChangelog() {
         for type in ${!commitTypes[@]}; do
           for commit in ${!clCommits[@]}; do
             message=${clCommits[$commit]}
-            if echo "$message" | egrep -q "^${commitTypes[$type]}"; then
+            if echo "$message" | egrep -q "^\[\[${commitTypes[$type]}\]\]"; then
               output+="  * $message\n"
             fi
           done
@@ -503,7 +503,7 @@ presetsExec() {
     echo -e " \033[1;33mJob $[i + 1]/${#array[@]}\033[0m\n"
     execJob "${array[$i]}"
   done
-  
+
   # all jobs done
   echo -e "\n  \033[1;32m*\033[0m Preset \"${presets[$presetNo]}\": \033[1;32mDone!\033[0m"
 }

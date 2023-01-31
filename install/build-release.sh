@@ -95,7 +95,7 @@ makeReleaseNotes() {
     for commit in ${!clCommits[@]}; do
       local message=${clCommits[$commit]}
       local currentType=${commitTypes[$type]}
-      if echo "$message" | egrep -q "^${currentType}"; then
+      if echo "$message" | egrep -q "^\[\[${currentType}\]\]"; then
         if (( newType > 0 )); then
           newType=0;
           output+="\n## ${clH[${commitTypes[$type]}]}\n\n"
