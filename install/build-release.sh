@@ -100,7 +100,7 @@ makeReleaseNotes() {
           newType=0;
           output+="\n## ${clH[${commitTypes[$type]}]}\n\n"
         fi
-        message=$(echo "$message" | sed -r 's/^.+?:\s//')
+        message=$(echo "$message" | sed -r 's/^.+?\]\s//')
         output+="* $message\n"
       fi
     done
