@@ -74,7 +74,7 @@ const artikel = {
 
   // change branch to master
   async changeBranch () {
-    await git.commandBranch();
+    await git.commandBranch("master");
     artikel.messages();
   },
 

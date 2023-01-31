@@ -1072,7 +1072,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="einstellungen-datenCache" class="option">Analyse-Cache</p>
 
-      <p class="indent-hint">Die Funktionen von <i>QS</i> beruhen alle auf Daten, die im Rahmen einer Analyse der im <a href="#git-dateien">Repository</a> liegenden XML-Dateien erhoben werden. Diese Analyse ist rechenintensiv, weswegen die App ihr Ergebnis in einem Cache speichert, um sie möglichst selten durchführen zu müssen. (Genauer gesagt gibt es zwei verschiedene Caches: einen für den <a href="#git-allgemeinesBranchesWGd">Branch</a> <q>master</q> und einen für <q>preprint</q>.)</p>
+      <p class="indent-hint">Die Funktionen von <i>QS</i> beruhen alle auf Daten, die im Rahmen einer Analyse der im <a href="#git-dateien">Repository</a> liegenden XML-Dateien erhoben werden. Diese Analyse ist rechenintensiv, weswegen die App ihr Ergebnis in einem Cache speichert, um sie möglichst selten durchführen zu müssen. (Genauer gesagt gibt es für jeden Branch einen eigenen Cache, also <abbr title="zum Beispiel">z.&nbsp;B.</abbr> einen für den <a href="#git-allgemeinesBranchesWGd">Branch</a> <q>master</q> und einen für <q>preprint</q>.)</p>
 
       <p class="indent-hint">Wurde der Cache einmal erstellt, wird die Analyse nur noch für neue oder geänderte XML-Dateien durchgeführt. Eine Ausnahme stellt allerdings die Berechnung der Hinweise dar. Diese werden jedes Mal komplett neu erstellt, wenn sich eine einzige XML-Datei geändert hat. (Dieses Verhalten wurde deswegen programmiert, weil die Hinweise sich auf dateiübergreifende Phänomene beziehen. Änderungen in einer Datei können Auswirkungen auf ein Vielzahl von Hinweisen in vielen verschiedenen Dateien haben.)</p>
 

@@ -111,9 +111,16 @@ const xml = {
     await xml.updateWait();
     xml.updating = true;
 
+    // get branch list
+    const branches = await git.commandExec("git branch --list");
+    const branchList = branches.split("\n");
+    branchList.forEach((i, n) => {
+      branchList[n] = i.replace(/^[ *]+/g, "");
+    });
+
     // remove cache files
     const promises = [];
-    for (const branch of [ "master", "preprint" ]) {
+    for (const branch of branchList) {
       promises.push(async function () {
         const path = shared.path.join(shared.info.userData, `xml-cache-${branch}.json`);
         const exists = await shared.ipc.invoke("exists", path);

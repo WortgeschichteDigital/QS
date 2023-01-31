@@ -141,7 +141,8 @@
 
 /* HINTS POPUP ---------------------------------- */
 
-.hints-popup {
+.hints-popup,
+#fun-git-branch-select {
   position: absolute;
   box-shadow: var(--shadow);
   padding: 10px;
@@ -201,7 +202,8 @@
   max-height: calc(100vh - 230px - 42px - 34px); /* see .hints-popup.fixed, 34px = p */
 }
 
-.hints-popup a {
+.hints-popup a,
+#fun-git-branch-select a:first-of-type {
   position: absolute;
   top: 0;
   right: 0;
@@ -209,13 +211,15 @@
   height: 30px;
 }
 
-.hints-popup a:focus {
+.hints-popup a:focus,
+#fun-git-branch-select a:first-of-type:focus {
   border-radius: 10px;
   outline: 2px solid var(--outline);
   outline-offset: -4px;
 }
 
-.hints-popup :is(h2, h3) {
+.hints-popup :is(h2, h3),
+#fun-git-branch-select h2 {
   margin: 15px 0 5px;
   padding-right: 30px;
   color: var(--colorBlueDark);
@@ -225,7 +229,8 @@
   line-height: 1.2rem;
 }
 
-.hints-popup h2 {
+.hints-popup h2,
+#fun-git-branch-select h2 {
   margin-top: 0;
   font-style: normal;
   font-weight: bold;

@@ -17,6 +17,9 @@ const keyboard = {
       } else if (active.id === "search-text") {
         viewSearch.toggleAdvanced("off");
         return;
+      } else if (document.querySelector("#fun-git-branch-select")) {
+        git.branchSelectRemove();
+        return;
       }
       const select = document.querySelector(".select-popup");
       if (select) {

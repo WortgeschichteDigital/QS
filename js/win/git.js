@@ -208,6 +208,75 @@ const git = {
     return true;
   },
 
+  // select branch from a list of available branches
+  //   branchList = array
+  branchSelect (branchList) {
+    // clean up branch list
+    branchList.forEach((i, n) => {
+      branchList[n] = i.replace(/^[ *]+/g, "");
+    });
+    branchList.sort();
+
+    // create popup
+    let popup = document.querySelector("#fun-git-branch-select");
+    if (!popup) {
+      popup = document.createElement("div");
+      popup.id = "fun-git-branch-select";
+      document.querySelector("#fun-git").appendChild(popup);
+    }
+    popup.replaceChildren();
+
+    // close icon and heading
+    const close = document.createElement("a");
+    popup.appendChild(close);
+    close.href = "#";
+    const icon = document.createElement("img");
+    close.appendChild(icon);
+    icon.src = "img/win/close.svg";
+    icon.width = "30";
+    icon.height = "30";
+    icon.alt = "";
+    close.addEventListener("click", function (evt) {
+      evt.preventDefault();
+      git.branchSelectRemove();
+    });
+    const h2 = document.createElement("h2");
+    popup.appendChild(h2);
+    h2.textContent = "Branches";
+
+    // fill popup
+    for (const branch of branchList) {
+      const a = document.createElement("a");
+      popup.appendChild(a);
+      a.classList.add("branch");
+      a.href = "#";
+      a.textContent = branch;
+      a.addEventListener("click", function (evt) {
+        evt.preventDefault();
+        git.commandBranch(this.textContent);
+        git.branchSelectRemove();
+      });
+    }
+
+    // show popup
+    void popup.offsetWidth;
+    popup.classList.add("visible");
+  },
+
+  // remove branch selector popup
+  branchSelectRemove () {
+    const popup = document.querySelector("#fun-git-branch-select");
+    if (!popup?.classList?.contains("visible")) {
+      return;
+    }
+    popup.addEventListener("transitionend", function () {
+      this.parentNode.removeChild(this);
+    }, {
+      once: true,
+    });
+    popup.classList.remove("visible");
+  },
+
   // execute a basic git command
   //   a = node
   async command (a) {
@@ -236,9 +305,21 @@ const git = {
   },
 
   // change branch
-  async commandBranch () {
+  //   branch = string | undefined
+  async commandBranch (branch = "") {
     const current = await git.branchCurrent();
-    const dest = current === "master" ? "preprint" : "master";
+    let dest = branch;
+    if (!dest) {
+      const branches = await git.commandExec("git branch --list");
+      if (branches) {
+        const branchList = branches.split("\n");
+        if (branchList.length > 2) {
+          git.branchSelect(branchList);
+          return;
+        }
+      }
+      dest = current === "master" ? "preprint" : "master";
+    }
 
     // Is the working tree clean?
     const clean = await git.branchClean();

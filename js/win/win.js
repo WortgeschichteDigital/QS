@@ -444,7 +444,8 @@ var win = {
     }
     win.switching = true;
 
-    // close popup in hints view
+    // close branch selector and popup in hints view
+    git.branchSelectRemove();
     viewHints.popupClose({});
 
     // reset navigation index in hints view
