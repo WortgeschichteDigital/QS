@@ -481,8 +481,8 @@ const artikel = {
   // app was startet via CLI and is requesting in export of the Artikel.json
   //   command = object
   async cliExport (command) {
-    const path = command["export-to"];
-    const noNew = command["no-new"];
+    const path = command["artikel-export-to"];
+    const noNew = command["artikel-no-new"];
 
     // wait until the app is ready
     await new Promise(resolve => {

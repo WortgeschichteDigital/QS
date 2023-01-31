@@ -575,7 +575,7 @@ const win = {
 
     // send XML data if necessary
     if (type === "cli") {
-      // export Artikel.json
+      // pass CLI commands
       bw.webContents.once("did-finish-load", function () {
         setTimeout(() => {
           // timeout makes absolutely sure that the window is already listening
@@ -858,7 +858,7 @@ let cliReturnCode = -1;
 for (let i = 0, len = process.argv.length; i < len; i++) {
   const arg = process.argv[i].match(/^--([^\s=]+)(?:=(.+))?/);
   if (!arg ||
-      !/^(export-to|no-new)$/.test(arg[1])) {
+      !/^(artikel-export-to|artikel-no-new)$/.test(arg[1])) {
     continue;
   }
   cliCommand[arg[1]] = arg[2]?.replace(/^"|"$/g, "") || true;
@@ -867,11 +867,11 @@ for (let i = 0, len = process.argv.length; i < len; i++) {
 // single instance lock
 const locked = app.requestSingleInstanceLock(cliCommand);
 
-if (typeof cliCommand["export-to"] !== "undefined" || !locked) {
+if (typeof cliCommand["artikel-export-to"] !== "undefined" || !locked) {
   // CLI COMMAND OR SECOND INSTANCE
   (async function () {
     // quit immediately if second instance without CLI command
-    if (typeof cliCommand["export-to"] === "undefined") {
+    if (typeof cliCommand["artikel-export-to"] === "undefined") {
       app.quit();
       process.exit(0);
     }
@@ -927,7 +927,7 @@ if (typeof cliCommand["export-to"] !== "undefined" || !locked) {
   // NORMAL APP BEHAVIOR
   // focus existing app window in case a second instance is opened
   app.on("second-instance", (...args) => {
-    if (typeof args[3]["export-to"] !== "undefined") {
+    if (typeof args[3]["artikel-export-to"] !== "undefined") {
       return;
     }
     const app = win.data.find(i => i.type === "app");
