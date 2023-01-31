@@ -9,12 +9,33 @@ const pv = {
   data: {},
 
   // show XML preview on zdl.org
-  xml () {
+  async xml () {
     if (!pv.data.xml) {
       pv.xmlNotFound();
       return;
     }
+
+    // try to restore the scroll position on reload
     const wv = document.querySelector("webview");
+    const url = wv.getURL();
+    let scrollTop = 0;
+    if (/www\.zdl\.org\/wb\/wortgeschichten\/pv/.test(url)) {
+      await new Promise(resolve => {
+        wv.executeJavaScript(`
+          window.pageYOffset;
+        `)
+          .then(result => {
+            const top = parseInt(result, 10);
+            if (!isNaN(top)) {
+              scrollTop = top;
+            }
+            resolve(true);
+          })
+          .catch(() => resolve(true));
+      });
+    }
+
+    // load preview
     wv.loadURL("https://www.zdl.org/wb/wortgeschichten/pv", {
       postData: [
         {
@@ -24,7 +45,15 @@ const pv = {
       ],
       extraHeaders: "Content-Type: application/x-www-form-urlencoded; charset=UTF-8",
     })
-      .then(() => pv.loadingDone(wv))
+      .then(() => {
+        if (scrollTop) {
+          // restore scroll position
+          wv.executeJavaScript(`
+            window.scrollTo(0, ${scrollTop});
+          `);
+        }
+        pv.loadingDone(wv);
+      })
       .catch(err => {
         wv.stop();
         wv.loadURL("file://" + shared.path.join(shared.info.appPath, "html", "pvError.html"))
