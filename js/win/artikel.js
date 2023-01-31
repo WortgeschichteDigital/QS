@@ -310,11 +310,7 @@ const artikel = {
           continue;
         }
         v.wf[domain] = {};
-        for (let [ field, lemmas ] of Object.entries(fields)) {
-          if (/^(Lebensformen|sozialräumliche Segregation)$/.test(field)) {
-            // TODO eraser later (temporary fix for old lemma values)
-            field += " (Wortfeld)";
-          }
+        for (const [ field, lemmas ] of Object.entries(fields)) {
           v.wf[domain][field] = [];
           for (const lemma of lemmas) {
             if (!v.le.includes(lemma)) {

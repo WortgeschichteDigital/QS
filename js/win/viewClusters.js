@@ -285,11 +285,7 @@ const viewClusters = {
         repo[domain].push(cl);
         for (const circle of [ "z", "s", "u" ]) {
           for (const [ lemma, points ] of Object.entries(cluster[circle])) {
-            let spelling = data.values.le[lemma.substring(1)];
-            if (/^(Lebensformen|sozialräumliche Segregation)$/.test(spelling)) {
-              // TODO eraser later (temporary fix for old lemma values)
-              spelling += " (Wortfeld)";
-            }
+            const spelling = data.values.le[lemma.substring(1)];
             if (fileCache[spelling]) {
               cl[circle][spelling] = {
                 file: fileCache[spelling],
