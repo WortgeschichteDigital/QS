@@ -90,7 +90,7 @@ const viewXml = {
       },
       {
         event: "Open",
-        icon: "open-file.svg",
+        icon: "xml.svg",
         title: "Datei im Editor öffnen",
       },
     ];

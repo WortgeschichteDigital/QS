@@ -150,7 +150,7 @@ var win = {
     const icons = [
       {
         fun: "openPv",
-        icon: "xml.svg",
+        icon: "preview.svg",
         title: "Datei in der Vorschau öffnen",
       },
       {
@@ -160,7 +160,7 @@ var win = {
       },
       {
         fun: "openEditor",
-        icon: "open-file.svg",
+        icon: "xml.svg",
         title: "Datei im Editor öffnen",
       },
     ];
