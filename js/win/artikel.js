@@ -502,7 +502,7 @@ const artikel = {
     }
 
     // Zeitstrahl data present?
-    if (!Object.keys(xml.zeitstrahl).length) {
+    if (!Object.keys(artikel.zeitstrahl).length) {
       shared.ipc.invoke("cli-return-code", 2);
       return;
     }
