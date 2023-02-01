@@ -93,6 +93,9 @@ const viewClusters = {
     // check filters,
     // update the section views
     viewClusters.updateCompCheck(false);
+    for (const val of Object.values(clustersMod.data.files)) {
+      val.clear();
+    }
     clustersMod.update();
 
     // focus search field in modulation section
