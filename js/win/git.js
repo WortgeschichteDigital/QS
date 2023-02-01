@@ -428,11 +428,11 @@ const git = {
   //   command = string
   async commandExec (command) {
     const result = await new Promise(resolve => {
-      const completeCommand = `cd "${git.config.dir}" && ${command}`;
       const options = {
+        cwd: git.config.dir,
         windowsHide: true,
       };
-      shared.exec(completeCommand, options, (err, stdout, stderr) => {
+      shared.exec(command, options, (err, stdout, stderr) => {
         if (err) {
           resolve([ err.code, stderr.trim() ]);
         } else {
