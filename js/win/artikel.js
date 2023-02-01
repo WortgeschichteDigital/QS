@@ -490,13 +490,6 @@ const artikel = {
       }, 50);
     });
 
-    // on branch master?
-    const branch = await git.branchCurrent();
-    if (branch !== "master") {
-      shared.ipc.invoke("cli-return-code", 1);
-      return;
-    }
-
     // Zeitstrahl data present?
     if (!Object.keys(artikel.zeitstrahl).length) {
       shared.ipc.invoke("cli-return-code", 2);
