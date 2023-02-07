@@ -62,4 +62,12 @@ module.exports = {
     }
     return year;
   },
+
+  // get file list of resources folder
+  async lsResources () {
+    const fs = require("fs").promises;
+    const path = require("path");
+    const result = await fs.readdir(path.join(__dirname, "..", "resources"));
+    return result;
+  },
 };

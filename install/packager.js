@@ -17,7 +17,7 @@ const config = {
   dir: "./",
   out: process.argv[3] || "../build",
   executableName: "QS",
-  extraResource: "./resources",
+  extraResource: [],
   ignore: [ /node_modules/, /package-lock\.json/ ],
   overwrite: true,
   asar: true,
@@ -44,17 +44,27 @@ switch (type) {
 }
 
 // packager
-packager(config)
-  .then(() => {
-    let os = "Linux";
-    if (type === "darwin") {
-      os = "macOS";
-    } else if (type === "win32") {
-      os = "Windows";
-    }
-    console.log(`${os} package created!`);
-  })
-  .catch(err => {
-    console.log(new Error(err));
-    process.exit(1);
-  });
+(async function () {
+  // fill resources file list
+  const files = await prepare.lsResources();
+  const path = require("path");
+  for (const f of files) {
+    config.extraResource.push(path.join("resources", f));
+  }
+
+  // package app
+  packager(config)
+    .then(() => {
+      let os = "Linux";
+      if (type === "darwin") {
+        os = "macOS";
+      } else if (type === "win32") {
+        os = "Windows";
+      }
+      console.log(`${os} package created!`);
+    })
+    .catch(err => {
+      console.log(new Error(err));
+      process.exit(1);
+    });
+}());
