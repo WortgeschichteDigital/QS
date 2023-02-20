@@ -367,12 +367,19 @@ const git = {
     }
 
     // detect remote tracking branches
+    const locales = await git.commandExec("git branch --list");
+    const localBranches = new Set();
+    for (let l of locales.split("\n")) {
+      l = l.trim();
+      l = l.replace("* ", "");
+      localBranches.add(l);
+    }
     const remotes = await git.commandExec("git branch --remotes");
     const branches = [];
     for (let r of remotes.split("\n")) {
       r = r.trim();
       r = r.replace(/^origin\/(.+)/, (...args) => args[1]);
-      if (/^HEAD/.test(r)) {
+      if (/^HEAD/.test(r) || !localBranches.has(r)) {
         continue;
       }
       branches.push(r);
