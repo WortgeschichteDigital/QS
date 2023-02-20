@@ -366,9 +366,22 @@ const git = {
       }
     }
 
+    // detect remote tracking branches
+    const remotes = await git.commandExec("git branch --remotes");
+    const branches = [];
+    for (let r of remotes.split("\n")) {
+      r = r.trim();
+      r = r.replace(/^origin\/(.+)/, (...args) => args[1]);
+      if (/^HEAD/.test(r)) {
+        continue;
+      }
+      branches.push(r);
+    }
+    const current = await git.branchCurrent();
+    branches.splice(branches.indexOf(current), 1);
+    branches.push(current);
+
     // Okay, let's pull it!
-    const branches = [ await git.branchCurrent() ];
-    branches.unshift(branches.includes("master") ? "preprint" : "master");
     for (const branch of branches) {
       const checkout = await git.commandExec(`git checkout ${branch}`);
       if (checkout === false) {
