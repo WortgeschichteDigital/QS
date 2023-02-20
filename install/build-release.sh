@@ -89,7 +89,7 @@ makeReleaseNotes() {
   clH[change]="Verbesserungen"
   clH[update]="Updates"
   clH[fix]="Behobene Fehler"
-  local commitTypes=(removal reature change update fix)
+  local commitTypes=(removal feature change update fix)
   for type in ${!commitTypes[@]}; do
     local newType=1
     for commit in ${!clCommits[@]}; do
