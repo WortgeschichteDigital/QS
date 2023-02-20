@@ -603,6 +603,7 @@ const hints = {
         hints.checkSprache(file, doc, content);
         hints.checkDiasystems(file, doc, content);
         hints.checkLiterature(file, doc, content);
+        hints.checkQuotations(file, doc, content);
         hints.collectComments(file, doc, content);
       } catch (err) {
         xml.updateErrors.push({
@@ -1153,6 +1154,50 @@ const hints = {
           type: "literature_missing",
         });
       }
+    }
+  },
+
+  // QUOTATION_SUPERFLUOUS
+  //   file = string (XML file name)
+  //   doc = document
+  //   content = string
+  checkQuotations (file, doc, content) {
+    const data = xml.data.files[file];
+
+    // collect quotation IDs
+    const wg = new Set();
+    doc.querySelectorAll(":where(Wortgeschichte_kompakt, Wortgeschichte) Belegreferenz").forEach(i => {
+      const id = i.getAttribute("Ziel");
+      wg.add(id);
+    });
+    const br = new Set();
+    const brEle = {};
+    doc.querySelectorAll("Belegreihe Beleg").forEach(i => {
+      const id = i.getAttribute("xml:id");
+      br.add(id);
+      // to speed up the operation, we need an element cache;
+      // querySelector(`Beleg[xml:id="${id}"]`) does not work, als "xml:id"
+      // is not a valid attribute name
+      brEle[id] = i;
+    });
+
+    // detect unquoted quotations
+    for (const id of br) {
+      if (wg.has(id)) {
+        continue;
+      }
+      hints.add(data.hints, file, {
+        line: xml.getLineNumber({
+          doc,
+          ele: brEle[id],
+          file: content,
+        }),
+        linkCount: 0,
+        scope: "Belegauswahl",
+        textErr: [ `<Beleg xml:id="${id}">` ],
+        textHint: [],
+        type: "quotation_superfluous",
+      });
     }
   },
 

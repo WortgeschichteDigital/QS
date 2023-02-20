@@ -14,6 +14,7 @@ const viewHints = {
     link_error: "Artikel-Link korrigieren",
     literature_error: "Literatur-Tag korrigieren",
     literature_missing: "Literaturtitel ergänzen",
+    quotation_superfluous: "Beleg nicht zitiert",
     semantic_type: "Semantik ergänzen",
     sprache_superfluous: "Sprach-Attribut entfernen",
     stichwort_ez: "Objektsprache falsch ausgezeichnet",
@@ -170,6 +171,7 @@ const viewHints = {
             "article_file",
             "article_id",
             "literature_missing",
+            "quotation_superfluous",
           ]);
           break;
         case "comment":
