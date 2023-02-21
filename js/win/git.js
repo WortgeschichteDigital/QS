@@ -395,7 +395,7 @@ const git = {
         document.querySelector("#fun-git-pull").focus();
         return;
       }
-      const pull = await git.commandExec(`git pull https://${git.config.user}:${encodeURIComponent(configPass)}@${git.remote} ${branch}:${branch}`);
+      const pull = await git.commandExec(`git pull https://${git.config.user}:${encodeURIComponent(configPass)}@${git.remote} ${branch}:refs/remotes/origin/${branch}`);
       if (pull === false) {
         document.querySelector("#fun-git-pull").focus();
         return;
