@@ -247,9 +247,13 @@
           <p>Git konfigurieren. Dafür die folgenden Befehle nacheinander ausführen; den gefetteten Text entsprechend anpassen:</p>
           <pre class="no-highlight">$ git config user.name "<b>Petra Pan</b>"
 $ git config user.email <b>ppan@gwdg.de</b>
-$ git config pull.rebase false
-$ git config credential.helper cache
+$ git config pull.rebase true
 $ git config core.editor nano</pre>
+        </li>
+
+        <li>
+          <p><strong>Nur unter macOS und Linux:</strong></p>
+          <pre>$ git config credential.helper cache</pre>
         </li>
 
         <li>
