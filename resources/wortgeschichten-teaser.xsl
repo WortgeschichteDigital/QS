@@ -43,6 +43,11 @@
       <xsl:apply-templates/>
       </b>
     </xsl:when>
+    <xsl:when test="@Stil = '#singleMarks'">
+      <xsl:text>‚</xsl:text>
+      <xsl:apply-templates/>
+      <xsl:text>‘</xsl:text>
+    </xsl:when>
     <xsl:when test="@Stil = '#u'">
       <u>
       <xsl:apply-templates/>
