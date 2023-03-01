@@ -676,7 +676,7 @@ const hints = {
             links: data.links,
           });
           // detect whether the lemma was already linked in the current block
-          if (linkCount && hints.detectVerweisInBlock(i, target)) {
+          if (linkCount && hints.detectVerweisInBlock(i, target).link) {
             continue;
           }
           // add hint
@@ -932,15 +932,19 @@ const hints = {
           // detect target
           const target = hints.detectTarget(x, lemma);
           // count how often the lemma was already linked
-          const linkCount = hints.getLinkCount({
+          let linkCount = hints.getLinkCount({
             file: x,
             hidx: target.hidx,
             lemma,
             links: data.links,
           });
           // detect whether the lemma was already linked in the current block
-          if (linkCount && hints.detectVerweisInBlock(i, target)) {
+          const inBlock = hints.detectVerweisInBlock(i, target);
+          if (linkCount && inBlock.link && inBlock.block !== "Verweise") {
             continue;
+          }
+          if (inBlock.block === "Verweise") {
+            linkCount = 0;
           }
           // add hint
           const hidx = target.hidx ? ` hidx="${target.hidx}"` : "";
@@ -1307,9 +1311,11 @@ const hints = {
   //   target = object (contains .hidx and .target, both strings)
   detectVerweisInBlock (ele, target) {
     let container;
-    for (const b of [ "Textblock", "Blockzitat", "Liste" ]) {
+    let blockType;
+    for (const b of [ "Textblock", "Blockzitat", "Liste", "Verweise" ]) {
       container = ele.closest(b);
       if (container) {
+        blockType = b;
         break;
       }
     }
@@ -1319,10 +1325,16 @@ const hints = {
       const hidx = vz.getAttribute("hidx") || "";
       if (hidx === target.hidx &&
           vz.textContent === target.target) {
-        return true;
+        return {
+          link: true,
+          block: blockType,
+        };
       }
     }
-    return false;
+    return {
+      link: false,
+      block: blockType,
+    };
   },
 
   // count how often a certain link is already present within the article's text
