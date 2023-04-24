@@ -89,4 +89,10 @@
   <xsl:text>“</xsl:text>
 </xsl:template>
 
+<xsl:template match="z:Zitat_primaer">
+  <i>
+    <xsl:apply-templates/>
+  </i>
+</xsl:template>
+
 </xsl:stylesheet>
