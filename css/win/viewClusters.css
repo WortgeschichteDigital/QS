@@ -330,6 +330,10 @@
   text-align: center;
 }
 
+.cluster.filtered-cluster {
+  border-color: var(--line);
+}
+
 .cluster.changed-cluster {
   border-color: var(--colorRed);
 }
@@ -366,6 +370,10 @@
   display: inline-block;
   max-width: min-content;
   white-space: normal;
+}
+
+.cluster.filtered-cluster span {
+  color: var(--textGreyLight);
 }
 
 .cluster-circle {

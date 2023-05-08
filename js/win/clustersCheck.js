@@ -55,6 +55,7 @@ const clustersCheck = {
 
     // fill in clusters
     const [ left, right ] = cont.children;
+    const printedLemmas = new Set();
     for (let i = 0, len = c.length; i < len; i++) {
       // this clusters ist excluded via authors filter
       if (!data.idx.includes(i)) {
@@ -77,6 +78,20 @@ const clustersCheck = {
               i.classList.add("new-lemma");
             }
           });
+        }
+      }
+
+      // mark filtered clusters
+      if (!viewClusters.filters["select-authors"]) {
+        let filtered = true;
+        for (const lemma of Object.keys(c[i].z)) {
+          if (!printedLemmas.has(lemma)) {
+            printedLemmas.add(lemma);
+            filtered = false;
+          }
+        }
+        if (filtered) {
+          cluster.classList.add("filtered-cluster");
         }
       }
 
