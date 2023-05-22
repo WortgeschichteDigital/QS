@@ -286,7 +286,7 @@ const artikel = {
       // values.se
       for (const i of file.links) {
         for (const se of i.type) {
-          if (!/Cluster|Kontext/.test(se) &&
+          if (!/Cluster/.test(se) &&
               !v.se.includes(se)) {
             v.se.push(se);
           }
@@ -399,7 +399,7 @@ const artikel = {
         if (!link.lemma.file) {
           continue;
         }
-        const types = link.type.filter(i => !/Cluster|Kontext/.test(i));
+        const types = link.type.filter(i => !/Cluster/.test(i));
         if (!types.length) {
           continue;
         }

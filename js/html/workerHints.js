@@ -46,11 +46,16 @@ const hints = {
   },
 
   // SEMANTIC_TYPE: corresponding semantic types
-  // ("Cluster" and "Kontext" are excluded)
+  // ("Cluster" is excluded)
   semCorrTypes: {
     Gegensatz: "Gegensatz",
+    Heteronym: "Heteronym",
+    Holonym: "Meronym",
     Hyperonym: "Hyponym",
     Hyponym: "Hyperonym",
+    Kohyponym: "Kohyponym",
+    Meronym: "Holonym",
+    Paronym: "Paronym",
     Synonym: "Synonym",
   },
 
