@@ -1449,7 +1449,9 @@ const hints = {
       if (exists) {
         const file = await shared.fsp.readFile(path, { encoding: "utf8" });
         if (!Object.keys(hints.variants).length) {
-          hints.variants = JSON.parse(file);
+          try {
+            hints.variants = JSON.parse(file);
+          } catch {}
         }
       }
     }
