@@ -269,7 +269,7 @@ window.addEventListener("load", async () => {
   shared.ipc.on("menu-teaser-tags", () => win.menuCommand("teaser-tags"));
   shared.ipc.on("menu-update", () => win.menuCommand("update"));
   shared.ipc.on("menu-xml", () => win.menuCommand("xml"));
-  shared.ipc.on("cli-command", (evt, command) => artikel.cliExport(command));
+  shared.ipc.on("cli-command", (evt, command) => cli.distribute(command));
   shared.ipc.on("save-prefs", () => prefs.save());
   shared.ipc.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
 
