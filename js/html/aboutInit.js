@@ -4,6 +4,9 @@ window.addEventListener("load", async () => {
   // RIGHT CLICK
   window.addEventListener("contextmenu", evt => popup.open(evt));
 
+  // KEYBOARD EVENTS
+  document.addEventListener("keydown", keyboard.shortcuts);
+
   // GET APP INFO
   shared.info = await shared.ipc.invoke("app-info");
 
