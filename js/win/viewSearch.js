@@ -128,7 +128,7 @@ const viewSearch = {
         if (!viewSearch.data.stripTags && !item.isRegExp) {
           let textHigh = "";
           for (let i = 0, len = text.length; i < len; i++) {
-            if (i > 0 && i < len - 1) {
+            if (i > 0 && i < len - 1 && text[i - 1] !== "\\") {
               textHigh += "(<[^>]+>)*";
             }
             textHigh += text[i];
