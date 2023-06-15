@@ -36,6 +36,7 @@
         ><li><a href="#einstellungen">Einstellungen</a></li
         ><li><a href="#tastatur">Tastaturkürzel</a></li
         ><li><a href="#verschiedenes">Verschiedenes</a></li
+        ><li><a href="#publikation">Publikation</a></li
       ></ul>
     </nav>
 
@@ -45,7 +46,7 @@
 
       <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wortgeschichten/#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
 
-      <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#verschiedenes-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
+      <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#publikation-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
 
       <ul>
         <li>die Suchfilter der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a>,</li>
@@ -1065,7 +1066,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="einstellungen-datenZeitstrahl" class="option">Zeitstrahldaten</p>
 
-      <p class="indent-hint">Die Zeitstrahldaten spielen für Ihren Arbeitsalltag normalerweise keine Rolle. Sie können diese Einstellung also im Prinzip ignorieren. Benötigt werden die Zeistrahldaten allerdings für den <a href="#verschiedenes-artikelJSON">Export der Artikel.json</a>, um den sich die nicht spezialisierten Mitarbeiter*innen dann kümmern müssen, wenn die Techniker*in längerfristig ausfällt.</p>
+      <p class="indent-hint">Die Zeitstrahldaten spielen für Ihren Arbeitsalltag normalerweise keine Rolle. Sie können diese Einstellung also im Prinzip ignorieren. Benötigt werden die Zeistrahldaten allerdings für den <a href="#publikation-artikelJSON">Export der Artikel.json</a>, um den sich die nicht spezialisierten Mitarbeiter*innen dann kümmern müssen, wenn die Techniker*in längerfristig ausfällt.</p>
 
       <p class="indent-hint">Bei der Artikel.json handelt es sich um eine für die Webseite unverzichtbare Datendatei, ohne die eine Publikation neuer Wortgeschichten nur eingeschränkt sinnvoll ist, weil <a href="#allgemeines-artikelJSON">viele Funktionen auf der Webseite</a> von ihren Inhalten abhängen. Sie liegt im Repository unter <code>resources/<wbr>Artikel.json</code>.</p>
 
@@ -1353,9 +1354,46 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="verschiedenes-funktionen">Die folgenden Funktionen sind über den App-Menüpunkt <i>Funktionen</i> erreichbar.</p>
 
+      <h2><span>Teaser-Tags</span></h2>
+
+      <p id="verschiedenes-teaser">Diese Funktion ist eher für Techniker*innen gedacht. Sie dient zur Evaluation des XML-Codes im Kurz-Gefasst. Für die Transformation des Kurz-Gefasst gibt es auf zdl.org zwei verschiedene XSLT: Das eine ist in die Transformationsroutine der Artikel integriert; das andere erzeugt eine technisch reduzierte Vorschau-Version für die Suchfunktion und die Startseite. Diese zweite Version des Scripts gerät gerne aus dem Blick.</p>
+
+      <p>Die Funktion listet alle <b>Tags</b> auf, die innerhalb von <code>&lt;Wortgeschichte_kompakt&gt;</code> verwendet werden. Die Tags sind klicksensitiv. Auf Klick werden alle <b>Attribute</b> aufgelistet, die im Zusammenhang mit dem gewählten Tag genutzt werden. Im unteren Teil des Fensters kann man durch den XML-Code der Kurz-Gefasst browsen, auf die die Auswahl zutrifft.</p>
+
+      <p>Über dem XML-Code gibt zwei <b>Icons</b>:</p>
+
+      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Zeigt das Kurz-Gefasst in der gerenderten HTML-Fassung an</p>
+
+      <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor des Betriebssystems</p>
+
+      <h1><span>Hilfe-Menü</span></h1>
+
+      <p id="verschiedenes-hilfe">Die folgenden Funktionen sind über den App-Menüpunkt <i>Hilfe</i> erreichbar.</p>
+
+      <h2><span>Updates</span></h2>
+
+      <p id="verschiedenes-udpates">Die App sucht bei jedem Start automatisch nach Programm-Updates. Wenn es eins gibt, wird ein Meldungsfenster geöffnet, in dem ein Link zur GitHub-Seite mit den Downloads zu finden ist.</p>
+
+      <p>Sie können die Funktion über diesen Menüpunkt jederzeit selbst anstoßen.</p>
+
+      <h2><span>Fehlerlog</span></h2>
+
+      <p id="verschiedenes-fehlerlog">Das Fehlerlog ist persistent, es wird also nicht bei jedem Programmstart neu erstellt, sondern immer weiter gefüllt. Tritt ein Programmfehler auf, der keine explizite Meldung für die Benutzer*in auslöst, wird dieser im Log protokolliert. Stoßen Sie auf einen Fehler, benötigt die Techniker*in genauere Informationen, um ihn zu beheben. Das Log stellt diese unter Umständen bereit.</p>
+
+      <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
+
+      <p>Mit dem Icon <img src="../img/win/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
+    </section>
+
+    <!-- PUBLICATION -->
+    <section id="publikation">
+      <h1><span>Publikation</span></h1>
+
+      <p>Die Funktionen im Menü <i>Publikation</i> dienen dazu, es jeder Mitarbeiter*in prinzipiell zu ermöglichen, selbständig neue Wortgeschichten auf <a href="https://www.zdl.org/">zdl.org</a> zu publizieren.</p>
+
       <h2><span>Artikel.json</span></h2>
 
-      <p id="verschiedenes-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmert sich normalerweise die Techniker*in. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
+      <p id="publikation-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmert sich normalerweise die Techniker*in. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
 
       <p><b>Update-Prozedere</b></p>
 
@@ -1395,36 +1433,6 @@ $ git push</pre>
 
         <li><i>Linux:</i> <code>/opt/<wbr>QS/</code></li>
       </ul>
-
-      <h2><span>Teaser-Tags</span></h2>
-
-      <p id="verschiedenes-teaser">Diese Funktion ist eher für Techniker*innen gedacht. Sie dient zur Evaluation des XML-Codes im Kurz-Gefasst. Für die Transformation des Kurz-Gefasst gibt es auf zdl.org zwei verschiedene XSLT: Das eine ist in die Transformationsroutine der Artikel integriert; das andere erzeugt eine technisch reduzierte Vorschau-Version für die Suchfunktion und die Startseite. Diese zweite Version des Scripts gerät gerne aus dem Blick.</p>
-
-      <p>Die Funktion listet alle <b>Tags</b> auf, die innerhalb von <code>&lt;Wortgeschichte_kompakt&gt;</code> verwendet werden. Die Tags sind klicksensitiv. Auf Klick werden alle <b>Attribute</b> aufgelistet, die im Zusammenhang mit dem gewählten Tag genutzt werden. Im unteren Teil des Fensters kann man durch den XML-Code der Kurz-Gefasst browsen, auf die die Auswahl zutrifft.</p>
-
-      <p>Über dem XML-Code gibt zwei <b>Icons</b>:</p>
-
-      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Zeigt das Kurz-Gefasst in der gerenderten HTML-Fassung an</p>
-
-      <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor des Betriebssystems</p>
-
-      <h1><span>Hilfe-Menü</span></h1>
-
-      <p id="verschiedenes-hilfe">Die folgenden Funktionen sind über den App-Menüpunkt <i>Hilfe</i> erreichbar.</p>
-
-      <h2><span>Updates</span></h2>
-
-      <p id="verschiedenes-udpates">Die App sucht bei jedem Start automatisch nach Programm-Updates. Wenn es eins gibt, wird ein Meldungsfenster geöffnet, in dem ein Link zur GitHub-Seite mit den Downloads zu finden ist.</p>
-
-      <p>Sie können die Funktion über diesen Menüpunkt jederzeit selbst anstoßen.</p>
-
-      <h2><span>Fehlerlog</span></h2>
-
-      <p id="verschiedenes-fehlerlog">Das Fehlerlog ist persistent, es wird also nicht bei jedem Programmstart neu erstellt, sondern immer weiter gefüllt. Tritt ein Programmfehler auf, der keine explizite Meldung für die Benutzer*in auslöst, wird dieser im Log protokolliert. Stoßen Sie auf einen Fehler, benötigt die Techniker*in genauere Informationen, um ihn zu beheben. Das Log stellt diese unter Umständen bereit.</p>
-
-      <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
-
-      <p>Mit dem Icon <img src="../img/win/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
     </section>
 
     <!-- OVERLAY: LOADING -->

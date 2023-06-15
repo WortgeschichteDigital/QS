@@ -118,17 +118,22 @@ const winMenu = {
         },
         { type: "separator" },
         {
-          label: "Artikel.json",
-          icon: path.join(__dirname, "img", "main", "json.png"),
-          click: () => winMenu.execute("artikel-json"),
-        },
-        {
           label: "Teaser-Tags",
           icon: path.join(__dirname, "img", "main", "xml.png"),
           click: () => winMenu.execute("teaser-tags"),
         },
       ],
     },
+    {
+      label: "&Publikation",
+      submenu: [
+        {
+          label: "Artikel.json",
+          icon: path.join(__dirname, "img", "main", "json.png"),
+          click: () => winMenu.execute("artikel-json"),
+        },
+      ],
+    }
   ],
   menuPv: [
     {
