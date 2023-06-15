@@ -111,7 +111,7 @@ const viewSearch = {
     // sort search terms by position in the search expression
     for (const i of search) {
       const reg = new RegExp(shared.escapeRegExp(i.textOri), "g");
-      i.textOriIdx = reg.exec(textOri).index;
+      i.textOriIdx = reg?.exec(textOri)?.index || 0;
     }
     search.sort((a, b) => a.textOriIdx - b.textOriIdx);
 
