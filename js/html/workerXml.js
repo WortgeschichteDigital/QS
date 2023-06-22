@@ -191,7 +191,27 @@ const xml = {
               values.faLemmas.includes(link.lemma.spelling)) {
             continue;
           }
-          values.faLemmas.push(link.lemma.spelling);
+          const file = xml.data.files[link.lemma.file];
+          let spellings = [ link.lemma.spelling ];
+          if (!file.hlJoined.includes(spellings[0]) &&
+              !file.nlJoined.includes(spellings[0])) {
+            const reg = new RegExp(`(^|/)${shared.escapeRegExp(spellings[0])}(/| \\(|$)`);
+            for (const lemma of file.hlJoined.concat(file.nlJoined)) {
+              if (reg.test(lemma)) {
+                const hidx = lemma.match(/ \(.+?\)$/);
+                spellings = lemma.split("/");
+                if (hidx) {
+                  for (let i = 0, len = spellings.length - 1; i < len; i++) {
+                    spellings[i] += hidx[0];
+                  }
+                }
+                break;
+              }
+            }
+          }
+          for (const s of spellings) {
+            values.faLemmas.push(s);
+          }
         }
       }
     }
