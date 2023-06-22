@@ -187,7 +187,8 @@ const xml = {
       if (values.fa) {
         for (const link of values.links) {
           if (link.scope !== "Verweise" ||
-              !link.lemma.spelling) {
+              !link.lemma.spelling ||
+              values.faLemmas.includes(link.lemma.spelling)) {
             continue;
           }
           values.faLemmas.push(link.lemma.spelling);
