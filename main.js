@@ -132,6 +132,11 @@ const winMenu = {
           icon: path.join(__dirname, "img", "main", "json.png"),
           click: () => winMenu.execute("artikel-json"),
         },
+        {
+          label: "Artikelübersicht",
+          icon: path.join(__dirname, "img", "main", "file.png"),
+          click: () => winMenu.execute("overview"),
+        },
       ],
     }
   ],

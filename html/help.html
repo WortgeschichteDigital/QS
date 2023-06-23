@@ -1433,6 +1433,22 @@ $ git push</pre>
 
         <li><i>Linux:</i> <code>/opt/<wbr>QS/</code></li>
       </ul>
+
+      <h2><span>Artikelübersicht</span></h2>
+
+      <p id="publikation-artikeluebersicht">Mithilfe dieser Funktion kann die <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> aufgefrischt werden. Die Darstellung der Artikelübersicht speist sich zum einen aus der <a href="#publikation-artikelJSON">Artikel.json</a> und zum anderen aus einem HTML-Template, in dem die Lemmata aufgelistet werden. Das Template wird mit dieser Funktion erstellt.</p>
+
+      <p>Soll die Übersicht aufgefrischt werden (weil <abbr title="zum Beispiel">z.&nbsp;B.</abbr> eine neue Wortgeschichte erschienen ist), muss die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, am richtigen Ort im ZDL-Repository gespeichert werden, nämlich unter:</p>
+
+      <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/wortgeschichten/index.tt</pre>
+
+      <p>Die bereits bestehende Datei wird dabei überschrieben. Danach können die Änderungen committet und gepusht werden:</p>
+
+      <pre>$ git add index.tt
+$ git commit -m "wgdListe: Update"
+$ git push</pre>
+
+      <p>Der Dialog, der sich nach dem Drücken auf <i>Exportieren</i> öffnet, wählt automatisch den richtigen Speicherort aus, wenn in den <a href="#einstellungen">Einstellungen</a> zuvor der <a href="#einstellungen-datenZDL">Pfad zum ZDL-Repository</a> hinterlegt wurde.</p>
     </section>
 
     <!-- OVERLAY: LOADING -->

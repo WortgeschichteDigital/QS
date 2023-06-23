@@ -35,6 +35,7 @@
     <script src="js/win/error.js"></script>
     <script src="js/win/git.js"></script>
     <script src="js/win/keyboard.js"></script>
+    <script src="js/win/overview.js"></script>
     <script src="js/win/prefs.js"></script>
     <script src="js/win/tags.js"></script>
     <script src="js/win/updates.js"></script>
@@ -361,6 +362,20 @@
           ><span></span
         ></div>
         <p><input type="button" value="Exportieren" id="artikel-calculate"></p>
+      </div>
+    </div>
+
+    <!-- OVERLAY: ARTICLE OVERVIEW -->
+    <div id="overview" class="overlay hide off">
+      <div>
+        <h1>Artikelübersicht<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <div id="overview-branch">
+          <p
+            ><img src="img/win/button-yes.svg" width="30" height="30" alt=""><i>Branch <q>master</q></i
+          ></p>
+          <p><i>Empfehlung:</i> Die Berechnung sollte auf Basis von <q>master</q> stattfinden: <a href="#">Branch wechseln</a>.</p>
+        </div>
+        <p><input type="button" value="Exportieren" id="overview-calculate"></p>
       </div>
     </div>
 

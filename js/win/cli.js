@@ -68,6 +68,14 @@ const cli = {
       }
     }
 
+    // COMMAND: export overview page
+    if (command["export-overview"]) {
+      const result = await cli.overview(command);
+      if (!result) {
+        return;
+      }
+    }
+
     // everything done
     shared.ipc.invoke("cli-return-code", 0);
   },
@@ -96,9 +104,35 @@ const cli = {
       return true;
     } catch (err) {
       // unspecified error
-      shared.ipc.invoke("cli-message", `Error: program error\n\n${err.name}: ${err.message}`);
-      shared.ipc.invoke("cli-return-code", 1);
+      cli.unspecifiedError(err);
       return false;
     }
+  },
+
+  // COMMAND: export overview page
+  async overview (command) {
+    shared.ipc.invoke("cli-message", "Exporting overview page . . .");
+    try {
+      // calculate page
+      const page = await overview.calculate(command["no-new"], true);
+      if (!page) {
+        return false;
+      }
+      // write file
+      const path = shared.path.join(command["export-out"], "index.tt");
+      await shared.fsp.writeFile(path, page);
+      return true;
+    } catch (err) {
+      // unspecified error
+      cli.unspecifiedError(err);
+      return false;
+    }
+  },
+
+  // return message from unspecified error
+  //   err = object
+  unspecifiedError (err) {
+    shared.ipc.invoke("cli-message", `Error: program error\n\n${err.name}: ${err.message}`);
+    shared.ipc.invoke("cli-return-code", 1);
   },
 };

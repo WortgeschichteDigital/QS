@@ -57,6 +57,9 @@ var win = {
       case "hints":
         document.querySelector("#view-hints").click();
         break;
+      case "overview":
+        overview.show();
+        break;
       case "preferences":
         overlay.show("prefs");
         break;
