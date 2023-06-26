@@ -255,6 +255,9 @@ $ git config core.editor nano</pre>
         <li>
           <p><strong>Nur unter macOS und Linux:</strong></p>
           <pre>$ git config credential.helper cache</pre>
+          <p>Wenn Sie XML-Dateien in Ihrem Repository committen, die auf einem Windows-System bearbeitet wurden:</p>
+          <pre>$ echo '*.xml text eol=lf' > .gitattributes
+$ echo "/.gitattributes" >> .git/info/exclude</pre>
         </li>
 
         <li>
