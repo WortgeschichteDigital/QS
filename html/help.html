@@ -247,7 +247,7 @@
         <li>
           <p>Git konfigurieren. Dafür die folgenden Befehle nacheinander ausführen; den gefetteten Text entsprechend anpassen:</p>
           <pre class="no-highlight">$ git config user.name "<b>Petra Pan</b>"
-$ git config user.email <b>ppan@gwdg.de</b>
+$ git config user.email <b>peter.pan@adwgoe.de</b>
 $ git config pull.rebase true
 $ git config core.editor nano</pre>
         </li>
@@ -1079,7 +1079,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="einstellungen-datenZDL" class="option">ZDL-Repository</p>
 
-      <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <i>Export der Terminologie</i> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im ZDL-Repository gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
+      <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <i>Export der Terminologie</i> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
 
       <p id="einstellungen-datenExport" class="option">Einstellungsdaten</p>
 
@@ -1398,7 +1398,27 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Die Funktionen im Menü <i>Publikation</i> dienen dazu, es jeder Mitarbeiter*in prinzipiell zu ermöglichen, selbständig neue Wortgeschichten auf <a href="https://www.zdl.org/">zdl.org</a> zu publizieren.</p>
 
-      <h2><span>Artikel.json</span></h2>
+      <h2><span>ZDL-Repository klonen</span></h2>
+
+      <p id="publikation-repository">Das ZDL-Repository benötigen Sie, wenn Sie die Funktionen <a href="#publikation-artikeluebersicht"><i>Artikelübersicht</i></a> und/oder <i>Terminologie</i> benutzen, da diese Dateien erzeugen, die im ZDL-Repository committet und gepusht werden müssen.</p>
+
+      <p>Das Klonen des ZDL-Repositorys funktioniert im Prinzip genauso wie das des <a href="#git-einrichtung">Wortgeschichten-Repositorys</a>. Man kann sich jedoch diverse Einrichtungsschritte sparen, weswegen es genügt, die folgenden Befehle in der <i>Git Bash</i> (unter Windows) <abbr title="beziehungsweise">bzw.</abbr> im <i>Terminal</i> (unter macOS) der Reihe nach auszuführen. Der gefettete Text in den Befehlen muss entsprechend angepasst werden:</p>
+
+      <pre class="no-highlight">$ git clone https://git.zdl.org/zdl/zdl.org.git
+$ cd zdl.org
+$ git config user.name "<b>Petra Pan</b>"
+$ git config user.email <b>peter.pan@adwgoe.de</b>
+$ git config pull.rebase true
+$ git config core.editor nano
+$ git switch --track origin/wgd</pre>
+
+      <p><b>Nur unter macOS und Linux:</b></p>
+
+      <pre>$ git config credential.helper cache</pre>
+
+      <p>Der Klon hat zwei Branches: <i>master</i> und <i>wgd</i>. Nach der Einrichtung ist der Branch <i>wgd</i> ausgecheckt. Da <em>auf gar keinen Fall</em> in <i>master</i> gearbeitet werden darf, muss der Branch vor dem Erstellen neuer Commits nicht gewechselt werden. Da der Branch allerdings von mehreren Mitarbeitern genutzt wird, sollten Sie vor dem Erstellen von Commits ein <code>git pull</code> nicht vergessen.</p>
+
+      <h2><span>Funktion <i>Artikel.json</i></span></h2>
 
       <p id="publikation-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmert sich normalerweise die Techniker*in. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
 
@@ -1441,11 +1461,11 @@ $ git push</pre>
         <li><i>Linux:</i> <code>/opt/<wbr>QS/</code></li>
       </ul>
 
-      <h2><span>Artikelübersicht</span></h2>
+      <h2><span>Funktion <i>Artikelübersicht</i></span></h2>
 
       <p id="publikation-artikeluebersicht">Mithilfe dieser Funktion kann die <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> aufgefrischt werden. Die Darstellung der Artikelübersicht speist sich zum einen aus der <a href="#publikation-artikelJSON">Artikel.json</a> und zum anderen aus einem HTML-Template, in dem die Lemmata aufgelistet werden. Das Template wird mit dieser Funktion erstellt.</p>
 
-      <p>Soll die Übersicht aufgefrischt werden (weil <abbr title="zum Beispiel">z.&nbsp;B.</abbr> eine neue Wortgeschichte erschienen ist), muss die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, am richtigen Ort im ZDL-Repository gespeichert werden, nämlich unter:</p>
+      <p>Soll die Übersicht aufgefrischt werden (weil <abbr title="zum Beispiel">z.&nbsp;B.</abbr> eine neue Wortgeschichte erschienen ist), muss die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden, nämlich unter:</p>
 
       <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/wortgeschichten/index.tt</pre>
 
