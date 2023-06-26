@@ -218,6 +218,14 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     prefs.zeitstrahlRemove();
   });
+  document.querySelector("#prefs-zdl-open").addEventListener("click", evt => {
+    evt.preventDefault();
+    prefs.zdlOpen();
+  });
+  document.querySelector("#prefs-zdl-remove").addEventListener("click", evt => {
+    evt.preventDefault();
+    prefs.zdlRemove();
+  });
   document.querySelector("#prefs-data-export").addEventListener("click", () => prefs.exportData());
   document.querySelector("#prefs-data-import").addEventListener("click", () => prefs.importData());
   document.querySelector("#prefs-marks").addEventListener("click", () => viewHints.eraseMarks());

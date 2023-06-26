@@ -1077,6 +1077,10 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
 
+      <p id="einstellungen-datenZDL" class="option">ZDL-Repository</p>
+
+      <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <i>Export der Terminologie</i> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im ZDL-Repository gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
+
       <p id="einstellungen-datenExport" class="option">Einstellungsdaten</p>
 
       <p class="indent-hint">Mithilfe der Buttons <i>Exportieren</i> und <i>Importieren</i> können Sie – Sie ahnen es schon – die Programmeinstellungen ex- oder importieren.</p>
@@ -1445,7 +1449,11 @@ $ git push</pre>
 
       <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/wortgeschichten/index.tt</pre>
 
-      <p>Die bereits bestehende Datei wird dabei überschrieben. Danach können die Änderungen committet und gepusht werden:</p>
+      <p>Doch zunächst sollten Sie pullen:</p>
+
+      <pre>$ git pull</pre>
+
+      <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
 
       <pre>$ git add index.tt
 $ git commit -m "wgdListe: Update"

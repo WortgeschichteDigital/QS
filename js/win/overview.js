@@ -71,6 +71,9 @@ const overview = {
         },
       ],
     };
+    if (prefs.data.zdl) {
+      options.defaultPath = shared.path.join(prefs.data.zdl, "root", "wb", "wortgeschichten", "index.tt");
+    }
     const result = await shared.ipc.invoke("file-dialog", false, options);
     if (result.canceld || !result.filePath) {
       return false;

@@ -225,6 +225,64 @@ const prefs = {
     artikel.messages();
   },
 
+  // ZDL-Repository: choose directory
+  async zdlOpen () {
+    // open dialog
+    const options = {
+      title: "ZDL-Repository auswählen",
+      defaultPath: shared.info.documents,
+      properties: [ "openDirectory" ],
+    };
+    const result = await shared.ipc.invoke("file-dialog", true, options);
+    if (result.canceld || !result?.filePaths?.length) {
+      return;
+    }
+
+    // check path
+    const [ path ] = result.filePaths;
+    const structure = {
+      ".git": false,
+      root: false,
+    };
+    try {
+      const files = await shared.fsp.readdir(path);
+      for (const f of files) {
+        structure[f] = true;
+      }
+    } catch (err) {
+      shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+      return;
+    }
+    if (Object.values(structure).some(i => !i)) {
+      const missing = [];
+      for (const [ k, v ] of Object.entries(structure)) {
+        if (!v) {
+          missing.push("• " + k);
+        }
+      }
+      await dialog.open({
+        type: "alert",
+        text: `Folgende Unterordner wurden im Repository nicht gefunden:\n${missing.join("<br>")}`,
+      });
+      return;
+    }
+
+    // accept path
+    document.querySelector("#prefs-zdl").value = path;
+    prefs.data.zdl = path;
+    prefs.save();
+  },
+
+  // ZDL-Repository: remove link to directory
+  zdlRemove () {
+    if (!prefs.data.zdl) {
+      return;
+    }
+    document.querySelector("#prefs-zdl").value = "";
+    delete prefs.data.zdl;
+    prefs.save();
+  },
+
   // export preferences data
   async exportData () {
     const [ today ] = new Date().toISOString().split("T");
@@ -245,6 +303,7 @@ const prefs = {
     try {
       const data = structuredClone(prefs.data);
       data.zeitstrahl = "";
+      data.zdl = "";
       data["app-version"] = "";
       await shared.fsp.writeFile(result.filePath, JSON.stringify(data));
     } catch (err) {
@@ -286,6 +345,7 @@ const prefs = {
 
     // apply data
     prefs.zeitstrahlRemove();
+    prefs.zdlRemove();
     prefs.data = json;
     prefs.data["app-version"] = shared.info.version;
     await prefs.init(true);

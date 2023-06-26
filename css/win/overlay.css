@@ -193,11 +193,12 @@
   text-indent: 0;
 }
 
-#prefs-zeitstrahl {
+#prefs-zeitstrahl,
+#prefs-zdl {
   width: calc(100% - 22px - 75px);
 }
 
-#prefs-zeitstrahl + .icon {
+:is(#prefs-zeitstrahl, #prefs-zdl) + .icon {
   margin-left: 10px;
 }
 
