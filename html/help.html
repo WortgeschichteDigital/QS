@@ -1396,7 +1396,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
     <section id="publikation">
       <h1><span>Publikation</span></h1>
 
-      <p>Die Funktionen im Menü <i>Publikation</i> dienen dazu, es jeder Mitarbeiter*in prinzipiell zu ermöglichen, selbständig neue Wortgeschichten auf <a href="https://www.zdl.org/">zdl.org</a> zu publizieren.</p>
+      <p>Die Funktionen im Menü <i>Publikation</i> sollen es den Mitarbeiter*innen des Projekts ermöglichen, neue Wortgeschichten weitgehend selbständig auf <a href="https://www.zdl.org/">zdl.org</a> zu publizieren. Sie dienen alle dazu, bestimmte Dateien aufzufrischen oder zu transformieren. Dies sind Aufgaben, um die sich normalerweise eine Techniker*in kümmert. Damit es im Notfall alle übernehmen können, die Git in Grundzügen beherrschen, wurden diese Funktion nach <i>QS</i> portiert.</p>
 
       <h2><span>ZDL-Repository klonen</span></h2>
 
@@ -1416,11 +1416,11 @@ $ git switch --track origin/wgd</pre>
 
       <pre>$ git config credential.helper cache</pre>
 
-      <p>Der Klon hat zwei Branches: <i>master</i> und <i>wgd</i>. Nach der Einrichtung ist der Branch <i>wgd</i> ausgecheckt. Da <em>auf gar keinen Fall</em> in <i>master</i> gearbeitet werden darf, muss der Branch vor dem Erstellen neuer Commits nicht gewechselt werden. Da der Branch allerdings von mehreren Mitarbeitern genutzt wird, sollten Sie vor dem Erstellen von Commits ein <code>git pull</code> nicht vergessen.</p>
+      <p>Der Klon hat zwei Branches: <i>master</i> und <i>wgd</i>. Nach dem Einrichten ist der Branch <i>wgd</i> ausgecheckt. Da <em>auf gar keinen Fall</em> in <i>master</i> gearbeitet werden darf, muss der Branch vor dem Erstellen neuer Commits nicht gewechselt werden. Da der Branch allerdings von mehreren Mitarbeitern genutzt wird, sollten Sie vor dem Erstellen von Commits ein <code>$ git pull</code> nicht vergessen.</p>
 
       <h2><span>Funktion <i>Artikel.json</i></span></h2>
 
-      <p id="publikation-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmert sich normalerweise die Techniker*in. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
+      <p id="publikation-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen.</p>
 
       <p><b>Update-Prozedere</b></p>
 
@@ -1428,6 +1428,8 @@ $ git switch --track origin/wgd</pre>
         <li><a href="#einstellungen-datenZeitstrahl">Zeistrahldaten</a> mit <i>QS</i> verknüpfen</li>
 
         <li>Nach <a href="#git-allgemeinesBranchesWGd">Branch <q>master</q></a> wechseln</li>
+
+        <li>Im Kopf des Hauptfenster auf <i>pull</i> klicken.</li>
 
         <li>
           <p>Funktionen &gt; Artikel.json &gt; Exportieren</p>
@@ -1440,8 +1442,7 @@ $ git switch --track origin/wgd</pre>
         <li>
           <p>Commit erstellen und pushen:</p>
 
-          <pre>$ git pull
-$ git add resources/Artikel.json
+          <pre>$ git add resources/Artikel.json
 $ git commit -m "Artikeldaten-Update"
 $ git push</pre>
         </li>
@@ -1469,9 +1470,7 @@ $ git push</pre>
 
       <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/wortgeschichten/index.tt</pre>
 
-      <p>Doch zunächst sollten Sie pullen:</p>
-
-      <pre>$ git pull</pre>
+      <p>Doch zunächst sollten Sie im Kopf des Programmfenster auf <i>pull</i> klicken.</p>
 
       <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
 
@@ -1483,17 +1482,17 @@ $ git push</pre>
 
       <h2><span>Funktion <i>Terminologie</i></span></h2>
 
-      <p id="publikation-terminologie">Mithilfe dieser Funktion kann das <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologische Kerninventar auf zdl.org</a> aufgefrischt werden. Die Anzeige dieser Seite speist sich aus der Terminologie-Datendatei, die im Wortgeschichten-Repository liegt:</p>
+      <p id="publikation-terminologie">Mithilfe dieser Funktion kann das <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologische Kerninventar auf zdl.org</a> aufgefrischt werden. Die Anzeige dieser Seite (und auch die der Erläuterungsfenster in den Artikeln) speist sich komplett aus der Terminologie-Datendatei, die im Wortgeschichten-Repository liegt:</p>
 
       <pre>/PFAD/ZUM/WORTGESCHICHTEN-REPOSITORY/resources/Terminologie.json</pre>
 
-      <p>Soll die Datei auf <a href="https://www.zdl.org/">zdl.org</a> aufgefrischt werden, müssen Sie eine Template-Toolkit-Datei mit der Dateiendung <code>*.tt</code> erzeugen. Die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, müssen Sie am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> ablegen, nämlich unter:</p>
+      <p>Soll die Datei auf <a href="https://www.zdl.org/">zdl.org</a> aufgefrischt werden, müssen Sie eine Template-Toolkit-Datei erzeugen. Die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, müssen Sie am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> ablegen, nämlich unter:</p>
 
       <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/WGd/terminologie.tt</pre>
 
-      <p>Das Ganze funktioniert ganz gleich, wie das <a href="#publikation-artikeluebersicht">Update der Artikelübersicht</a>. Zunächst sollten Sie pullen:</p>
+      <p>Das Ganze funktioniert ganz gleich, wie das <a href="#publikation-artikeluebersicht">Update der Artikelübersicht</a>:</p>
 
-      <pre>$ git pull</pre>
+      <p>Zunächst sollten Sie im Kopf des Programmfenster auf <i>pull</i> klicken.</p>
 
       <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
 
@@ -1510,11 +1509,11 @@ $ git push</pre>
       <p id="publikation-wortverlaufskurven">Mit dieser Funktion können die <a href="https://www.dwds.de/r/plot/">Wortverlaufskurven des DWDS</a> für die Publikation einer Wortgeschichte transformiert werden. Bei der Transformation wird Folgendes geändert:</p>
 
       <ul>
-        <li>Stil und Farbe der Kurven werden an das Farbschema von <a href="https://www.zdl.org/">zdl.org</a> angepasst;</li>
+        <li>Stil und Farbe der Kurven werden an das Schema von <a href="https://www.zdl.org/">zdl.org</a> angepasst;</li>
         <li>aus den Legenden werden überflüssige Wörter gelöscht (<abbr title="zum Beispiel">z.&nbsp;B.</abbr> <q>Gesamt</q>).</li>
       </ul>
 
-      <p>Das Ergebnis der Transformation wird in einer neuen Datei gespeichert, die im selben Ordner abgelegt wird, in dem die geladene Wortverlaufskurve liegt. Der Name der neuen Datei beginnt mit <code>! </code>.</p>
+      <p>Das Ergebnis der Transformation wird in einer neuen Datei gespeichert, die im selben Ordner abgelegt wird, in dem die zuvor geladene Wortverlaufskurve liegt. Der Name der neuen Datei beginnt mit <code>! </code>. Er sollte also ganz oben im Ordner zu finden sein.</p>
     </section>
 
     <!-- OVERLAY: LOADING -->
