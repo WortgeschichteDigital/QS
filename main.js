@@ -138,6 +138,11 @@ const winMenu = {
           click: () => winMenu.execute("overview"),
         },
         {
+          label: "Terminologie",
+          icon: path.join(__dirname, "img", "main", "file.png"),
+          click: () => winMenu.execute("term"),
+        },
+        {
           label: "Wortverlaufskurven",
           icon: path.join(__dirname, "img", "main", "transform.png"),
           click: () => winMenu.execute("svg"),

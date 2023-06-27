@@ -73,6 +73,9 @@ var win = {
       case "teaser-tags":
         tags.show();
         break;
+      case "term":
+        term.show();
+        break;
       case "update":
         xml.update();
         break;

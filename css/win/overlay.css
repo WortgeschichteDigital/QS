@@ -52,6 +52,27 @@
 }
 
 
+/* TERMINOLOGY ---------------------------------- */
+
+#term > div {
+  width: 400px;
+}
+
+#term-type {
+  margin-bottom: 20px;
+  font-size: .9rem;
+  line-height: 1.35rem;
+}
+
+#term-type-html {
+  margin-left: 20px;
+}
+
+#term p:last-child {
+  text-align: center;
+}
+
+
 /* SVG ------------------------------------------ */
 
 #svg > div {

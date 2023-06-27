@@ -76,6 +76,14 @@ const cli = {
       }
     }
 
+    // COMMAND: export terminology
+    if (command["export-terminology"]) {
+      const result = await cli.term(command);
+      if (!result) {
+        return;
+      }
+    }
+
     // COMMAND: transform SVG file
     if (command["transform-svg"]) {
       const result = await cli.svg(command);
@@ -118,6 +126,7 @@ const cli = {
   },
 
   // COMMAND: export overview page
+  //   command = object
   async overview (command) {
     shared.ipc.invoke("cli-message", "Exporting overview page . . .");
     try {
@@ -137,7 +146,34 @@ const cli = {
     }
   },
 
+  // COMMAND: export terminology
+  //   command = object
+  async term (command) {
+    // load Terminologie.json and template
+    const json = await term.load(true);
+    if (!json) {
+      return false;
+    }
+
+    // make file
+    shared.ipc.invoke("cli-message", "Exporting terminology . . .");
+    const type = command["export-terminology-type"] || "tt";
+    const file = term.makeFile(type, command["no-new"]);
+
+    // save file
+    try {
+      const path = shared.path.join(command["export-out"], `terminologie.${type}`);
+      await shared.fsp.writeFile(path, file);
+      return true;
+    } catch {
+      shared.ipc.invoke("cli-message", "Error: writing terminology file failed");
+      shared.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+  },
+
   // COMMAND: transform SVG file
+  //   command = object
   async svg (command) {
     const path = command["transform-svg"];
 

@@ -39,6 +39,7 @@
     <script src="js/win/prefs.js"></script>
     <script src="js/win/svg.js"></script>
     <script src="js/win/tags.js"></script>
+    <script src="js/win/term.js"></script>
     <script src="js/win/updates.js"></script>
     <script src="js/win/viewClusters.js"></script>
     <script src="js/win/viewHints.js"></script>
@@ -377,6 +378,20 @@
           <p><i>Empfehlung:</i> Die Berechnung sollte auf Basis von <q>master</q> stattfinden: <a href="#">Branch wechseln</a>.</p>
         </div>
         <p><input type="button" value="Exportieren" id="overview-calculate"></p>
+      </div>
+    </div>
+
+    <!-- OVERLAY: TERMINOLOGY -->
+    <div id="term" class="overlay hide off">
+      <div>
+        <h1>Terminologie<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <p id="term-type"
+          ><input type="radio" name="term-type" id="term-type-tt" checked
+          ><label for="term-type-tt">Template Toolkit</label
+          ><input type="radio" name="term-type" id="term-type-html"
+          ><label for="term-type-html">HTML</label
+        ></p>
+        <p><input type="button" value="Exportieren" id="term-export"></p>
       </div>
     </div>
 

@@ -1079,7 +1079,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="einstellungen-datenZDL" class="option">ZDL-Repository</p>
 
-      <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <i>Export der Terminologie</i> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
+      <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <a href="#publikation-terminologie"><i>Export der Terminologie</i></a> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
 
       <p id="einstellungen-datenExport" class="option">Einstellungsdaten</p>
 
@@ -1400,7 +1400,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <h2><span>ZDL-Repository klonen</span></h2>
 
-      <p id="publikation-repository">Das ZDL-Repository benötigen Sie, wenn Sie die Funktionen <a href="#publikation-artikeluebersicht"><i>Artikelübersicht</i></a> und/oder <i>Terminologie</i> benutzen, da diese Dateien erzeugen, die im ZDL-Repository committet und gepusht werden müssen.</p>
+      <p id="publikation-repository">Das ZDL-Repository benötigen Sie, wenn Sie die Funktionen <a href="#publikation-artikeluebersicht"><i>Artikelübersicht</i></a> und/oder <a href="#publikation-terminologie"><i>Terminologie</i></a> benutzen, da diese Dateien erzeugen, die im ZDL-Repository committet und gepusht werden müssen.</p>
 
       <p>Das Klonen des ZDL-Repositorys funktioniert im Prinzip genauso wie das des <a href="#git-einrichtung">Wortgeschichten-Repositorys</a>. Man kann sich jedoch diverse Einrichtungsschritte sparen, weswegen es genügt, die folgenden Befehle in der <i>Git Bash</i> (unter Windows) <abbr title="beziehungsweise">bzw.</abbr> im <i>Terminal</i> (unter macOS) der Reihe nach auszuführen. Der gefettete Text in den Befehlen muss entsprechend angepasst werden:</p>
 
@@ -1475,11 +1475,35 @@ $ git push</pre>
 
       <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
 
-      <pre>$ git add index.tt
+      <pre>$ git add root/wb/wortgeschichten/index.tt
 $ git commit -m "wgdListe: Update"
 $ git push</pre>
 
       <p>Der Dialog, der sich nach dem Drücken auf <i>Exportieren</i> öffnet, wählt automatisch den richtigen Speicherort aus, wenn in den <a href="#einstellungen">Einstellungen</a> zuvor der <a href="#einstellungen-datenZDL">Pfad zum ZDL-Repository</a> hinterlegt wurde.</p>
+
+      <h2><span>Funktion <i>Terminologie</i></span></h2>
+
+      <p id="publikation-terminologie">Mithilfe dieser Funktion kann das <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologische Kerninventar auf zdl.org</a> aufgefrischt werden. Die Anzeige dieser Seite speist sich aus der Terminologie-Datendatei, die im Wortgeschichten-Repository liegt:</p>
+
+      <pre>/PFAD/ZUM/WORTGESCHICHTEN-REPOSITORY/resources/Terminologie.json</pre>
+
+      <p>Soll die Datei auf <a href="https://www.zdl.org/">zdl.org</a> aufgefrischt werden, müssen Sie eine Template-Toolkit-Datei mit der Dateiendung <code>*.tt</code> erzeugen. Die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, müssen Sie am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> ablegen, nämlich unter:</p>
+
+      <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/WGd/terminologie.tt</pre>
+
+      <p>Das Ganze funktioniert ganz gleich, wie das <a href="#publikation-artikeluebersicht">Update der Artikelübersicht</a>. Zunächst sollten Sie pullen:</p>
+
+      <pre>$ git pull</pre>
+
+      <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
+
+      <pre>$ git add root/wb/WGd/terminologie.tt
+$ git commit -m "wgdTerm: Update"
+$ git push</pre>
+
+      <p>Der Dialog, der sich nach dem Drücken auf <i>Exportieren</i> öffnet, wählt automatisch den richtigen Speicherort aus, wenn in den <a href="#einstellungen">Einstellungen</a> zuvor der <a href="#einstellungen-datenZDL">Pfad zum ZDL-Repository</a> hinterlegt wurde.</p>
+
+      <p>Die Terminologiedaten können auch als HTML-Seite exportiert werden. Diese Option gibt es <abbr title="vor allem">v.&nbsp;a.</abbr> deswegen, damit die bereits publizierten Erläuterungen mit einem Office-Programm geöffnet werden können.</p>
 
       <h2><span>Funktion <i>Wortverlaufskurven</i></span></h2>
 

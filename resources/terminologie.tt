@@ -1,0 +1,29 @@
+[% page_title = 'Wortgeschichte digital: Terminologisches Kerninventar' | html %]
+
+[% BLOCK html_head %]
+  <link rel="canonical" href="https://www.zdl.org/wb/wgd/Terminologie">
+  <link rel="stylesheet" href="[% base %]static/wgd/wgd-para.css">
+  <link rel="stylesheet" media="print" href="[% base %]static/wgd/wgd-para-print.css">
+  <script src="[% base %]static/wgd/wgd-shared.js" defer></script>
+  <script src="[% base %]static/wgd/wgd-para.js" defer></script>
+[% END %]
+
+<div class="row justify-content-md-center">
+<div class="wgd-para wgd-term col col-md-auto bg-white p-3 d shadow">
+
+<h1>Terminologisches Kerninventar von <i>Wortgeschichte digital</i></h1>
+
+<p
+  ><a href="[% base %]wb/wortgeschichten/">Wortgeschichten</a
+  ><span>·</span
+  ><a href="[% base %]wb/wgd/Quiz">Wort-Quiz</a
+  ><span>·</span
+  ><a href="[% base %]wb/wgd/">Zum Projekt <i>Wortgeschichte digital</i></a
+></p>
+
+<p id="wgd-term-in-arbeit"><i>Diese Seite befindet sich noch im Aufbau und wird fortlaufend ergänzt.</i></p>
+
+{{RESULT}}
+
+</div>
+</div>
