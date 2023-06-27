@@ -1390,6 +1390,40 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
       <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
 
       <p>Mit dem Icon <img src="../img/win/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
+
+      <h1><span>Command-Line Interface (CLI)</span></h1>
+
+      <p id="verschiedenes-cli"><i>QS</i> verfügt über diverse Kommandozeilenschalter, wodurch die App im Prinzip wie ein Kommandozeilenprogramm nutzbar ist (wenn auch mit vergleichsweise geringer Performance, weil zunächst ein verstecktes App-Fenster gestartet werden muss). Mit den zur Verfügung stehenden Argumenten lassen sich alle Funktionen aufrufen, die sich im Menü <a href="#publikation"><i>Publikation</i></a> finden.</p>
+
+      <p>Die folgenden Schalter können beliebig miteinander kombiniert werden. Auf diese Weise lassen sich mit einem einzigen Aufruf prinzipiell alle vier Funktionen in einem Zuge ausführen. Die einzelnen Optionen sollten im Befehl jedoch nicht mehrfach auftauchen. Sollte dies einmal der Fall sein, nutzt <i>QS</i> immer den am weitesten hinten stehenden Wert (was natürlich nur bei Optionen relevant ist, die einen Parameter verlangen).</p>
+
+      <pre><b>--export-out=[Ordner]</b></pre>
+
+      <p class="indent-hint">Übergibt den Zielordner, in den hinein die gewünschte Datei exportiert werden soll. Wird eine der folgenden <code>--export</code>-Optionen genutzt, muss <code>--export-out</code> <em>zwingend</em> angegeben werden. Der übergebene Pfad muss außerdem <em>zwingend</em> ein Ordner und <em>zwingend</em> absolut sein.</p>
+
+      <pre><b>--export-artikel-json</b></pre>
+
+      <p class="indent-hint">Die Datei <a href="#publikation-artikelJSON">Artikel.json</a> soll berechnet und in dem via <code>--export-out</code> definiert Ausgabeordner abgelegt werden.</p>
+
+      <pre><b>--export-overview</b></pre>
+
+      <p class="indent-hint">Die <a href="#publikation-artikeluebersicht">Artikelübersicht</a> soll berechnet und in dem via <code>--export-out</code> definiert Ausgabeordner abgelegt werden. Der Name der Ausgabedatei lautet <code>index.tt</code>.</p>
+
+      <pre><b>--export-terminology</b></pre>
+
+      <p class="indent-hint">Die Übersichtsseite mit dem <a href="#publikation-terminologie">terminologischen Kerninventar</a> soll berechnet und in dem via <code>--export-out</code> definiert Ausgabeordner abgelegt werden. Das Format kann via <code>--export-terminology-type</code> gesteuert werden. Der Name der Ausgabedatei lautet <code>terminologie.[tt | html]</code>.</p>
+
+      <pre><b>--export-terminology-type=[tt | html]</b></pre>
+
+      <p class="indent-hint">Steuert das Ausgabeformat für die Übersichtsseite mit dem terminologischen Kerninventar. Wird diese Option nicht genutzt, wird standardmäßig das Ausgabeformat <code>tt</code> gewählt.</p>
+
+      <pre><b>--no-new</b></pre>
+
+      <p class="indent-hint">Neue Datein werden bei der Berechnung nicht berücksichtigt. Hierbei handelt es sich um Dateien, die im Repository noch nicht committet wurden. Dies sind zum einen XML-Dateien, die im <a href="#git-ignore">Ordner <code>ignore</code></a> liegen, und zum anderen <q lang="en"><a href="#git-untracked">untracked files</a></q>, die im Ordner <code>articles</code> liegen. Diese Option ist für die Exportfunktionen <code>--export-artikel-json</code>, <code>--export-overview</code> und <code>--export-terminology</code> relevant.</p>
+
+      <pre><b>--transform-svg=[SVG-Datei]</b></pre>
+
+      <p class="indent-hint">Die übergebene SVG-Datei wird so <a href="#publikation-wortverlaufskurven">transformiert</a>, dass sie in Stil und Farbe dem Schema auf <a href="https://www.zdl.org/">zdl.org</a> entspricht. Die Ausgabedatei hat denselben Namen wie das Original, allerdings mit einem vorangestellten <code>! </code>. Sie wird im selben Ordner wie das Original abgelegt.</p>
     </section>
 
     <!-- PUBLICATION -->
