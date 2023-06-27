@@ -37,6 +37,7 @@
     <script src="js/win/keyboard.js"></script>
     <script src="js/win/overview.js"></script>
     <script src="js/win/prefs.js"></script>
+    <script src="js/win/svg.js"></script>
     <script src="js/win/tags.js"></script>
     <script src="js/win/updates.js"></script>
     <script src="js/win/viewClusters.js"></script>
@@ -376,6 +377,19 @@
           <p><i>Empfehlung:</i> Die Berechnung sollte auf Basis von <q>master</q> stattfinden: <a href="#">Branch wechseln</a>.</p>
         </div>
         <p><input type="button" value="Exportieren" id="overview-calculate"></p>
+      </div>
+    </div>
+
+    <!-- OVERLAY: SVG TRANSFORMATION -->
+    <div id="svg" class="overlay hide off">
+      <div>
+        <h1>Wortverlaufskurven<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <p></p>
+        <div id="svg-path" class="no-plot">keine Wortverlaufskurve geladen</div>
+        <p
+          ><input type="button" value="1. Laden" id="svg-load"
+          ><input type="button" value="2. Transformieren" id="svg-transform"
+        ></p>
       </div>
     </div>
 

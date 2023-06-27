@@ -1359,7 +1359,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
     <section id="verschiedenes">
       <h1><span>Funktionen</span></h1>
 
-      <p id="verschiedenes-funktionen">Die folgenden Funktionen sind über den App-Menüpunkt <i>Funktionen</i> erreichbar.</p>
+      <p id="verschiedenes-funktionen">Die folgende Funktion ist über den App-Menüpunkt <i>Funktionen</i> erreichbar.</p>
 
       <h2><span>Teaser-Tags</span></h2>
 
@@ -1480,6 +1480,17 @@ $ git commit -m "wgdListe: Update"
 $ git push</pre>
 
       <p>Der Dialog, der sich nach dem Drücken auf <i>Exportieren</i> öffnet, wählt automatisch den richtigen Speicherort aus, wenn in den <a href="#einstellungen">Einstellungen</a> zuvor der <a href="#einstellungen-datenZDL">Pfad zum ZDL-Repository</a> hinterlegt wurde.</p>
+
+      <h2><span>Funktion <i>Wortverlaufskurven</i></span></h2>
+
+      <p id="publikation-wortverlaufskurven">Mit dieser Funktion können die <a href="https://www.dwds.de/r/plot/">Wortverlaufskurven des DWDS</a> für die Publikation einer Wortgeschichte transformiert werden. Bei der Transformation wird Folgendes geändert:</p>
+
+      <ul>
+        <li>Stil und Farbe der Kurven werden an das Farbschema von <a href="https://www.zdl.org/">zdl.org</a> angepasst;</li>
+        <li>aus den Legenden werden überflüssige Wörter gelöscht (<abbr title="zum Beispiel">z.&nbsp;B.</abbr> <q>Gesamt</q>).</li>
+      </ul>
+
+      <p>Das Ergebnis der Transformation wird in einer neuen Datei gespeichert, die im selben Ordner abgelegt wird, in dem die geladene Wortverlaufskurve liegt. Der Name der neuen Datei beginnt mit <code>! </code>.</p>
     </section>
 
     <!-- OVERLAY: LOADING -->

@@ -137,8 +137,13 @@ const winMenu = {
           icon: path.join(__dirname, "img", "main", "file.png"),
           click: () => winMenu.execute("overview"),
         },
+        {
+          label: "Wortverlaufskurven",
+          icon: path.join(__dirname, "img", "main", "transform.png"),
+          click: () => winMenu.execute("svg"),
+        },
       ],
-    }
+    },
   ],
   menuPv: [
     {
@@ -894,7 +899,7 @@ for (let i = 0, len = process.argv.length; i < len; i++) {
   cliCommand[arg[1]] = value;
 }
 
-const cliCommandFound = Object.values(cliCommand).some(i => i === true);
+const cliCommandFound = Object.values(cliCommand).some(i => i === true) || cliCommand["transform-svg"];
 let cliReturnCode = -1;
 
 // single instance lock

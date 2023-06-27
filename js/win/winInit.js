@@ -269,6 +269,8 @@ window.addEventListener("load", async () => {
     overview.changeBranch();
   });
   document.querySelector("#overview-calculate").addEventListener("click", () => overview.calculate(true, false));
+  document.querySelector("#svg-load").addEventListener("click", () => svg.load());
+  document.querySelector("#svg-transform").addEventListener("click", () => svg.transform());
 
   // LISTEN TO IPC MESSAGES
   shared.ipc.on("menu-app-updates", () => win.menuCommand("app-updates"));
@@ -280,6 +282,7 @@ window.addEventListener("load", async () => {
   shared.ipc.on("menu-overview", () => win.menuCommand("overview"));
   shared.ipc.on("menu-preferences", () => win.menuCommand("preferences"));
   shared.ipc.on("menu-search", () => win.menuCommand("search"));
+  shared.ipc.on("menu-svg", () => win.menuCommand("svg"));
   shared.ipc.on("menu-teaser-tags", () => win.menuCommand("teaser-tags"));
   shared.ipc.on("menu-update", () => win.menuCommand("update"));
   shared.ipc.on("menu-xml", () => win.menuCommand("xml"));

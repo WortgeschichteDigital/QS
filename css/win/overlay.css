@@ -52,6 +52,36 @@
 }
 
 
+/* SVG ------------------------------------------ */
+
+#svg > div {
+  width: 600px;
+}
+
+#svg p:has(input) {
+  text-align: center;
+}
+
+#svg input {
+  width: 220px;
+}
+
+#svg input:last-child {
+  margin-left: 10px;
+}
+
+#svg-path {
+  margin: 10px 10px 20px;
+  font-size: .9rem;
+  line-height: 1.35rem;
+}
+
+#svg-path.no-plot {
+  font-style: italic;
+  text-align: center;
+}
+
+
 /* GIT CONFIGURATION ---------------------------- */
 
 #git > div {

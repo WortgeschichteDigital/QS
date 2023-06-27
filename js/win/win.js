@@ -67,6 +67,9 @@ var win = {
         await win.viewToggle(document.querySelector("#view-search"));
         viewSearch.toggleAdvanced("on");
         break;
+      case "svg":
+        svg.show();
+        break;
       case "teaser-tags":
         tags.show();
         break;

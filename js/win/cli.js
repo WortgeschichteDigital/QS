@@ -76,6 +76,14 @@ const cli = {
       }
     }
 
+    // COMMAND: transform SVG file
+    if (command["transform-svg"]) {
+      const result = await cli.svg(command);
+      if (!result) {
+        return;
+      }
+    }
+
     // everything done
     shared.ipc.invoke("cli-return-code", 0);
   },
@@ -127,6 +135,71 @@ const cli = {
       cli.unspecifiedError(err);
       return false;
     }
+  },
+
+  // COMMAND: transform SVG file
+  async svg (command) {
+    const path = command["transform-svg"];
+
+    // ERROR: path does not exist
+    const exists = await shared.ipc.invoke("exists", path);
+    if (!exists) {
+      shared.ipc.invoke("cli-message", "Error: SVG file not found");
+      shared.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+
+    // ERROR: not of type file
+    const stats = await shared.fsp.lstat(path);
+    if (!stats.isFile()) {
+      shared.ipc.invoke("cli-message", "Error: SVG file path not a file");
+      shared.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+
+    // backup current file data
+    const backup = { ...svg.file };
+
+    // load XSLT files (if necessary)
+    if (!Object.values(svg.xslt).some(i => i)) {
+      const xslt = await svg.loadXslt();
+      if (!xslt) {
+        shared.ipc.invoke("cli-message", "Error: loading XSLT files failed");
+        shared.ipc.invoke("cli-return-code", 1);
+        return false;
+      }
+    }
+
+    // load SVG file
+    try {
+      svg.file.content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      svg.file.path = path;
+    } catch {
+      shared.ipc.invoke("cli-message", "Error: reading SVG file failed");
+      shared.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+
+    // transform file
+    shared.ipc.invoke("cli-message", "Transforming SVG file . . .");
+    const trans = svg.transformExecute();
+    if (trans.err !== false) {
+      shared.ipc.invoke("cli-message", `Error: transformation failed (${trans.err})`);
+      shared.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+    try {
+      await shared.fsp.writeFile(trans.path, trans.str);
+    } catch {
+      shared.ipc.invoke("cli-message", "Error: writing SVG file failed");
+      shared.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+
+    // restore file data backup
+    svg.file = { ...backup };
+
+    return true;
   },
 
   // return message from unspecified error
