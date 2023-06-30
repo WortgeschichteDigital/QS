@@ -110,6 +110,9 @@ const tooltip = {
         <p>Die Zeitstrahldaten werden für den Export der Datei Artikel.json (Funktionen&nbsp;&gt; Artikel.json), einer für die Webseite unverzichtbaren Datendatei, verwendet. Anders als die übrigen Inhalte können Zeitstrahldaten nicht von QS berechnet werden. Exportieren Sie die Datei ohne Zeitstrahldaten, kann auf der Webseite kein Zeitstrahl angezeigt werden.</p>
         <p>Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das <b>W:\\Software\\<wbr>Entwicklungsumgebung WGd\\<wbr>wgd.local\\<wbr>scr\\<wbr>Zeitstrahl\\<wbr>data\\<wbr>data.json</b>.</p>
       `,
+      "prefs-help-data-zdl": `
+        Wird der Pfad zum ZDL-Repository angegeben, kann dies die Benutzung der Funktionen <i>Publikation &gt; Artikelübersicht</i> und <i>Publikation &gt; Terminologie</i> erleichtern. Die App schlägt beim Exportieren der jeweiligen Dateien dann den korrekten Pfad vor.
+      `,
       "search-help": `
         <p>Suchwörter sind durch <b>Leerzeichen</b> getrennt. Beim Suchen werden die einzelnen Wörter durch ein <b>logisches Und</b> miteinander verknüpft:<span class="example">alternative Fakten<br>= Suche nach „alternative“ UND „Fakten“.</span></p>
         <p>Taucht in einem Suchwort ein <b>Großbuchstabe</b> auf, wird bei der Suche für dieses Wort zwischen Groß- und Kleinschreibung unterschieden.</p>

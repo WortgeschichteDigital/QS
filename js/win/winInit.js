@@ -218,6 +218,14 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     prefs.zeitstrahlRemove();
   });
+  document.querySelector("#prefs-zdl-open").addEventListener("click", evt => {
+    evt.preventDefault();
+    prefs.zdlOpen();
+  });
+  document.querySelector("#prefs-zdl-remove").addEventListener("click", evt => {
+    evt.preventDefault();
+    prefs.zdlRemove();
+  });
   document.querySelector("#prefs-data-export").addEventListener("click", () => prefs.exportData());
   document.querySelector("#prefs-data-import").addEventListener("click", () => prefs.importData());
   document.querySelector("#prefs-marks").addEventListener("click", () => viewHints.eraseMarks());
@@ -256,6 +264,14 @@ window.addEventListener("load", async () => {
       noNew: true,
     });
   });
+  document.querySelector("#overview-branch a").addEventListener("click", evt => {
+    evt.preventDefault();
+    overview.changeBranch();
+  });
+  document.querySelector("#overview-calculate").addEventListener("click", () => overview.calculate(true, false));
+  document.querySelector("#term-export").addEventListener("click", () => term.exportFile());
+  document.querySelector("#svg-load").addEventListener("click", () => svg.load());
+  document.querySelector("#svg-transform").addEventListener("click", () => svg.transform());
 
   // LISTEN TO IPC MESSAGES
   shared.ipc.on("menu-app-updates", () => win.menuCommand("app-updates"));
@@ -264,12 +280,15 @@ window.addEventListener("load", async () => {
   shared.ipc.on("menu-error-log", () => win.menuCommand("error-log"));
   shared.ipc.on("menu-filters", () => win.menuCommand("filters"));
   shared.ipc.on("menu-hints", () => win.menuCommand("hints"));
+  shared.ipc.on("menu-overview", () => win.menuCommand("overview"));
   shared.ipc.on("menu-preferences", () => win.menuCommand("preferences"));
   shared.ipc.on("menu-search", () => win.menuCommand("search"));
+  shared.ipc.on("menu-svg", () => win.menuCommand("svg"));
   shared.ipc.on("menu-teaser-tags", () => win.menuCommand("teaser-tags"));
+  shared.ipc.on("menu-term", () => win.menuCommand("term"));
   shared.ipc.on("menu-update", () => win.menuCommand("update"));
   shared.ipc.on("menu-xml", () => win.menuCommand("xml"));
-  shared.ipc.on("cli-command", (evt, command) => artikel.cliExport(command));
+  shared.ipc.on("cli-command", (evt, command) => cli.distribute(command));
   shared.ipc.on("save-prefs", () => prefs.save());
   shared.ipc.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
 

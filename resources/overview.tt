@@ -1,0 +1,33 @@
+[% page_title = 'Wortgeschichte digital: Wortgeschichten' | html %]
+
+[% BLOCK html_head %]
+  <link rel="canonical" href="https://www.zdl.org/wb/wortgeschichten/">
+  <link rel="stylesheet" href="[% base %]static/wgd/wgd-liste.css">
+  <link rel="stylesheet" href="[% base %]static/wgd/wgd-cluster.css">
+  <link rel="stylesheet" href="[% base %]static/wgd/wgd-reg.css">
+  <link rel="stylesheet" href="[% base %]static/wgd/wgd-zs.css">
+  <link rel="stylesheet" media="print" href="[% base %]static/wgd/wgd-liste-print.css">
+  <script src="[% base %]static/wgd/wgd-shared.js" defer></script>
+  <script src="[% base %]static/wgd/wgd-cluster.js" defer></script>
+  <script src="[% base %]static/wgd/wgd-reg.js" defer></script>
+  <script src="[% base %]static/wgd/wgd-zs.js" defer></script>
+  <script src="[% base %]static/wgd/wgd-liste.js" defer></script>
+[% END %]
+
+<div class="row justify-content-md-center">
+<div class="col col-md-auto bg-white p-3 d shadow" id="wgd-uebersicht">
+
+<h1>Wortgeschichten</h1>
+
+<p
+  ><a href="[% base %]wb/wgd/Terminologie">Terminologisches Kerninventar</a
+  ><span>·</span
+  ><a href="[% base %]wb/wgd/Quiz">Wort-Quiz</a
+  ><span>·</span
+  ><a href="[% base %]wb/wgd/">Zum Projekt <i>Wortgeschichte digital</i></a
+></p>
+
+<div id="wgd-liste"></div>
+
+</div>
+</div>

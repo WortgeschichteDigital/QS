@@ -48,6 +48,10 @@ input[type="button"][value="Konfiguration"] {
   background-image: url(../../img/win/preferences.svg);
 }
 
+input[type="button"][value$="Laden"] {
+  background-image: url(../../img/win/open-file.svg);
+}
+
 input[type="button"][value="Löschen"] {
   background-image: url(../../img/win/cleanup.svg);
 }
@@ -58,6 +62,10 @@ input[type="button"][value="Nein"] {
 
 input[type="button"][value="Suchen"] {
   background-image: url(../../img/win/search.svg);
+}
+
+input[type="button"][value$="Transformieren"] {
+  background-image: url(../../img/win/transform.svg);
 }
 
 input[type="button"][value="Vorschau"] {

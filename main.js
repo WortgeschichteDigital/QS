@@ -118,14 +118,34 @@ const winMenu = {
         },
         { type: "separator" },
         {
+          label: "Teaser-Tags",
+          icon: path.join(__dirname, "img", "main", "xml.png"),
+          click: () => winMenu.execute("teaser-tags"),
+        },
+      ],
+    },
+    {
+      label: "&Publikation",
+      submenu: [
+        {
           label: "Artikel.json",
           icon: path.join(__dirname, "img", "main", "json.png"),
           click: () => winMenu.execute("artikel-json"),
         },
         {
-          label: "Teaser-Tags",
-          icon: path.join(__dirname, "img", "main", "xml.png"),
-          click: () => winMenu.execute("teaser-tags"),
+          label: "Artikelübersicht",
+          icon: path.join(__dirname, "img", "main", "file.png"),
+          click: () => winMenu.execute("overview"),
+        },
+        {
+          label: "Terminologie",
+          icon: path.join(__dirname, "img", "main", "file.png"),
+          click: () => winMenu.execute("term"),
+        },
+        {
+          label: "Wortverlaufskurven",
+          icon: path.join(__dirname, "img", "main", "transform.png"),
+          click: () => winMenu.execute("svg"),
         },
       ],
     },
@@ -853,25 +873,48 @@ const worker = {
 /* APP EVENTS ----------------------------------- */
 
 // parse CLI options
-const cliCommand = {};
-let cliReturnCode = -1;
+const cliCommand = {
+  // ignore new articles
+  "no-new": false,
+  // output directory for export command
+  "export-out": "",
+  // export Artikel.json
+  "export-artikel-json": false,
+  // export overview page with all articles
+  "export-overview": false,
+  // export terminology page
+  "export-terminology": false,
+  // output type of terminology page (tt | html)
+  "export-terminology-type": "tt",
+  // transform passed svg file (Wortverlaufskurve)
+  "transform-svg": "",
+};
+
 for (let i = 0, len = process.argv.length; i < len; i++) {
   const arg = process.argv[i].match(/^--([^\s=]+)(?:=(.+))?/);
-  if (!arg ||
-      !/^(artikel-export-to|artikel-no-new)$/.test(arg[1])) {
+  if (!arg || typeof cliCommand[arg[1]] === "undefined") {
+    // argument unknown
     continue;
   }
-  cliCommand[arg[1]] = arg[2]?.replace(/^"|"$/g, "") || true;
+  const value = arg[2]?.replace(/^"|"$/g, "") || true;
+  if (typeof value !== typeof cliCommand[arg[1]]) {
+    // value has different type => probably misusage (no path given)
+    continue;
+  }
+  cliCommand[arg[1]] = value;
 }
+
+const cliCommandFound = Object.values(cliCommand).some(i => i === true) || cliCommand["transform-svg"];
+let cliReturnCode = -1;
 
 // single instance lock
 const locked = app.requestSingleInstanceLock(cliCommand);
 
-if (typeof cliCommand["artikel-export-to"] !== "undefined" || !locked) {
+if (cliCommandFound || !locked) {
   // CLI COMMAND OR SECOND INSTANCE
   (async function () {
     // quit immediately if second instance without CLI command
-    if (typeof cliCommand["artikel-export-to"] === "undefined") {
+    if (!cliCommandFound) {
       app.quit();
       process.exit(0);
     }
@@ -896,30 +939,6 @@ if (typeof cliCommand["artikel-export-to"] !== "undefined" || !locked) {
     });
 
     // quit app
-    let message = "";
-    switch (cliReturnCode) {
-      case 1:
-        message = "not on branch master";
-        break;
-      case 2:
-        message = "Zeitstrahl data missing";
-        break;
-      case 3:
-        message = "path not specified";
-        break;
-      case 4:
-        message = "path not absolute";
-        break;
-      case 5:
-        message = "target directory not writable";
-        break;
-      case 10:
-        message = "unspecified program error";
-        break;
-    }
-    if (message) {
-      console.log("Error: " + message);
-    }
     app.quit();
     process.exit(cliReturnCode);
   }());
@@ -927,7 +946,7 @@ if (typeof cliCommand["artikel-export-to"] !== "undefined" || !locked) {
   // NORMAL APP BEHAVIOR
   // focus existing app window in case a second instance is opened
   app.on("second-instance", (...args) => {
-    if (typeof args[3]["artikel-export-to"] !== "undefined") {
+    if (Object.values(args[3]).some(i => i === true)) {
       return;
     }
     const app = win.data.find(i => i.type === "app");
@@ -985,6 +1004,8 @@ ipcMain.handle("app-info", evt => {
     winId: bw.id,
   };
 });
+
+ipcMain.handle("cli-message", (evt, message) => console.log(message));
 
 ipcMain.handle("cli-return-code", (evt, returnCode) => {
   cliReturnCode = returnCode;

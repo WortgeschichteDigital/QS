@@ -57,6 +57,9 @@ var win = {
       case "hints":
         document.querySelector("#view-hints").click();
         break;
+      case "overview":
+        overview.show();
+        break;
       case "preferences":
         overlay.show("prefs");
         break;
@@ -64,8 +67,14 @@ var win = {
         await win.viewToggle(document.querySelector("#view-search"));
         viewSearch.toggleAdvanced("on");
         break;
+      case "svg":
+        svg.show();
+        break;
       case "teaser-tags":
         tags.show();
+        break;
+      case "term":
+        term.show();
         break;
       case "update":
         xml.update();

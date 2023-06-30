@@ -1,37 +1,42 @@
 @charset "utf-8";
 
-/* ARTIKEL.JSON --------------------------------- */
+/* ARTIKEL.JSON + OVERVIEW ---------------------- */
 
-#artikel > div {
+:is(#artikel, #overview) > div {
   width: 400px;
 }
 
-#artikel div img {
+:is(#artikel, #overview) div img {
   vertical-align: top;
   margin-right: 10px;
 }
 
-#artikel div div {
+:is(#artikel, #overview) div div {
   margin: 10px;
 }
 
-#artikel p {
+:is(#artikel, #overview) p {
   margin: 0;
   font-size: .8rem;
   line-height: 1.2rem;
 }
 
-#artikel div p:first-child {
+:is(#artikel, #overview) div p:first-child {
   font-size: 1rem;
   line-height: 1.5rem;
 }
 
-#artikel div p:last-child {
+:is(#artikel, #overview) div p:last-child {
   margin-left: 40px;
 }
 
 #artikel > div > p {
   margin-bottom: 10px;
+  text-align: center;
+}
+
+#overview > div > p {
+  margin: 20px 0 10px;
   text-align: center;
 }
 
@@ -44,6 +49,57 @@
 
 #artikel-calculating.invisible {
   height: 0;
+}
+
+
+/* TERMINOLOGY ---------------------------------- */
+
+#term > div {
+  width: 400px;
+}
+
+#term-type {
+  margin-bottom: 20px;
+  font-size: .9rem;
+  line-height: 1.35rem;
+}
+
+#term-type-html {
+  margin-left: 20px;
+}
+
+#term p:last-child {
+  text-align: center;
+}
+
+
+/* SVG ------------------------------------------ */
+
+#svg > div {
+  width: 600px;
+}
+
+#svg p:has(input) {
+  text-align: center;
+}
+
+#svg input {
+  width: 220px;
+}
+
+#svg input:last-child {
+  margin-left: 10px;
+}
+
+#svg-path {
+  margin: 10px 10px 20px;
+  font-size: .9rem;
+  line-height: 1.35rem;
+}
+
+#svg-path.no-plot {
+  font-style: italic;
+  text-align: center;
 }
 
 
@@ -188,11 +244,12 @@
   text-indent: 0;
 }
 
-#prefs-zeitstrahl {
+#prefs-zeitstrahl,
+#prefs-zdl {
   width: calc(100% - 22px - 75px);
 }
 
-#prefs-zeitstrahl + .icon {
+:is(#prefs-zeitstrahl, #prefs-zdl) + .icon {
   margin-left: 10px;
 }
 

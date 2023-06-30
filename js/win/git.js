@@ -172,7 +172,7 @@ const git = {
         for (const i of missing) {
           notFound.push("• " + i);
         }
-        text = `Folgende Unterordner wurden nicht im Repository gefunden:\n${notFound.join("<br>")}`;
+        text = `Folgende Unterordner wurden im Repository nicht gefunden:\n${notFound.join("<br>")}`;
       }
     }
     await dialog.open({

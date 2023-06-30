@@ -28,14 +28,18 @@
 
     <script src="js/win/artikel.js"></script>
     <script src="js/win/bars.js"></script>
+    <script src="js/win/cli.js"></script>
     <script src="js/win/clustersCheck.js"></script>
     <script src="js/win/clustersComp.js"></script>
     <script src="js/win/clustersMod.js"></script>
     <script src="js/win/error.js"></script>
     <script src="js/win/git.js"></script>
     <script src="js/win/keyboard.js"></script>
+    <script src="js/win/overview.js"></script>
     <script src="js/win/prefs.js"></script>
+    <script src="js/win/svg.js"></script>
     <script src="js/win/tags.js"></script>
+    <script src="js/win/term.js"></script>
     <script src="js/win/updates.js"></script>
     <script src="js/win/viewClusters.js"></script>
     <script src="js/win/viewHints.js"></script>
@@ -363,6 +367,47 @@
       </div>
     </div>
 
+    <!-- OVERLAY: ARTICLE OVERVIEW -->
+    <div id="overview" class="overlay hide off">
+      <div>
+        <h1>Artikelübersicht<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <div id="overview-branch">
+          <p
+            ><img src="img/win/button-yes.svg" width="30" height="30" alt=""><i>Branch <q>master</q></i
+          ></p>
+          <p><i>Empfehlung:</i> Die Berechnung sollte auf Basis von <q>master</q> stattfinden: <a href="#">Branch wechseln</a>.</p>
+        </div>
+        <p><input type="button" value="Exportieren" id="overview-calculate"></p>
+      </div>
+    </div>
+
+    <!-- OVERLAY: TERMINOLOGY -->
+    <div id="term" class="overlay hide off">
+      <div>
+        <h1>Terminologie<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <p id="term-type"
+          ><input type="radio" name="term-type" id="term-type-tt" checked
+          ><label for="term-type-tt">Template Toolkit</label
+          ><input type="radio" name="term-type" id="term-type-html"
+          ><label for="term-type-html">HTML</label
+        ></p>
+        <p><input type="button" value="Exportieren" id="term-export"></p>
+      </div>
+    </div>
+
+    <!-- OVERLAY: SVG TRANSFORMATION -->
+    <div id="svg" class="overlay hide off">
+      <div>
+        <h1>Wortverlaufskurven<a href="#" class="overlay-close" title="&lt;i&gt;Tastatur:&lt;/i&gt; Esc"><img src="img/win/close-white.svg" width="30" height="30" alt="x"></a></h1>
+        <p></p>
+        <div id="svg-path" class="no-plot">keine Wortverlaufskurve geladen</div>
+        <p
+          ><input type="button" value="1. Laden" id="svg-load"
+          ><input type="button" value="2. Transformieren" id="svg-transform"
+        ></p>
+      </div>
+    </div>
+
     <!-- OVERLAY: GIT CONFIGURATION -->
     <div id="git" class="overlay hide off">
       <div>
@@ -418,6 +463,14 @@
                 ><input type="text" value="" placeholder="Pfad zur data.json" id="prefs-zeitstrahl" readonly tabindex="-1"
                 ><a href="#" id="prefs-zeitstrahl-open" class="icon" title="Datei auswählen"><img src="img/win/open-file.svg" width="30" height="30" alt=""></a
                 ><a href="#" id="prefs-zeitstrahl-remove" class="icon" title="Datei entkoppeln"><img src="img/win/delete.svg" width="30" height="30" alt=""></a
+              ></p>
+              <h2>ZDL-Repository<a href="#einstellungen-datenZDL" id="prefs-help-data-zdl" class="icon"
+                ><img src="img/win/help.svg" width="24" height="24" alt=""
+              ></a></h2>
+              <p
+                ><input type="text" value="" placeholder="Pfad zum ZDL-Repository" id="prefs-zdl" readonly tabindex="-1"
+                ><a href="#" id="prefs-zdl-open" class="icon" title="Ordner auswählen"><img src="img/win/open-file.svg" width="30" height="30" alt=""></a
+                ><a href="#" id="prefs-zdl-remove" class="icon" title="Ordner entkoppeln"><img src="img/win/delete.svg" width="30" height="30" alt=""></a
               ></p>
               <h2>Einstellungsdaten<a href="#einstellungen-datenExport" id="prefs-help-data" class="icon"
                 ><img src="img/win/help.svg" width="24" height="24" alt=""

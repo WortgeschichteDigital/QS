@@ -56,7 +56,7 @@ function makeConfig () {
         {
           from: "./resources",
           to: "./",
-          filter: [ "*.js", "*.xsl" ],
+          filter: [ "*.js", "*.tt", "*.xsl" ],
         },
       ],
     },

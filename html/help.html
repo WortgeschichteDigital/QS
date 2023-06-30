@@ -36,6 +36,7 @@
         ><li><a href="#einstellungen">Einstellungen</a></li
         ><li><a href="#tastatur">Tastaturkürzel</a></li
         ><li><a href="#verschiedenes">Verschiedenes</a></li
+        ><li><a href="#publikation">Publikation</a></li
       ></ul>
     </nav>
 
@@ -45,7 +46,7 @@
 
       <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wortgeschichten/#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
 
-      <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#verschiedenes-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
+      <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#publikation-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
 
       <ul>
         <li>die Suchfilter der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a>,</li>
@@ -60,6 +61,10 @@
 
         <li>die automatischen Verknüpfungen mit WGd-Artikeln im Belegnavigator.</li>
       </ul>
+
+      <p>Darüber hinaus kann <i>QS</i> die <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a> und den Index im <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologischen Kerninventar</a> auffrischen. Außerdem ist die App in der Lage, die Wortverlaufskurven an das ZDL-Farbschema anzupassen. Diese Funktionen werden im Abschnitt <a href="#publikation">Publikation</a> erläutert.</p>
+
+      <p><i>Für Entwickler*innen:</i> Die Publikationsfunktionen lassen sich alle via <a href="#verschiedenes-cli">CLI</a> ausführen.</p>
 
       <h1><span>Überblick</span></h1>
 
@@ -246,7 +251,7 @@
         <li>
           <p>Git konfigurieren. Dafür die folgenden Befehle nacheinander ausführen; den gefetteten Text entsprechend anpassen:</p>
           <pre class="no-highlight">$ git config user.name "<b>Petra Pan</b>"
-$ git config user.email <b>ppan@gwdg.de</b>
+$ git config user.email <b>peter.pan@adwgoe.de</b>
 $ git config pull.rebase true
 $ git config core.editor nano</pre>
         </li>
@@ -254,6 +259,9 @@ $ git config core.editor nano</pre>
         <li>
           <p><strong>Nur unter macOS und Linux:</strong></p>
           <pre>$ git config credential.helper cache</pre>
+          <p>Wenn Sie XML-Dateien in Ihrem Repository committen, die auf einem Windows-System bearbeitet wurden:</p>
+          <pre>$ echo '*.xml text eol=lf' > .gitattributes
+$ echo "/.gitattributes" >> .git/info/exclude</pre>
         </li>
 
         <li>
@@ -1065,13 +1073,17 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="einstellungen-datenZeitstrahl" class="option">Zeitstrahldaten</p>
 
-      <p class="indent-hint">Die Zeitstrahldaten spielen für Ihren Arbeitsalltag normalerweise keine Rolle. Sie können diese Einstellung also im Prinzip ignorieren. Benötigt werden die Zeistrahldaten allerdings für den <a href="#verschiedenes-artikelJSON">Export der Artikel.json</a>, um den sich die nicht spezialisierten Mitarbeiter*innen dann kümmern müssen, wenn die Techniker*in längerfristig ausfällt.</p>
+      <p class="indent-hint">Die Zeitstrahldaten spielen für Ihren Arbeitsalltag normalerweise keine Rolle. Sie können diese Einstellung also im Prinzip ignorieren. Benötigt werden die Zeistrahldaten allerdings für den <a href="#publikation-artikelJSON">Export der Artikel.json</a>, um den sich die nicht spezialisierten Mitarbeiter*innen dann kümmern müssen, wenn die Techniker*in längerfristig ausfällt.</p>
 
       <p class="indent-hint">Bei der Artikel.json handelt es sich um eine für die Webseite unverzichtbare Datendatei, ohne die eine Publikation neuer Wortgeschichten nur eingeschränkt sinnvoll ist, weil <a href="#allgemeines-artikelJSON">viele Funktionen auf der Webseite</a> von ihren Inhalten abhängen. Sie liegt im Repository unter <code>resources/<wbr>Artikel.json</code>.</p>
 
       <p class="indent-hint"><i>QS</i> kann diese Datei zwar erzeugen, aber anders als ihre übrigen Inhalte können die Zeitstrahldaten nicht von der App berechnet werden. Wird die Datei ohne Zeitstrahldaten exportiert, kann auf der Webseite kein <a href="https://www.zdl.org/wb/wortgeschichten/#Zeitstrahl">Zeitstrahl</a> angezeigt werden.</p>
 
       <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
+
+      <p id="einstellungen-datenZDL" class="option">ZDL-Repository</p>
+
+      <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <a href="#publikation-terminologie"><i>Export der Terminologie</i></a> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
 
       <p id="einstellungen-datenExport" class="option">Einstellungsdaten</p>
 
@@ -1351,50 +1363,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
     <section id="verschiedenes">
       <h1><span>Funktionen</span></h1>
 
-      <p id="verschiedenes-funktionen">Die folgenden Funktionen sind über den App-Menüpunkt <i>Funktionen</i> erreichbar.</p>
-
-      <h2><span>Artikel.json</span></h2>
-
-      <p id="verschiedenes-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen. Um ein Update der Datei kümmert sich normalerweise die Techniker*in. Damit es im Notfall jeder übernehmen kann, der Git basal bedienen kann, wurde diese Funktion in <i>QS</i> eingerichtet.</p>
-
-      <p><b>Update-Prozedere</b></p>
-
-      <ol>
-        <li><a href="#einstellungen-datenZeitstrahl">Zeistrahldaten</a> mit <i>QS</i> verknüpfen</li>
-
-        <li>Nach <a href="#git-allgemeinesBranchesWGd">Branch <q>master</q></a> wechseln</li>
-
-        <li>
-          <p>Funktionen &gt; Artikel.json &gt; Exportieren</p>
-
-          <p>Die App schlägt als Ziel bereits den richtigen Ordner im Repository vor. Die ältere Version der Artikel.json einfach ersetzen.</p>
-        </li>
-
-        <li><i>Git Bash</i> (unter Windows), <i>Terminal</i> (unter macOS) oder einen beliebigen Terminal-Emulator (unter Linux) im Repository-Ordner öffnen</li>
-
-        <li>
-          <p>Commit erstellen und pushen:</p>
-
-          <pre>$ git pull
-$ git add resources/Artikel.json
-$ git commit -m "Artikeldaten-Update"
-$ git push</pre>
-        </li>
-      </ol>
-
-      <p><i>Für Techniker*innen zur Evaluation:</i> <i>QS</i> liefert ein <b>Node-Script</b> mit, mit dessen Hilfe man die Artikel.json in menschenlesbares JSON verwandeln kann. Die Datei ist im Original <a href="https://www.zdl.org/wb/wgd/api#Artikeldaten">stark größenoptimiert</a>, weswegen viele Werte nur Indizes sind, die auf ein Objekt namens <code>values</code> zeigen. Das Script erzeugt eine Datei mit Einrückungen, in der die Indizes durch die tatsächlichen Werte ersetzt wurden. Es liegt im Installationsordner von <i>QS</i> im Unterordner <code>resources</code>:</p>
-
-      <pre>$ node hrArtikel.js /PFAD/ZUM/INSTALLATIONSORDNER/resources/Artikel.json</pre>
-
-      <p>Die Output-Datei wird in dem Ordner erzeugt, in dem die Artikel.json liegt.</p>
-
-      <p>Der Installationsordner von <i>QS</i> ist abhängig vom Betriebssystem:</p>
-
-      <ul>
-        <li><i>Windows:</i> <code>C:\<wbr>Users\<wbr>BENUTZERNAME\<wbr>AppData\<wbr>Local\<wbr>Programs\<wbr>QS\</code></li>
-
-        <li><i>Linux:</i> <code>/opt/<wbr>QS/</code></li>
-      </ul>
+      <p id="verschiedenes-funktionen">Die folgende Funktion ist über den App-Menüpunkt <i>Funktionen</i> erreichbar.</p>
 
       <h2><span>Teaser-Tags</span></h2>
 
@@ -1425,6 +1394,164 @@ $ git push</pre>
       <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
 
       <p>Mit dem Icon <img src="../img/win/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
+
+      <h1><span>Command-Line Interface (CLI)</span></h1>
+
+      <p id="verschiedenes-cli"><i>QS</i> verfügt über diverse Kommandozeilenschalter, wodurch die App im Prinzip wie ein Kommandozeilenprogramm nutzbar ist (wenn auch mit vergleichsweise geringer Performance, weil zunächst ein verstecktes App-Fenster gestartet werden muss). Mit den zur Verfügung stehenden Argumenten lassen sich alle Funktionen aufrufen, die sich im Menü <a href="#publikation"><i>Publikation</i></a> finden.</p>
+
+      <p>Die folgenden Schalter können beliebig miteinander kombiniert werden. Auf diese Weise lassen sich mit einem einzigen Aufruf prinzipiell alle vier Funktionen in einem Zuge ausführen. Die einzelnen Optionen sollten im Befehl jedoch nicht mehrfach auftauchen. Sollte dies einmal der Fall sein, nutzt <i>QS</i> immer den am weitesten hinten stehenden Wert (was natürlich nur bei Optionen relevant ist, die einen Parameter verlangen).</p>
+
+      <pre><b>--export-out=[Ordner]</b></pre>
+
+      <p class="indent-hint">Übergibt den Zielordner, in den hinein die gewünschte Datei exportiert werden soll. Wird eine der folgenden <code>--export</code>-Optionen genutzt, muss <code>--export-out</code> <em>zwingend</em> angegeben werden. Der übergebene Pfad muss außerdem <em>zwingend</em> ein Ordner und <em>zwingend</em> absolut sein.</p>
+
+      <pre><b>--export-artikel-json</b></pre>
+
+      <p class="indent-hint">Die Datei <a href="#publikation-artikelJSON">Artikel.json</a> soll berechnet und in dem via <code>--export-out</code> definiert Ausgabeordner abgelegt werden.</p>
+
+      <pre><b>--export-overview</b></pre>
+
+      <p class="indent-hint">Die <a href="#publikation-artikeluebersicht">Artikelübersicht</a> soll berechnet und in dem via <code>--export-out</code> definiert Ausgabeordner abgelegt werden. Der Name der Ausgabedatei lautet <code>index.tt</code>.</p>
+
+      <pre><b>--export-terminology</b></pre>
+
+      <p class="indent-hint">Die Übersichtsseite mit dem <a href="#publikation-terminologie">terminologischen Kerninventar</a> soll berechnet und in dem via <code>--export-out</code> definiert Ausgabeordner abgelegt werden. Das Format kann via <code>--export-terminology-type</code> gesteuert werden. Der Name der Ausgabedatei lautet <code>terminologie.[tt | html]</code>.</p>
+
+      <pre><b>--export-terminology-type=[tt | html]</b></pre>
+
+      <p class="indent-hint">Steuert das Ausgabeformat für die Übersichtsseite mit dem terminologischen Kerninventar. Wird diese Option nicht genutzt, wird standardmäßig das Ausgabeformat <code>tt</code> gewählt.</p>
+
+      <pre><b>--no-new</b></pre>
+
+      <p class="indent-hint">Neue Datein werden bei der Berechnung nicht berücksichtigt. Hierbei handelt es sich um Dateien, die im Repository noch nicht committet wurden. Dies sind zum einen XML-Dateien, die im <a href="#git-ignore">Ordner <code>ignore</code></a> liegen, und zum anderen <q lang="en"><a href="#git-untracked">untracked files</a></q>, die im Ordner <code>articles</code> liegen. Diese Option ist für die Exportfunktionen <code>--export-artikel-json</code>, <code>--export-overview</code> und <code>--export-terminology</code> relevant.</p>
+
+      <pre><b>--transform-svg=[SVG-Datei]</b></pre>
+
+      <p class="indent-hint">Die übergebene SVG-Datei wird so <a href="#publikation-wortverlaufskurven">transformiert</a>, dass sie in Stil und Farbe dem Schema auf <a href="https://www.zdl.org/">zdl.org</a> entspricht. Die Ausgabedatei hat denselben Namen wie das Original, allerdings mit einem vorangestellten <code>! </code>. Sie wird im selben Ordner wie das Original abgelegt.</p>
+    </section>
+
+    <!-- PUBLICATION -->
+    <section id="publikation">
+      <h1><span>Publikation</span></h1>
+
+      <p>Die Funktionen im Menü <i>Publikation</i> sollen es den Mitarbeiter*innen des Projekts ermöglichen, neue Wortgeschichten weitgehend selbständig auf <a href="https://www.zdl.org/">zdl.org</a> zu publizieren. Sie dienen alle dazu, bestimmte Dateien aufzufrischen oder zu transformieren. Dies sind Aufgaben, um die sich normalerweise eine Techniker*in kümmert. Damit es im Notfall alle übernehmen können, die Git in Grundzügen beherrschen, wurden diese Funktion nach <i>QS</i> portiert.</p>
+
+      <h2><span>ZDL-Repository klonen</span></h2>
+
+      <p id="publikation-repository">Das ZDL-Repository benötigen Sie, wenn Sie die Funktionen <a href="#publikation-artikeluebersicht"><i>Artikelübersicht</i></a> und/oder <a href="#publikation-terminologie"><i>Terminologie</i></a> benutzen, da diese Dateien erzeugen, die im ZDL-Repository committet und gepusht werden müssen.</p>
+
+      <p>Das Klonen des ZDL-Repositorys funktioniert im Prinzip genauso wie das des <a href="#git-einrichtung">Wortgeschichten-Repositorys</a>. Man kann sich jedoch diverse Einrichtungsschritte sparen, weswegen es genügt, die folgenden Befehle in der <i>Git Bash</i> (unter Windows) <abbr title="beziehungsweise">bzw.</abbr> im <i>Terminal</i> (unter macOS) der Reihe nach auszuführen. Der gefettete Text in den Befehlen muss entsprechend angepasst werden:</p>
+
+      <pre class="no-highlight">$ git clone https://git.zdl.org/zdl/zdl.org.git
+$ cd zdl.org
+$ git config user.name "<b>Petra Pan</b>"
+$ git config user.email <b>peter.pan@adwgoe.de</b>
+$ git config pull.rebase true
+$ git config core.editor nano
+$ git switch --track origin/wgd</pre>
+
+      <p><b>Nur unter macOS und Linux:</b></p>
+
+      <pre>$ git config credential.helper cache</pre>
+
+      <p>Der Klon hat zwei Branches: <i>master</i> und <i>wgd</i>. Nach dem Einrichten ist der Branch <i>wgd</i> ausgecheckt. Da <em>auf gar keinen Fall</em> in <i>master</i> gearbeitet werden darf, muss der Branch vor dem Erstellen neuer Commits nicht gewechselt werden. Da der Branch allerdings von mehreren Mitarbeitern genutzt wird, sollten Sie vor dem Erstellen von Commits ein <code>$ git pull</code> nicht vergessen.</p>
+
+      <h2><span>Funktion <i>Artikel.json</i></span></h2>
+
+      <p id="publikation-artikelJSON">Die Artikel.json ist eine Datendatei, die <a href="#allgemeines-artikelJSON">zahlreiche Funktionen</a> auf der Webseite füttert, die ohne eine aktuelle Version dieser Datei nicht korrekt laufen.</p>
+
+      <p><b>Update-Prozedere</b></p>
+
+      <ol>
+        <li><a href="#einstellungen-datenZeitstrahl">Zeistrahldaten</a> mit <i>QS</i> verknüpfen</li>
+
+        <li>Nach <a href="#git-allgemeinesBranchesWGd">Branch <q>master</q></a> wechseln</li>
+
+        <li>Im Kopf des Hauptfenster auf <i>pull</i> klicken.</li>
+
+        <li>
+          <p>Funktionen &gt; Artikel.json &gt; Exportieren</p>
+
+          <p>Die App schlägt als Ziel bereits den richtigen Ordner im Repository vor. Die ältere Version der Artikel.json einfach ersetzen.</p>
+        </li>
+
+        <li><i>Git Bash</i> (unter Windows), <i>Terminal</i> (unter macOS) oder einen beliebigen Terminal-Emulator (unter Linux) im Repository-Ordner öffnen</li>
+
+        <li>
+          <p>Commit erstellen und pushen:</p>
+
+          <pre>$ git add resources/Artikel.json
+$ git commit -m "Artikeldaten-Update"
+$ git push</pre>
+        </li>
+      </ol>
+
+      <p><i>Für Techniker*innen zur Evaluation:</i> <i>QS</i> liefert ein <b>Node-Script</b> mit, mit dessen Hilfe man die Artikel.json in menschenlesbares JSON verwandeln kann. Die Datei ist im Original <a href="https://www.zdl.org/wb/wgd/api#Artikeldaten">stark größenoptimiert</a>, weswegen viele Werte nur Indizes sind, die auf ein Objekt namens <code>values</code> zeigen. Das Script erzeugt eine Datei mit Einrückungen, in der die Indizes durch die tatsächlichen Werte ersetzt wurden. Es liegt im Installationsordner von <i>QS</i> im Unterordner <code>resources</code>. Benutzung:</p>
+
+      <pre>$ node hrArtikel.js /PFAD/ZUM/REPOSITORY/resources/Artikel.json</pre>
+
+      <p>Die Output-Datei wird in dem Ordner erzeugt, in dem die Artikel.json liegt.</p>
+
+      <p>Der Installationsordner von <i>QS</i> ist abhängig vom Betriebssystem:</p>
+
+      <ul>
+        <li><i>Windows:</i> <code>C:\<wbr>Users\<wbr>BENUTZERNAME\<wbr>AppData\<wbr>Local\<wbr>Programs\<wbr>QS\</code></li>
+
+        <li><i>Linux:</i> <code>/opt/<wbr>QS/</code></li>
+      </ul>
+
+      <h2><span>Funktion <i>Artikelübersicht</i></span></h2>
+
+      <p id="publikation-artikeluebersicht">Mithilfe dieser Funktion kann die <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> aufgefrischt werden. Die Darstellung der Artikelübersicht speist sich zum einen aus der <a href="#publikation-artikelJSON">Artikel.json</a> und zum anderen aus einem HTML-Template, in dem die Lemmata aufgelistet werden. Das Template wird mit dieser Funktion erstellt.</p>
+
+      <p>Soll die Übersicht aufgefrischt werden (weil <abbr title="zum Beispiel">z.&nbsp;B.</abbr> eine neue Wortgeschichte erschienen ist), muss die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden, nämlich unter:</p>
+
+      <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/wortgeschichten/index.tt</pre>
+
+      <p>Doch zunächst sollten Sie im Kopf des Programmfenster auf <i>pull</i> klicken.</p>
+
+      <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
+
+      <pre>$ git add root/wb/wortgeschichten/index.tt
+$ git commit -m "wgdListe: Update"
+$ git push</pre>
+
+      <p>Der Dialog, der sich nach dem Drücken auf <i>Exportieren</i> öffnet, wählt automatisch den richtigen Speicherort aus, wenn in den <a href="#einstellungen">Einstellungen</a> zuvor der <a href="#einstellungen-datenZDL">Pfad zum ZDL-Repository</a> hinterlegt wurde.</p>
+
+      <h2><span>Funktion <i>Terminologie</i></span></h2>
+
+      <p id="publikation-terminologie">Mithilfe dieser Funktion kann das <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologische Kerninventar auf zdl.org</a> aufgefrischt werden. Die Anzeige dieser Seite (und auch die der Erläuterungsfenster in den Artikeln) speist sich komplett aus der Terminologie-Datendatei, die im Wortgeschichten-Repository liegt:</p>
+
+      <pre>/PFAD/ZUM/WORTGESCHICHTEN-REPOSITORY/resources/Terminologie.json</pre>
+
+      <p>Soll die Datei auf <a href="https://www.zdl.org/">zdl.org</a> aufgefrischt werden, müssen Sie eine Template-Toolkit-Datei erzeugen. Die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, müssen Sie am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> ablegen, nämlich unter:</p>
+
+      <pre>/PFAD/ZUM/ZDL-REPOSITORY/root/wb/WGd/terminologie.tt</pre>
+
+      <p>Das Ganze funktioniert ganz gleich, wie das <a href="#publikation-artikeluebersicht">Update der Artikelübersicht</a>:</p>
+
+      <p>Zunächst sollten Sie im Kopf des Programmfenster auf <i>pull</i> klicken.</p>
+
+      <p>Danach können Sie die Template-Datei erzeugen und die bereits bestehende Datei überschreiben, um im Anschluss die Änderungen zu committen und zu pushen:</p>
+
+      <pre>$ git add root/wb/WGd/terminologie.tt
+$ git commit -m "wgdTerm: Update"
+$ git push</pre>
+
+      <p>Der Dialog, der sich nach dem Drücken auf <i>Exportieren</i> öffnet, wählt automatisch den richtigen Speicherort aus, wenn in den <a href="#einstellungen">Einstellungen</a> zuvor der <a href="#einstellungen-datenZDL">Pfad zum ZDL-Repository</a> hinterlegt wurde.</p>
+
+      <p>Die Terminologiedaten können auch als HTML-Seite exportiert werden. Diese Option gibt es <abbr title="vor allem">v.&nbsp;a.</abbr> deswegen, damit die bereits publizierten Erläuterungen mit einem Office-Programm geöffnet werden können.</p>
+
+      <h2><span>Funktion <i>Wortverlaufskurven</i></span></h2>
+
+      <p id="publikation-wortverlaufskurven">Mit dieser Funktion können die <a href="https://www.dwds.de/r/plot/">Wortverlaufskurven des DWDS</a> für die Publikation einer Wortgeschichte transformiert werden. Bei der Transformation wird Folgendes geändert:</p>
+
+      <ul>
+        <li>Stil und Farbe der Kurven werden an das Schema von <a href="https://www.zdl.org/">zdl.org</a> angepasst;</li>
+        <li>aus den Legenden werden überflüssige Wörter gelöscht (<abbr title="zum Beispiel">z.&nbsp;B.</abbr> <q>Gesamt</q>).</li>
+      </ul>
+
+      <p>Das Ergebnis der Transformation wird in einer neuen Datei gespeichert, die im selben Ordner abgelegt wird, in dem die zuvor geladene Wortverlaufskurve liegt. Der Name der neuen Datei beginnt mit <code>! </code>. Er sollte also ganz oben im Ordner zu finden sein.</p>
     </section>
 
     <!-- OVERLAY: LOADING -->
