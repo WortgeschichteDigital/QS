@@ -36,7 +36,7 @@ const pv = {
     }
 
     // load preview
-    wv.loadURL("https://www.zdl.org/wb/wortgeschichten/pv", {
+    wv.loadURL("https://www.zdl.org/wb/wortgeschichten/pv?bn=mark", {
       postData: [
         {
           type: "rawData",
