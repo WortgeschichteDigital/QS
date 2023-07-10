@@ -1438,7 +1438,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <h2><span>ZDL-Repository klonen</span></h2>
 
-      <p id="publikation-repository">Das ZDL-Repository benötigen Sie, wenn Sie die Funktionen <a href="#publikation-artikeluebersicht"><i>Artikelübersicht</i></a> und/oder <a href="#publikation-terminologie"><i>Terminologie</i></a> benutzen, da diese Dateien erzeugen, die im ZDL-Repository committet und gepusht werden müssen.</p>
+      <p id="publikation-repository">Für die Funktionen <a href="#publikation-artikeluebersicht"><i>Artikelübersicht</i></a> und <a href="#publikation-terminologie"><i>Terminologie</i></a> ist es sinnvoll, einen lokalen Klon des ZDL-Repositorys zu haben. Denn diese Funktionen erzeugen Dateien, die im ZDL-Repository committet und gepusht werden müssen.</p>
+
+      <p>Wenn Ihr System keine Symlinks unterstützt (dies gilt <abbr title="besonders">bes.</abbr> für Windows), kann das Repository nicht korrekt geklont werden. Klone, in denen die Symlinks von Git automatisch durch Dateien ersetzt werden, können nicht zum Erstellen von Commits genutzt werden!</p>
 
       <p>Das Klonen des ZDL-Repositorys funktioniert im Prinzip genauso wie das des <a href="#git-einrichtung">Wortgeschichten-Repositorys</a>. Man kann sich jedoch diverse Einrichtungsschritte sparen, weswegen es genügt, die folgenden Befehle in der <i>Git Bash</i> (unter Windows) <abbr title="beziehungsweise">bzw.</abbr> im <i>Terminal</i> (unter macOS) der Reihe nach auszuführen. Der gefettete Text in den Befehlen muss entsprechend angepasst werden:</p>
 
