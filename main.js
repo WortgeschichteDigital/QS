@@ -896,10 +896,15 @@ for (let i = 0, len = process.argv.length; i < len; i++) {
     // argument unknown
     continue;
   }
-  const value = arg[2]?.replace(/^"|"$/g, "") || true;
+  let value = arg[2]?.replace(/^"|"$/g, "") || true;
   if (typeof value !== typeof cliCommand[arg[1]]) {
-    // value has different type => probably misusage (no path given)
+    // value has different type => probably misusage (e.g. no path given)
     continue;
+  }
+  // ensure "export-out" path is absolute
+  if (arg[1] === "export-out" && !path.isAbsolute(value)) {
+    value = path.join(process.cwd(), value);
+    value = path.normalize(value);
   }
   cliCommand[arg[1]] = value;
 }

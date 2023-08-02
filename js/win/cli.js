@@ -27,13 +27,6 @@ const cli = {
 
     // basic checks for the export directory
     if (command["export-out"]) {
-      // ERROR: path not absolute
-      if (!shared.path.isAbsolute(command["export-out"])) {
-        shared.ipc.invoke("cli-message", "Error: path not absolute");
-        shared.ipc.invoke("cli-return-code", 1);
-        return;
-      }
-
       // ERROR: target does not exist
       const exists = await shared.ipc.invoke("exists", command["export-out"]);
       if (!exists) {
