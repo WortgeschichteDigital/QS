@@ -325,6 +325,7 @@ const overview = {
     // insert soft hypen(s)
     function shy (entryText) {
       const rep = new Set([
+        [ /(?<=[a-z])bewegung/, "&shy;bewegung" ],
         [ /(?<=[a-z])durchsetzungs(?=[a-z])/, "&shy;durchsetzungs&shy;" ],
         [ /(?<=[a-z])theoretiker/, "&shy;theoretiker" ],
         [ /(?<=[a-z])theorie/, "&shy;theorie" ],
