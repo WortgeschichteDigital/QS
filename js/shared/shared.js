@@ -198,11 +198,24 @@ const shared = {
     scope.querySelectorAll('a[href^="https:"], a[href^="mailto:"]').forEach(i => {
       i.addEventListener("click", function (evt) {
         evt.preventDefault();
+
         // prevent double-clicks
         if (evt.detail > 1) {
           return;
         }
-        shared.shell.openExternal(this.getAttribute("href"));
+
+        // ensure that the URL is valid and does not contain malicious code
+        // before passing it to openExternal()
+        let validURL;
+        try {
+          validURL = new URL(this.getAttribute("href")).href;
+        } catch (err) {
+          shared.errorLog(err);
+          return;
+        }
+
+        // open URL in browser/mail app
+        shared.shell.openExternal(validURL);
       });
     });
   },
