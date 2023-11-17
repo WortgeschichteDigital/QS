@@ -966,6 +966,20 @@ if (cliCommandFound || !locked) {
     win.open({ type: "app" });
   });
 
+  // strengthen security for web contents:
+  //   - disallow navigation to other pages
+  //   - disallow creation of windows with window.open()
+  app.on("web-contents-created", (evt, contents) => {
+    contents.on("will-navigate", function (evt) {
+      if (this.getType() !== "webview" || win.data.find(i => i.id === this.id)) {
+        // allow navigation within <webview> of the preview window
+        // (the web contents within the <webview> has a different ID than every other window)
+        evt.preventDefault();
+      }
+    });
+    contents.setWindowOpenHandler(() => ({ action: "deny" }));
+  });
+
   // quit app when every window is closed
   app.on("window-all-closed", async () => {
     // write preferences
