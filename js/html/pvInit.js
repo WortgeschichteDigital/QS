@@ -23,7 +23,8 @@ window.addEventListener("load", async () => {
   const wv = document.querySelector("webview");
   wv.addEventListener("did-finish-load", () => pv.updateIcons());
   wv.addEventListener("did-fail-load", function () {
-    if (/www\.zdl\.org\/wb\/wortgeschichten\/pv/.test(this.getURL())) {
+    const url = new URL(this.getURL());
+    if (url.host === "www.zdl.org" && url.pathname === "/wb/wortgeschichten/pv") {
       pv.xml();
     } else {
       pv.updateIcons();

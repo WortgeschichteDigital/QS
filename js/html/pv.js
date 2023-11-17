@@ -17,9 +17,9 @@ const pv = {
 
     // try to restore the scroll position on reload
     const wv = document.querySelector("webview");
-    const url = wv.getURL();
+    const url = new URL(wv.getURL());
     let scrollTop = 0;
-    if (/www\.zdl\.org\/wb\/wortgeschichten\/pv/.test(url)) {
+    if (url.host === "www.zdl.org" && url.pathname === "/wb/wortgeschichten/pv") {
       await new Promise(resolve => {
         wv.executeJavaScript(`
           window.pageYOffset;
