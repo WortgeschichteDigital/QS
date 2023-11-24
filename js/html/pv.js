@@ -11,7 +11,7 @@ const pv = {
   // show XML preview on zdl.org
   async xml () {
     if (!pv.data.xml) {
-      pv.xmlNotFound();
+      pv.xmlNotFound(`Die Daten aus der Datei „${pv.data.file}“ konnten nicht geladen werden.`);
       return;
     }
 
@@ -55,31 +55,15 @@ const pv = {
         }
         pv.loadingDone(wv);
       })
-      .catch(async err => {
+      .catch(err => {
         wv.stop();
-        const path = await modules.path.join(shared.info.appPath, "html", "pvError.html");
-        wv.loadURL("file://" + path)
-          .then(() => {
-            pv.loadingDone(wv);
-            wv.executeJavaScript(`
-              let label = document.createElement("p");
-              label.classList.add("label");
-              label.textContent = "Fehlermeldung";
-              document.body.appendChild(label);
-              let err = document.createElement("p");
-              err.innerHTML = "${shared.errorString(err.message)}";
-              document.body.appendChild(err);
-            `);
-          })
-          .catch(() => {
-            wv.stop();
-            pv.loadingDone(wv);
-          });
+        pv.xmlNotFound(shared.errorString(err.message));
       });
   },
 
   // show error document if XML file was not found (anymore)
-  async xmlNotFound () {
+  //   message = string
+  async xmlNotFound (message) {
     const wv = document.querySelector("webview");
     const path = await modules.path.join(shared.info.appPath, "html", "pvError.html");
     wv.loadURL("file://" + path)
@@ -91,7 +75,7 @@ const pv = {
           label.textContent = "Fehlermeldung";
           document.body.appendChild(label);
           let err = document.createElement("p");
-          err.innerHTML = "Die Daten aus der Datei „${pv.data.file}“ konnten nicht geladen werden.";
+          err.innerHTML = "${message}";
           document.body.appendChild(err);
         `);
       })
