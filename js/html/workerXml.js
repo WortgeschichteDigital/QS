@@ -396,9 +396,9 @@ const xml = {
 
   // write cache file
   async writeCache () {
-    const path = shared.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
+    const path = modules.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
     try {
-      await shared.fsp.writeFile(path, JSON.stringify(xml.data));
+      await modules.fsp.writeFile(path, JSON.stringify(xml.data));
     } catch (err) {
       xml.updateErrors.push({
         file: "Cache",
@@ -420,7 +420,7 @@ const xml = {
     const { xmlFiles } = data;
 
     // get XML files
-    const files = xmlFiles || await shared.ipc.invoke("xml-files", xml.gitDir);
+    const files = xmlFiles || await modules.ipc.invoke("xml-files", xml.gitDir);
     const updated = [];
     for (const [ k, v ] of Object.entries(files)) {
       // save file content
@@ -482,7 +482,7 @@ const xml = {
     }
 
     // send data to main window
-    shared.ipc.invoke("xml-worker-done", {
+    modules.ipc.invoke("xml-worker-done", {
       data: xml.data,
       files: xml.files,
       updateErrors: xml.updateErrors,

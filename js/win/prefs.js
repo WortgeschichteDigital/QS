@@ -8,7 +8,7 @@ const prefs = {
   //   dataLoaded = boolean
   async init (dataLoaded) {
     if (!dataLoaded) {
-      prefs.data = await shared.ipc.invoke("prefs");
+      prefs.data = await modules.ipc.invoke("prefs");
     }
     for (const [ k, v ] of Object.entries(prefs.data)) {
       // option not within the preferences overlay
@@ -112,7 +112,7 @@ const prefs = {
     prefs.data.search = viewSearch.getAdvancedData();
 
     // save preferences
-    shared.ipc.invoke("prefs-save", prefs.data);
+    modules.ipc.invoke("prefs-save", prefs.data);
   },
 
   // change section
@@ -169,7 +169,7 @@ const prefs = {
       ],
       properties: [ "openFile" ],
     };
-    const result = await shared.ipc.invoke("file-dialog", true, options);
+    const result = await modules.ipc.invoke("file-dialog", true, options);
     if (result.canceld || !result?.filePaths?.length) {
       return;
     }
@@ -190,7 +190,7 @@ const prefs = {
   async zeitstrahlRead (path, passive = true) {
     let content;
     try {
-      content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      content = await modules.fsp.readFile(path, { encoding: "utf8" });
     } catch {
       return false;
     }
@@ -233,7 +233,7 @@ const prefs = {
       defaultPath: shared.info.documents,
       properties: [ "openDirectory" ],
     };
-    const result = await shared.ipc.invoke("file-dialog", true, options);
+    const result = await modules.ipc.invoke("file-dialog", true, options);
     if (result.canceld || !result?.filePaths?.length) {
       return;
     }
@@ -245,7 +245,7 @@ const prefs = {
       root: false,
     };
     try {
-      const files = await shared.fsp.readdir(path);
+      const files = await modules.fsp.readdir(path);
       for (const f of files) {
         structure[f] = true;
       }
@@ -288,7 +288,7 @@ const prefs = {
     const [ today ] = new Date().toISOString().split("T");
     const options = {
       title: "Einstellungen speichern",
-      defaultPath: shared.path.join(shared.info.documents, "resources", `QS_Einstellungen_${today}.json`),
+      defaultPath: modules.path.join(shared.info.documents, "resources", `QS_Einstellungen_${today}.json`),
       filters: [
         {
           name: "JSON",
@@ -296,7 +296,7 @@ const prefs = {
         },
       ],
     };
-    const result = await shared.ipc.invoke("file-dialog", false, options);
+    const result = await modules.ipc.invoke("file-dialog", false, options);
     if (result.canceld || !result.filePath) {
       return;
     }
@@ -305,7 +305,7 @@ const prefs = {
       data.zeitstrahl = "";
       data.zdl = "";
       data["app-version"] = "";
-      await shared.fsp.writeFile(result.filePath, JSON.stringify(data));
+      await modules.fsp.writeFile(result.filePath, JSON.stringify(data));
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
     }
@@ -325,14 +325,14 @@ const prefs = {
       ],
       properties: [ "openFile" ],
     };
-    const result = await shared.ipc.invoke("file-dialog", true, options);
+    const result = await modules.ipc.invoke("file-dialog", true, options);
     if (result.canceld || !result?.filePaths?.length) {
       return;
     }
     const [ path ] = result.filePaths;
     let json;
     try {
-      const content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      const content = await modules.fsp.readFile(path, { encoding: "utf8" });
       json = JSON.parse(content);
       if (!json.filters || !json.sorting || !json.search) {
         shared.error("Datei enthält keine QS-Einstellungen");

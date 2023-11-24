@@ -48,7 +48,7 @@ const popup = {
 
     // cretae popup menu
     if (items.length) {
-      shared.ipc.invoke("popup", items);
+      modules.ipc.invoke("popup", items);
     }
   },
 

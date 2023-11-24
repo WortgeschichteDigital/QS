@@ -1,5 +1,11 @@
 "use strict";
 
+const modules = {
+  clipboard: require("electron").clipboard,
+  ipc: require("electron").ipcRenderer,
+  shell: require("electron").shell,
+};
+
 window.addEventListener("load", async () => {
   // RIGHT CLICK
   window.addEventListener("contextmenu", evt => popup.open(evt));
@@ -37,11 +43,11 @@ window.addEventListener("load", async () => {
   });
 
   // LISTEN TO IPC MESSAGES
-  shared.ipc.on("menu-search", () => help.searchToggle(true));
-  shared.ipc.on("show", (evt, data) => help.show(data));
+  modules.ipc.on("menu-search", () => help.searchToggle(true));
+  modules.ipc.on("show", (evt, data) => help.show(data));
 
   // GET APP INFO
-  shared.info = await shared.ipc.invoke("app-info");
+  shared.info = await modules.ipc.invoke("app-info");
 
   // INITIALIZE WINDOW
   shared.externalLinks();

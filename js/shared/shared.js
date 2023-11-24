@@ -11,19 +11,6 @@ const shared = {
   //   winId = integer (window ID)
   info: {},
 
-  // Electron modules
-  // (this file is also included in workers, but in that context,
-  // require() isn't available => check whether window exists or not)
-  clipboard: typeof window !== "undefined" ? require("electron").clipboard : null,
-  ipc: typeof window !== "undefined" ? require("electron").ipcRenderer : null,
-  shell: typeof window !== "undefined" ? require("electron").shell : null,
-
-  // Node.js modules
-  exec: typeof window !== "undefined" ? require("child_process").exec : null,
-  crypto: typeof window !== "undefined" ? require("crypto") : null,
-  fsp: typeof window !== "undefined" ? require("fs").promises : null,
-  path: typeof window !== "undefined" ? require("path") : null,
-
   // make a big number human readable
   //   num = integer
   bigNumber (num) {
@@ -172,7 +159,7 @@ const shared = {
     if (stack) {
       err += `(${stack})\n`;
     }
-    shared.ipc.invoke("error", err);
+    modules.ipc.invoke("error", err);
 
     // no details avaiblable
     function noDetails () {
@@ -215,7 +202,7 @@ const shared = {
         }
 
         // open URL in browser/mail app
-        shared.shell.openExternal(validURL);
+        modules.shell.openExternal(validURL);
       });
     });
   },

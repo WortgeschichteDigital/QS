@@ -54,7 +54,7 @@ const term = {
     // save file
     const options = {
       title: `terminologie.${type} speichern`,
-      defaultPath: shared.path.join(shared.info.documents, `terminologie.${type}`),
+      defaultPath: modules.path.join(shared.info.documents, `terminologie.${type}`),
       filters: [
         {
           name: "TemplateToolkit",
@@ -69,14 +69,14 @@ const term = {
       };
     }
     if (prefs.data.zdl) {
-      options.defaultPath = shared.path.join(prefs.data.zdl, "root", "wb", "WGd", `terminologie.${type}`);
+      options.defaultPath = modules.path.join(prefs.data.zdl, "root", "wb", "WGd", `terminologie.${type}`);
     }
-    const result = await shared.ipc.invoke("file-dialog", false, options);
+    const result = await modules.ipc.invoke("file-dialog", false, options);
     if (result.canceld || !result.filePath) {
       return;
     }
     try {
-      await shared.fsp.writeFile(result.filePath, file);
+      await modules.fsp.writeFile(result.filePath, file);
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
     }
@@ -86,14 +86,14 @@ const term = {
   //   cli = boolean
   async load (cli) {
     // Terminologie.json
-    const path = shared.path.join(git.config.dir, "resources", "Terminologie.json");
+    const path = modules.path.join(git.config.dir, "resources", "Terminologie.json");
     try {
-      const content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      const content = await modules.fsp.readFile(path, { encoding: "utf8" });
       term.json = JSON.parse(content);
     } catch (err) {
       if (cli) {
-        shared.ipc.invoke("cli-message", "Error: reading Terminologie.json failed");
-        shared.ipc.invoke("cli-return-code", 1);
+        modules.ipc.invoke("cli-message", "Error: reading Terminologie.json failed");
+        modules.ipc.invoke("cli-return-code", 1);
       } else {
         await shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
         document.querySelector("#term-export").focus();
@@ -109,8 +109,8 @@ const term = {
     });
     if (!result) {
       if (cli) {
-        shared.ipc.invoke("cli-message", "Error: reading terminologie.tt failed");
-        shared.ipc.invoke("cli-return-code", 1);
+        modules.ipc.invoke("cli-message", "Error: reading terminologie.tt failed");
+        modules.ipc.invoke("cli-return-code", 1);
       }
       return false;
     }

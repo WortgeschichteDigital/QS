@@ -127,7 +127,7 @@ const tooltip = {
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
         const [ section, id ] = this.getAttribute("href").substring(1).split("-");
-        shared.ipc.invoke("help", {
+        modules.ipc.invoke("help", {
           id,
           section,
         });

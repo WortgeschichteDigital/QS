@@ -134,7 +134,7 @@ const clustersCheck = {
   //   cluster = object
   hash (cluster) {
     const str = JSON.stringify(cluster);
-    return shared.crypto.createHash("sha1").update(str).digest("hex");
+    return modules.crypto.createHash("sha1").update(str).digest("hex");
   },
 
   // jump through new clusters

@@ -63,7 +63,7 @@ const overview = {
     // save file
     const options = {
       title: "index.tt speichern",
-      defaultPath: shared.path.join(shared.info.documents, "index.tt"),
+      defaultPath: modules.path.join(shared.info.documents, "index.tt"),
       filters: [
         {
           name: "TemplateToolkit",
@@ -72,14 +72,14 @@ const overview = {
       ],
     };
     if (prefs.data.zdl) {
-      options.defaultPath = shared.path.join(prefs.data.zdl, "root", "wb", "wortgeschichten", "index.tt");
+      options.defaultPath = modules.path.join(prefs.data.zdl, "root", "wb", "wortgeschichten", "index.tt");
     }
-    const result = await shared.ipc.invoke("file-dialog", false, options);
+    const result = await modules.ipc.invoke("file-dialog", false, options);
     if (result.canceld || !result.filePath) {
       return false;
     }
     try {
-      await shared.fsp.writeFile(result.filePath, page);
+      await modules.fsp.writeFile(result.filePath, page);
       return true;
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);

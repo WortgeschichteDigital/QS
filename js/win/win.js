@@ -99,8 +99,8 @@ var win = {
       resources = resources.replace(/node_modules.+/, "") + "resources";
     }
     try {
-      const path = shared.path.join(resources, xsl);
-      const result = await shared.fsp.readFile(path, { encoding: "utf8" });
+      const path = modules.path.join(resources, xsl);
+      const result = await modules.fsp.readFile(path, { encoding: "utf8" });
       if (!obj[key]) {
         obj[key] = result;
       }
@@ -209,7 +209,7 @@ var win = {
       shared.error(`Datei „${file}“ nicht mehr gefunden`);
       return;
     }
-    shared.ipc.invoke("pv", {
+    modules.ipc.invoke("pv", {
       dir: data.dir,
       file,
       git: git.config.dir,
@@ -224,8 +224,8 @@ var win = {
       shared.error(`Datei „${file}“ nicht mehr gefunden`);
       return;
     }
-    const path = shared.path.join(git.config.dir, data.dir, file);
-    const result = await shared.shell.openPath(path);
+    const path = modules.path.join(git.config.dir, data.dir, file);
+    const result = await modules.shell.openPath(path);
     if (result) {
       shared.error(result);
     }
@@ -326,7 +326,7 @@ var win = {
     }
     const dataS = win.sortingGetData();
     const str = JSON.stringify(dataF) + JSON.stringify(dataS);
-    return shared.crypto.createHash("sha1").update(str).digest("hex");
+    return modules.crypto.createHash("sha1").update(str).digest("hex");
   },
 
   // sorting: toggle sorting icons

@@ -335,7 +335,7 @@ const viewHints = {
       a.title = "Erläuterung im Handbuch öffnen";
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
-        shared.ipc.invoke("help", {
+        modules.ipc.invoke("help", {
           id: this.dataset.type,
           section: "hinweise",
         });

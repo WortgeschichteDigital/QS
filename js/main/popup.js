@@ -7,18 +7,18 @@ const items = {
   close: {
     label: "Fenster schließen",
     icon: "close.png",
-    click: 'shared.ipc.invoke("close")',
+    click: 'modules.ipc.invoke("close")',
     accelerator: "CommandOrControl+W",
   },
   copyLink: {
     label: "Link kopieren",
     icon: "link.png",
-    click: 'shared.clipboard.writeText(popup.element.getAttribute("href"))',
+    click: 'modules.clipboard.writeText(popup.element.getAttribute("href"))',
   },
   copyMail: {
     label: "Adresse kopieren",
     icon: "mail.png",
-    click: 'shared.clipboard.writeText(popup.element.getAttribute("href").replace(/^mailto:/, ""))',
+    click: 'modules.clipboard.writeText(popup.element.getAttribute("href").replace(/^mailto:/, ""))',
   },
   editCut: {
     label: "Ausschneiden",

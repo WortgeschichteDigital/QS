@@ -256,10 +256,10 @@ const viewClusters = {
   // load the file Artikel.json from the repo
   async loadArtikelJSON () {
     // load file
-    const path = shared.path.join(git.config.dir, "resources", "Artikel.json");
+    const path = modules.path.join(git.config.dir, "resources", "Artikel.json");
     let content;
     try {
-      content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      content = await modules.fsp.readFile(path, { encoding: "utf8" });
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
       return;

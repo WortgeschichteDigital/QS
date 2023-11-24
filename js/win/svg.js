@@ -51,7 +51,7 @@ const svg = {
     // load file
     const options = {
       title: "Wortverlaufskurve laden",
-      defaultPath: shared.path.join(git.config.dir, "resources", "images"),
+      defaultPath: modules.path.join(git.config.dir, "resources", "images"),
       filters: [
         {
           name: "SVG",
@@ -60,13 +60,13 @@ const svg = {
       ],
       properties: [ "openFile" ],
     };
-    const result = await shared.ipc.invoke("file-dialog", true, options);
+    const result = await modules.ipc.invoke("file-dialog", true, options);
     if (result.canceld || !result?.filePaths?.length) {
       return;
     }
     const [ path ] = result.filePaths;
     try {
-      svg.file.content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      svg.file.content = await modules.fsp.readFile(path, { encoding: "utf8" });
       svg.file.path = path;
     } catch (err) {
       await shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
@@ -94,7 +94,7 @@ const svg = {
     }
 
     // check if svg file still exists
-    const exists = await shared.ipc.invoke("exists", svg.file.path);
+    const exists = await modules.ipc.invoke("exists", svg.file.path);
     if (!exists) {
       await dialog.open({
         type: "alert",
@@ -112,7 +112,7 @@ const svg = {
       return;
     }
     try {
-      await shared.fsp.writeFile(trans.path, trans.str);
+      await modules.fsp.writeFile(trans.path, trans.str);
     } catch (err) {
       await shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
       document.querySelector("#svg-transform").focus();
@@ -144,9 +144,9 @@ const svg = {
       err: trans.querySelector("parsererror div")?.textContent?.trim() || false,
       str: new XMLSerializer().serializeToString(trans),
     };
-    const parsedPath = shared.path.parse(svg.file.path);
+    const parsedPath = modules.path.parse(svg.file.path);
     result.file = "! " + parsedPath.base;
-    result.path = shared.path.join(parsedPath.dir, result.file);
+    result.path = modules.path.join(parsedPath.dir, result.file);
 
     return result;
   },

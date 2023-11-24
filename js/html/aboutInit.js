@@ -1,5 +1,11 @@
 "use strict";
 
+const modules = {
+  clipboard: require("electron").clipboard,
+  ipc: require("electron").ipcRenderer,
+  shell: require("electron").shell,
+};
+
 window.addEventListener("load", async () => {
   // RIGHT CLICK
   window.addEventListener("contextmenu", evt => popup.open(evt));
@@ -8,7 +14,7 @@ window.addEventListener("load", async () => {
   document.addEventListener("keydown", keyboard.shortcuts);
 
   // GET APP INFO
-  shared.info = await shared.ipc.invoke("app-info");
+  shared.info = await modules.ipc.invoke("app-info");
 
   // PRINT MAIL ADDRESS
   const decoded = about.decodeMail("wvjkiovxidgbwvefekxfzutfpogspjep0eqspAceyhqf0eg");

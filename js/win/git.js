@@ -14,7 +14,7 @@ const git = {
   // check Git config
   async configCheck () {
     // get config data
-    git.config = await shared.ipc.invoke("git-config");
+    git.config = await modules.ipc.invoke("git-config");
     // check config
     const dirOkay = await git.dirCheck(git.config.dir);
     if (!dirOkay[0] || !git.config.user) {
@@ -94,13 +94,13 @@ const git = {
 
     // close all preview windows if dir is about to be changed
     if (git.config.dir !== dir) {
-      shared.ipc.invoke("pv-close-all");
+      modules.ipc.invoke("pv-close-all");
     }
 
     // save config data in prefs file
     git.config.user = user;
     git.config.dir = dir;
-    shared.ipc.invoke("git-save", git.config);
+    modules.ipc.invoke("git-save", git.config);
 
     // fill in preferences
     git.fillPrefs();
@@ -116,7 +116,7 @@ const git = {
       defaultPath: shared.info.documents,
       properties: [ "openDirectory" ],
     };
-    const result = await shared.ipc.invoke("file-dialog", true, options);
+    const result = await modules.ipc.invoke("file-dialog", true, options);
     if (result.canceld || !result?.filePaths?.length) {
       return;
     }
@@ -136,7 +136,7 @@ const git = {
       ignore: false,
     };
     try {
-      const files = await shared.fsp.readdir(dir);
+      const files = await modules.fsp.readdir(dir);
       for (const f of files) {
         structure[f] = true;
       }
@@ -452,7 +452,7 @@ const git = {
         cwd: git.config.dir,
         windowsHide: true,
       };
-      shared.exec(command, options, (err, stdout, stderr) => {
+      modules.exec(command, options, (err, stdout, stderr) => {
         if (err) {
           resolve([ err.code, stderr.trim() ]);
         } else {

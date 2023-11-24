@@ -7,15 +7,15 @@ const error = {
   // show error log
   async showLog () {
     if (!error.log) {
-      error.log = shared.path.join(shared.info.userData, "error.log");
+      error.log = modules.path.join(shared.info.userData, "error.log");
     }
     const pre = document.querySelector("#error pre");
     pre.replaceChildren();
-    const exists = await shared.ipc.invoke("exists", error.log);
+    const exists = await modules.ipc.invoke("exists", error.log);
     if (!exists) {
       pre.textContent = "Das Fehlerlog ist leer.";
     } else {
-      const log = await shared.fsp.readFile(error.log, { encoding: "utf8" });
+      const log = await modules.fsp.readFile(error.log, { encoding: "utf8" });
       pre.textContent = log;
     }
     overlay.show("error");
@@ -24,12 +24,12 @@ const error = {
 
   // open log file in external program
   async openLog () {
-    const exists = await shared.ipc.invoke("exists", error.log);
+    const exists = await modules.ipc.invoke("exists", error.log);
     if (!exists) {
       error.noLog();
       return;
     }
-    const result = await shared.shell.openPath(error.log);
+    const result = await modules.shell.openPath(error.log);
     if (result) {
       shared.error(result);
     }
@@ -37,7 +37,7 @@ const error = {
 
   // delete log file
   async deleteLog () {
-    let exists = await shared.ipc.invoke("exists", error.log);
+    let exists = await modules.ipc.invoke("exists", error.log);
     if (!exists) {
       error.noLog();
       return;
@@ -49,12 +49,12 @@ const error = {
     if (!result) {
       return;
     }
-    exists = await shared.ipc.invoke("exists", error.log);
+    exists = await modules.ipc.invoke("exists", error.log);
     if (!exists) {
       error.noLog();
       return;
     }
-    result = await shared.fsp.unlink(error.log);
+    result = await modules.fsp.unlink(error.log);
     if (result) {
       shared.error(result);
     } else {

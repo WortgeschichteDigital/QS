@@ -1,5 +1,10 @@
 "use strict";
 
+const modules = {
+  ipc: require("electron").ipcRenderer,
+  path: require("path"),
+};
+
 window.addEventListener("load", async () => {
   // RIGHT CLICK
   window.addEventListener("contextmenu", evt => popup.open(evt));
@@ -40,19 +45,19 @@ window.addEventListener("load", async () => {
   });
 
   // LISTEN TO IPC MESSAGES
-  shared.ipc.on("menu-nav-back", () => pv.nav("back"));
-  shared.ipc.on("menu-nav-forward", () => pv.nav("forward"));
-  shared.ipc.on("menu-nav-xml", () => pv.nav("xml"));
-  shared.ipc.on("menu-new", () => pv.nav("new"));
-  shared.ipc.on("menu-update", () => pv.nav("update"));
-  shared.ipc.on("update", (evt, args) => {
+  modules.ipc.on("menu-nav-back", () => pv.nav("back"));
+  modules.ipc.on("menu-nav-forward", () => pv.nav("forward"));
+  modules.ipc.on("menu-nav-xml", () => pv.nav("xml"));
+  modules.ipc.on("menu-new", () => pv.nav("new"));
+  modules.ipc.on("menu-update", () => pv.nav("update"));
+  modules.ipc.on("update", (evt, args) => {
     pv.data = args;
     document.title = `QS / ${pv.data.file}`;
     pv.xml();
   });
 
   // GET APP INFO
-  shared.info = await shared.ipc.invoke("app-info");
+  shared.info = await modules.ipc.invoke("app-info");
 
   // INITIALIZE WINDOW
   shared.keyboardMacOS();

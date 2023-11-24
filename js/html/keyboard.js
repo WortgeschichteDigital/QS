@@ -8,7 +8,7 @@ const keyboard = {
     if (typeof about !== "undefined") {
       // Key "Escape"
       if (!m && evt.key === "Escape") {
-        shared.ipc.invoke("close");
+        modules.ipc.invoke("close");
       }
     } else if (typeof help !== "undefined") {
       // Key "Escape"

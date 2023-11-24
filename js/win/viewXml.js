@@ -264,10 +264,10 @@ const viewXml = {
   //   a = node (clicked link)
   async funCopyToFolder (a) {
     const { file } = a.closest("tr").dataset;
-    const pathSrc = shared.path.join(git.config.dir, "articles", file);
-    const pathDest = shared.path.join(git.config.dir, "ignore", file);
+    const pathSrc = modules.path.join(git.config.dir, "articles", file);
+    const pathDest = modules.path.join(git.config.dir, "ignore", file);
     try {
-      await shared.fsp.copyFile(pathSrc, pathDest, shared.fsp.constants.COPYFILE_EXCL);
+      await modules.fsp.copyFile(pathSrc, pathDest, modules.fsp.constants.COPYFILE_EXCL);
       const xmlFiles = {};
       xmlFiles[file] = {
         dir: "ignore",

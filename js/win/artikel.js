@@ -127,7 +127,7 @@ const artikel = {
     // save file
     const options = {
       title: "Arikel.json speichern",
-      defaultPath: shared.path.join(git.config.dir, "resources", "Artikel.json"),
+      defaultPath: modules.path.join(git.config.dir, "resources", "Artikel.json"),
       filters: [
         {
           name: "JSON",
@@ -135,12 +135,12 @@ const artikel = {
         },
       ],
     };
-    const result = await shared.ipc.invoke("file-dialog", false, options);
+    const result = await modules.ipc.invoke("file-dialog", false, options);
     if (result.canceld || !result.filePath) {
       return;
     }
     try {
-      await shared.fsp.writeFile(result.filePath, JSON.stringify(artikel.data.json));
+      await modules.fsp.writeFile(result.filePath, JSON.stringify(artikel.data.json));
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
     }

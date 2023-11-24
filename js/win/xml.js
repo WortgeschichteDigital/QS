@@ -96,8 +96,8 @@ const xml = {
   async loadCache () {
     let json;
     try {
-      const path = shared.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
-      const content = await shared.fsp.readFile(path, { encoding: "utf8" });
+      const path = modules.path.join(shared.info.userData, `xml-cache-${xml.data.branch}.json`);
+      const content = await modules.fsp.readFile(path, { encoding: "utf8" });
       json = JSON.parse(content);
     } catch {
       // the cache file might not exist yet which is fine
@@ -123,13 +123,13 @@ const xml = {
     const promises = [];
     for (const branch of branchList) {
       promises.push(async function () {
-        const path = shared.path.join(shared.info.userData, `xml-cache-${branch}.json`);
-        const exists = await shared.ipc.invoke("exists", path);
+        const path = modules.path.join(shared.info.userData, `xml-cache-${branch}.json`);
+        const exists = await modules.ipc.invoke("exists", path);
         if (!exists) {
           return;
         }
         try {
-          await shared.fsp.unlink(path);
+          await modules.fsp.unlink(path);
         } catch {}
       }(branch));
     }
@@ -189,7 +189,7 @@ const xml = {
     untracked = untracked.split("\n");
 
     // start worker
-    const response = await shared.ipc.invoke("xml-worker-work", {
+    const response = await modules.ipc.invoke("xml-worker-work", {
       data: xml.data,
       files: xml.files,
       gitDir: git.config.dir,

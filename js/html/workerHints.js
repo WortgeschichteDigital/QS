@@ -1374,7 +1374,7 @@ const hints = {
         ident += i.text;
       }
     }
-    const hash = shared.crypto.createHash("sha1").update(ident).digest("hex");
+    const hash = modules.crypto.createHash("sha1").update(ident).digest("hex");
     obj.ident = hash.substring(0, 10);
     h.push(obj);
   },
@@ -1389,13 +1389,13 @@ const hints = {
     // in case they were updated while the app was running
     hints.diasystems = {};
     // check whether Diasystematik.rnc exists or not
-    const path = shared.path.join(xml.gitDir, "share", "rnc", "Diasystematik.rnc");
-    const exists = await shared.ipc.invoke("exists", path);
+    const path = modules.path.join(xml.gitDir, "share", "rnc", "Diasystematik.rnc");
+    const exists = await modules.ipc.invoke("exists", path);
     if (!exists) {
       return false;
     }
     // read systems and values
-    const file = await shared.fsp.readFile(path, { encoding: "utf8" });
+    const file = await modules.fsp.readFile(path, { encoding: "utf8" });
     const systems = [ "Gebrauchszeitraum", "Regiolekt", "Register", "Sachgebiet", "Soziolekt" ];
     for (const s of systems) {
       hints.diasystems[s] = [];
@@ -1417,13 +1417,13 @@ const hints = {
     // in case they were updated while the app was running
     hints.literature = new Set();
     // check whether Literaturliste.xml exists or not
-    const path = shared.path.join(xml.gitDir, "share", "Literaturliste.xml");
-    const exists = await shared.ipc.invoke("exists", path);
+    const path = modules.path.join(xml.gitDir, "share", "Literaturliste.xml");
+    const exists = await modules.ipc.invoke("exists", path);
     if (!exists) {
       return false;
     }
     // read IDs
-    const file = await shared.fsp.readFile(path, { encoding: "utf8" });
+    const file = await modules.fsp.readFile(path, { encoding: "utf8" });
     for (const i of file.matchAll(/<Fundstelle xml:id="(.+?)">/g)) {
       hints.literature.add(i[1]);
     }
@@ -1443,11 +1443,11 @@ const hints = {
   // fill the object hints.variants and hints.lemmas
   async fillVariants () {
     // load known variants from cache
-    const path = shared.path.join(shared.info.userData, "variants.json");
+    const path = modules.path.join(shared.info.userData, "variants.json");
     if (!Object.keys(hints.variants).length) {
-      const exists = await shared.ipc.invoke("exists", path);
+      const exists = await modules.ipc.invoke("exists", path);
       if (exists) {
-        const file = await shared.fsp.readFile(path, { encoding: "utf8" });
+        const file = await modules.fsp.readFile(path, { encoding: "utf8" });
         if (!Object.keys(hints.variants).length) {
           try {
             hints.variants = JSON.parse(file);
@@ -1566,7 +1566,7 @@ const hints = {
     // save completed variants to cache file
     if (save) {
       try {
-        shared.fsp.writeFile(path, JSON.stringify(hints.variants));
+        modules.fsp.writeFile(path, JSON.stringify(hints.variants));
       } catch {}
     }
   },

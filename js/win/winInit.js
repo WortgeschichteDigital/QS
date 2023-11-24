@@ -1,5 +1,18 @@
 "use strict";
 
+const modules = {
+  // Electron modules
+  clipboard: require("electron").clipboard,
+  ipc: require("electron").ipcRenderer,
+  shell: require("electron").shell,
+
+  // Node.js modules
+  exec: require("child_process").exec,
+  crypto: require("crypto"),
+  fsp: require("fs").promises,
+  path: require("path"),
+}
+
 window.addEventListener("load", async () => {
   // RIGHT CLICK
   window.addEventListener("contextmenu", evt => popup.open(evt));
@@ -274,29 +287,29 @@ window.addEventListener("load", async () => {
   document.querySelector("#svg-transform").addEventListener("click", () => svg.transform());
 
   // LISTEN TO IPC MESSAGES
-  shared.ipc.on("menu-app-updates", () => win.menuCommand("app-updates"));
-  shared.ipc.on("menu-artikel-json", () => win.menuCommand("artikel-json"));
-  shared.ipc.on("menu-clusters", () => win.menuCommand("clusters"));
-  shared.ipc.on("menu-error-log", () => win.menuCommand("error-log"));
-  shared.ipc.on("menu-filters", () => win.menuCommand("filters"));
-  shared.ipc.on("menu-hints", () => win.menuCommand("hints"));
-  shared.ipc.on("menu-overview", () => win.menuCommand("overview"));
-  shared.ipc.on("menu-preferences", () => win.menuCommand("preferences"));
-  shared.ipc.on("menu-search", () => win.menuCommand("search"));
-  shared.ipc.on("menu-svg", () => win.menuCommand("svg"));
-  shared.ipc.on("menu-teaser-tags", () => win.menuCommand("teaser-tags"));
-  shared.ipc.on("menu-term", () => win.menuCommand("term"));
-  shared.ipc.on("menu-update", () => win.menuCommand("update"));
-  shared.ipc.on("menu-xml", () => win.menuCommand("xml"));
-  shared.ipc.on("cli-command", (evt, command) => cli.distribute(command));
-  shared.ipc.on("save-prefs", () => prefs.save());
-  shared.ipc.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
+  modules.ipc.on("menu-app-updates", () => win.menuCommand("app-updates"));
+  modules.ipc.on("menu-artikel-json", () => win.menuCommand("artikel-json"));
+  modules.ipc.on("menu-clusters", () => win.menuCommand("clusters"));
+  modules.ipc.on("menu-error-log", () => win.menuCommand("error-log"));
+  modules.ipc.on("menu-filters", () => win.menuCommand("filters"));
+  modules.ipc.on("menu-hints", () => win.menuCommand("hints"));
+  modules.ipc.on("menu-overview", () => win.menuCommand("overview"));
+  modules.ipc.on("menu-preferences", () => win.menuCommand("preferences"));
+  modules.ipc.on("menu-search", () => win.menuCommand("search"));
+  modules.ipc.on("menu-svg", () => win.menuCommand("svg"));
+  modules.ipc.on("menu-teaser-tags", () => win.menuCommand("teaser-tags"));
+  modules.ipc.on("menu-term", () => win.menuCommand("term"));
+  modules.ipc.on("menu-update", () => win.menuCommand("update"));
+  modules.ipc.on("menu-xml", () => win.menuCommand("xml"));
+  modules.ipc.on("cli-command", (evt, command) => cli.distribute(command));
+  modules.ipc.on("save-prefs", () => prefs.save());
+  modules.ipc.on("update-file", (evt, xmlFiles) => xml.update(xmlFiles));
 
   // GET APP INFO
-  shared.info = await shared.ipc.invoke("app-info");
+  shared.info = await modules.ipc.invoke("app-info");
 
   // PRELOAD IMAGES
-  const images = await shared.ipc.invoke("list-of-images");
+  const images = await modules.ipc.invoke("list-of-images");
   const imagesPreload = [];
   for (const i of images) {
     const img = new Image();

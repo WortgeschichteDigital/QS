@@ -56,7 +56,7 @@ const pv = {
       })
       .catch(err => {
         wv.stop();
-        wv.loadURL("file://" + shared.path.join(shared.info.appPath, "html", "pvError.html"))
+        wv.loadURL("file://" + modules.path.join(shared.info.appPath, "html", "pvError.html"))
           .then(() => {
             pv.loadingDone(wv);
             wv.executeJavaScript(`
@@ -79,7 +79,7 @@ const pv = {
   // show error document if XML file was not found (anymore)
   xmlNotFound () {
     const wv = document.querySelector("webview");
-    wv.loadURL("file://" + shared.path.join(shared.info.appPath, "html", "pvError.html"))
+    wv.loadURL("file://" + modules.path.join(shared.info.appPath, "html", "pvError.html"))
       .then(() => {
         pv.loadingDone(wv);
         wv.executeJavaScript(`
@@ -123,7 +123,7 @@ const pv = {
   // request an updated XML file
   updateXml () {
     document.querySelector("#update img").classList.add("rotate");
-    shared.ipc.invoke("pv", {
+    modules.ipc.invoke("pv", {
       dir: pv.data.dir,
       file: pv.data.file,
       git: pv.data.git,
@@ -133,7 +133,7 @@ const pv = {
 
   // open the same article in another window
   newWin () {
-    shared.ipc.invoke("pv-new", {
+    modules.ipc.invoke("pv-new", {
       dir: pv.data.dir,
       file: pv.data.file,
       git: pv.data.git,
