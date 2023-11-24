@@ -36,11 +36,12 @@ const pv = {
     }
 
     // load preview
+    const bytes = await modules.bufferFrom(`xml=${encodeURIComponent(pv.data.xml)}`);
     wv.loadURL("https://www.zdl.org/wb/wortgeschichten/pv?bn=mark", {
       postData: [
         {
           type: "rawData",
-          bytes: Buffer.from(`xml=${encodeURIComponent(pv.data.xml)}`),
+          bytes,
         },
       ],
       extraHeaders: "Content-Type: application/x-www-form-urlencoded; charset=UTF-8",
@@ -54,9 +55,10 @@ const pv = {
         }
         pv.loadingDone(wv);
       })
-      .catch(err => {
+      .catch(async err => {
         wv.stop();
-        wv.loadURL("file://" + modules.path.join(shared.info.appPath, "html", "pvError.html"))
+        const path = await modules.path.join(shared.info.appPath, "html", "pvError.html");
+        wv.loadURL("file://" + path)
           .then(() => {
             pv.loadingDone(wv);
             wv.executeJavaScript(`
@@ -77,9 +79,10 @@ const pv = {
   },
 
   // show error document if XML file was not found (anymore)
-  xmlNotFound () {
+  async xmlNotFound () {
     const wv = document.querySelector("webview");
-    wv.loadURL("file://" + modules.path.join(shared.info.appPath, "html", "pvError.html"))
+    const path = await modules.path.join(shared.info.appPath, "html", "pvError.html");
+    wv.loadURL("file://" + path)
       .then(() => {
         pv.loadingDone(wv);
         wv.executeJavaScript(`

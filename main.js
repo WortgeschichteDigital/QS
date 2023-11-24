@@ -537,7 +537,11 @@ const win = {
         bwOptions.x = undefined;
         bwOptions.y = undefined;
       }
-      // preview windows have <webview>
+      // change webPreferences
+      bwOptions.webPreferences.contextIsolation = true;
+      bwOptions.webPreferences.nodeIntegration = false;
+      bwOptions.webPreferences.preload = path.join(__dirname, "js", "html", "pvPreload.js");
+      bwOptions.webPreferences.sandbox = true;
       bwOptions.webPreferences.webviewTag = true;
     }
     const bw = new BrowserWindow(bwOptions);
@@ -1050,6 +1054,12 @@ ipcMain.handle("close", evt => {
   const bw = BrowserWindow.fromWebContents(evt.sender);
   bw.close();
 });
+
+ipcMain.handle("ctxBridge-buffer-from", (evt, str) => Buffer.from(str));
+
+ipcMain.handle("ctxBridge-path-join", (evt, arr) => path.join(...arr));
+
+ipcMain.handle("ctxBridge-process-platform", () => process.platform);
 
 ipcMain.handle("help", (evt, data) => win.help(data));
 

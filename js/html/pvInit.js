@@ -1,10 +1,5 @@
 "use strict";
 
-const modules = {
-  ipc: require("electron").ipcRenderer,
-  path: require("path"),
-};
-
 window.addEventListener("load", async () => {
   // RIGHT CLICK
   window.addEventListener("contextmenu", evt => popup.open(evt));
@@ -58,6 +53,9 @@ window.addEventListener("load", async () => {
 
   // GET APP INFO
   shared.info = await modules.ipc.invoke("app-info");
+
+  // GET PROCESS DATA
+  window.process = await modules.process();
 
   // INITIALIZE WINDOW
   shared.keyboardMacOS();
