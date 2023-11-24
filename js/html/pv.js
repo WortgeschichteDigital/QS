@@ -8,6 +8,9 @@ const pv = {
   //   xml = string (XML file content)
   data: {},
 
+  // wait until the <webview> is initialized
+  wvInit: false,
+
   // show XML preview on zdl.org
   async xml () {
     if (!pv.data.xml) {

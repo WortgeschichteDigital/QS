@@ -21,7 +21,10 @@ window.addEventListener("load", async () => {
 
   // WEBVIEW EVENTS
   const wv = document.querySelector("webview");
-  wv.addEventListener("did-finish-load", () => pv.updateIcons());
+  wv.addEventListener("did-finish-load", () => {
+    pv.wvInit = true;
+    pv.updateIcons();
+  });
   wv.addEventListener("did-fail-load", function () {
     const url = new URL(this.getURL());
     if (url.host === "www.zdl.org" && url.pathname === "/wb/wortgeschichten/pv") {
@@ -45,9 +48,19 @@ window.addEventListener("load", async () => {
   modules.ipc.on("menu-nav-xml", () => pv.nav("xml"));
   modules.ipc.on("menu-new", () => pv.nav("new"));
   modules.ipc.on("menu-update", () => pv.nav("update"));
-  modules.ipc.on("update", (evt, args) => {
+  modules.ipc.on("update", async (evt, args) => {
     pv.data = args;
     document.title = `QS / ${pv.data.file}`;
+    if (!pv.wvInit) {
+      await new Promise(resolve => {
+        const interval = setInterval(() => {
+          if (pv.wvInit) {
+            clearInterval(interval);
+            resolve(true);
+          }
+        }, 50);
+      });
+    }
     pv.xml();
   });
 
