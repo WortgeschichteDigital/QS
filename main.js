@@ -1011,7 +1011,23 @@ if (cliCommandFound || !locked) {
 
 /* RENDERER REQUESTS ---------------------------- */
 
+// Security: ensure that WebContents, which sent a request, have loaded a local file
+function validSender (evt) {
+  try {
+    const validURL = new URL(evt.senderFrame.url);
+    if (validURL.protocol !== "file:") {
+      return false;
+    }
+  } catch {
+    return false;
+  }
+  return true;
+}
+
 ipcMain.handle("app-info", evt => {
+  if (!validSender(evt)) {
+    return {};
+  }
   const bw = BrowserWindow.fromWebContents(evt.sender);
   return {
     appPath: app.getAppPath(),
@@ -1040,11 +1056,17 @@ ipcMain.handle("help", (evt, data) => win.help(data));
 ipcMain.handle("error", (evt, err) => error.log(err));
 
 ipcMain.handle("exists", async (evt, path) => {
+  if (!validSender(evt)) {
+    return false;
+  }
   const result = await services.exists(path);
   return result;
 });
 
 ipcMain.handle("file-dialog", async (evt, open, options) => {
+  if (!validSender(evt)) {
+    return null;
+  }
   const bw = BrowserWindow.fromWebContents(evt.sender);
   const result = await services.fileDialog({
     bw,
@@ -1054,9 +1076,17 @@ ipcMain.handle("file-dialog", async (evt, open, options) => {
   return result;
 });
 
-ipcMain.handle("git-config", () => prefs.data.git);
+ipcMain.handle("git-config", evt => {
+  if (!validSender(evt)) {
+    return {};
+  }
+  return prefs.data.git;
+});
 
 ipcMain.handle("git-save", (evt, config) => {
+  if (!validSender(evt)) {
+    return;
+  }
   prefs.data.git = config;
   prefs.write();
 });
@@ -1071,6 +1101,9 @@ ipcMain.handle("popup", (evt, items) => popup.make(evt.sender, items));
 ipcMain.handle("prefs", () => prefs.data.options);
 
 ipcMain.handle("prefs-save", async (evt, options) => {
+  if (!validSender(evt)) {
+    return;
+  }
   prefs.data.options = options;
   await prefs.write();
   if (typeof prefs.saved !== "undefined") {
@@ -1078,25 +1111,44 @@ ipcMain.handle("prefs-save", async (evt, options) => {
   }
 });
 
-ipcMain.handle("pv", (evt, args) => win.pvOpen(args));
+ipcMain.handle("pv", (evt, args) => {
+  if (!validSender(evt)) {
+    return;
+  }
+  win.pvOpen(args);
+});
 
 ipcMain.handle("pv-close-all", () => win.pvCloseAll());
 
-ipcMain.handle("pv-new", (evt, args) => win.open({
-  type: "pv",
-  xml: args,
-}));
+ipcMain.handle("pv-new", (evt, args) => {
+  if (!validSender(evt)) {
+    return;
+  }
+  win.open({
+    type: "pv",
+    xml: args,
+  });
+});
 
 ipcMain.handle("xml-files", async (evt, repoDir) => {
+  if (!validSender(evt)) {
+    return {};
+  }
   const result = await xml.getFiles(repoDir);
   return result;
 });
 
 ipcMain.handle("xml-worker-done", (evt, data) => {
+  if (!validSender(evt)) {
+    return;
+  }
   worker.data = data;
 });
 
 ipcMain.handle("xml-worker-work", async (evt, data) => {
+  if (!validSender(evt)) {
+    return null;
+  }
   const result = await worker.work(data);
   return result;
 });
