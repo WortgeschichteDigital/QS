@@ -161,7 +161,6 @@ prepare() {
   # tag release
   read -p "  Next Job \"Tag release\" (press Enter) . . ."
   echo -e "\n  \033[1;32m*\033[0m Tag release\n"
-  declare -A types
   types[1]="Feature release v${version}"
   types[2]="Release v${version}, fixes"
   types[3]="Release v${version}, Electron update"
