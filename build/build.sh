@@ -317,7 +317,7 @@ makeChangelog() {
       fi
     fi
   done
-  
+
   echo "$output"
 }
 
@@ -399,7 +399,7 @@ execJob() {
   if [ "$type" = "installer" ]; then
     echo -e "  \033[1;32m*\033[0m Execute installer"
     cd "${dir}/../"
-    node ./install/installer-${os}.js $pkg $(getMail)
+    node build/build.mjs builder $(sysName) $pkg "$build" $(getMail)
     if (( $? > 0 )); then
       echo -e "\033[1;31mError!\033[0m\n  \033[1;31m*\033[0m Installer failed"
       cd "$dir"
@@ -411,7 +411,7 @@ execJob() {
   if [ "$type" = "packager" ]; then
     echo -e "  \033[1;32m*\033[0m Execute packager"
     cd "${dir}/../"
-    node ./install/packager.js "$(sysName)" "${build}"
+    node build/build.mjs packager $(sysName) "$build"
     if (( $? > 0 )); then
       echo -e "\033[1;31mError!\033[0m\n  \033[1;31m*\033[0m Package failed"
       cd "$dir"

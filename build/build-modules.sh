@@ -56,7 +56,7 @@ installModules() {
   for (( i=0; i<${#modules[@]}; i++ )); do
     local moduleBase=${modules[$i]%%@*}
     echo -e "\n*** ${moduleBase} ***"
-    
+
     # module isn't installed yet => install it
     local local="node_modules/${moduleBase}/package.json"
     if ! test -e "$local"; then

@@ -51,16 +51,23 @@ Starten der App:
 $ npm start
 ```
 
-Electron-Packager installieren:
+Electron-Builder und Electron-Packager installieren:
 
 ```
+$ npm install --save-dev electron-builder
 $ npm install --save-dev electron-packager
 ```
 
 Paketieren:
 
 ```
-$ node install/packager.js [win32|linux|darwin]
+$ node build/build.mjs [win32|linux|darwin]
+```
+
+Hilfe:
+
+```
+$ node build/build.mjs --help
 ```
 
 ## Lizenzen
