@@ -136,7 +136,7 @@ const artikel = {
       ],
     };
     const result = await modules.ipc.invoke("file-dialog", false, options);
-    if (result.canceld || !result.filePath) {
+    if (result.canceled || !result.filePath) {
       return;
     }
     try {

@@ -72,7 +72,7 @@ const term = {
       options.defaultPath = modules.path.join(prefs.data.zdl, "root", "wb", "WGd", `terminologie.${type}`);
     }
     const result = await modules.ipc.invoke("file-dialog", false, options);
-    if (result.canceld || !result.filePath) {
+    if (result.canceled || !result.filePath) {
       return;
     }
     try {

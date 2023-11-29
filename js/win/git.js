@@ -117,7 +117,7 @@ const git = {
       properties: [ "openDirectory" ],
     };
     const result = await modules.ipc.invoke("file-dialog", true, options);
-    if (result.canceld || !result?.filePaths?.length) {
+    if (result.canceled || !result?.filePaths?.length) {
       return;
     }
     document.querySelector("#git-dir").value = result.filePaths[0];

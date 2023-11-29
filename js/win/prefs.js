@@ -170,7 +170,7 @@ const prefs = {
       properties: [ "openFile" ],
     };
     const result = await modules.ipc.invoke("file-dialog", true, options);
-    if (result.canceld || !result?.filePaths?.length) {
+    if (result.canceled || !result?.filePaths?.length) {
       return;
     }
     const [ path ] = result.filePaths;
@@ -234,7 +234,7 @@ const prefs = {
       properties: [ "openDirectory" ],
     };
     const result = await modules.ipc.invoke("file-dialog", true, options);
-    if (result.canceld || !result?.filePaths?.length) {
+    if (result.canceled || !result?.filePaths?.length) {
       return;
     }
 
@@ -297,7 +297,7 @@ const prefs = {
       ],
     };
     const result = await modules.ipc.invoke("file-dialog", false, options);
-    if (result.canceld || !result.filePath) {
+    if (result.canceled || !result.filePath) {
       return;
     }
     try {
@@ -326,7 +326,7 @@ const prefs = {
       properties: [ "openFile" ],
     };
     const result = await modules.ipc.invoke("file-dialog", true, options);
-    if (result.canceld || !result?.filePaths?.length) {
+    if (result.canceled || !result?.filePaths?.length) {
       return;
     }
     const [ path ] = result.filePaths;

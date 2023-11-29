@@ -61,7 +61,7 @@ const svg = {
       properties: [ "openFile" ],
     };
     const result = await modules.ipc.invoke("file-dialog", true, options);
-    if (result.canceld || !result?.filePaths?.length) {
+    if (result.canceled || !result?.filePaths?.length) {
       return;
     }
     const [ path ] = result.filePaths;
