@@ -511,9 +511,8 @@ const win = {
       webPreferences: {
         backgroundThrottling: false,
         contextIsolation: false,
-        defaultEncoding: "utf-8",
+        defaultEncoding: "UTF-8",
         devTools: dev,
-        enableRemoteModule: false,
         nodeIntegration: true,
         spellcheck: false,
       },
@@ -815,9 +814,8 @@ const worker = {
         webPreferences: {
           backgroundThrottling: false,
           contextIsolation: false,
-          defaultEncoding: "utf-8",
+          defaultEncoding: "UTF-8",
           devTools: dev,
-          enableRemoteModule: false,
           nodeIntegration: true,
         },
       });
