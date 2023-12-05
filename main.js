@@ -10,9 +10,9 @@ const { promises: fsp } = require("fs");
 const path = require("path");
 
 // costum modules
-const popup = require("./js/main/popup");
-const services = require("./js/main/services");
-const xml = require("./js/main/xml");
+const popup = require("./js/main/popup.cjs");
+const services = require("./js/main/services.cjs");
+const xml = require("./js/main/xml.cjs");
 
 
 /* VARIABLES ------------------------------------ */

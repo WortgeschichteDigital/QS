@@ -1,5 +1,3 @@
-"use strict";
-
 const crypto = require("crypto");
 const { promises: fsp } = require("fs");
 const path = require("path");

@@ -1,5 +1,3 @@
-"use strict";
-
 const { dialog } = require("electron");
 const { promises: fsp } = require("fs");
 const path = require("path");
