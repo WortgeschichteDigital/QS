@@ -35,6 +35,7 @@ const xml = {
   //                              the structure is the same as "textErr"
   //         type         = ""  hint type; available types
   //                              article_file        = correct XML file name
+  //                              article_heading     = ensure that "Kurz gefasst" has a heading
   //                              article_id          = correct article ID
   //                              comment             = value of comment node
   //                              diasystemic_value   = add diasystemic value

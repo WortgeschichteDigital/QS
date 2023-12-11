@@ -4,6 +4,7 @@ const viewHints = {
   // hint types
   types: {
     article_file: "Dateiname korrigieren",
+    article_heading: "Überschrift korrigieren",
     article_id: "Artikel-ID korrigieren",
     comment: "XML-Kommentar",
     diasystemic_value: "Diasystematik ergänzen",
@@ -169,6 +170,7 @@ const viewHints = {
         case "general":
           hintTypes = hintTypes.concat([
             "article_file",
+            "article_heading",
             "article_id",
             "literature_missing",
             "quotation_superfluous",

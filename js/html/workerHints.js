@@ -601,6 +601,7 @@ const hints = {
         continue;
       }
       try {
+        hints.checkHeading(file, doc, content);
         hints.checkEZ(file, doc, content);
         hints.checkSW(file, doc, content);
         hints.checkTR(file, doc, content);
@@ -616,6 +617,65 @@ const hints = {
           err: `${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`,
         });
       }
+    }
+  },
+
+  // ARTICLE_HEADING
+  //   file = string (XML file name)
+  //   doc = document
+  //   content = string
+  checkHeading (file, doc, content) {
+    // get heading of <Wortgeschichte_kompakt>
+    const h = doc.querySelector("Wortgeschichte_kompakt Ueberschrift");
+
+    if (!h) {
+      // Error 1: heading is missing
+      hints.add(xml.data.files[file].hints, file, {
+        line: xml.getLineNumber({
+          doc,
+          ele: doc.querySelector("Wortgeschichte_kompakt Abschnitt"),
+          file: content,
+        }),
+        linkCount: 0,
+        scope: "Kurz gefasst",
+        textErr: [
+          {
+            text: "Überschrift fehlt",
+            type: "text_hint",
+          },
+        ],
+        textHint: [
+          {
+            text: "<Ueberschrift>Kurz gefasst</Ueberschrift>",
+            type: "copy",
+          },
+        ],
+        type: "article_heading",
+      });
+    } else if (h.textContent !== "Kurz gefasst") {
+      // Error 2: heading is bogus
+      hints.add(xml.data.files[file].hints, file, {
+        line: xml.getLineNumber({
+          doc,
+          ele: h,
+          file: content,
+        }),
+        linkCount: 0,
+        scope: "Kurz gefasst",
+        textErr: [
+          {
+            text: `<Ueberschrift>${h.textContent}</Ueberschrift>`,
+            type: "text_hint",
+          },
+        ],
+        textHint: [
+          {
+            text: "<Ueberschrift>Kurz gefasst</Ueberschrift>",
+            type: "copy",
+          },
+        ],
+        type: "article_heading",
+      });
     }
   },
 
