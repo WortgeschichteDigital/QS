@@ -96,7 +96,7 @@ var win = {
     let resources = process.resourcesPath;
     if (/node_modules/.test(resources)) {
       // app is not packaged => process.resourcesPath is the path to the Electron resources
-      resources = modules.path.join(__dirname, "resources");
+      resources = modules.path.join(shared.info.appPath, "resources");
     }
     try {
       const path = modules.path.join(resources, xsl);
