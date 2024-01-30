@@ -1,6 +1,7 @@
 [% page_title = 'Wortgeschichte digital: Wortgeschichten' | html %]
 
 [% BLOCK html_head %]
+  <link rel="manifest" href="[% base %]wgd.webmanifest">
   <link rel="canonical" href="https://www.zdl.org/wb/wortgeschichten/">
   <link rel="stylesheet" href="[% base %]static/wgd/wgd-liste.css">
   <link rel="stylesheet" href="[% base %]static/wgd/wgd-cluster.css">
@@ -15,7 +16,7 @@
 [% END %]
 
 <div class="row justify-content-md-center">
-<div class="col col-md-auto bg-white p-3 d shadow" id="wgd-uebersicht">
+<div class="wgd-content col col-md-auto bg-white p-3 d shadow" id="wgd-uebersicht">
 
 <h1>Wortgeschichten</h1>
 

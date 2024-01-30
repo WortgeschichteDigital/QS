@@ -1,6 +1,7 @@
 [% page_title = 'Wortgeschichte digital: Terminologisches Kerninventar' | html %]
 
 [% BLOCK html_head %]
+  <link rel="manifest" href="[% base %]wgd.webmanifest">
   <link rel="canonical" href="https://www.zdl.org/wb/wgd/Terminologie">
   <link rel="stylesheet" href="[% base %]static/wgd/wgd-para.css">
   <link rel="stylesheet" media="print" href="[% base %]static/wgd/wgd-para-print.css">
@@ -9,7 +10,7 @@
 [% END %]
 
 <div class="row justify-content-md-center">
-<div class="wgd-para wgd-term col col-md-auto bg-white p-3 d shadow">
+<div class="wgd-para wgd-term wgd-content col col-md-auto bg-white p-3 d shadow">
 
 <h1>Terminologisches Kerninventar von <i>Wortgeschichte digital</i></h1>
 
