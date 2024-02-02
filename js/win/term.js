@@ -222,10 +222,11 @@ const term = {
       }
 
       // EXPLANATION BLOCK
-      const block = [];
+      const block = [ "<article>" ];
 
       // element: heading
-      block.push(`<h2 id='${encodeURIComponent(term)}'>${term}${makeCopyLink(term)}</h2>`);
+      block.push(" ".repeat(2) + "<header>");
+      block.push(`${" ".repeat(4)}<h2 id='${encodeURIComponent(term)}'>${term}${makeCopyLink(term)}</h2>`);
 
       // element: infos
       const infos = [
@@ -266,7 +267,7 @@ const term = {
         // no links
         if (!info.link) {
           text += val[info.key].join(", ") + "</p>";
-          block.push(text);
+          block.push(" ".repeat(4) + text);
           continue;
         }
 
@@ -282,8 +283,9 @@ const term = {
           text += `<a href='#${encodeURIComponent(termLink)}'>${val[info.key][i]}</a>`;
         }
         text += "</p>";
-        block.push(text);
+        block.push(" ".repeat(4) + text);
       }
+      block.push(" ".repeat(2) + "</header>");
 
       // element: text
       for (let i = 0, len = val.text.length; i < len; i++) {
@@ -294,7 +296,7 @@ const term = {
         if (/^bsp/.test(item.typ) &&
             !/^bsp/.test(val.text[i - 1].typ) &&
             !val.text[i - 1].label) {
-          let bsp = "<p class='wgd-term-bsp-label'><i>";
+          let bsp = " ".repeat(2) + "<p class='wgd-term-bsp-label'><i>";
           if (i !== val.text.length - 1 &&
               /^bsp/.test(val.text[i + 1].typ)) {
             bsp += "Beispiele:";
@@ -305,7 +307,7 @@ const term = {
         }
 
         // explanation or example
-        p += "<p";
+        p += " ".repeat(2) + "<p";
         if (/^bsp/.test(item.typ)) {
           p += " class='wgd-term-bsp'";
         } else if (/lang$/.test(item.typ)) {
@@ -318,15 +320,18 @@ const term = {
         block.push(p);
       }
 
+      // footer
+      block.push(" ".repeat(2) + "<footer>");
+
       // element: literature
       if (val.lit.length) {
-        let lit = "<div class='wgd-term-lit'><i>Literatur:</i> ";
+        let lit = "<p class='wgd-term-lit'><i>Literatur:</i> ";
         for (let i = 0, len = val.lit.length; i < len; i++) {
           const item = val.lit[i];
           if (i > 0) {
             lit += "; ";
           }
-          lit += `<a href='#${encodeURIComponent(item.sigle)}'>${item.sigle}</a>`;
+          lit += `<a href='#${encodeURIComponent(item.sigle)}'><cite>${item.sigle}</cite></a>`;
           if (item.seite) {
             lit += ", " + item.seite;
           }
@@ -335,14 +340,14 @@ const term = {
             lit += ".";
           }
         }
-        lit += "</div>";
-        block.push(lit);
+        lit += "</p>";
+        block.push(" ".repeat(4) + lit);
       }
 
       // element: index
       if (type === "tt" && val.index.length) {
         const numerus = val.index.length > 1 ? "Wortgeschichten" : "Wortgeschichte";
-        let index = `<div class='wgd-term-wg'><i>${numerus}:</i> `;
+        let index = `<p class='wgd-term-wg'><i>${numerus}:</i> `;
         for (let i = 0, len = val.index.length; i < len; i++) {
           const item = val.index[i];
           if (i > 0) {
@@ -354,30 +359,34 @@ const term = {
           }
           index += `'>${shared.hidxPrint(item.lemma)}</a>`;
         }
-        index += "</div>";
-        block.push(index);
+        index += "</p>";
+        block.push(" ".repeat(4) + index);
       }
 
       // element: citation help
-      let citation = "<div class='wgd-term-zit'><i>Zitierhilfe:</i> <span>";
+      let citation = "<p class='wgd-term-zit'><i>Zitierhilfe:</i> <span>";
       citation += val.autor[0];
       for (let i = 1, len = val.autor.length; i < len; i++) {
         const autor = val.autor[i].split(", ");
         citation += `/${autor[1]} ${autor[0]}`;
       }
       citation += `: „${term}“. In: Wortgeschichte digital&nbsp;– ZDL, https://www.zdl.org/<wbr>wb/<wbr>wgd/<wbr>Terminologie<wbr>#${encodeURIComponent(term)}`;
-      citation += ".</span></div>";
-      block.push(citation);
+      citation += ".</span></p>";
+      block.push(" ".repeat(4) + citation);
 
       // add block
+      block.push(" ".repeat(2) + "</footer>");
+      block.push("</article>");
       blocks.push(block.join("\n"));
     }
 
     // LITERATURE BLOCK
-    blocks.push(`<h2 id='Literatur'>Literatur${makeCopyLink("Literatur")}</h2>`);
+    const literature = [];
+    literature.push("<section>");
+    literature.push(`${" ".repeat(2)}<h2 id='Literatur'>Literatur${makeCopyLink("Literatur")}</h2>`);
     const litBlock = [];
     for (const [ sigle, val ] of Object.entries(j.Literatur)) {
-      let lit = `<div id='${encodeURIComponent(sigle)}'`;
+      let lit = `${" ".repeat(4)}<p id='${encodeURIComponent(sigle)}'`;
       if (val.lang) {
         lit += ` lang='${val.lang}'`;
       }
@@ -389,16 +398,18 @@ const term = {
         lit += sigle;
       }
       lit += " </b>";
-      lit += val.titel + "</div>";
+      lit += val.titel + "</p>";
       litBlock.push(lit);
     }
     // nest literature into <div> to insure that the last-child is also the last-child
     // when the tooltip is visible
-    blocks.push(`<div>\n${litBlock.join("\n")}\n</div>`);
+    literature.push(`${" ".repeat(2)}<div>\n${litBlock.join("\n")}\n${" ".repeat(2)}</div>`);
+    literature.push("</section>");
+    blocks.push(literature.join("\n"));
 
     // LICENSE BLOCK
     if (type === "tt") {
-      blocks.push("<div id='wgd-term-lizenz'>\n<div><span id='wgd-term-lizenz-label'>Lizenz</span><a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' id='wgd-term-lizenz-img'><img src='[% base %]static/images/wgd-cc.svg' width='120' height='42' alt='CC BY-SA'></a>Die Erläuterungstexte des terminologischen Kerninventars stehen unter der <a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' class='wgd-link-extern'>Creative Commons-Lizenz BY-SA 4.0</a>.</div>\n</div>");
+      blocks.push("<footer id='wgd-term-lizenz'>\n<div><span id='wgd-term-lizenz-label'>Lizenz</span><a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' id='wgd-term-lizenz-img'><img src='[% base %]static/images/wgd-cc.svg' width='120' height='42' alt='CC BY-SA'></a>Die Erläuterungstexte des terminologischen Kerninventars stehen unter der <a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' class='wgd-link-extern'>Creative Commons-Lizenz BY-SA 4.0</a>.</div>\n</footer>");
     }
 
     // copy link creator

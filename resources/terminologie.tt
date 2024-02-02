@@ -3,28 +3,23 @@
 [% BLOCK html_head %]
   <link rel="manifest" href="[% base %]wgd.webmanifest">
   <link rel="canonical" href="https://www.zdl.org/wb/wgd/Terminologie">
-  <link rel="stylesheet" href="[% base %]static/wgd/wgd-para.css">
-  <link rel="stylesheet" media="print" href="[% base %]static/wgd/wgd-para-print.css">
-  <script src="[% base %]static/wgd/wgd-shared.js" defer></script>
-  <script src="[% base %]static/wgd/wgd-para.js" defer></script>
+  <link rel="stylesheet" href="[% base %]static/wgd/para-navi.min.css" media="screen">
+  <link rel="stylesheet" href="[% base %]static/wgd/para-navi-print.min.css" media="print">
+  <script src="[% base %]static/wgd/para-navi.min.mjs" type="module"></script>
 [% END %]
 
-<div class="row justify-content-md-center">
-<div class="wgd-para wgd-term wgd-content col col-md-auto bg-white p-3 d shadow">
+<main class="wgd-para wgd-term wgd-content shadow">
 
-<h1>Terminologisches Kerninventar von <i>Wortgeschichte digital</i></h1>
+<header>
+  <h1>Terminologisches Kerninventar<br>von <i>Wortgeschichte digital</i></h1>
 
-<p
-  ><a href="[% base %]wb/wortgeschichten/">Wortgeschichten</a
-  ><span>·</span
-  ><a href="[% base %]wb/wgd/Quiz">Wort-Quiz</a
-  ><span>·</span
-  ><a href="[% base %]wb/wgd/">Zum Projekt <i>Wortgeschichte digital</i></a
-></p>
+  <p class="wgd-zu-start"
+    ><a href="[% base %]wb/wortgeschichten/"><abbr title="Wortgeschichte digital">WGd</abbr>-Startseite</a
+  ></p>
+</header>
 
 <p id="wgd-term-in-arbeit"><i>Diese Seite befindet sich noch im Aufbau und wird fortlaufend ergänzt.</i></p>
 
 {{RESULT}}
 
-</div>
-</div>
+</main>

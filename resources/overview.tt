@@ -1,31 +1,20 @@
-[% page_title = 'Wortgeschichte digital: Wortgeschichten' | html %]
+[% page_title = 'Wortgeschichte digital: Artikelübersicht' | html %]
 
 [% BLOCK html_head %]
   <link rel="manifest" href="[% base %]wgd.webmanifest">
-  <link rel="canonical" href="https://www.zdl.org/wb/wortgeschichten/">
-  <link rel="stylesheet" href="[% base %]static/wgd/wgd-liste.css">
-  <link rel="stylesheet" href="[% base %]static/wgd/wgd-cluster.css">
-  <link rel="stylesheet" href="[% base %]static/wgd/wgd-reg.css">
-  <link rel="stylesheet" href="[% base %]static/wgd/wgd-zs.css">
-  <link rel="stylesheet" media="print" href="[% base %]static/wgd/wgd-liste-print.css">
-  <script src="[% base %]static/wgd/wgd-shared.js" defer></script>
-  <script src="[% base %]static/wgd/wgd-cluster.js" defer></script>
-  <script src="[% base %]static/wgd/wgd-reg.js" defer></script>
-  <script src="[% base %]static/wgd/wgd-zs.js" defer></script>
-  <script src="[% base %]static/wgd/wgd-liste.js" defer></script>
+  <link rel="canonical" href="https://www.zdl.org/wb/wgd/Artikel">
+  <link rel="stylesheet" href="[% base %]static/wgd/art.min.css" media="screen">
+  <link rel="stylesheet" href="[% base %]static/wgd/art-print.min.css" media="print">
+  <script src="[% base %]static/wgd/art.min.mjs" type="module"></script>
 [% END %]
 
 <div class="row justify-content-md-center">
 <div class="wgd-content col col-md-auto bg-white p-3 d shadow" id="wgd-uebersicht">
 
-<h1>Wortgeschichten</h1>
+<h1>Artikelübersicht<br>von <i>Wortgeschichte digital</i></h1>
 
-<p
-  ><a href="[% base %]wb/wgd/Terminologie">Terminologisches Kerninventar</a
-  ><span>·</span
-  ><a href="[% base %]wb/wgd/Quiz">Wort-Quiz</a
-  ><span>·</span
-  ><a href="[% base %]wb/wgd/">Zum Projekt <i>Wortgeschichte digital</i></a
+<p class="wgd-zu-start"
+  ><a href="[% base %]wb/wortgeschichten/"><abbr title="Wortgeschichte digital">WGd</abbr>-Startseite</a
 ></p>
 
 <div id="wgd-liste"></div>
