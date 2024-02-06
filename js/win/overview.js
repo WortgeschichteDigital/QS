@@ -323,6 +323,8 @@ const overview = {
     }
 
     // insert soft hypen(s)
+    // (this code is also used for zdl.org:
+    // static/wgd/start/art.mjs)
     function shy (entryText) {
       const rep = new Set([
         [ /(?<=[a-z])bewegung/, "&shy;bewegung" ],
