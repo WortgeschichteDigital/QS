@@ -43,7 +43,7 @@ const overview = {
       const result = await win.loadXsl({
         obj: overview,
         key: "tt",
-        xsl: "overview.tt",
+        xsl: "artikel.tt",
       });
       if (!result) {
         return false;
@@ -62,8 +62,8 @@ const overview = {
 
     // save file
     const options = {
-      title: "index.tt speichern",
-      defaultPath: modules.path.join(shared.info.documents, "index.tt"),
+      title: "artikel.tt speichern",
+      defaultPath: modules.path.join(shared.info.documents, "artikel.tt"),
       filters: [
         {
           name: "TemplateToolkit",
@@ -72,7 +72,7 @@ const overview = {
       ],
     };
     if (prefs.data.zdl) {
-      options.defaultPath = modules.path.join(prefs.data.zdl, "root", "wb", "wortgeschichten", "index.tt");
+      options.defaultPath = modules.path.join(prefs.data.zdl, "root", "wb", "WGd", "artikel.tt");
     }
     const result = await modules.ipc.invoke("file-dialog", false, options);
     if (result.canceled || !result.filePath) {

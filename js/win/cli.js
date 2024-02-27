@@ -129,7 +129,7 @@ const cli = {
         return false;
       }
       // write file
-      const path = modules.path.join(command["export-out"], "index.tt");
+      const path = modules.path.join(command["export-out"], "artikel.tt");
       await modules.fsp.writeFile(path, page);
       return true;
     } catch (err) {
