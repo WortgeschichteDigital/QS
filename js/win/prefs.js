@@ -364,6 +364,19 @@ const prefs = {
     shared.feedback("okay");
   },
 
+  // clear the HTML cache
+  async clearHTMLCache () {
+    const result = await modules.ipc.invoke("clear-cache");
+    let text = "Der HTML-Cache wurde geleert.";
+    if (!result) {
+      text = "Beim Leeren des HTMl-Caches ist ein <strong>Fehler</strong> aufgetreten.";
+    }
+    dialog.open({
+      type: "alert",
+      text,
+    });
+  },
+
   // statistical data
   statsData: [],
 

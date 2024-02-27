@@ -11,7 +11,7 @@ const modules = {
   crypto: require("crypto"),
   fsp: require("fs").promises,
   path: require("path"),
-}
+};
 
 window.addEventListener("load", async () => {
   // RIGHT CLICK
@@ -243,6 +243,7 @@ window.addEventListener("load", async () => {
   document.querySelector("#prefs-data-import").addEventListener("click", () => prefs.importData());
   document.querySelector("#prefs-marks").addEventListener("click", () => viewHints.eraseMarks());
   document.querySelector("#prefs-cache-leeren").addEventListener("click", () => xml.resetCache(true));
+  document.querySelector("#prefs-html-cache-leeren").addEventListener("click", () => prefs.clearHTMLCache());
   document.querySelector("#prefs-git-config").addEventListener("click", () => prefs.gitConfig());
   document.querySelectorAll("#dialog input").forEach(i => {
     i.addEventListener("click", function () {

@@ -103,6 +103,9 @@ const tooltip = {
       "prefs-help-data-cache": `
         Beim Programmstart und immer dann, wenn Sie auf <i>Update</i> drücken, werden die XML-Dateien analysiert. Mit den dabei zusammengetragenen Daten arbeitet die App. Da das Erstellen der Daten sehr rechenintensiv ist, wird das Ergebnis in einem Cache gespeichert, den Sie mit dieser Funktion zurücksetzen können.
       `,
+      "prefs-help-html-cache": `
+        Die Dateien, die im Vorschaufenster von der Seite zdl.org heruntergeladen werden, werden in einem Cache gespeichert, um wiederholte Aufrufe zu beschleunigen. Sollte die Vorschauansicht fehlerhaft sein, bietet es sich an, diesen HTML-Cache zu leeren.
+      `,
       "prefs-help-data-marks": `
         Mit dieser Funktion können Sie alle Markierungen löschen, die Sie in der Ansicht <i>Hinweise</i> vorgenommen haben.
       `,

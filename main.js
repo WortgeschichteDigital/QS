@@ -1053,6 +1053,16 @@ ipcMain.handle("close", evt => {
   bw.close();
 });
 
+ipcMain.handle("clear-cache", async () => {
+  const bw = win.data.find(i => i.type === "app")?.bw;
+  if (bw) {
+    const ses = bw.webContents.session;
+    ses.clearCache();
+    return true;
+  }
+  return false;
+});
+
 ipcMain.handle("ctxBridge-buffer-from", (evt, str) => Buffer.from(str));
 
 ipcMain.handle("ctxBridge-path-join", (evt, arr) => path.join(...arr));
