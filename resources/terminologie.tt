@@ -1,6 +1,7 @@
-[% page_title = 'Wortgeschichte digital: Terminologisches Kerninventar' | html %]
+[% wgd_page_title = 'Wortgeschichte digital: Terminologisches Kerninventar' | html %]
 
 [% BLOCK html_head %]
+  <meta name="description" content="Wortgeschichte digital – Beschreibung des terminologischen Kerninventars mit Literaturhinweisen und Indizes der zum jeweiligen Terminus passenden Wortgeschichten">
   <link rel="manifest" href="[% base %]wgd.webmanifest">
   <link rel="canonical" href="https://www.zdl.org/wb/wgd/Terminologie">
   <link rel="stylesheet" href="[% base %]static/wgd/para-navi.min.css" media="screen">

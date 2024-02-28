@@ -409,7 +409,7 @@ const term = {
 
     // LICENSE BLOCK
     if (type === "tt") {
-      blocks.push("<footer id='wgd-term-lizenz'>\n<div><span id='wgd-term-lizenz-label'>Lizenz</span><a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' id='wgd-term-lizenz-img'><img src='[% base %]static/images/wgd-cc.svg' width='120' height='42' alt='CC BY-SA'></a>Die Erläuterungstexte des terminologischen Kerninventars stehen unter der <a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' class='wgd-link-extern'>Creative Commons-Lizenz BY-SA 4.0</a>.</div>\n</footer>");
+      blocks.push("<footer id='wgd-term-lizenz'>\n<div><span id='wgd-term-lizenz-label'>Lizenz</span><a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' id='wgd-term-lizenz-img'><img src='[% base %]static/images/wgd-cc.svg' loading='lazy' width='120' height='42' alt='CC BY-SA'></a>Die Erläuterungstexte des terminologischen Kerninventars stehen unter der <a href='https://creativecommons.org/licenses/by-sa/4.0/deed.de' rel='license' class='wgd-link-extern'>Creative Commons-Lizenz BY-SA 4.0</a>.</div>\n</footer>");
     }
 
     // copy link creator
