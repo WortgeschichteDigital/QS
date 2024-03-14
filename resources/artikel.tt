@@ -1,13 +1,40 @@
-[% wgd_page_title = 'Wortgeschichte digital: Artikelübersicht' | html %]
+[% wgd_content = 'true' %]
+
+[% wgd_page_title = 'Wortgeschichte digital: Artikelübersicht' %]
+
+[% wgd_desc = 'Artikelübersicht mit allen Stichwörtern in verschiedenen Ansichten (Alphabet, Cluster, Zeitstrahl, Registerwörter)' %]
 
 [% BLOCK html_head %]
-  <meta name="description" content="Wortgeschichte digital – Artikelübersicht mit allen Stichwörtern in verschiedenen Ansichten (Alphabet, Cluster, Zeitstrahl, Registerwörter)">
+  <meta name="description" content="[% wgd_desc %]">
   <link rel="manifest" href="[% base %]wgd.webmanifest">
   <link rel="canonical" href="https://www.zdl.org/wb/wgd/Artikel">
-  <link rel="stylesheet" href="[% base %]static/wgd/art.min.css" media="screen">
-  <link rel="stylesheet" href="[% base %]static/wgd/art-print.min.css" media="print">
-  <script src="[% base %]static/wgd/art.min.mjs" type="module"></script>
+  <link rel="stylesheet" href="[% base %][% static_file('static/wgd/art.min.css') %]" media="screen">
+  <link rel="stylesheet" href="[% base %][% static_file('static/wgd/art-print.min.css') %]" media="print">
+  <script src="[% base %][% static_file('static/wgd/art.min.mjs') %]" type="module"></script>
+  [% PROCESS 'wb/WGd/_structured-data.tt'
+      wgd_bread_url1 = "${base}wb/wortgeschichten/"
+      wgd_bread_name1 = 'Wortgeschichte digital'
+      wgd_bread_url2 = "${base}wb/wgd/Artikel"
+      wgd_bread_name2 = 'Artikelübersicht'
+      wgd_keywords = '[ "Lexikographie", "Wörterbuch", "Neuhochdeutsch", "Sprache", "Stichwort", "Lemma", "Cluster", "Register" ]'
+  %]
 [% END %]
+
+<nav id="wgd-breadcrumb" class="wgd-breadcrumb-artikel" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList" aria-label="Brotkrumennavigation von Wortgeschichte digital">
+  <ol>
+    <li itemprop="itemListElement" itemscope="itemscope" itemtype="https://schema.org/ListItem"
+      ><a itemprop="item" href="[% base %]wb/wortgeschichten/"
+        ><span itemprop="name">Wortgeschichte digital</span
+      ></a
+      ><meta itemprop="position" content="1"
+    ></li>
+    <li itemprop="itemListElement" itemscope="itemscope" itemtype="https://schema.org/ListItem"
+      ><span itemprop="name" class="wgd-breadcrumb-wide">Artikelübersicht</span
+      ><span class="wgd-breadcrumb-narrow">Artikel</span
+      ><meta itemprop="position" content="2"
+    ></li>
+  </ol>
+</nav>
 
 <main class="wgd-content shadow">
 
