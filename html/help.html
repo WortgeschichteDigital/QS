@@ -44,25 +44,25 @@
     <section id="allgemeines">
       <h1><span>Aufgabe der App</span></h1>
 
-      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wortgeschichten/#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
+      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wgd/Artikel#Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
 
       <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#publikation-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
 
       <ul>
-        <li>die Suchfilter der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a>,</li>
+        <li>die Suchfilter der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht</a>,</li>
 
         <li>die Liste der neuen Artikel in der Artikelübersicht,</li>
 
         <li>die Cluster (in der Artikelübersicht und in den Wortgeschichten),</li>
 
-        <li>den <a href="https://www.zdl.org/wb/wortgeschichten/#Zeitstrahl">Zeitstrahl</a>,</li>
+        <li>den <a href="https://www.zdl.org/wb/wgd/Artikel#Zeitstrahl">Zeitstrahl</a>,</li>
 
         <li>die Suchleiste in den Wortgeschichten und</li>
 
         <li>die automatischen Verknüpfungen mit WGd-Artikeln im Belegnavigator.</li>
       </ul>
 
-      <p>Darüber hinaus kann <i>QS</i> die <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht</a> und den Index im <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologischen Kerninventar</a> auffrischen. Außerdem ist die App in der Lage, die Wortverlaufskurven an das ZDL-Farbschema anzupassen. Diese Funktionen werden im Abschnitt <a href="#publikation">Publikation</a> erläutert.</p>
+      <p>Darüber hinaus kann <i>QS</i> die <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht</a> und den Index im <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologischen Kerninventar</a> auffrischen. Außerdem ist die App in der Lage, die Wortverlaufskurven an das ZDL-Farbschema anzupassen. Diese Funktionen werden im Abschnitt <a href="#publikation">Publikation</a> erläutert.</p>
 
       <p><i>Für Entwickler*innen:</i> Die Publikationsfunktionen lassen sich alle via <a href="#verschiedenes-cli">CLI</a> ausführen.</p>
 
@@ -322,7 +322,7 @@ nothing to commit, working tree clean</pre>
 
             <li><code>resources/Quiz.json</code> Datendatei fürs <a href="https://www.zdl.org/wb/wgd/Quiz">Wort-Quiz</a></li>
 
-            <li><code>resources/Register.json</code> Datendatei mit <a href="https://www.zdl.org/wb/wortgeschichten/#Register">Registerwörtern</a></li>
+            <li><code>resources/Register.json</code> Datendatei mit <a href="https://www.zdl.org/wb/wgd/Artikel#Register">Registerwörtern</a></li>
 
             <li><code>resources/Terminologie.json</code> Datendatei mit den Texten des <a href="https://www.zdl.org/wb/wgd/Terminologie">terminologischen Kerninventars</a></li>
           </ul>
@@ -894,7 +894,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-vergleichen">Sektion <i>Vergleichen</i></a> werden einander ähnliche Cluster aufgeführt. Die XML-Dateien, die zu den Lemmata der Clusterzentren gehören, können von dort mit einem Klick zur Modulieren-Sektion hinzugefügt werden.</li>
 
-        <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> werden alle Cluster eines Themenfeldes so dargestellt wie in der <a href="https://www.zdl.org/wb/wortgeschichten/">WGd-Artikelübersicht auf zdl.org</a>. Im Unterschied zur Online-Übersicht kann man hier jedoch leicht sehen, welche Cluster sich geändert haben und in welchen neue Lemmata hinzugekommen sind.</li>
+        <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> werden alle Cluster eines Themenfeldes so dargestellt wie in der <a href="https://www.zdl.org/wb/wgd/Artikel">WGd-Artikelübersicht auf zdl.org</a>. Im Unterschied zur Online-Übersicht kann man hier jedoch leicht sehen, welche Cluster sich geändert haben und in welchen neue Lemmata hinzugekommen sind.</li>
       </ul>
 
       <h2><span>Sektion Modulieren</span></h2>
@@ -941,7 +941,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Um eine <b>Modulierung zurückzusetzen</b> können Sie auf das Icon <img src="../img/win/cleanup.svg" width="30" height="30" alt=""> im Suchfeld klicken. Es entfernt alle Artikelblöcke aus der Modulierung.</p>
 
-      <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
+      <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
 
       <p>Clusterzentren können sinnvoll <b>nur in eine Richtung moduliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgen, dass ein Clusterzentrum entsteht. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modulieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
 
@@ -961,13 +961,13 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="clusterei-ueberpruefen">Für diese Sektion muss zwingend ein Themfeld-<a href="#allgemeines-filterleiste">Filter</a> eingestellt werden. Zusätzlich kann auch der Autor*innen-Filter genutzt werden. Mit seiner Hilfe kann man sich nur diejenigen Cluster anzeigen lassen, in deren Zentrum mindestens ein Lemma der ausgewählten Autor*in zu finden ist.</p>
 
-      <p>In der Sektion <i>Überprüfen</i> werden die Cluster analog zur <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> aufgelistet. Interessant ist diese Sektion <abbr title="vor allem">v.&nbsp;a.</abbr> im Zusammenhang mit der <a href="#clusterei-vorschau">Funktion zur Berechnung der Vorschau</a>. Haben Sie eine Vorschau berechnet, werden Cluster, die zuvor nicht existiert oder sich verändert haben, rot umrandet. Und Lemmata, die zuvor in keinem Cluster zu finden waren, werden sogar <mark class="color4">rot hinterlegt</mark>.</p>
+      <p>In der Sektion <i>Überprüfen</i> werden die Cluster analog zur <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> aufgelistet. Interessant ist diese Sektion <abbr title="vor allem">v.&nbsp;a.</abbr> im Zusammenhang mit der <a href="#clusterei-vorschau">Funktion zur Berechnung der Vorschau</a>. Haben Sie eine Vorschau berechnet, werden Cluster, die zuvor nicht existiert oder sich verändert haben, rot umrandet. Und Lemmata, die zuvor in keinem Cluster zu finden waren, werden sogar <mark class="color4">rot hinterlegt</mark>.</p>
 
       <p>Mithilfe des Icons <img src="../img/win/jump.svg" width="30" height="30" alt=""> in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> können Sie durch die geänderten <abbr title="beziehungsweise">bzw.</abbr> neuen Cluster springen. Dieses Icon ist nur sichtbar, wenn die Sektion <i>Überprüfen</i> aktiv ist.</p>
 
       <p>Mitunter werden Sie auf <b>rot umrandete Cluster</b> stoßen, bei denen Sie keine visuelle Differenz zu einem bereits zuvor bestehenden Cluster erkennen können. Dies liegt daran, dass der Unterschied sehr subtiler Natur ist. In einem solchen Fall hat sich nämlich die Anzahl der Clusterpunkte geändert, mit deren Hilfe die Lemmata im Cluster gewichtet und sortiert werden. Die Änderung hatte dann aber einen so geringen Umfang, dass sie für die Visualisierung des Clusters keine Rolle spielte.</p>
 
-      <p>Sind <b>Cluster ausgegraut</b> werden diese in der <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> nicht angezeigt. Die Lemmata des ausgegrauten Clusterzentrums tauchen in solchen Fällen alle mindestens einmal in bereits weiter oben gedruckten Clustern auf. Cluster werden nur ausgegraut, wenn <em>kein</em> Autor*innen-Filter eingestellt ist, wenn also alle Cluster zu einem Themenfeld in der Anzeige sichtbar sind.</p>
+      <p>Sind <b>Cluster ausgegraut</b> werden diese in der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> nicht angezeigt. Die Lemmata des ausgegrauten Clusterzentrums tauchen in solchen Fällen alle mindestens einmal in bereits weiter oben gedruckten Clustern auf. Cluster werden nur ausgegraut, wenn <em>kein</em> Autor*innen-Filter eingestellt ist, wenn also alle Cluster zu einem Themenfeld in der Anzeige sichtbar sind.</p>
 
       <h1><span>Vorschau berechnen</span></h1>
 
@@ -1077,7 +1077,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-hint">Bei der Artikel.json handelt es sich um eine für die Webseite unverzichtbare Datendatei, ohne die eine Publikation neuer Wortgeschichten nur eingeschränkt sinnvoll ist, weil <a href="#allgemeines-artikelJSON">viele Funktionen auf der Webseite</a> von ihren Inhalten abhängen. Sie liegt im Repository unter <code>resources/<wbr>Artikel.json</code>.</p>
 
-      <p class="indent-hint"><i>QS</i> kann diese Datei zwar erzeugen, aber anders als ihre übrigen Inhalte können die Zeitstrahldaten nicht von der App berechnet werden. Wird die Datei ohne Zeitstrahldaten exportiert, kann auf der Webseite kein <a href="https://www.zdl.org/wb/wortgeschichten/#Zeitstrahl">Zeitstrahl</a> angezeigt werden.</p>
+      <p class="indent-hint"><i>QS</i> kann diese Datei zwar erzeugen, aber anders als ihre übrigen Inhalte können die Zeitstrahldaten nicht von der App berechnet werden. Wird die Datei ohne Zeitstrahldaten exportiert, kann auf der Webseite kein <a href="https://www.zdl.org/wb/wgd/Artikel#Zeitstrahl">Zeitstrahl</a> angezeigt werden.</p>
 
       <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
 
@@ -1508,7 +1508,7 @@ $ git push</pre>
 
       <h2><span>Funktion <i>Artikelübersicht</i></span></h2>
 
-      <p id="publikation-artikeluebersicht">Mithilfe dieser Funktion kann die <a href="https://www.zdl.org/wb/wortgeschichten/">Artikelübersicht auf zdl.org</a> aufgefrischt werden. Die Darstellung der Artikelübersicht speist sich zum einen aus der <a href="#publikation-artikelJSON">Artikel.json</a> und zum anderen aus einem HTML-Template, in dem die Lemmata aufgelistet werden. Das Template wird mit dieser Funktion erstellt.</p>
+      <p id="publikation-artikeluebersicht">Mithilfe dieser Funktion kann die <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> aufgefrischt werden. Die Darstellung der Artikelübersicht speist sich zum einen aus der <a href="#publikation-artikelJSON">Artikel.json</a> und zum anderen aus einem HTML-Template, in dem die Lemmata aufgelistet werden. Das Template wird mit dieser Funktion erstellt.</p>
 
       <p>Soll die Übersicht aufgefrischt werden (weil <abbr title="zum Beispiel">z.&nbsp;B.</abbr> eine neue Wortgeschichte erschienen ist), muss die Datei, die nach dem Drücken von <i>Exportieren</i> zum Speichern angeboten wird, am richtigen Ort im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden, nämlich unter:</p>
 
