@@ -245,11 +245,12 @@
 }
 
 #prefs-zeitstrahl,
+#prefs-ressourcen,
 #prefs-zdl {
   width: calc(100% - 22px - 75px);
 }
 
-:is(#prefs-zeitstrahl, #prefs-zdl) + .icon {
+:is(#prefs-zeitstrahl, #prefs-ressourcen, #prefs-zdl) + .icon {
   margin-left: 10px;
 }
 

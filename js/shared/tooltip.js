@@ -98,7 +98,7 @@ const tooltip = {
         <p>Mit dieser Option können Sie also bereits vorgenommene Modulierungen temporär zurücksetzen.</p>
       `,
       "prefs-help-data": `
-        Die Einstellungen können exportiert werden, um sie auf einem anderen Rechner wieder zu importieren. Sie umfassen auch die in der Ansicht <i>Hinweise</i> gesetzten Markierungen. Vom Export ausgenommen sind die Git-Konfiguration und der Pfad zu den Zeitstrahldaten.
+        Die Einstellungen können exportiert werden, um sie auf einem anderen Rechner wieder zu importieren. Sie umfassen auch die in der Ansicht <i>Hinweise</i> gesetzten Markierungen. Vom Export ausgenommen sind die Git-Konfiguration und die Pfad zu den Zeitstrahl- und Ressourcendaten.
       `,
       "prefs-help-data-cache": `
         Beim Programmstart und immer dann, wenn Sie auf <i>Update</i> drücken, werden die XML-Dateien analysiert. Mit den dabei zusammengetragenen Daten arbeitet die App. Da das Erstellen der Daten sehr rechenintensiv ist, wird das Ergebnis in einem Cache gespeichert, den Sie mit dieser Funktion zurücksetzen können.
@@ -110,8 +110,12 @@ const tooltip = {
         Mit dieser Funktion können Sie alle Markierungen löschen, die Sie in der Ansicht <i>Hinweise</i> vorgenommen haben.
       `,
       "prefs-help-data-zeitstrahl": `
-        <p>Die Zeitstrahldaten werden für den Export der Datei Artikel.json (Funktionen&nbsp;&gt; Artikel.json), einer für die Webseite unverzichtbaren Datendatei, verwendet. Anders als die übrigen Inhalte können Zeitstrahldaten nicht von QS berechnet werden. Exportieren Sie die Datei ohne Zeitstrahldaten, kann auf der Webseite kein Zeitstrahl angezeigt werden.</p>
+        <p>Die Zeitstrahldaten werden für den Export der Datei Artikel.json (Funktionen&nbsp;&gt; Artikel.json), einer für die Webseite unverzichtbaren Datendatei, verwendet. Anders als die meisten Inhalte können die Zeitstrahldaten nicht von QS berechnet werden. Exportieren Sie die Datei ohne Zeitstrahldaten, kann auf der Webseite kein Zeitstrahl angezeigt werden.</p>
         <p>Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das <b>W:\\Software\\<wbr>Entwicklungsumgebung WGd\\<wbr>wgd.local\\<wbr>scr\\<wbr>Zeitstrahl\\<wbr>data\\<wbr>data.json</b>.</p>
+      `,
+      "prefs-help-data-ressourcen": `
+        <p>Die Ressourcendaten werden für den Export der Datei Artikel.json (Funktionen&nbsp;&gt; Artikel.json), einer für die Webseite unverzichtbaren Datendatei, verwendet. Anders als die meisten Inhalte können die Ressourcendaten nicht von QS berechnet werden. Exportieren Sie die Datei ohne Ressourcendaten, können in den Wortgeschichten die Verweise zu weiteren Internetressourcen unterhalb der Literaturliste nicht eingeblendet werden.</p>
+        <p>Die Ressourcendaten liegen auf dem Netzlaufwerk. Unter Windows wäre das <b>W:\\Software\\<wbr>Entwicklungsumgebung WGd\\<wbr>wgd.local\\<wbr>scr\\<wbr>Ressourcen\\<wbr>data.json</b>.</p>
       `,
       "prefs-help-data-zdl": `
         Wird der Pfad zum ZDL-Repository angegeben, kann dies die Benutzung der Funktionen <i>Publikation &gt; Artikelübersicht</i> und <i>Publikation &gt; Terminologie</i> erleichtern. Die App schlägt beim Exportieren der jeweiligen Dateien dann den korrekten Pfad vor.

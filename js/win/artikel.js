@@ -29,6 +29,15 @@ const artikel = {
   //                            0        = unknown (no quotation for this lemma)
   zeitstrahl: {},
 
+  // contents of data.json with resources data (see preferences); structure:
+  //   [LEMMA]    = {}    every spelling of a lemma has an entry of its own
+  //     checked  = ""    ISO 8601 | ""
+  //     sites    = {}
+  //       d      = bool  DWDS entry found
+  //       k      = bool  Wiktionary entry found
+  //       w      = bool  Wortforschungs-DB entry found
+  ressourcen: {},
+
   // open the overlay
   async show () {
     if (!artikel.data.calculating) {
@@ -46,6 +55,10 @@ const artikel = {
       {
         type: "zeitstrahl",
         ok: !!prefs.data.zeitstrahl,
+      },
+      {
+        type: "ressourcen",
+        ok: !!prefs.data.ressourcen,
       },
       {
         type: "branch",
@@ -67,7 +80,7 @@ const artikel = {
   },
 
   // append the missing data file
-  appendZeitstrahl () {
+  appendData () {
     overlay.show("prefs");
     document.querySelector('#prefs a[href="#data"]').click();
   },
@@ -210,6 +223,8 @@ const artikel = {
       nl: {},
       // publication dates
       on: [],
+      // resource data
+      re: [],
       // semantics
       se: [],
       // topic domains
@@ -302,6 +317,26 @@ const artikel = {
     }
     v.on.sort();
     v.se.sort();
+
+    // values.re
+    const { ressourcen: res } = artikel;
+    for (const le of v.le) {
+      const r = [];
+      for (const i of le.split("/")) {
+        if (res[i]) {
+          let links = "";
+          for (const [ site, val ] of Object.entries(res[i].sites)) {
+            if (val) {
+              links += site;
+            }
+          }
+          r.push(links);
+        } else {
+          r.push("");
+        }
+      }
+      v.re.push(r.join("/"));
+    }
 
     // values.wf
     if (zs.fields) {

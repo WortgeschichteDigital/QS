@@ -99,6 +99,13 @@ const cli = {
       return false;
     }
 
+    // ERROR: resources data not present
+    if (!Object.keys(artikel.ressourcen).length) {
+      modules.ipc.invoke("cli-message", "Error: resources data missing");
+      modules.ipc.invoke("cli-return-code", 1);
+      return false;
+    }
+
     // Okay, let's export the data!
     modules.ipc.invoke("cli-message", "Exporting Artikel.json . . .");
     try {

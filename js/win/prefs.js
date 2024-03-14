@@ -40,6 +40,11 @@ const prefs = {
     if (prefs.data.zeitstrahl) {
       await prefs.zeitstrahlRead(prefs.data.zeitstrahl);
     }
+
+    // read resources data if file path present
+    if (prefs.data.ressourcen) {
+      await prefs.ressourcenRead(prefs.data.ressourcen);
+    }
   },
 
   // initialize filter options at startup
@@ -225,6 +230,76 @@ const prefs = {
     artikel.messages();
   },
 
+  // Ressourcen: choose data.json
+  async ressourcenOpen () {
+    const options = {
+      title: "Ressourcendaten auswählen",
+      defaultPath: shared.info.documents,
+      filters: [
+        {
+          name: "JSON",
+          extensions: [ "json" ],
+        },
+      ],
+      properties: [ "openFile" ],
+    };
+    const result = await modules.ipc.invoke("file-dialog", true, options);
+    if (result.canceled || !result?.filePaths?.length) {
+      return;
+    }
+    const [ path ] = result.filePaths;
+    const read = await prefs.ressourcenRead(path, false);
+    if (!read) {
+      return;
+    }
+    document.querySelector("#prefs-ressourcen").value = path;
+    prefs.data.ressourcen = path;
+    prefs.save();
+    artikel.messages();
+  },
+
+  // Ressourcen: read data file
+  //   path = string
+  //   passive = false | undefined
+  async ressourcenRead (path, passive = true) {
+    let content;
+    try {
+      content = await modules.fsp.readFile(path, { encoding: "utf8" });
+    } catch {
+      return false;
+    }
+    let resData;
+    try {
+      resData = JSON.parse(content);
+    } catch (err) {
+      if (!passive) {
+        shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+      }
+      return false;
+    }
+    const [ firstLemma ] = Object.keys(resData);
+    if (!resData[firstLemma].checked || !resData[firstLemma].sites) {
+      if (!passive) {
+        shared.error("Datei enthält keine Ressourcendaten");
+      }
+      return false;
+    }
+    artikel.ressourcen = resData;
+    return true;
+  },
+
+  // Ressourcen: remove link to data file
+  ressourcenRemove () {
+    if (!prefs.data.ressourcen) {
+      return;
+    }
+    document.querySelector("#prefs-ressourcen").value = "";
+    delete prefs.data.ressourcen;
+    prefs.save();
+    artikel.ressourcen = {};
+    artikel.messages();
+  },
+
   // ZDL-Repository: choose directory
   async zdlOpen () {
     // open dialog
@@ -303,6 +378,7 @@ const prefs = {
     try {
       const data = structuredClone(prefs.data);
       data.zeitstrahl = "";
+      data.ressourcen = "";
       data.zdl = "";
       data["app-version"] = "";
       await modules.fsp.writeFile(result.filePath, JSON.stringify(data));
@@ -345,6 +421,7 @@ const prefs = {
 
     // apply data
     prefs.zeitstrahlRemove();
+    prefs.ressourcenRemove();
     prefs.zdlRemove();
     prefs.data = json;
     prefs.data["app-version"] = shared.info.version;

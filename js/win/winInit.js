@@ -231,6 +231,14 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     prefs.zeitstrahlRemove();
   });
+  document.querySelector("#prefs-ressourcen-open").addEventListener("click", evt => {
+    evt.preventDefault();
+    prefs.ressourcenOpen();
+  });
+  document.querySelector("#prefs-ressourcen-remove").addEventListener("click", evt => {
+    evt.preventDefault();
+    prefs.ressourcenRemove();
+  });
   document.querySelector("#prefs-zdl-open").addEventListener("click", evt => {
     evt.preventDefault();
     prefs.zdlOpen();
@@ -264,9 +272,11 @@ window.addEventListener("load", async () => {
     evt.preventDefault();
     win.openEditor(this.parentNode.dataset.file);
   });
-  document.querySelector("#artikel-zeitstrahl a").addEventListener("click", evt => {
-    evt.preventDefault();
-    artikel.appendZeitstrahl();
+  document.querySelectorAll(":is(#artikel-zeitstrahl, #artikel-ressourcen) a").forEach(i => {
+    i.addEventListener("click", evt => {
+      evt.preventDefault();
+      artikel.appendData();
+    });
   });
   document.querySelector("#artikel-branch a").addEventListener("click", evt => {
     evt.preventDefault();

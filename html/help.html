@@ -51,13 +51,15 @@
       <ul>
         <li>die Suchfilter der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht</a>,</li>
 
-        <li>die Liste der neuen Artikel in der Artikelübersicht,</li>
+        <li>die Liste der neuen Artikel auf der <a href="https://www.zdl.org/wb/wortgeschichten/">WGd-Startseite</a>,</li>
 
         <li>die Cluster (in der Artikelübersicht und in den Wortgeschichten),</li>
 
         <li>den <a href="https://www.zdl.org/wb/wgd/Artikel#Zeitstrahl">Zeitstrahl</a>,</li>
 
         <li>die Suchleiste in den Wortgeschichten und</li>
+
+        <li>die Verlinkungen weiterer Ressourcen in den Wortgeschichten</li>
 
         <li>die automatischen Verknüpfungen mit WGd-Artikeln im Belegnavigator.</li>
       </ul>
@@ -1081,6 +1083,12 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
 
+      <p id="einstellungen-datenRessourcen" class="option">Ressourcendaten</p>
+
+      <p class="indent-hint">Für die Ressourcendaten gilt dasselbe wie für die Zeitstrahldaten: Sie werden allein für den <a href="#publikation-artikelJSON">Export der Artikel.json</a> benötigt. Ebenso wie die Zeitstrahldaten können auch die Ressourcendaten von der App nicht berechnet werden.</p>
+
+      <p class="indent-hint">Die Ressourcendaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Ressourcen\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
+
       <p id="einstellungen-datenZDL" class="option">ZDL-Repository</p>
 
       <p class="indent-hint">Der Gebrauch der <a href="#publikation">Publikations</a>-Funktionen <a href="#publikation-artikeluebersicht"><i>Export der Artikelübersicht</i></a> und <a href="#publikation-terminologie"><i>Export der Terminologie</i></a> kann durch diese Einstellung erleichtert werden. Die Dateien, die durch die beiden Funktionen erzeugt werden, müssen nämlich im <a href="#publikation-repository">ZDL-Repository</a> gespeichert werden. Wurde in dieser Einstellung zuvor der Pfad zum Repository hinterlegt, wird beim Export automatisch der korrekte Unterordner ausgewählt und man muss nur noch das Speichern (und Überschreiben) der Dateien bestätigen.</p>
@@ -1089,7 +1097,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-hint">Mithilfe der Buttons <i>Exportieren</i> und <i>Importieren</i> können Sie – Sie ahnen es schon – die Programmeinstellungen ex- oder importieren.</p>
 
-      <p class="indent-hint">Dies ist immer dann nützlich, wenn Sie abwechselnd an mehreren Rechnern arbeiten und Ihre Daten zwischen den Rechnern synchronisieren möchten. Denn die Einstellungen umfassen nicht nur die Konfiguration in der <a href="#allgemeines-filterleiste">Filter-</a> oder <a href="#allgemeines-kopfleiste">Kopfleiste</a>. Zu ihnen gehören auch die in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> gesetzten Markierungen. Vom Export ausgenommen sind die <a href="#einstellungen-git">Git-Konfiguration</a> und der <a href="#einstellungen-datenZeitstrahl">Pfad zu den Zeitstrahldaten</a>.</p>
+      <p class="indent-hint">Dies ist immer dann nützlich, wenn Sie abwechselnd an mehreren Rechnern arbeiten und Ihre Daten zwischen den Rechnern synchronisieren möchten. Denn die Einstellungen umfassen nicht nur die Konfiguration in der <a href="#allgemeines-filterleiste">Filter-</a> oder <a href="#allgemeines-kopfleiste">Kopfleiste</a>. Zu ihnen gehören auch die in der <a href="#hinweise">Ansicht <i>Hinweise</i></a> gesetzten Markierungen. Vom Export ausgenommen sind die <a href="#einstellungen-git">Git-Konfiguration</a> und die Pfade zu den <a href="#einstellungen-datenZeitstrahl">Zeitstrahl-</a> und <a href="#einstellungen-datenRessourcen">Ressourcendaten</a>.</p>
 
       <p id="einstellungen-datenMarks" class="option">Markierungsdaten</p>
 
@@ -1469,7 +1477,7 @@ $ git switch --track origin/wgd</pre>
       <p><b>Update-Prozedere</b></p>
 
       <ol>
-        <li><a href="#einstellungen-datenZeitstrahl">Zeistrahldaten</a> mit <i>QS</i> verknüpfen</li>
+        <li><a href="#einstellungen-datenZeitstrahl">Zeistrahl-</a> und <a href="#einstellungen-datenRessourcen">Ressourcendaten</a> mit <i>QS</i> verknüpfen</li>
 
         <li>Nach <a href="#git-allgemeinesBranchesWGd">Branch <q>master</q></a> wechseln</li>
 
