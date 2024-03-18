@@ -222,11 +222,11 @@ const term = {
       }
 
       // EXPLANATION BLOCK
-      const block = [ "<article>" ];
+      const block = [ "<article itemscope itemtype='https://schema.org/Article'>" ];
 
       // element: heading
       block.push(" ".repeat(2) + "<header>");
-      block.push(`${" ".repeat(4)}<h2 id='${encodeURIComponent(term)}'>${term}${makeCopyLink(term)}</h2>`);
+      block.push(`${" ".repeat(4)}<h2 id='${encodeURIComponent(term)}' itemprop="headline">${term}${makeCopyLink(term)}</h2>`);
 
       // element: infos
       const infos = [
@@ -288,6 +288,7 @@ const term = {
       block.push(" ".repeat(2) + "</header>");
 
       // element: text
+      block.push(" ".repeat(2) + "<div itemprop='articleBody'>");
       for (let i = 0, len = val.text.length; i < len; i++) {
         const item = val.text[i];
         let p = "";
@@ -296,7 +297,7 @@ const term = {
         if (/^bsp/.test(item.typ) &&
             !/^bsp/.test(val.text[i - 1].typ) &&
             !val.text[i - 1].label) {
-          let bsp = " ".repeat(2) + "<p class='wgd-term-bsp-label'><i>";
+          let bsp = " ".repeat(4) + "<p class='wgd-term-bsp-label'><i>";
           if (i !== val.text.length - 1 &&
               /^bsp/.test(val.text[i + 1].typ)) {
             bsp += "Beispiele:";
@@ -307,7 +308,7 @@ const term = {
         }
 
         // explanation or example
-        p += " ".repeat(2) + "<p";
+        p += " ".repeat(4) + "<p";
         if (/^bsp/.test(item.typ)) {
           p += " class='wgd-term-bsp'";
         } else if (/lang$/.test(item.typ)) {
@@ -319,6 +320,7 @@ const term = {
         p += `>${item.html}</p>`;
         block.push(p);
       }
+      block.push(" ".repeat(2) + "</div>");
 
       // footer
       block.push(" ".repeat(2) + "<footer>");
@@ -331,7 +333,7 @@ const term = {
           if (i > 0) {
             lit += "; ";
           }
-          lit += `<a href='#${encodeURIComponent(item.sigle)}'><cite>${item.sigle}</cite></a>`;
+          lit += `<a href='#${encodeURIComponent(item.sigle)}'><cite itemprop='citation'>${item.sigle}</cite></a>`;
           if (item.seite) {
             lit += ", " + item.seite;
           }
@@ -365,12 +367,12 @@ const term = {
 
       // element: citation help
       let citation = "<p class='wgd-term-zit'><i>Zitierhilfe:</i> <span>";
-      citation += val.autor[0];
+      citation += `<span itemprop='author' itemscope itemtype='https://schema.org/Person'>${val.autor[0]}<meta itemprop='name' content='${val.autor[0]}'></span>`;
       for (let i = 1, len = val.autor.length; i < len; i++) {
         const autor = val.autor[i].split(", ");
-        citation += `/${autor[1]} ${autor[0]}`;
+        citation += `/<span itemprop='author' itemscope itemtype='https://schema.org/Person'>${autor[1]} ${autor[0]}<meta itemprop='name' content='${val.autor[i]}'></span>`;
       }
-      citation += `: „${term}“. In: Wortgeschichte digital&nbsp;– ZDL, https://www.zdl.org/<wbr>wb/<wbr>wgd/<wbr>Terminologie<wbr>#${encodeURIComponent(term)}`;
+      citation += `: „${term}“. In: Wortgeschichte digital&nbsp;– ZDL, <span itemprop='url'>https://www.zdl.org/<wbr>wb/<wbr>wgd/<wbr>Terminologie<wbr>#${encodeURIComponent(term)}</span>`;
       citation += ".</span></p>";
       block.push(" ".repeat(4) + citation);
 
