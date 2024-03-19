@@ -685,6 +685,9 @@ const hints = {
   //   content = string
   checkEZ (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     const scopes = [
       "Wortgeschichte_kompakt erwaehntes_Zeichen",
       "Wortgeschichte erwaehntes_Zeichen",
@@ -775,6 +778,9 @@ const hints = {
   //   content = string
   checkSW (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     const scopes = [
       "Wortgeschichte_kompakt Stichwort",
       "Wortgeschichte Stichwort",
@@ -833,6 +839,9 @@ const hints = {
   //   content = string
   checkTR (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     for (const i of doc.querySelectorAll("Textreferenz")) {
       const target = i.getAttribute("Ziel");
       const text = i.textContent;
@@ -919,6 +928,9 @@ const hints = {
   //   content = string
   checkVE (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     for (const i of doc.querySelectorAll("Verweis_extern")) {
       // WWW_ERROR: <Verweistext> missing
       const text = i?.querySelector("Verweistext")?.textContent;
@@ -1041,6 +1053,9 @@ const hints = {
   //   content = string
   checkSprache (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     // text marked as German
     for (const i of doc.querySelectorAll('[Sprache="dt"]')) {
       if (!i.parentNode.closest("[Sprache]")) {
@@ -1109,6 +1124,9 @@ const hints = {
   //   content = string
   checkDiasystems (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     for (const lesarten of doc.querySelectorAll("Lesarten")) {
       for (const n of lesarten.childNodes) {
         if (n.nodeName !== "Lesart") {
@@ -1180,6 +1198,9 @@ const hints = {
   //   content = string
   checkLiterature (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     for (const i of doc.querySelectorAll("Literaturtitel")) {
       const id = i.getAttribute("xml:id");
       const ziel = i.getAttribute("Ziel");
@@ -1232,6 +1253,9 @@ const hints = {
   //   content = string
   checkQuotations (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
 
     // collect quotation IDs
     const wg = new Set();
@@ -1276,6 +1300,9 @@ const hints = {
   //   content = string
   collectComments (file, doc, content) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
     const iterator = doc.createNodeIterator(doc.documentElement, NodeFilter.SHOW_COMMENT);
     let node;
     let idx = -1;
@@ -1335,6 +1362,9 @@ const hints = {
   //   lemma = string
   detectTarget (file, lemma) {
     const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
 
     // field article
     if (data.fa) {
