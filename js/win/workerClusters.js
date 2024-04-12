@@ -107,8 +107,8 @@ const clusters = {
   // calculate clusters
   calculate () {
     const { data: d } = clusters;
-    d.checked = new Set();
-    d.detected = new Set();
+    d.checked = {};
+    d.detected = {};
     d.result = {};
 
     // structured array with all lemma combinations of a possible cluster center;
@@ -144,6 +144,10 @@ const clusters = {
 
     // calculate clusters per domain
     for (const domain of d.domains) {
+      // prepare domain sets for checked and detected clusters
+      d.checked[domain] = new Set();
+      d.detected[domain] = new Set();
+
       // all clusters of this domain; structure:
       //   z         = {}   center (Zentrum): lemmas that mutually refer to each other
       //     [LEMMA] = 1    summed up weight of the links that refer to this lemma
@@ -225,10 +229,10 @@ const clusters = {
             // speed up the process by skipping already checked combinations
             combination.sort();
             const combinationJoined = combination.join();
-            if (d.checked.has(combinationJoined)) {
+            if (d.checked[domain].has(combinationJoined)) {
               continue;
             }
-            d.checked.add(combinationJoined);
+            d.checked[domain].add(combinationJoined);
 
             // apply and test the possible cluster centers
             const z = {};
@@ -278,10 +282,10 @@ const clusters = {
             // (for speed reasons we have to discard duplicates ASAP)
             zKeys.sort();
             const zKeysJoined = zKeys.join();
-            if (d.detected.has(zKeysJoined)) {
+            if (d.detected[domain].has(zKeysJoined)) {
               continue;
             }
-            d.detected.add(zKeysJoined);
+            d.detected[domain].add(zKeysJoined);
 
             // add main and sub lemmas to the center
             // if they pertain to the same multi lemma article
