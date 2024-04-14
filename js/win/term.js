@@ -366,13 +366,20 @@ const term = {
       }
 
       // element: citation help
+      const revisionCurrent = makeRevisionDate(val.revision.at(-1));
+      let revisionFirst = makeRevisionDate(val.revision[0]);
+      if (revisionCurrent !== revisionFirst) {
+        revisionFirst = ", zuerst " + revisionFirst;
+      } else {
+        revisionFirst = "";
+      }
       let citation = "<p class='wgd-term-zit'><i>Zitierhilfe:</i> <span>";
       citation += `<span itemprop='author' itemscope itemtype='https://schema.org/Person'>${val.autor[0]}<meta itemprop='name' content='${val.autor[0]}'></span>`;
       for (let i = 1, len = val.autor.length; i < len; i++) {
         const autor = val.autor[i].split(", ");
         citation += `/<span itemprop='author' itemscope itemtype='https://schema.org/Person'>${autor[1]} ${autor[0]}<meta itemprop='name' content='${val.autor[i]}'></span>`;
       }
-      citation += `: „${term}“. In: Wortgeschichte digital&nbsp;– ZDL, <span itemprop='url'>https://www.zdl.org/<wbr>wb/<wbr>wgd/<wbr>Terminologie<wbr>#${encodeURIComponent(term)}</span>`;
+      citation += `: „${term}“. Version ${revisionCurrent + revisionFirst}. In: Wortgeschichte digital&nbsp;– ZDL, <span itemprop='url'>https://www.zdl.org/<wbr>wb/<wbr>wgd/<wbr>Terminologie<wbr>#${encodeURIComponent(term)}</span>`;
       citation += ".</span></p>";
       block.push(" ".repeat(4) + citation);
 
@@ -380,6 +387,12 @@ const term = {
       block.push(" ".repeat(2) + "</footer>");
       block.push("</article>");
       blocks.push(block.join("\n"));
+    }
+
+    // construct a printable revision date
+    function makeRevisionDate (r) {
+      const revision = r.split("-");
+      return revision[1] + "/<wbr>" + revision[0];
     }
 
     // LITERATURE BLOCK
