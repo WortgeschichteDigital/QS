@@ -479,7 +479,7 @@ const win = {
       if (type === "about") {
         return {
           width: 750,
-          height: 430,
+          height: 405,
         };
       }
       return {
@@ -507,6 +507,7 @@ const win = {
       minWidth: 700,
       height,
       minHeight: 700,
+      useContentSize: type === "about" ? true : false,
       show: false,
       webPreferences: {
         backgroundThrottling: false,
