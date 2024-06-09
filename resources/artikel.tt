@@ -17,6 +17,7 @@
       wgd_bread_url2 = "${base}wb/wgd/Artikel"
       wgd_bread_name2 = 'Artikelübersicht'
       wgd_keywords = '[ "Lexikographie", "Wörterbuch", "Neuhochdeutsch", "Sprache", "Stichwort", "Lemma", "Cluster", "Register" ]'
+      wgd_artikel = "true"
   %]
 [% END %]
 
@@ -46,6 +47,15 @@
   ></p>
 </header>
 
-<div id="wgd-liste"></div>
+<noscript>
+  <div class="error">
+    <p>Die Artikelübersicht benötigt Scripting, das in Ihrem Browser leider ausgeschaltet ist.</p>
+
+    <p>Als Ersatz für die Übersicht mit verschiedenen Ansichten und Filtern folgt eine Liste der neusten <abbr title="Wortgeschichte digital">WGd</abbr>-Artikel.</p>
+  </div>
+
+  <h2>Neue Artikel</h2>
+{{RESULT}}
+</noscript>
 
 </main>
