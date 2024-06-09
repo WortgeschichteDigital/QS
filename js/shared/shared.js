@@ -176,7 +176,7 @@ const shared = {
 
   // escape special RegExp tokens
   escapeRegExp (text) {
-    return text.replace(/\/|\(|\)|\[|\]|\{|\}|\.|\?|\\|\+|\*|\^|\$|\|/g, m => `\\${m}`);
+    return text.replace(/[/\\|()[\]{}.?+*^$]/g, m => `\\${m}`);
   },
 
   // open links in external program
