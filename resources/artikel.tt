@@ -49,7 +49,7 @@
 
 <noscript>
   <div class="error">
-    <p>Die Artikelübersicht benötigt Scripting, das in Ihrem Browser leider ausgeschaltet ist.</p>
+    <p class="wgd-laden-fehler">Die Artikelübersicht benötigt Scripting, das in Ihrem Browser leider ausgeschaltet ist.</p>
 
     <p>Als Ersatz für die Übersicht mit verschiedenen Ansichten und Filtern folgt eine Liste der neusten <abbr title="Wortgeschichte digital">WGd</abbr>-Artikel.</p>
   </div>
