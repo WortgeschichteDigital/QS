@@ -36,6 +36,9 @@ const xml = {
         // authors
         data.authors = [];
         doc.querySelectorAll("Revision Autor").forEach(i => {
+          if (i.getAttribute("Funktion")) {
+            return;
+          }
           const text = i.textContent;
           if (!data.authors.includes(text)) {
             data.authors.push(text);
