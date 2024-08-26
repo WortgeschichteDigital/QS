@@ -36,7 +36,7 @@ const xml = {
         // authors
         data.authors = [];
         doc.querySelectorAll("Revision Autor").forEach(i => {
-          if (i.getAttribute("Funktion")) {
+          if (i.getAttribute("Funktion") && !/^Autor/.test(i.getAttribute("Funktion"))) {
             return;
           }
           const text = i.textContent;
