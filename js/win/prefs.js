@@ -278,7 +278,7 @@ const prefs = {
       return false;
     }
     const [ firstLemma ] = Object.keys(resData);
-    if (!resData[firstLemma].checked || !resData[firstLemma].sites) {
+    if (!resData[firstLemma].d.checked || typeof resData[firstLemma].d.found === "undefined") {
       if (!passive) {
         shared.error("Datei enthält keine Ressourcendaten");
       }

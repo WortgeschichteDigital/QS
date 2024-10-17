@@ -31,11 +31,11 @@ const artikel = {
 
   // contents of data.json with resources data (see preferences); structure:
   //   [LEMMA]    = {}    every spelling of a lemma has an entry of its own
-  //     checked  = ""    ISO 8601 | ""
-  //     sites    = {}
-  //       d      = bool  DWDS entry found
-  //       k      = bool  Wiktionary entry found
-  //       w      = bool  Wortforschungs-DB entry found
+  //     d         = {}   DWDS
+  //       checked = ""   ISO 8601 | ""
+  //       found   = bool lemma was found
+  //     k         = {}   Wiktionary
+  //     w         = {}   Wortforschungs-DB
   ressourcen: {},
 
   // open the overlay
@@ -320,13 +320,14 @@ const artikel = {
 
     // values.re
     const { ressourcen: res } = artikel;
+    console.log(res);
     for (const le of v.le) {
       const r = [];
       for (const i of le.split("/")) {
         if (res[i]) {
           let links = "";
-          for (const [ site, val ] of Object.entries(res[i].sites)) {
-            if (val) {
+          for (const [ site, val ] of Object.entries(res[i])) {
+            if (val.found) {
               links += site;
             }
           }
