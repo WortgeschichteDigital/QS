@@ -35,6 +35,7 @@ const artikel = {
   //       checked = ""   ISO 8601 | ""
   //       found   = bool lemma was found
   //     k         = {}   Wiktionary
+  //     n         = {}   Wörterbuchnetz
   //     w         = {}   Wortforschungs-DB
   ressourcen: {},
 
@@ -320,7 +321,6 @@ const artikel = {
 
     // values.re
     const { ressourcen: res } = artikel;
-    console.log(res);
     for (const le of v.le) {
       const r = [];
       for (const i of le.split("/")) {
