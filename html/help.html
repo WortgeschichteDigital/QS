@@ -129,12 +129,14 @@
           <li><i>Tagging: Semantik</i><br
             ><a href="#hinweise-semantic_type"><i>Semantik ergänzen</i></a
           ></li>
+          <li><i>Belege: Fehler</i><br
+            ><a href="#hinweise-quotation_superfluous"><i>Beleg nicht zitiert</i></a
+          ></li>
           <li><i>Allgemeine Fehler</i><br
             ><a href="#hinweise-article_file"><i>Dateiname korrigieren</i></a
             >, <a href="#hinweise-article_id"><i>Artikel-ID korrigieren</i></a
             >, <a href="#hinweise-literature_missing"><i>Literaturtitel ergänzen</i></a
-            >, <a href="#hinweise-quotation_superfluous"><i>Beleg nicht zitiert</i></a
-          ></li>
+            ></li>
           <li><i>Kommentare</i><br
             ><a href="#hinweise-comment"><i>XML-Kommentare</i></a
           ></li>
@@ -832,6 +834,16 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <p class="indent-hint">Die Auszeichnung lexikalischer Semantiken ist wichtig für die Darstellung der Verweiscluster im Artikel. In diesen werden nur diejenigen lexikalischen Semantiken abgebildet, die im XML-Code des jeweiligen Artikels wirklich getaggt wurden.</p>
 
+      <h2><span>Belege: Fehler</span></h2>
+
+      <p id="hinweise-quotation_superfluous" class="hint">Beleg nicht zitiert</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Belegreihe&gt;</code> <abbr title="beziehungsweise">bzw.</abbr> <code>&lt;Wortgeschichte&gt;</code>, <code>&lt;Wortgeschichte_kompakt&gt;</code></p>
+
+        <p class="tag"><i>Attribut:</i><code>@xml:id</code></p>
+
+        <p class="indent-hint">Der im Hinweis genannte Beleg taucht zwar in der Belegreihe auf. In <code>&lt;Wortgeschichte&gt;</code> oder <code>&lt;Wortgeschichte_kompakt&gt;</code> findet sich jedoch kein <code>&lt;Belegreferenz&gt;</code>-Tag, dessen <code>@Ziel</code> auf den Beleg verweist.</p>
+
       <h2><span>Allgemeine Fehler</span></h2>
 
       <p id="hinweise-article_file" class="hint">Dateiname korrigieren</p>
@@ -861,14 +873,6 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <p class="tag"><i>Tag:</i><code>&lt;Literaturtitel&gt;</code></p>
 
         <p class="indent-hint">Der Literaturtitel wurde in der Datei <code>share/<wbr>Literaturliste.xml</code> nicht gefunden. Wurde der Titel unter der genannten ID bereits in die Literaturdatenbank von <i>Zettel’s Traum</i> übertragen, kann dieser Fehler getrost ignoriert werden.</p>
-
-      <p id="hinweise-quotation_superfluous" class="hint">Beleg nicht zitiert</p>
-
-        <p class="scope"><i>Skopus:</i><code>&lt;Belegreihe&gt;</code> <abbr title="beziehungsweise">bzw.</abbr> <code>&lt;Wortgeschichte&gt;</code>, <code>&lt;Wortgeschichte_kompakt&gt;</code></p>
-
-        <p class="tag"><i>Attribut:</i><code>@xml:id</code></p>
-
-        <p class="indent-hint">Der im Hinweis genannte Beleg taucht zwar in der Belegreihe auf. In <code>&lt;Wortgeschichte&gt;</code> oder <code>&lt;Wortgeschichte_kompakt&gt;</code> findet sich jedoch kein <code>&lt;Belegreferenz&gt;</code>-Tag, dessen <code>@Ziel</code> auf den Beleg verweist.</p>
 
       <h2><span>Kommentare</span></h2>
 

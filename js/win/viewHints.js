@@ -167,13 +167,15 @@ const viewHints = {
         case "tagging_semantics":
           hintTypes = hintTypes.concat([ "semantic_type" ]);
           break;
+        case "quotations_error":
+          hintTypes = hintTypes.concat([ "quotation_superfluous" ]);
+          break;
         case "general":
           hintTypes = hintTypes.concat([
             "article_file",
             "article_heading",
             "article_id",
             "literature_missing",
-            "quotation_superfluous",
           ]);
           break;
         case "comment":
