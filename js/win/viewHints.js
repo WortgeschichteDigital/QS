@@ -18,6 +18,7 @@ const viewHints = {
     quotation_referror: "Belegreferenz kein Beleg",
     quotation_superfluous: "Beleg nicht zitiert",
     revision_future: "Revisionsdatum in der Zukunft",
+    revision_helterskelter: "Revision in falscher Reihenfolge",
     semantic_type: "Semantik ergänzen",
     sprache_superfluous: "Sprach-Attribut entfernen",
     stichwort_ez: "Objektsprache falsch ausgezeichnet",
@@ -182,6 +183,7 @@ const viewHints = {
             "article_id",
             "literature_missing",
             "revision_future",
+            "revision_helterskelter",
           ]);
           break;
         case "comment":

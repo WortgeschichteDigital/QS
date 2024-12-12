@@ -1317,7 +1317,7 @@ const hints = {
     }
   },
 
-  // REVISION_FUTURE
+  // REVISION_FUTURE, REVISION_HELTERSKELTER
   //   file = string (XML file name)
   //   doc = document
   //   content = string
@@ -1339,20 +1339,44 @@ const hints = {
     });
 
     const now = new Date();
-    for (const i of revs) {
-      if (i.dateObj > now) {
-        // this revision's date is in the future
+    for (let i = 0, len = revs.length; i < len; i++) {
+      const item = revs[i];
+
+      // this revision's date is in the future
+      if (item.dateObj > now) {
         hints.add(data.hints, file, {
           line: xml.getLineNumber({
             doc,
-            ele: i.ele,
+            ele: item.ele,
             file: content,
           }),
           linkCount: 0,
           scope: "Artikel",
-          textErr: [ `<Datum>${i.dateVal}</Datum>` ],
+          textErr: [ `<Datum>${item.dateVal}</Datum>` ],
           textHint: [],
           type: "revision_future",
+        });
+      }
+
+      // this revision breaks the chronological order
+      if (i > 0 && item.dateObj < revs[i - 1].dateObj) {
+        hints.add(data.hints, file, {
+          line: xml.getLineNumber({
+            doc,
+            ele: item.ele.closest("Revision"),
+            file: content,
+          }),
+          linkCount: 0,
+          scope: "Artikel",
+          textErr: [
+            "<Revision>",
+            {
+              text: `<Datum>${revs[i - 1].dateVal}</Datum> (vorherige Revision)\n<Datum>${item.dateVal}</Datum> (diese Revision)`,
+              type: "context",
+            },
+          ],
+          textHint: [],
+          type: "revision_helterskelter",
         });
       }
     }
