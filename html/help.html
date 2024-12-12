@@ -130,7 +130,8 @@
             ><a href="#hinweise-semantic_type"><i>Semantik ergänzen</i></a
           ></li>
           <li><i>Belege: Fehler</i><br
-            ><a href="#hinweise-quotation_superfluous"><i>Beleg nicht zitiert</i></a
+            ><a href="#hinweise-quotation_referror"><i>Belegreferenz kein Beleg</i></a
+            >, <a href="#hinweise-quotation_superfluous"><i>Beleg nicht zitiert</i></a
           ></li>
           <li><i>Allgemeine Fehler</i><br
             ><a href="#hinweise-article_file"><i>Dateiname korrigieren</i></a
@@ -835,6 +836,14 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <p class="indent-hint">Die Auszeichnung lexikalischer Semantiken ist wichtig für die Darstellung der Verweiscluster im Artikel. In diesen werden nur diejenigen lexikalischen Semantiken abgebildet, die im XML-Code des jeweiligen Artikels wirklich getaggt wurden.</p>
 
       <h2><span>Belege: Fehler</span></h2>
+
+      <p id="hinweise-quotation_referror" class="hint">Belegreferenz kein Beleg</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Wortgeschichte&gt;</code>, <code>&lt;Wortgeschichte_kompakt&gt;</code> <abbr title="beziehungsweise">bzw.</abbr> <code>&lt;Belegreihe&gt;</code></p>
+
+        <p class="tag"><i>Tag:</i><code>&lt;Belegreferenz&gt;</code></p>
+
+        <p class="indent-hint">Die im Hinweis genannte Belegreferenz zeigt auf ein Element, das <em>kein</em> <code>&lt;Beleg&gt;</code> ist. Der Hinweis wird <abbr title="beziehungsweise">z.&nbsp;B.</abbr> dann ausgeworfen, wenn die ID in <code>@Ziel</code> auf ein Element wie <code>&lt;Literaturtitel&gt;</code> zeigt. Ist dies der Fall, muss <code>&lt;Belegreferenz&gt;</code> zu <code>&lt;Literaturreferenz&gt;</code> geändert werden. Die genaue Änderung hängt aber davon ab, welches Element tatsächlich referiert wird.</p>
 
       <p id="hinweise-quotation_superfluous" class="hint">Beleg nicht zitiert</p>
 

@@ -1247,7 +1247,7 @@ const hints = {
     }
   },
 
-  // QUOTATION_SUPERFLUOUS
+  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS
   //   file = string (XML file name)
   //   doc = document
   //   content = string
@@ -1259,9 +1259,12 @@ const hints = {
 
     // collect quotation IDs
     const wg = new Set();
+    const wgEle = {};
     doc.querySelectorAll(":where(Wortgeschichte_kompakt, Wortgeschichte) Belegreferenz").forEach(i => {
       const id = i.getAttribute("Ziel");
       wg.add(id);
+      // element cache (see below brEle)
+      wgEle[id] = i;
     });
     const br = new Set();
     const brEle = {};
@@ -1291,6 +1294,25 @@ const hints = {
         textHint: [],
         type: "quotation_superfluous",
       });
+    }
+
+    // detect references that are would-be quotations
+    // (the cited ID does not point to a quotation, but to something else)
+    for (const id of wg) {
+      if (!br.has(id)) {
+        hints.add(data.hints, file, {
+          line: xml.getLineNumber({
+            doc,
+            ele: wgEle[id],
+            file: content,
+          }),
+          linkCount: 0,
+          scope: hints.detectScope(wgEle[id]),
+          textErr: [ `<Belegreferenz Ziel="${id}"/>` ],
+          textHint: [],
+          type: "quotation_referror",
+        });
+      }
     }
   },
 

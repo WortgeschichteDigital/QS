@@ -46,6 +46,7 @@ const xml = {
   //                              link_error          = correct internal link
   //                              literature_error    = correct literature tag
   //                              literature_missing  = add missing literature title
+  //                              quotation_referror  = the cited ID is not a quotation (but something else)
   //                              quotation_superfluous = unused quotation cited
   //                              semantic_type       = add semantic type
   //                              sprache_superfluous = @Sprache is superfluous

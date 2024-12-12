@@ -15,6 +15,7 @@ const viewHints = {
     link_error: "Artikel-Link korrigieren",
     literature_error: "Literatur-Tag korrigieren",
     literature_missing: "Literaturtitel ergänzen",
+    quotation_referror: "Belegreferenz kein Beleg",
     quotation_superfluous: "Beleg nicht zitiert",
     semantic_type: "Semantik ergänzen",
     sprache_superfluous: "Sprach-Attribut entfernen",
@@ -168,7 +169,10 @@ const viewHints = {
           hintTypes = hintTypes.concat([ "semantic_type" ]);
           break;
         case "quotations_error":
-          hintTypes = hintTypes.concat([ "quotation_superfluous" ]);
+          hintTypes = hintTypes.concat([
+            "quotation_referror",
+            "quotation_superfluous",
+          ]);
           break;
         case "general":
           hintTypes = hintTypes.concat([
