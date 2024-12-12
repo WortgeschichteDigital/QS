@@ -17,6 +17,7 @@ const viewHints = {
     literature_missing: "Literaturtitel ergänzen",
     quotation_referror: "Belegreferenz kein Beleg",
     quotation_superfluous: "Beleg nicht zitiert",
+    revision_future: "Revisionsdatum in der Zukunft",
     semantic_type: "Semantik ergänzen",
     sprache_superfluous: "Sprach-Attribut entfernen",
     stichwort_ez: "Objektsprache falsch ausgezeichnet",
@@ -180,6 +181,7 @@ const viewHints = {
             "article_heading",
             "article_id",
             "literature_missing",
+            "revision_future",
           ]);
           break;
         case "comment":

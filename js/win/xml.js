@@ -48,6 +48,7 @@ const xml = {
   //                              literature_missing  = add missing literature title
   //                              quotation_referror  = the cited ID is not a quotation (but something else)
   //                              quotation_superfluous = unused quotation cited
+  //                              revision_future     = the revision date is in the future
   //                              semantic_type       = add semantic type
   //                              sprache_superfluous = @Sprache is superfluous
   //                              stichwort_ez        = <Stichwort>: change tag to <erwaehntes_Zeichen>

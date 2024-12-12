@@ -610,6 +610,7 @@ const hints = {
         hints.checkDiasystems(file, doc, content);
         hints.checkLiterature(file, doc, content);
         hints.checkQuotations(file, doc, content);
+        hints.checkRevisions(file, doc, content);
         hints.collectComments(file, doc, content);
       } catch (err) {
         xml.updateErrors.push({
@@ -1311,6 +1312,47 @@ const hints = {
           textErr: [ `<Belegreferenz Ziel="${id}"/>` ],
           textHint: [],
           type: "quotation_referror",
+        });
+      }
+    }
+  },
+
+  // REVISION_FUTURE
+  //   file = string (XML file name)
+  //   doc = document
+  //   content = string
+  checkRevisions (file, doc, content) {
+    const data = xml.data.files[file];
+    if (!data) {
+      return;
+    }
+
+    const revs = [];
+    doc.querySelectorAll("Revisionen Revision").forEach(i => {
+      const date = i.querySelector("Datum").textContent;
+      const dateSp = date.split(".");
+      revs.push({
+        dateObj: new Date(`${dateSp[2]}-${dateSp[1]}-${dateSp[0]}`),
+        dateVal: date,
+        ele: i,
+      });
+    });
+
+    const now = new Date();
+    for (const i of revs) {
+      if (i.dateObj > now) {
+        // this revision's date is in the future
+        hints.add(data.hints, file, {
+          line: xml.getLineNumber({
+            doc,
+            ele: i.ele,
+            file: content,
+          }),
+          linkCount: 0,
+          scope: "Artikel",
+          textErr: [ `<Datum>${i.dateVal}</Datum>` ],
+          textHint: [],
+          type: "revision_future",
         });
       }
     }
