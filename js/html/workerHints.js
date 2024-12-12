@@ -379,10 +379,20 @@ const hints = {
             // size can be 0 as types like "Cluster" have no corresponding type
             continue;
           }
+
+          // is there a link to the current file
+          // (there should be because there's a lexical relation)
+          let linkFound = false;
+
           for (const x of target.links) {
-            if (x.lemma.file === file &&
-                data.hl.includes(x.lemma.spelling) &&
-                !semCorrCorrect(data.hl, semCorr, x.type)) {
+            if (x.lemma.file !== file || !data.hl.includes(x.lemma.spelling)) {
+              // the link does not point to the current file or a main lemma in the current file
+              continue;
+            }
+
+            linkFound = true;
+
+            if (!semCorrCorrect(data.hl, semCorr, x.type)) {
               let hintText = "keine Typisierung";
               if (x.type.length) {
                 hintText = `<Verweis Typ="${x.type.join(" ")}">`;
@@ -412,6 +422,36 @@ const hints = {
                 type: "semantic_type",
               });
             }
+          }
+
+          // SEMANTIC_LINK: this link has a semantic type but no responsive link in the linked article => propose to add it
+          if (!linkFound) {
+            const hlTargets = [];
+            for (const hl of data.hlJoined) {
+              hlTargets.push(hl.split("/")[0]);
+            }
+            hints.add(target.hints, i.lemma.file, {
+              line: 0,
+              linkCount: 0,
+              scope: "Artikel",
+              textErr: [
+                {
+                  text: `semantischer Verweis auf „${hlTargets.join("“ oder „")}“ nicht gefunden`,
+                  type: "hint_text",
+                },
+              ],
+              textHint: [
+                {
+                  text: `<Verweis Typ="${[ ...semCorr ].sort().join(" ")}">\n  <Verweistext/>\n  <Verweisziel>${hlTargets.join("|")}</Verweisziel>\n</Verweis>`,
+                  type: "copy",
+                },
+                {
+                  text: `In ${file}, Zeile ${i.line} ist ein semantischer Verweis\nvom Typ „${typeJoined}“, der auf ${i.lemma.file} zeigt.`,
+                  type: "context",
+                },
+              ],
+              type: "semantic_link",
+            });
           }
         }
       }

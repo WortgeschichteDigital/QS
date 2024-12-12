@@ -71,6 +71,10 @@
   max-width: 100%;
 }
 
+.hint p.pre {
+  white-space: pre;
+}
+
 .hint .text-correct,
 .hint .text-erroneous,
 .hint .text-hint,

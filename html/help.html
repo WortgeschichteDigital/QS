@@ -127,7 +127,8 @@
             ><a href="#hinweise-diasystemic_value"><i>Diasystematik ergänzen</i></a
           ></li>
           <li><i>Tagging: Semantik</i><br
-            ><a href="#hinweise-semantic_type"><i>Semantik ergänzen</i></a
+            ><a href="#hinweise-semantic_link"><i>semantischen Artikel-Link ergänzen</i></a
+            >, <a href="#hinweise-semantic_type"><i>Semantik ergänzen</i></a
           ></li>
           <li><i>Belege: Fehler</i><br
             ><a href="#hinweise-quotation_referror"><i>Belegreferenz kein Beleg</i></a
@@ -808,6 +809,23 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <p class="indent-hint">Der Textabgleich erfolgt immer trunkiert, <abbr title="das heißt">d.&nbsp;h.</abbr>, dass auch Wortteile einen Hinweis auslösen können. Dieses (im Kern sinnvolle) Verhalten führt <abbr title="zum Beispiel">z.&nbsp;B.</abbr> dazu, dass das Wort <i>Moderne</i> den unsinnigen Hinweis provoziert, das Sachgebiet <i>Mode</i> zu taggen.</p>
 
       <h2><span>Tagging: Semantik</span></h2>
+
+      <p id="hinweise-semantic_link" class="hint">semantischen Artikel-Link ergänzen</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Verweise&gt;</code></p>
+
+        <p class="tag"><i>Tag:</i><code>&lt;Verweis&gt;</code></p>
+
+        <p class="indent-hint">Verweise können mit lexikalischen Semantiken wie Gegensatz oder Synonym angereichert werden, indem man das Attribut <code>@Typ</code> ergänzt. Wenn ein Verweis solch eine semantische Typisierung hat, wird automatisch überprüft, <a href="#hinweise-semantic_type">ob korrespondiernde Verweise eine entsprechende Auszeichnung</a> besitzen. Wird in dem Artikel, auf den verwiesen wird, kein korrespondierender Verweis gefunden, erscheint diese Meldung.</p>
+
+        <p class="indent-hint">Es ist natürlich nicht nötig, alle Artikel wechselseitig miteinander zu verlinken. Wenn der Marker einer semantischen Typisierung vorliegt, ist dies aber ein starkes Zeichen dafür, dass ein enger Zusammenhang zwischen den Lemmata besteht. Dann sollte man über eine Verlinkung nachdenken.</p>
+
+        <p class="indent-hint">Wenn im Artikel <i>Gruppe</i> <abbr title="beispielsweise">bspw.</abbr> ein Verweis auf <i>Clan</i> vorhanden ist, der <i>Clan</i> als Hyponym zu <i>Gruppe</i> markiert, in <i>Clan</i> aber kein Verweis auf <i>Gruppe</i> zu finden ist, ist es wahrscheinlich sinnvoll, die Verweisliste <code>&lt;Verweise <span class="xml-attr-key">Typ=</span><span class="xml-attr-val">&quot;Wortfeld&quot;</span>&gt;</code> in <i>Clan</i> um einen Verweis nach diesem Muster zu ergänzen:
+
+        <pre class="indent-hint">&lt;Verweis <span class="xml-attr-key">Typ=</span><span class="xml-attr-val">&quot;Hyperonym&quot;</span>&gt;
+  &lt;Verweistext/&gt;
+  &lt;Verweisziel&gt;Gruppe&lt;/Verweisziel&gt;
+&lt;/Verweis&gt;</pre>
 
       <p id="hinweise-semantic_type" class="hint">Semantik ergänzen</p>
 

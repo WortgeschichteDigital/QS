@@ -50,6 +50,8 @@ const xml = {
   //                              quotation_superfluous = unused quotation cited
   //                              revision_future     = the revision date is in the future
   //                              revision_helterskelter = the revision date is out of order
+  //                              semantic_link       = there is no link to a certain file that has a corresponding link,
+  //                                                    which points to this file and has a semantic type attached to it
   //                              semantic_type       = add semantic type
   //                              sprache_superfluous = @Sprache is superfluous
   //                              stichwort_ez        = <Stichwort>: change tag to <erwaehntes_Zeichen>

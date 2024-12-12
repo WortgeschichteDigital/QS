@@ -19,6 +19,7 @@ const viewHints = {
     quotation_superfluous: "Beleg nicht zitiert",
     revision_future: "Revisionsdatum in der Zukunft",
     revision_helterskelter: "Revision in falscher Reihenfolge",
+    semantic_link: "semantischen Artikel-Link ergänzen",
     semantic_type: "Semantik ergänzen",
     sprache_superfluous: "Sprach-Attribut entfernen",
     stichwort_ez: "Objektsprache falsch ausgezeichnet",
@@ -168,7 +169,10 @@ const viewHints = {
           hintTypes = hintTypes.concat([ "diasystemic_value" ]);
           break;
         case "tagging_semantics":
-          hintTypes = hintTypes.concat([ "semantic_type" ]);
+          hintTypes = hintTypes.concat([
+            "semantic_link",
+            "semantic_type",
+          ]);
           break;
         case "quotations_error":
           hintTypes = hintTypes.concat([
@@ -405,7 +409,7 @@ const viewHints = {
       const p = document.createElement("p");
       cont.appendChild(p);
       if (typeof i === "string") {
-        p.innerHTML = prepareText(i);
+        appendText(i, p);
       } else {
         if (i.type === "context") {
           p.classList.add("context");
@@ -429,7 +433,7 @@ const viewHints = {
         } else if (i.type === "hint_text") {
           p.classList.add("hint-text");
         }
-        p.innerHTML = prepareText(i.text);
+        appendText(i.text, p);
         if (i.type === "comment_link") {
           p.classList.add("no-select");
           const a = document.createElement("a");
@@ -446,7 +450,8 @@ const viewHints = {
     }
 
     // prepare text (replace special tokens, highlight, line breaks)
-    function prepareText (text) {
+    function appendText (text, p) {
+      // prepare text
       let t = viewSearch.textMaskChars(text);
       if (/&lt;/.test(t) &&
           /&gt;/.test(t)) {
@@ -460,7 +465,12 @@ const viewHints = {
         return `<span class="xml-attr-key">${p1}</span><span class="xml-attr-val">${p2}</span>`;
       });
       t = t.replace(/\n/g, "<br>");
-      return t;
+
+      // append text
+      if (/ {2}/.test(t)) {
+        p.classList.add("pre");
+      }
+      p.innerHTML = t;
     }
   },
 
