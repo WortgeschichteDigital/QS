@@ -1288,7 +1288,7 @@ const hints = {
     }
   },
 
-  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS, QUOTATION_DATE
+  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS, QUOTATION_DATE, QUOTATION_HELTERSKELTER
   //   file = string (XML file name)
   //   doc = document
   //   content = string
@@ -1458,6 +1458,33 @@ const hints = {
           type: "quotation_date",
         });
       }
+    }
+
+    // QUOTATION_HELTERSKELTER
+    // check whether all quotations are in chronological order or not
+    let lastID = "";
+    for (const [ id, v ] of Object.entries(bData)) {
+      if (lastID && v.dateSort < bData[lastID].dateSort) {
+        hints.add(data.hints, file, {
+          line: xml.getLineNumber({
+            doc,
+            ele: v.ele,
+            file: content,
+          }),
+          linkCount: 0,
+          scope: "Belegauswahl",
+          textErr: [
+            `<Belegreferenz xml:id="${id}">`,
+            {
+              text: `<Datum>${bData[lastID].date}</Datum> (vorheriger Beleg)\n<Datum>${v.date}</Datum> (dieser Beleg)`,
+              type: "context",
+            },
+          ],
+          textHint: [],
+          type: "quotation_helterskelter",
+        });
+      }
+      lastID = id;
     }
   },
 

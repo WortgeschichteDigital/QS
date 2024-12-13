@@ -16,6 +16,7 @@ const viewHints = {
     literature_error: "Literatur-Tag korrigieren",
     literature_missing: "Literaturtitel ergänzen",
     quotation_date: "Belegdatum korrigieren",
+    quotation_helterskelter: "Beleg in falscher Reihenfolge",
     quotation_referror: "Belegreferenz kein Beleg",
     quotation_superfluous: "Beleg nicht zitiert",
     revision_future: "Revisionsdatum in der Zukunft",
@@ -178,6 +179,7 @@ const viewHints = {
         case "quotations_error":
           hintTypes = hintTypes.concat([
             "quotation_date",
+            "quotation_helterskelter",
             "quotation_referror",
             "quotation_superfluous",
           ]);

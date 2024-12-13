@@ -270,6 +270,10 @@ section ul {
   list-style-type: circle;
 }
 
+section ul.indent-hint {
+  margin-left: 40px;
+}
+
 section ul ul {
   margin-bottom: 0;
 }
