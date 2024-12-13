@@ -92,7 +92,7 @@ const hints = {
         }
         for (const l of data.hl.concat(data.nl)) {
           if (hidxLemmas.has(l)) {
-            const xmlSplitted = xml.files[file].split(`<Schreibung>${l}</Schreibung>`)[0];
+            const [ xmlSplitted ] = xml.files[file].split(`<Schreibung>${l}</Schreibung>`);
             hints.add(data.hints, file, {
               line: xmlSplitted.split("\n").length,
               linkCount: 0,
@@ -1288,7 +1288,7 @@ const hints = {
     }
   },
 
-  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS
+  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS, QUOTATION_DATE
   //   file = string (XML file name)
   //   doc = document
   //   content = string
@@ -1298,35 +1298,101 @@ const hints = {
       return;
     }
 
-    // collect quotation IDs
+    // collect quotation data
     const wg = new Set();
     const wgEle = {};
     doc.querySelectorAll(":where(Wortgeschichte_kompakt, Wortgeschichte) Belegreferenz").forEach(i => {
       const id = i.getAttribute("Ziel");
       wg.add(id);
-      // element cache (see below brEle)
+      // element cache (to speed up operations)
       wgEle[id] = i;
     });
-    const br = new Set();
-    const brEle = {};
+
+    const monthMap = {
+      Januar: "01",
+      Februar: "02",
+      März: "03",
+      April: "04",
+      Mai: "05",
+      Juni: "06",
+      Juli: "07",
+      August: "08",
+      September: "09",
+      Oktober: "10",
+      November: "11",
+      Dezember: "12",
+    };
+    const b = new Set();
+    const bData = {};
     doc.querySelectorAll("Belegreihe Beleg").forEach(i => {
+      // add ID to quotation list
       const id = i.getAttribute("xml:id");
-      br.add(id);
-      // to speed up the operation, we need an element cache;
-      // querySelector(`Beleg[xml:id="${id}"]`) does not work, als "xml:id"
-      // is not a valid attribute name
-      brEle[id] = i;
+      b.add(id);
+
+      // detect sorting date
+      const date = i.querySelector("Datum").textContent;
+      let dateSort;
+      if (date.length === 2) {
+        // century: 15 = 1401-1500
+        dateSort = (parseInt(date, 10) - 1) * 100 + 1 + "-01-01";
+      } else if (/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}$/.test(date)) {
+        // exact day: 03.12.2024
+        const dateSp = date.split(".");
+        dateSort = `${dateSp[2]}-${dateSp[1]}-${dateSp[0]}`;
+      } else if (/^0000/.test(date)) {
+        // before a certain year: 0000-2024
+        dateSort = date.split("-")[1] + "-01-01";
+      } else {
+        // year: 2024
+        // year range: 2010-2020
+        // two years: 2023/24
+        // after a certain year: 2010-9999
+        dateSort = date.split(/[-/]/)[0] + "-01-01";
+      }
+
+      // parse citation for a date of the day
+      const dateCit = [];
+      const dateCitOri = [];
+      const cit = i.querySelector("unstrukturiert").textContent;
+      for (const m of cit.matchAll(/([0-9]{1,2})\.\s?([0-9]{1,2}\.|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s?([0-9]{4})/g)) {
+        const citOri = m[0];
+        if (/^[0-9]/.test(m[2])) {
+          // month as number
+          m[2] = m[2].replace(/\.$/, "");
+        } else {
+          // month in written-out form
+          m[2] = monthMap[m[2]];
+        }
+        const citNorm = m[1].padStart(2, "0") + "." + m[2].padStart(2, "0") + "." + m[3];
+        if (!dateCit.includes(citNorm)) {
+          dateCit.push(citNorm);
+          dateCitOri.push(citOri);
+        }
+      }
+
+      // create quotation object
+      bData[id] = {
+        date,
+        dateCit,
+        dateCitOri,
+        dateSort: new Date(dateSort),
+        // to speed up the operation, we need an element cache;
+        // querySelector(`Beleg[xml:id="${id}"]`) does not work, als "xml:id"
+        // is not a valid attribute name
+        ele: i,
+      };
     });
 
+    // QUOTATION_SUPERFLUOUS
     // detect unquoted quotations
-    for (const id of br) {
+    for (const id of b) {
       if (wg.has(id)) {
         continue;
       }
       hints.add(data.hints, file, {
         line: xml.getLineNumber({
           doc,
-          ele: brEle[id],
+          ele: bData[id].ele,
           file: content,
         }),
         linkCount: 0,
@@ -1337,10 +1403,11 @@ const hints = {
       });
     }
 
+    // QUOTATION_REFERROR
     // detect references that are would-be quotations
     // (the cited ID does not point to a quotation, but to something else)
     for (const id of wg) {
-      if (!br.has(id)) {
+      if (!b.has(id)) {
         hints.add(data.hints, file, {
           line: xml.getLineNumber({
             doc,
@@ -1352,6 +1419,43 @@ const hints = {
           textErr: [ `<Belegreferenz Ziel="${id}"/>` ],
           textHint: [],
           type: "quotation_referror",
+        });
+      }
+    }
+
+    // QUOTATION_DATE
+    // detect quotations that have a date of the day in it's citation
+    // which does not match the date, given in <Datum>
+    for (const v of Object.values(bData)) {
+      if (v.dateCit.length && !v.dateCit.includes(v.date)) {
+        const ori = [];
+        for (const i of v.dateCitOri) {
+          ori.push(i.replace(/\s/g, " "));
+        }
+        const rep = [];
+        for (const i of v.dateCit) {
+          rep.push(`<Datum>${i}</Datum>`);
+        }
+        hints.add(data.hints, file, {
+          line: xml.getLineNumber({
+            doc,
+            ele: v.ele.querySelector("Datum"),
+            file: content,
+          }),
+          linkCount: 0,
+          scope: "Belegauswahl",
+          textErr: [ `<Datum>${v.date}</Datum>` ],
+          textHint: [
+            {
+              text: rep.join("\n"),
+              type: "copy",
+            },
+            {
+              text: `Datum in der Quellenangabe: ${ori.join(" und ")}`,
+              type: "context",
+            },
+          ],
+          type: "quotation_date",
         });
       }
     }

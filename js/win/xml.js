@@ -46,6 +46,8 @@ const xml = {
   //                              link_error          = correct internal link
   //                              literature_error    = correct literature tag
   //                              literature_missing  = add missing literature title
+  //                              quotation_date      = the citation contains a date of the day which does not match
+  //                                                    the quotation's date in <Datum>
   //                              quotation_referror  = the cited ID is not a quotation (but something else)
   //                              quotation_superfluous = unused quotation cited
   //                              revision_future     = the revision date is in the future

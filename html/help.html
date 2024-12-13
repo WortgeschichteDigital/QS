@@ -131,7 +131,8 @@
             >, <a href="#hinweise-semantic_type"><i>Semantik ergänzen</i></a
           ></li>
           <li><i>Belege: Fehler</i><br
-            ><a href="#hinweise-quotation_referror"><i>Belegreferenz kein Beleg</i></a
+            ><a href="#hinweise-quotation_date"><i>Belegdatum korrigieren</i></a
+            >, <a href="#hinweise-quotation_referror"><i>Belegreferenz kein Beleg</i></a
             >, <a href="#hinweise-quotation_superfluous"><i>Beleg nicht zitiert</i></a
           ></li>
           <li><i>Allgemeine Fehler</i><br
@@ -856,6 +857,16 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <p class="indent-hint">Die Auszeichnung lexikalischer Semantiken ist wichtig für die Darstellung der Verweiscluster im Artikel. In diesen werden nur diejenigen lexikalischen Semantiken abgebildet, die im XML-Code des jeweiligen Artikels wirklich getaggt wurden.</p>
 
       <h2><span>Belege: Fehler</span></h2>
+
+      <p id="hinweise-quotation_date" class="hint">Belegdatum korrigieren</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Belegreihe&gt;</code></p>
+
+        <p class="tag"><i>Tag:</i><code>&lt;Datum&gt;</code></p>
+
+        <p class="indent-hint">Die App durchsucht in jedem Beleg <code>&lt;unstrukturiert&gt;</code> auf ein genaues Tagesdatum. Dabei werden verschiedene Datumsformate erkannt: <q>03.05.2024</q>, <q>3.&nbsp;5. 2024</q>, <q>3.&nbsp;Mai 2024</q>. Wenn in der Quellenangabe ein Tagesdatum gefunden wird und wenn das Belegdatum in <code>&lt;Datum&gt;</code> vom Datum in der Quellenangabe abweicht, wird dieser Hinweis ausgeworfen.</p>
+
+        <p class="indent-hint">Ist der Hinweis korrekt, sollte das Datum in jedem Fall korrigiert werden. Denn nur, wenn in <code>&lt;Datum&gt;</code> das exakte Tagesdatum steht, kann eine korrekte, chronologische Sortierung der Belegauswahl sichergestellt werden.</p>
 
       <p id="hinweise-quotation_referror" class="hint">Belegreferenz kein Beleg</p>
 
