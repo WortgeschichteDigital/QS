@@ -131,7 +131,11 @@ window.addEventListener("load", async () => {
   document.querySelectorAll("#sorting a.icon").forEach(i => {
     i.addEventListener("click", function (evt) {
       evt.preventDefault();
-      win.sortingToggleIcons(this);
+      if (i.id === "hint-export") {
+        viewHints.exportHints();
+      } else {
+        win.sortingToggleIcons(this);
+      }
     });
   });
   document.querySelectorAll(".select-filter").forEach(i => {

@@ -300,6 +300,15 @@ section.trans-linear {
   outline-offset: -2px;
 }
 
+a.icon#hint-export {
+  display: none;
+  margin-left: 40px;
+}
+
+#sorting:has(#sorting-filter-cont.hints-view) #hint-export {
+  display: inline-block;
+}
+
 /* Clusters */
 
 #clusters-nav #clusters-nav-preview {

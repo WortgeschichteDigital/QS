@@ -971,4 +971,55 @@ const viewHints = {
       i.classList.remove("visible");
     }
   },
+
+  // export hints that can be used for a safe replacement
+  async exportHints () {
+    // populate export list
+    const safe = [ "quotation_date" ];
+    const exportList = [];
+    for (const i of viewHints.data.hints) {
+      // Is this hint safe?
+      if (!safe.includes(i.hint.type)) {
+        continue;
+      }
+
+      // create safe replacement entry
+      exportList.push({
+        file: i.file,
+        line: i.hint.line,
+        textCur: i.hint.textErr[0],
+        textRep: i.hint.textHint[0]?.text || i.hint.textHint[0],
+      });
+    }
+
+    // nothing to export
+    if (!exportList.length) {
+      dialog.open({
+        type: "alert",
+        text: "Es werden keine Hinweise angezeigt, die durch eine sichere Ersetzung behoben werden können.",
+      });
+      return;
+    }
+
+    // export list
+    const options = {
+      title: "Hinweise speichern",
+      defaultPath: modules.path.join(shared.info.userData, "safe-replacements.json"),
+      filters: [
+        {
+          name: "JSON",
+          extensions: [ "json" ],
+        },
+      ],
+    };
+    const result = await modules.ipc.invoke("file-dialog", false, options);
+    if (result.canceled || !result.filePath) {
+      return;
+    }
+    try {
+      await modules.fsp.writeFile(result.filePath, JSON.stringify(exportList, null, " ".repeat(2)));
+    } catch (err) {
+      shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+    }
+  },
 };
