@@ -1330,6 +1330,7 @@ const hints = {
       b.add(id);
 
       // detect sorting date
+      // (Attention! Code duplication in XML-Cleanup/sort-quotations.mjs)
       const date = i.querySelector("Datum").textContent;
       let dateSort;
       if (date.length === 2) {
