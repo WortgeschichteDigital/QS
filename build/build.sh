@@ -8,6 +8,7 @@ presets=(
 )
 preset1=(
   "type=installer|os=linux|pkg=deb|clean=y"
+  "type=installer|os=linux|pkg=appImage|clean=y"
   "type=installer|os=win|pkg=nsis|clean=y"
   "type=packager|os=linux|arch=gz|clean=y"
   "type=packager|os=mac|arch=gz|clean=y"
