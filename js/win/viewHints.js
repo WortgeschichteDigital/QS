@@ -739,7 +739,7 @@ const viewHints = {
       let start = 0;
       for (let i = hint.line - 1; i >= 0; i--) {
         const line = fileCont[i];
-        if (/<(Absatz|Blockzitat|Liste|Textblock)/.test(line)) {
+        if (/<(Absatz|Belegreihe|Blockzitat|Liste|Textblock)/.test(line)) {
           start = i;
           break;
         }
@@ -747,7 +747,7 @@ const viewHints = {
       let end = 0;
       for (let i = hint.line - 1, len = fileCont.length; i < len; i++) {
         const line = fileCont[i];
-        if (/<\/(Absatz|Blockzitat|Liste|Textblock)>/.test(line)) {
+        if (/<\/(Absatz|Belegreihe|Blockzitat|Liste|Textblock)>/.test(line)) {
           end = i;
           break;
         }
