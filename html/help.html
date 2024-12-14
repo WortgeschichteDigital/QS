@@ -133,6 +133,7 @@
           <li><i>Belege: Fehler</i><br
             ><a href="#hinweise-quotation_date"><i>Belegdatum korrigieren</i></a
             >, <a href="#hinweise-quotation_helterskelter"><i>Beleg in falscher Reihenfolge</i></a
+            >, <a href="#hinweise-quotcluster_helterskelter"><i>Belegreferenzen in falscher Reihenfolge</i></a
             >, <a href="#hinweise-quotation_referror"><i>Belegreferenz kein Beleg</i></a
             >, <a href="#hinweise-quotation_superfluous"><i>Beleg nicht zitiert</i></a
           ></li>
@@ -892,6 +893,16 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
           <li><i>Belegdatum = Zeitraum:</i> Es gibt verschiedene Möglichkeiten, einen Entstehungszeitraum anzugeben: <code>&lt;Datum&gt;2010-2020&lt;/Datum&gt;</code> (Entstehungsdatum zwischen 2010 und 2020) und <code>&lt;Datum&gt;2023/24&lt;/Datum&gt;</code> (Entstehungsdatum zwischen 2023 und 2024). Bei diesen Belegen wird immer das zuerst genannte Jahr und in diesem der 1.&nbsp;Januar als Sortierdatum genutzt. Bei den Sondernotierungen <code>&lt;Datum&gt;0000-2010&lt;/Datum&gt;</code> (Entstehungsdatum vor 2010) und <code>&lt;Datum&gt;2010-9999&lt;/Datum&gt;</code> (Entstehungsdatum nach 2010) wird das vor/nach Jahr genutzt und auch hier der 1.&nbsp;Januar.</li>
         </ul>
+
+      <p id="hinweise-quotcluster_helterskelter" class="hint">Belegreferenzen in falscher Reihenfolge</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Wortgeschichte&gt;</code></p>
+
+        <p class="tag"><i>Tag:</i><code>&lt;Belegreferenz&gt;</code></p>
+
+        <p class="indent-hint">In einer Wortgeschichte wird mit <code>&lt;Belegreferenz <span class="xml-attr-key">Ziel=</span><span class="xml-attr-val">&quot;Beleg-ID&quot;</span>/&gt;</code> an vielen Stellen gleich auf eine ganze Reihe an Belegen verwiesen. Die Belegreferenzen werden dann durch ein Komma voneinander getrennt. Dieser Hinweis erscheint, wenn in solch einer Reihe die einzelnen Belegreferenzen nicht in der Reihenfolge stehen, die die Belege in der Belegauswahl haben.</p>
+
+        <p class="indent-hint">Der Hinweis muss nicht unbedingt ein Fehler sein. Wenn den Belegreferenzen <abbr title="zum Beispiel">z.&nbsp;B.</abbr> eine Aufzählung verschiedener Kollokationen vorausgeht, kann es durchaus sinnvoll sein, die Belege nicht in chronologischder Reihenfolge, sondern in der der genannten Kollokationen zu referenzieren.</p>
 
       <p id="hinweise-quotation_referror" class="hint">Belegreferenz kein Beleg</p>
 

@@ -19,6 +19,7 @@ const viewHints = {
     quotation_helterskelter: "Beleg in falscher Reihenfolge",
     quotation_referror: "Belegreferenz kein Beleg",
     quotation_superfluous: "Beleg nicht zitiert",
+    quotcluster_helterskelter: "Belegreferenzen in falscher Reihenfolge",
     revision_future: "Revisionsdatum in der Zukunft",
     revision_helterskelter: "Revision in falscher Reihenfolge",
     semantic_link: "semantischen Artikel-Link ergänzen",
@@ -182,6 +183,7 @@ const viewHints = {
             "quotation_helterskelter",
             "quotation_referror",
             "quotation_superfluous",
+            "quotcluster_helterskelter",
           ]);
           break;
         case "general":

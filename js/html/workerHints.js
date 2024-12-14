@@ -1288,7 +1288,8 @@ const hints = {
     }
   },
 
-  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS, QUOTATION_DATE, QUOTATION_HELTERSKELTER
+  // QUOTATION_REFERROR, QUOTATION_SUPERFLUOUS, QUOTATION_DATE,
+  // QUOTATION_HELTERSKELTER, QUOTCLUSTER_HELTERSKELTER
   //   file = string (XML file name)
   //   doc = document
   //   content = string
@@ -1298,16 +1299,37 @@ const hints = {
       return;
     }
 
-    // collect quotation data
-    const wg = new Set();
-    const wgEle = {};
+    // collect quotation data (article text)
+    const br = [];
+    const brClusters = [ [] ];
     doc.querySelectorAll(":where(Wortgeschichte_kompakt, Wortgeschichte) Belegreferenz").forEach(i => {
+      // save element
       const id = i.getAttribute("Ziel");
-      wg.add(id);
-      // element cache (to speed up operations)
-      wgEle[id] = i;
+      br.push({
+        id,
+        ele: i,
+      });
+
+      // detect reference clusters
+      // (i.e. consecutive <Belegreferenz> separated by commas)
+      if (i.nextSibling?.nodeType === Node.TEXT_NODE &&
+          i.nextSibling.nodeValue.trim() === "," &&
+          i.nextSibling?.nextSibling?.nodeType === Node.ELEMENT_NODE &&
+          i.nextSibling.nextSibling.nodeName === "Belegreferenz") {
+        brClusters.at(-1).push({
+          id,
+          ele: i,
+        });
+      } else if (brClusters.at(-1).length) {
+        brClusters.at(-1).push({
+          id,
+          ele: i,
+        });
+        brClusters.push([]);
+      }
     });
 
+    // collect quotation data (quotation list)
     const monthMap = {
       Januar: "01",
       Februar: "02",
@@ -1387,7 +1409,7 @@ const hints = {
     // QUOTATION_SUPERFLUOUS
     // detect unquoted quotations
     for (const id of b) {
-      if (wg.has(id)) {
+      if (br.some(i => i.id === id)) {
         continue;
       }
       hints.add(data.hints, file, {
@@ -1407,20 +1429,64 @@ const hints = {
     // QUOTATION_REFERROR
     // detect references that are would-be quotations
     // (the cited ID does not point to a quotation, but to something else)
-    for (const id of wg) {
-      if (!b.has(id)) {
+    for (const i of br) {
+      if (!b.has(i.id)) {
         hints.add(data.hints, file, {
           line: xml.getLineNumber({
             doc,
-            ele: wgEle[id],
+            ele: i.ele,
             file: content,
           }),
           linkCount: 0,
-          scope: hints.detectScope(wgEle[id]),
-          textErr: [ `<Belegreferenz Ziel="${id}"/>` ],
+          scope: hints.detectScope(i.ele),
+          textErr: [ `<Belegreferenz Ziel="${i.id}"/>` ],
           textHint: [],
           type: "quotation_referror",
         });
+      }
+    }
+
+    // QUOTCLUSTER_HELTERSKELTER
+    // detect quotation clusters in which the cited quotation are not given in chronological order
+    const bRow = Object.keys(bData);
+    for (const cluster of brClusters) {
+      for (let i = 1, len = cluster.length; i < len; i++) {
+        const idx = bRow.indexOf(cluster[i].id);
+        const idxPrev = bRow.indexOf(cluster[i - 1].id);
+        if (idxPrev > idx) {
+          // wrong order
+          const wrong = [];
+          for (const c of cluster) {
+            wrong.push(`<Belegreferenz Ziel="${c.id}"/>`);
+          }
+
+          // right order
+          cluster.sort((a, b) => bRow.indexOf(a.id) - bRow.indexOf(b.id));
+          const right = [];
+          for (const c of cluster) {
+            right.push(`<Belegreferenz Ziel="${c.id}"/>`);
+          }
+
+          // push hint
+          hints.add(data.hints, file, {
+            line: xml.getLineNumber({
+              doc,
+              ele: cluster[0].ele,
+              file: content,
+            }),
+            linkCount: 0,
+            scope: "Wortgeschichte",
+            textErr: [ wrong.join(", ") ],
+            textHint: [
+              {
+                text: right.join(", "),
+                type: "copy",
+              },
+            ],
+            type: "quotcluster_helterskelter",
+          });
+          break;
+        }
       }
     }
 

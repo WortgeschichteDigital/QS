@@ -51,6 +51,7 @@ const xml = {
   //                              quotation_helterskelter = the quotation is out of chronological order
   //                              quotation_referror  = the cited ID is not a quotation (but something else)
   //                              quotation_superfluous = unused quotation cited
+  //                              quotcluster_helterskelter = a cluster of quotations in the article text is not in chronological order
   //                              revision_future     = the revision date is in the future
   //                              revision_helterskelter = the revision date is out of order
   //                              semantic_link       = there is no link to a certain file that has a corresponding link,
