@@ -22,6 +22,7 @@ const viewHints = {
     quotcluster_helterskelter: "Belegreferenzen in falscher Reihenfolge",
     revision_future: "Revisionsdatum in der Zukunft",
     revision_helterskelter: "Revision in falscher Reihenfolge",
+    revision_samedate: "mehrere Revisionen am selben Tag",
     semantic_link: "semantischen Artikel-Link ergänzen",
     semantic_type: "Semantik ergänzen",
     sprache_superfluous: "Sprach-Attribut entfernen",
@@ -194,6 +195,7 @@ const viewHints = {
             "literature_missing",
             "revision_future",
             "revision_helterskelter",
+            "revision_samedate",
           ]);
           break;
         case "comment":

@@ -143,6 +143,7 @@
             >, <a href="#hinweise-literature_missing"><i>Literaturtitel ergänzen</i></a
             >, <a href="#hinweise-revision_future"><i>Revisionsdatum in der Zukunft</i></a
             >, <a href="#hinweise-revision_helterskelter"><i>Revision in falscher Reihenfolge</i></a
+            >, <a href="#hinweise-revision_samedate"><i>mehrere Revisionen am selben Tag</i></a
             ></li>
           <li><i>Kommentare</i><br
             ><a href="#hinweise-comment"><i>XML-Kommentare</i></a
@@ -965,6 +966,14 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <p class="tag"><i>Tag:</i><code>&lt;Revision&gt;</code></p>
 
         <p class="indent-hint">Das Datum der Revision bricht die chronologische Reihenfolge, weil das Datum der vorherigen Revision <em>hinter</em> dem Datum dieser Revision liegt. Die Reihenfolge der Revisionsnotizen muss also angepasst werden. Denkbar ist aber auch, dass ein einfacher Tippfehler vorliegt: Das Jahr im <code>&lt;Datum&gt;</code> der angegebenen Version könnte falsch sein.</p>
+
+      <p id="hinweise-revision_samedate" class="hint">mehrere Revisionen am selben Tag</p>
+
+        <p class="scope"><i>Skopus:</i><code>&lt;Artikel&gt;</code></p>
+
+        <p class="tag"><i>Tag:</i><code>&lt;Revision&gt;</code></p>
+
+        <p class="indent-hint">Es gibt mehrere Revisionseinträge für ein und dasselbe Datum. In solchen Fällen sollten die Notizen in den <code>&lt;Aenderung&gt;</code>-Tags besser zu einer Revision zusammengefasst werden.</p>
 
       <h2><span>Kommentare</span></h2>
 

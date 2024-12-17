@@ -54,6 +54,7 @@ const xml = {
   //                              quotcluster_helterskelter = a cluster of quotations in the article text is not in chronological order
   //                              revision_future     = the revision date is in the future
   //                              revision_helterskelter = the revision date is out of order
+  //                              revision_samedate   = there is more than one revision for the same date
   //                              semantic_link       = there is no link to a certain file that has a corresponding link,
   //                                                    which points to this file and has a semantic type attached to it
   //                              semantic_type       = add semantic type

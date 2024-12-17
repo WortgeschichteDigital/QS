@@ -1555,7 +1555,7 @@ const hints = {
     }
   },
 
-  // REVISION_FUTURE, REVISION_HELTERSKELTER
+  // REVISION_FUTURE, REVISION_HELTERSKELTER, REVISION_SAMEDATE
   //   file = string (XML file name)
   //   doc = document
   //   content = string
@@ -1568,6 +1568,21 @@ const hints = {
     const revs = [];
     doc.querySelectorAll("Revisionen Revision").forEach(i => {
       const date = i.querySelector("Datum").textContent;
+      if (revs.some(x => x.dateVal === date)) {
+        // there is already a revision for this date
+        hints.add(data.hints, file, {
+          line: xml.getLineNumber({
+            doc,
+            ele: i.querySelector("Datum"),
+            file: content,
+          }),
+          linkCount: 0,
+          scope: "Artikel",
+          textErr: [ `<Datum>${date}</Datum>` ],
+          textHint: [],
+          type: "revision_samedate",
+        });
+      }
       const dateSp = date.split(".");
       revs.push({
         dateObj: new Date(`${dateSp[2]}-${dateSp[1]}-${dateSp[0]}`),
