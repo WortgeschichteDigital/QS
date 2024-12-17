@@ -979,7 +979,10 @@ const viewHints = {
   // export hints that can be used for a safe replacement
   async exportHints () {
     // populate export list
-    const safe = [ "quotation_date" ];
+    const safe = [
+      "quotation_date",
+      "quotcluster_helterskelter",
+    ];
     const exportList = [];
     for (const i of viewHints.data.hints) {
       // Is this hint safe?
