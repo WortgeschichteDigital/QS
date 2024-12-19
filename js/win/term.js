@@ -460,11 +460,11 @@ const term = {
     result = result.replace(/<p class='wgd-term-bsp-label'>(.+?)<\/p>/g, (...args) => `<p>${args[1]}</p>`);
     result = result.replace(/<p class='wgd-term-bsp'>(.+?)<\/p>/g, (...args) => `<p style='margin-left: 24pt'>${args[1]}</p>`);
     result = result.replace(/<span class='wgd-term-wird-zu'>&gt;<\/span>/g, `${"\u00A0".repeat(3)}<b>&gt;</b>${"\u00A0".repeat(3)}`);
-    result = result.replace(/<div class='wgd-term-lit'>(.+?)<\/div>/g, (...args) => {
+    result = result.replace(/<p class='wgd-term-lit'>(.+?)<\/p>/g, (...args) => {
       const p = args[1].replace(/<u>(.+?)<\/u>/g, (...a) => a[1]);
       return `<p><i>${p}</i></p>`;
     });
-    result = result.replace(/<div.+?class='wgd-term-lit-titel'><b.+?>(.+?)<\/b>(.+?)<\/div>/g, (...args) => `<p><b>${args[1]}</b></p>\n<p>${args[2]}</p>`);
+    result = result.replace(/<p.+?class='wgd-term-lit-titel'><b.+?>(.+?)<\/b>(.+?)<\/p>/g, (...args) => `<p><b>${args[1]}</b></p>\n<p>${args[2]}</p>`);
 
     // wrap into HTML
     result = `<!doctype html>
