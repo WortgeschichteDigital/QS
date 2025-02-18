@@ -8,9 +8,9 @@
   <meta name="description" content="[% wgd_desc %]">
   <link rel="manifest" href="[% base %]wgd.webmanifest">
   <link rel="canonical" href="https://www.zdl.org/wb/wgd/Terminologie">
-  <link rel="stylesheet" href="[% base %][% static_file('static/wgd/para-navi.min.css') %]" media="screen">
-  <link rel="stylesheet" href="[% base %][% static_file('static/wgd/para-navi-print.min.css') %]" media="print">
-  <script src="[% base %][% static_file('static/wgd/para-navi.min.mjs') %]" type="module"></script>
+  <link rel="stylesheet" href="[% base %][% static_file('static/wgd/term.min.css') %]" media="screen">
+  <link rel="stylesheet" href="[% base %][% static_file('static/wgd/term-print.min.css') %]" media="print">
+  <script src="[% base %][% static_file('static/wgd/term.min.mjs') %]" type="module"></script>
   [% PROCESS 'wb/WGd/_structured-data.tt'
       wgd_bread_url1 = "${base}wb/wortgeschichten/"
       wgd_bread_name1 = 'Wortgeschichte digital'
