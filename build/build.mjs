@@ -267,8 +267,10 @@ const builder = {
             synopsis: "App zur Qualitätssicherung von „Wortgeschichte digital“",
             category: "Science",
             desktop: {
-              Name: "QS",
-              Keywords: keywords,
+              entry: {
+                Name: "QS",
+                Keywords: keywords,
+              },
             },
           };
 
