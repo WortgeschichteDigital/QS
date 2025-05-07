@@ -24,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/WortgeschichteDigital/QS/issues"
   },
-  "main": "main.js",
+  "main": "main.cjs",
   "scripts": {
     "start": "electron ."
   },
