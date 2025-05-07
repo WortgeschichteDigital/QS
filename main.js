@@ -3,7 +3,16 @@
 /* LOAD MODULES --------------------------------- */
 
 // Electron modules
-const { app, BrowserWindow, screen: display, ipcMain, Menu, nativeImage } = require("electron");
+const {
+  app,
+  BaseWindow,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  nativeImage,
+  screen,
+  WebContentsView,
+} = require("electron");
 
 // Node.js modules
 const { promises: fsp } = require("fs");
@@ -168,37 +177,31 @@ const winMenu = {
         {
           label: "Zurück",
           icon: path.join(__dirname, "img", "main", "nav-back.png"),
-          click: () => winMenu.execute("nav-back"),
+          click: () => pv.nav(BaseWindow.getFocusedWindow(), "goBack"),
           accelerator: "Alt+Left",
         },
         {
           label: "Vorwärts",
           icon: path.join(__dirname, "img", "main", "nav-forward.png"),
-          click: () => winMenu.execute("nav-forward"),
+          click: () => pv.nav(BaseWindow.getFocusedWindow(), "goForward"),
           accelerator: "Alt+Right",
         },
         { type: "separator" },
         {
           label: "XML-Vorschau",
           icon: path.join(__dirname, "img", "main", "xml.png"),
-          click: () => winMenu.execute("nav-xml"),
-          accelerator: "Alt+Home",
-        },
-      ],
-    },
-    {
-      label: "&Funktionen",
-      submenu: [
-        {
-          label: "Update",
-          icon: path.join(__dirname, "img", "main", "view-refresh.png"),
-          click: () => winMenu.execute("update"),
+          click: () => {
+            const bw = BaseWindow.getFocusedWindow();
+            pv.open({
+              winId: bw.id,
+            });
+          },
           accelerator: "F5",
         },
         {
           label: "Neues Fenster",
           icon: path.join(__dirname, "img", "main", "window-new.png"),
-          click: () => winMenu.execute("new"),
+          click: () => pv.openNew(BaseWindow.getFocusedWindow()),
           accelerator: "CommandOrControl+N",
         },
       ],
@@ -230,7 +233,7 @@ const winMenu = {
       ],
     },
   ],
-  menuAll: [
+  menuEdit: [
     {
       label: "&Bearbeiten",
       submenu: [
@@ -268,6 +271,8 @@ const winMenu = {
         },
       ],
     },
+  ],
+  menuView: [
     {
       label: "&Ansicht",
       submenu: [
@@ -275,7 +280,7 @@ const winMenu = {
           label: "Anzeige vergrößern",
           icon: path.join(__dirname, "img", "main", "zoom-in.png"),
           role: "zoomIn",
-          // Electron-Bug (otherwise Ctrl + Plus doesn't work)
+          // Electron bug (otherwise Ctrl + Plus doesn't work)
           accelerator: "CommandOrControl+=",
         },
         {
@@ -287,6 +292,38 @@ const winMenu = {
           label: "Standardgröße",
           icon: path.join(__dirname, "img", "main", "zoom-original.png"),
           role: "resetZoom",
+        },
+        { type: "separator" },
+        {
+          label: "Vollbild",
+          icon: path.join(__dirname, "img", "main", "view-fullscreen.png"),
+          role: "toggleFullScreen",
+        },
+      ],
+    },
+  ],
+  menuViewPv: [
+    {
+      label: "&Ansicht",
+      submenu: [
+        {
+          label: "Anzeige vergrößern",
+          icon: path.join(__dirname, "img", "main", "zoom-in.png"),
+          click: () => pv.zoom("in"),
+          // Electron bug (otherwise Ctrl + Plus doesn't work)
+          accelerator: "CommandOrControl+=",
+        },
+        {
+          label: "Anzeige verkleinern",
+          icon: path.join(__dirname, "img", "main", "zoom-out.png"),
+          click: () => pv.zoom("out"),
+          accelerator: "CommandOrControl+-",
+        },
+        {
+          label: "Standardgröße",
+          icon: path.join(__dirname, "img", "main", "zoom-original.png"),
+          click: () => pv.zoom("original"),
+          accelerator: "CommandOrControl+0",
         },
         { type: "separator" },
         {
@@ -341,9 +378,25 @@ const winMenu = {
       ],
     },
   ],
+  menuDevPv: [
+    {
+      label: "&Dev",
+      submenu: [
+        {
+          label: "Developer Tools",
+          click: () => {
+            const bw = BaseWindow.getFocusedWindow();
+            const { wvBase } = win.data.find(i => i.id === bw.id);
+            wvBase.webContents.openDevTools();
+          },
+          accelerator: "CommandOrControl+Shift+I",
+        },
+      ],
+    },
+  ],
 
   // set window menu
-  //   bw = object (browser window)
+  //   bw = object (browser or base window)
   //   type = string (about | app | help | pv)
   set (bw, type) {
     // build window specific app menu
@@ -351,24 +404,24 @@ const winMenu = {
     if (type === "about") {
       menu = winMenu.menuWin;
     } else if (type === "app") {
-      for (const i of [ winMenu.menuApp, winMenu.menuAll, winMenu.menuHelp ]) {
+      for (const i of [ winMenu.menuApp, winMenu.menuEdit, winMenu.menuView, winMenu.menuHelp ]) {
         menu = menu.concat(i);
       }
     } else if (type === "pv") {
-      for (const i of [ winMenu.menuPv, winMenu.menuAll ]) {
+      for (const i of [ winMenu.menuPv, winMenu.menuEdit, winMenu.menuViewPv ]) {
         menu = menu.concat(i);
       }
     } else if (type === "help") {
-      for (const i of [ winMenu.menuWin, winMenu.menuWinHelp, winMenu.menuAll ]) {
+      for (const i of [ winMenu.menuWin, winMenu.menuWinHelp, winMenu.menuEdit, winMenu.menuView ]) {
         menu = menu.concat(i);
       }
     } else {
-      for (const i of [ winMenu.menuWin, winMenu.menuAll ]) {
+      for (const i of [ winMenu.menuWin, winMenu.menuEdit, winMenu.menuView ]) {
         menu = menu.concat(i);
       }
     }
     if (dev) {
-      menu = menu.concat(winMenu.menuDev);
+      menu = menu.concat(type === "pv" ? winMenu.menuDevPv : winMenu.menuDev);
     }
 
     // remove ampersands on macOS
@@ -457,19 +510,24 @@ for (const i of [ "about", "app", "help", "pv" ]) {
 
 const win = {
   // data of currently open windows; filled with objects:
-  //   bw = object (browser window)
+  //   bw = object (browser or base window)
   //   id = integer (window ID)
   //   type = string (about | app | cli | help | pv | worker)
-  //   xml = string (name of XML file shown in pv window, otherwise empty string)
+  //   wvBase = object (null | in "pv" windows: web contents with header)
+  //   wvWeb = object (null | in "pv" windows: web contents with XML preview)
+  //   xml = object (empty | in "pv" wndows: data regarding the XML preview)
+  //     dir = string (articles | ignore)
+  //     file = string (XML file name)
+  //     git = string (path to git directory)
   data: [],
 
   // open new window
   //   show = object | undefined (show section in help window)
   //   type = string (about | app | cli | help | pv)
-  //   xml = object | undefined (see win.pvOpen())
+  //   xml = object | undefined (see win.data)
   open ({ show = null, type, xml = {} }) {
     // define window dimensions
-    const { workArea } = display.getPrimaryDisplay();
+    const { workArea } = screen.getPrimaryDisplay();
     const data = prefs.data.win[type] || {};
     const x = data.x >= 0 ? data.x : undefined;
     const y = data.y >= 0 ? data.y : undefined;
@@ -507,7 +565,7 @@ const win = {
       minWidth: 700,
       height,
       minHeight: 700,
-      useContentSize: type === "about" ? true : false,
+      useContentSize: type === "about",
       show: false,
       webPreferences: {
         backgroundThrottling: false,
@@ -530,21 +588,75 @@ const win = {
       if (/darwin|win32/.test(process.platform)) {
         bwOptions.webPreferences.useContentSize = true;
       }
-    } else if (type === "pv") {
+    }
+    let bw;
+    let wvBase = null;
+    let wvWeb = null;
+    if (type === "pv") {
       // if this is the n-th preview window => let the system decide how to place it
       const pvWin = win.data.filter(i => i.type === "pv");
       if (pvWin.length > 0) {
         bwOptions.x = undefined;
         bwOptions.y = undefined;
       }
-      // change webPreferences
-      bwOptions.webPreferences.contextIsolation = true;
-      bwOptions.webPreferences.nodeIntegration = false;
-      bwOptions.webPreferences.preload = path.join(__dirname, "js", "html", "pvPreload.js");
-      bwOptions.webPreferences.sandbox = true;
-      bwOptions.webPreferences.webviewTag = true;
+
+      // remove webPreferences
+      delete bwOptions.webPreferences;
+
+      // create base window
+      bw = new BaseWindow(bwOptions);
+
+      // create web contents: base
+      wvBase = new WebContentsView({
+        webPreferences: {
+          contextIsolation: true,
+          defaultEncoding: "UTF-8",
+          devTools: dev,
+          nodeIntegration: false,
+          preload: path.join(__dirname, "js", "html", "pvPreload.js"),
+          sandbox: true,
+          spellcheck: false,
+        },
+      });
+      bw.contentView.addChildView(wvBase);
+      wvBase.webContents.loadFile(path.join(__dirname, "html", "pv.html"));
+
+      // create web contents: web
+      wvWeb = new WebContentsView();
+      bw.contentView.addChildView(wvWeb);
+      wvWeb.setVisible(false);
+      wvWeb.webContents.loadFile(path.join(__dirname, "html", "pvLoading.html"));
+      wvWeb.webContents.on("did-finish-load", function () {
+        const bw = BrowserWindow.fromWebContents(this);
+        const { wvBase } = win.data.find(i => i.id === bw.id);
+        wvBase.webContents.send("update-icons", {
+          canGoBack: this.navigationHistory.canGoBack(),
+          canGoForward: this.navigationHistory.canGoForward(),
+        });
+      });
+      wvWeb.webContents.on("did-fail-load", function () {
+        const url = new URL(this.getURL());
+        if (url.host === "www.zdl.org" && url.pathname === "/wb/wortgeschichten/pv") {
+          const bw = BrowserWindow.fromWebContents(this);
+          const data = win.data.find(i => i.id === bw.id);
+          pv.load(bw, data.xml);
+        } else {
+          this.send("update-icons", {
+            canGoBack: this.navigationHistory.canGoBack(),
+            canGoForward: this.navigationHistory.canGoForward(),
+          });
+        }
+      });
+
+      // append resize action
+      let resize;
+      bw.on("resize", function () {
+        clearTimeout(resize);
+        resize = setTimeout(() => pv.setBounds(this), 25);
+      });
+    } else {
+      bw = new BrowserWindow(bwOptions);
     }
-    const bw = new BrowserWindow(bwOptions);
 
     // maximize window?
     if (data.maximized) {
@@ -556,7 +668,9 @@ const win = {
       bw,
       id: bw.id,
       type,
-      xml: xml.file || "",
+      wvBase,
+      wvWeb,
+      xml,
     });
 
     // set menu
@@ -571,20 +685,21 @@ const win = {
     }
 
     // load html
-    const html = {
-      about: path.join(__dirname, "html", "about.html"),
-      app: path.join(__dirname, "win.html"),
-      cli: path.join(__dirname, "win.html"),
-      help: path.join(__dirname, "html", "help.html"),
-      pv: path.join(__dirname, "html", "pv.html"),
-    };
-    if (dev) {
-      // no cache while developing
-      bw.loadURL("file://" + html[type], {
-        extraHeaders: "pragma: no-cache\n",
-      });
-    } else {
-      bw.loadFile(html[type]);
+    if (type !== "pv") {
+      const html = {
+        about: path.join(__dirname, "html", "about.html"),
+        app: path.join(__dirname, "win.html"),
+        cli: path.join(__dirname, "win.html"),
+        help: path.join(__dirname, "html", "help.html"),
+      };
+      if (dev) {
+        // no cache while developing
+        bw.loadURL("file://" + html[type], {
+          extraHeaders: "pragma: no-cache\n",
+        });
+      } else {
+        bw.loadFile(html[type]);
+      }
     }
 
     // focus window (otherwise it might not be in the foreground)
@@ -593,11 +708,11 @@ const win = {
     }
 
     // show window (this prevents flickering on startup)
-    if (type !== "cli") {
+    if (type !== "cli" && type !== "pv") {
       bw.once("ready-to-show", () => bw.show());
     }
 
-    // send XML data if necessary
+    // send data if necessary
     if (type === "cli") {
       // pass CLI commands
       bw.webContents.once("did-finish-load", function () {
@@ -608,10 +723,26 @@ const win = {
         }, 100);
       });
     } else if (type === "pv") {
-      // load file into preview
-      bw.webContents.once("did-finish-load", function () {
+      // show window and load XML file for preview
+      // (WORKAROUND: currently, base windows do not emit the "ready-to-show" event)
+      wvBase.webContents.once("did-finish-load", function () {
         const bw = BrowserWindow.fromWebContents(this);
-        win.pvSend(bw, xml);
+        const { wvWeb } = win.data.find(i => i.id === bw.id);
+
+        // set bounds
+        pv.setBounds(bw);
+
+        // show window
+        bw.show();
+
+        // ensure a smooth loading of the contents of the window
+        setTimeout(() => {
+          this.send("init-done");
+          setTimeout(() => {
+            wvWeb.setVisible(true);
+            setTimeout(() => pv.load(bw, xml), 300);
+          }, 300);
+        }, 1250);
       });
     } else if (show) {
       // make the window show a section
@@ -676,7 +807,7 @@ const win = {
 
   // close the currently active (i.e. focused) window
   close () {
-    const bw = BrowserWindow.getFocusedWindow();
+    const bw = BrowserWindow.getFocusedWindow() || BaseWindow.getFocusedWindow();
     bw.close();
   },
 
@@ -710,69 +841,12 @@ const win = {
   },
 
   // focus the app window
-  //   bw = object (browser window)
+  //   bw = object (browser or base window)
   focus (bw) {
     if (bw.isMinimized()) {
       bw.restore();
     }
     setTimeout(() => bw.focus(), 25);
-  },
-
-  // open or focus preview window
-  //   args = object
-  //     dir = string (articles | ignore)
-  //     file = string (XML file name)
-  //     git = string (path to git directory)
-  //     winId = integer (window ID)
-  pvOpen (args) {
-    for (const i of win.data) {
-      if (!args.winId && i.xml === args.file ||
-          args.winId && i.id === args.winId) {
-        win.pvSend(i.bw, args);
-        return;
-      }
-    }
-    win.open({
-      type: "pv",
-      xml: args,
-    });
-  },
-
-  // close all preview windows
-  pvCloseAll () {
-    const exclude = [];
-    for (const w of win.data) {
-      if (w.type !== "pv") {
-        exclude.push(w.type);
-      }
-    }
-    win.closeAll(exclude);
-  },
-
-  // send data to preview window
-  //   bw = object (browser window)
-  //   args = object (see win.pvOpen())
-  async pvSend (bw, args) {
-    // get XML file
-    const xmlPath = path.join(args.git, args.dir, args.file);
-    const exists = await services.exists(xmlPath);
-    args.xml = "";
-    if (exists) {
-      const xmlFiles = await xml.getFile(args.git, args.dir, args.file);
-      if (xmlFiles[args.file]) {
-        args.xml = xmlFiles[args.file].xml;
-        // update file data in main window
-        const appWin = win.data.find(i => i.type === "app");
-        appWin.bw.webContents.send("update-file", xmlFiles);
-      }
-    }
-
-    // send data
-    bw.webContents.send("update", args);
-
-    // focus window
-    // (this is important in case the window already exists)
-    bw.focus();
   },
 
   // show section in help window
@@ -787,6 +861,222 @@ const win = {
         type: "help",
         show: data,
       });
+    }
+  },
+};
+
+
+/* PREVIEW WINDOW ------------------------------- */
+
+const pv = {
+  // open a new preview window or reload the XML file into an already existing one
+  //   args = object (either "winId" or the other keys are present)
+  //     dir = string (articles | ignore)
+  //     file = string (XML file name)
+  //     git = string (path to git directory)
+  //     winId = integer (window ID)
+  open (args) {
+    for (const i of win.data) {
+      if (!args.winId && i.xml?.file === args.file ||
+          args.winId && i.id === args.winId) {
+        pv.load(i.bw, i.xml);
+        return;
+      }
+    }
+    win.open({
+      type: "pv",
+      xml: args,
+    });
+  },
+
+  // open a new instance of an already existing preview window
+  //   bw = base window
+  openNew (bw) {
+    const data = win.data.find(i => i.id === bw.id);
+    win.open({
+      type: "pv",
+      xml: data.xml,
+    });
+  },
+
+  // close all preview windows
+  closeAll () {
+    const exclude = [];
+    for (const w of win.data) {
+      if (w.type !== "pv") {
+        exclude.push(w.type);
+      }
+    }
+    win.closeAll(exclude);
+  },
+
+  // set bounds for the views of the given preview window
+  //   bw = base window
+  setBounds (bw) {
+    // header height: 78px height + 3px margin
+    const headerHeight = 81;
+
+    // get browser window dimensions
+    const [ width, height ] = bw.getContentSize();
+
+    // find web contents
+    const { wvBase, wvWeb } = win.data.find(i => i.id === bw.id);
+
+    // set bounds: base
+    wvBase.setBounds({
+      x: 0,
+      y: 0,
+      width,
+      height,
+    });
+
+    // set bounds: web
+    wvWeb.setBounds({
+      x: 0,
+      y: headerHeight,
+      width,
+      height: height - headerHeight,
+    });
+  },
+
+  // load the XML preview into a given base window
+  //   bw = base window
+  //   args = object (see win.data)
+  async load (bw, args) {
+    // get XML file
+    const xmlPath = path.join(args.git, args.dir, args.file);
+    const exists = await services.exists(xmlPath);
+    let xmlFile = "";
+    if (exists) {
+      const xmlFiles = await xml.getFile(args.git, args.dir, args.file);
+      if (xmlFiles[args.file]) {
+        xmlFile = xmlFiles[args.file].xml;
+        // update file data in main window
+        const appWin = win.data.find(i => i.type === "app");
+        appWin.bw.webContents.send("update-file", xmlFiles);
+      }
+    }
+
+    // no XML data found => error message
+    const { wvBase, wvWeb } = win.data.find(i => i.id === bw.id);
+    if (!xmlFile) {
+      pv.loadingError(wvBase, wvWeb, `Die Daten aus der Datei „${args.file}“ konnten nicht geladen werden.`);
+      return;
+    }
+
+    // try to restore the scroll position on reload
+    const wc = wvWeb.webContents;
+    const url = new URL(wc.getURL());
+    let scrollTop = 0;
+    if (url.host === "www.zdl.org" && url.pathname === "/wb/wortgeschichten/pv") {
+      try {
+        const result = await wc.executeJavaScript(`
+          window.pageYOffset;
+        `);
+        const top = parseInt(result, 10);
+        if (!isNaN(top)) {
+          scrollTop = top;
+        }
+      } catch {}
+    }
+
+    // load preview
+    try {
+      // load page
+      const bytes = Buffer.from(`xml=${encodeURIComponent(xmlFile)}`);
+      await wc.loadURL("https://www.zdl.org/wb/wortgeschichten/pv?bn=mark", {
+        postData: [
+          {
+            type: "rawData",
+            bytes,
+          },
+        ],
+        extraHeaders: "Content-Type: application/x-www-form-urlencoded; charset=UTF-8",
+      });
+
+      // restore scroll position
+      if (scrollTop) {
+        wc.executeJavaScript(`
+          window.scrollTo(0, ${scrollTop});
+        `);
+      }
+
+      // finish up loading
+      pv.loadingDone(wvBase, wvWeb);
+    } catch (err) {
+      // failed to load the preview => error message
+      wc.stop();
+      pv.loadingError(wvBase, wvWeb, shared.errorString(err.message));
+    }
+
+    // focus window
+    // (this is important in case the window already exists)
+    bw.focus();
+  },
+
+  // finish up the loading procedure
+  //   wvBase = view
+  //   wvWeb = view
+  loadingDone (wvBase, wvWeb) {
+    wvWeb.webContents.navigationHistory.clear();
+    wvBase.webContents.send("update-icons", {
+      canGoBack: false,
+      canGoForward: false,
+    });
+  },
+
+  // show error document on loading failures
+  //   wvBase = view
+  //   wvWeb = view
+  //   message = string
+  async loadingError (wvBase, wvWeb, message) {
+    try {
+      await wvWeb.webContents.loadFile(path.join(__dirname, "html", "pvError.html"));
+      pv.loadingDone(wvBase, wvWeb);
+      wvWeb.webContents.executeJavaScript(`
+        let label = document.createElement("p");
+        label.classList.add("label");
+        label.textContent = "Fehlermeldung";
+        document.body.appendChild(label);
+        let err = document.createElement("p");
+        err.innerHTML = "${message}";
+        document.body.appendChild(err);
+      `);
+    } catch {
+      wvWeb.webContents.stop();
+      pv.loadingDone(wvBase, wvWeb);
+    }
+  },
+
+  // change zoom of the web view
+  //   action = string
+  zoom (action) {
+    const bw = BaseWindow.getFocusedWindow();
+    const { wvWeb } = win.data.find(i => i.id === bw.id);
+    let level = wvWeb.webContents.getZoomLevel();
+    switch (action) {
+      case "in":
+        level++;
+        break;
+      case "out":
+        level--;
+        break;
+      case "original":
+        level = 0;
+        break;
+    }
+    wvWeb.webContents.setZoomLevel(level);
+  },
+
+  // navigate within a web contents
+  //   bw = base window
+  //   action = string
+  nav (bw, action) {
+    const { wvWeb } = win.data.find(i => i.id === bw.id);
+    if (action === "goBack") {
+      wvWeb.webContents.navigationHistory.goBack();
+    } else if (action === "goForward") {
+      wvWeb.webContents.navigationHistory.goForward();
     }
   },
 };
@@ -826,7 +1116,9 @@ const worker = {
         bw,
         id: bw.id,
         type: "worker",
-        xml: "",
+        wvBase: null,
+        wvWeb: null,
+        xml: null,
       });
 
       // load html
@@ -974,9 +1266,16 @@ if (cliCommandFound || !locked) {
   //   - disallow creation of windows with window.open()
   app.on("web-contents-created", (evt, contents) => {
     contents.on("will-navigate", function (evt) {
-      if (this.getType() !== "webview" || win.data.find(i => i.id === this.id)) {
-        // allow navigation within <webview> of the preview window
-        // (the web contents within the <webview> has a different ID than every other window)
+      const mayNavigate = [];
+      for (const i of win.data) {
+        if (i.type !== "pv") {
+          continue;
+        }
+        mayNavigate.push(i.wvWeb.webContents.id);
+      }
+      if (!mayNavigate.includes(this.id)) {
+        // only allow navigation in preview windows and
+        // only in those web contents that show the preview
         evt.preventDefault();
       }
     });
@@ -1054,7 +1353,7 @@ ipcMain.handle("close", evt => {
   bw.close();
 });
 
-ipcMain.handle("clear-cache", async () => {
+ipcMain.handle("clear-cache", () => {
   const bw = win.data.find(i => i.type === "app")?.bw;
   if (bw) {
     const ses = bw.webContents.session;
@@ -1063,12 +1362,6 @@ ipcMain.handle("clear-cache", async () => {
   }
   return false;
 });
-
-ipcMain.handle("ctxBridge-buffer-from", (evt, str) => Buffer.from(str));
-
-ipcMain.handle("ctxBridge-path-join", (evt, arr) => path.join(...arr));
-
-ipcMain.handle("ctxBridge-process-platform", () => process.platform);
 
 ipcMain.handle("help", (evt, data) => win.help(data));
 
@@ -1130,23 +1423,43 @@ ipcMain.handle("prefs-save", async (evt, options) => {
   }
 });
 
+ipcMain.handle("process-info", evt => {
+  if (!validSender(evt)) {
+    return {};
+  }
+  return {
+    platform: process.platform,
+  };
+});
+
 ipcMain.handle("pv", (evt, args) => {
   if (!validSender(evt)) {
     return;
   }
-  win.pvOpen(args);
+  pv.open(args);
 });
 
-ipcMain.handle("pv-close-all", () => win.pvCloseAll());
-
-ipcMain.handle("pv-new", (evt, args) => {
+ipcMain.handle("pv-close-all", evt => {
   if (!validSender(evt)) {
     return;
   }
-  win.open({
-    type: "pv",
-    xml: args,
-  });
+  pv.closeAll();
+});
+
+ipcMain.handle("pv-nav", (evt, data) => {
+  if (!validSender(evt)) {
+    return;
+  }
+  const { bw } = win.data.find(i => i.id === data.winId);
+  pv.nav(bw, data.action);
+});
+
+ipcMain.handle("pv-new", evt => {
+  if (!validSender(evt)) {
+    return;
+  }
+  const bw = BrowserWindow.fromWebContents(evt.sender);
+  pv.openNew(bw);
 });
 
 ipcMain.handle("xml-files", async (evt, repoDir) => {

@@ -19,10 +19,6 @@ header a {
   height: 48px;
 }
 
-header a:nth-last-child(2) {
-  margin-left: 40px;
-}
-
 header a:focus {
   outline: 2px solid var(--outline);
   border-radius: 5px;
@@ -30,14 +26,4 @@ header a:focus {
 
 header a img {
   vertical-align: top;
-}
-
-
-/* WEBVIEW -------------------------------------- */
-
-webview {
-  display: flex;
-  margin-top: 3px;
-  width: 100vw;
-  height: calc(100vh - 81px);
 }
