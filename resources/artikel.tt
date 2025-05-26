@@ -37,7 +37,7 @@
   </ol>
 </nav>
 
-<main class="wgd-content shadow">
+<main class="wgd-content wgd-init shadow">
 
 <header>
   <h1>Artikelübersicht<br>von <i>Wortgeschichte digital</i></h1>
