@@ -1042,9 +1042,9 @@ const hints = {
         //     (in cases like that the external reference is definitley correct)
         //   - if the link is part of the meanings structure
         if (!hints.lemmas[lemma] ||
-          data.hl.includes(lemma) ||
-          data.nl.includes(lemma) ||
-          i.closest("Nachweise")) {
+            data.hl.includes(lemma) ||
+            data.nl.includes(lemma) ||
+            i.closest("Nachweise")) {
           continue;
         }
         for (const x of hints.lemmas[lemma].xml) {
@@ -1379,7 +1379,7 @@ const hints = {
       const dateCitOri = [];
       const cit = i.querySelector("unstrukturiert").textContent;
       for (const m of cit.matchAll(/([0-9]{1,2})\.\s?([0-9]{1,2}\.|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s?([0-9]{4})/g)) {
-        const citOri = m[0];
+        const [ citOri ] = m;
         if (/^[0-9]/.test(m[2])) {
           // month as number
           m[2] = m[2].replace(/\.$/, "");
@@ -1898,7 +1898,13 @@ const hints = {
     const noLookup = [ "an", "auf", "aus", "bei", "bis", "durch", "für", "gegen", "hinter", "in", "mit", "nach", "neben", "oder", "über", "um", "und", "unter", "von", "vor", "zu", "zwischen" ];
     const missing = [];
     for (const [ file, data ] of Object.entries(xml.data.files)) {
-      for (let lemma of data.hl.concat(data.nl)) {
+      const lemmas = data.hl.concat(data.nl);
+      for (const fl of data.faLemmas) {
+        if (!lemmas.includes(fl)) {
+          lemmas.push(fl);
+        }
+      }
+      for (let lemma of lemmas) {
         lemma = shared.hidxClear(lemma);
         if (!hints.lemmas[lemma]) {
           hints.lemmas[lemma] = {
