@@ -48,19 +48,8 @@ const xml = {
         // field
         data.fa = doc.querySelector('Artikel[Typ="Wortfeldartikel"]') !== null;
 
-        // data.faLemmas is mainly filled after the link analysis
+        // data.faLemmas is filled after the link analysis
         data.faLemmas = [];
-
-        // add field lemmas in <Textverweis> (for which there is no article yet)
-        if (data.fa) {
-          doc.querySelectorAll("Verweise[Typ='Wortfeld'] Textreferenz").forEach(tr => {
-            tr.textContent.split("/").forEach(spelling => {
-              if (!data.faLemmas.includes(spelling)) {
-                data.faLemmas.push(spelling);
-              }
-            });
-          });
-        }
 
         // main lemmas
         data.hl = [];
