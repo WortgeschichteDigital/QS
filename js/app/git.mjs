@@ -1,0 +1,478 @@
+
+import xml from "./xml.mjs";
+
+import dialog from "../dialog.mjs";
+import overlay from "../overlay.mjs";
+import shared from "../shared.mjs";
+
+export { git as default };
+
+const git = {
+  // URI to remote repository
+  remote: "git.zdl.org/zdl/wortgeschichten.git",
+
+  // Git config
+  config: {},
+
+  // password for Git repository
+  // (only valid for current app session)
+  configPass: "",
+
+  // check Git config
+  async configCheck () {
+    // get config data
+    git.config = await bridge.ipc.invoke("git-config");
+    // check config
+    const dirOkay = await git.dirCheck(git.config.dir);
+    if (!dirOkay[0] || !git.config.user) {
+      // open config form
+      git.configFormShow();
+      // show message if the directory wasn't found anymore
+      if (git.config.dir && !dirOkay[0]) {
+        await git.dirError(dirOkay[1]);
+      }
+      // wait until the configuration is okay
+      const gitWin = document.getElementById("git");
+      await new Promise(resolve => {
+        const checkConfig = setInterval(() => {
+          if (gitWin.classList.contains("hide")) {
+            clearInterval(checkConfig);
+            resolve(true);
+          }
+        }, 25);
+      });
+      // close config form
+      await shared.wait(500);
+    } else {
+      git.fillPrefs();
+    }
+  },
+
+  // show config overlay
+  configFormShow () {
+    // show window
+    overlay.show("git");
+
+    // fill in
+    document.getElementById("git-dir").value = git.config.dir;
+    const user = document.getElementById("git-user");
+    user.value = git.config.user;
+    user.select();
+  },
+
+  // check inputs in config overlay
+  async configFormCheck () {
+    const user = document.getElementById("git-user").value.trim();
+    const dir = document.getElementById("git-dir").value.trim();
+    if (!user || !dir) {
+      const missing = [];
+      if (!user) {
+        missing.push("• den Benutzernamen angeben");
+      }
+      if (!dir) {
+        missing.push("• den Pfad zum Repository auswählen");
+      }
+      await dialog.open({
+        type: "alert",
+        text: "Sie müssen noch:\n" + missing.join("<br>"),
+      });
+      if (!user) {
+        document.getElementById("git-user").select();
+      } else if (!dir) {
+        document.getElementById("git-dir-open").focus();
+      }
+      return;
+    } else if (/\s/.test(user)) {
+      await dialog.open({
+        type: "alert",
+        text: "Der Benutzername darf keine Leerzeichen enthalten.",
+      });
+      document.getElementById("git-user").select();
+      return;
+    }
+
+    // check directory
+    const dirOkay = await git.dirCheck(dir);
+    if (!dirOkay[0]) {
+      git.config.dir = "";
+      git.dirError(dirOkay[1]);
+      return;
+    }
+
+    // close all preview windows if dir is about to be changed
+    if (git.config.dir !== dir) {
+      bridge.ipc.invoke("pv-close-all");
+    }
+
+    // save config data in prefs file
+    git.config.user = user;
+    git.config.dir = dir;
+    bridge.ipc.invoke("git-save", git.config);
+
+    // fill in preferences
+    git.fillPrefs();
+
+    // close window
+    overlay.hide("git");
+  },
+
+  // select repository directory
+  async dirSelect () {
+    const options = {
+      title: "Repository auswählen",
+      defaultPath: shared.info.documents,
+      properties: [ "openDirectory" ],
+    };
+    const result = await bridge.ipc.invoke("file-dialog", true, options);
+    if (result.canceled || !result?.filePaths?.length) {
+      return;
+    }
+    document.getElementById("git-dir").value = result.filePaths[0];
+    document.getElementById("git-okay").focus();
+  },
+
+  // check directory with presumed Git repository
+  //   dir = string
+  async dirCheck (dir) {
+    if (!dir) {
+      return [ false, "empty" ];
+    }
+    const structure = {
+      ".git": false,
+      articles: false,
+      ignore: false,
+    };
+    const files = await bridge.ipc.invoke("file-readdir", dir);
+    if (!Array.isArray(files)) {
+      return [ false, "not found" ];
+    }
+    for (const f of files) {
+      structure[f] = true;
+    }
+    if (Object.values(structure).some(i => !i)) {
+      const missing = [];
+      for (const [ k, v ] of Object.entries(structure)) {
+        if (!v) {
+          missing.push(k);
+        }
+      }
+      return [ false, missing.join(" ") ];
+    }
+    return [ true, "" ];
+  },
+
+  // display appropriate error message
+  //   error = string (empty | not found | missing folders, separated by spaces)
+  async dirError (error) {
+    let text;
+    if (error === "empty") {
+      text = "Sie haben noch keinen Repository-Pfad ausgewählt.";
+    } else if (error === "not found") {
+      text = "Das ausgewählte Repository existiert nicht mehr.";
+    } else {
+      const missing = error.split(" ");
+      if (missing.includes(".git")) {
+        text = "Der ausgewählte Ordner enthält kein Git-Repository.";
+      } else {
+        const notFound = [];
+        for (const i of missing) {
+          notFound.push("• " + i);
+        }
+        text = `Folgende Unterordner wurden im Repository nicht gefunden:\n${notFound.join("<br>")}`;
+      }
+    }
+    await dialog.open({
+      type: "alert",
+      text,
+    });
+    document.getElementById("git-dir-open").focus();
+  },
+
+  // return current branch
+  async branchCurrent () {
+    const result = await git.commandExec("git branch --show-current");
+    return result;
+  },
+
+  // print current branch
+  async branchCurrentPrint () {
+    const branchCurrent = await git.branchCurrent();
+    document.getElementById("fun-git-branch").textContent = branchCurrent || "???";
+    return branchCurrent;
+  },
+
+  // check whether the current branch is clean or not
+  //   feedback = false | undefined
+  async branchClean (feedback = true) {
+    const notClean = await git.commandExec("git diff --stat");
+    if (notClean || notClean === false) {
+      if (notClean && feedback) {
+        await shared.error("Branch nicht sauber, Änderungen an Dateien noch nicht committet");
+      }
+      return false;
+    }
+    return true;
+  },
+
+  // select branch from a list of available branches
+  //   branchList = array
+  branchSelect (branchList) {
+    // clean up branch list
+    branchList.forEach((i, n) => {
+      branchList[n] = i.replace(/^[ *]+/g, "");
+    });
+    branchList.sort();
+
+    // create popup
+    let popup = document.getElementById("fun-git-branch-select");
+    if (!popup) {
+      popup = document.createElement("div");
+      popup.id = "fun-git-branch-select";
+      document.getElementById("fun-git").appendChild(popup);
+    }
+    popup.replaceChildren();
+
+    // close icon and heading
+    const close = document.createElement("a");
+    popup.appendChild(close);
+    close.href = "#";
+    const icon = document.createElement("img");
+    close.appendChild(icon);
+    icon.src = "img/close.svg";
+    icon.width = "30";
+    icon.height = "30";
+    icon.alt = "";
+    close.addEventListener("click", function (evt) {
+      evt.preventDefault();
+      git.branchSelectRemove();
+    });
+    const h2 = document.createElement("h2");
+    popup.appendChild(h2);
+    h2.textContent = "Branches";
+
+    // fill popup
+    for (const branch of branchList) {
+      const a = document.createElement("a");
+      popup.appendChild(a);
+      a.classList.add("branch");
+      a.href = "#";
+      a.textContent = branch;
+      a.addEventListener("click", function (evt) {
+        evt.preventDefault();
+        git.commandBranch(this.textContent);
+        git.branchSelectRemove();
+      });
+    }
+
+    // show popup
+    void popup.offsetWidth;
+    popup.classList.add("visible");
+  },
+
+  // remove branch selector popup
+  branchSelectRemove () {
+    const popup = document.getElementById("fun-git-branch-select");
+    if (!popup?.classList?.contains("visible")) {
+      return;
+    }
+    popup.addEventListener("transitionend", function () {
+      this.parentNode.removeChild(this);
+    }, {
+      once: true,
+    });
+    popup.classList.remove("visible");
+  },
+
+  // execute a basic git command
+  //   a = node
+  async command (a) {
+    await xml.updateWait();
+    let command = a.id.replace("fun-git-", "");
+    command = command.substring(0, 1).toUpperCase() + command.substring(1);
+    git["command" + command]();
+  },
+
+  // show status
+  async commandStatus () {
+    let status = await git.commandExec("git status");
+    if (status === false) {
+      document.getElementById("fun-git-status").focus();
+      return;
+    }
+    status = shared.errorString(status);
+    status = status.replace(/\t/g, "\u00A0".repeat(2));
+    const win = document.getElementById("dialog");
+    win.classList.add("code");
+    await dialog.open({
+      type: "alert",
+      text: status,
+    });
+    setTimeout(() => win.classList.remove("code"), 300);
+  },
+
+  // change branch
+  //   branch = string | undefined
+  async commandBranch (branch = "") {
+    const current = await git.branchCurrent();
+    let dest = branch;
+    if (!dest) {
+      const branches = await git.commandExec("git branch --list");
+      if (branches) {
+        const branchList = branches.split("\n");
+        if (branchList.length > 2) {
+          git.branchSelect(branchList);
+          return;
+        }
+      }
+      dest = current === "master" ? "preprint" : "master";
+    }
+
+    // Is the working tree clean?
+    const clean = await git.branchClean();
+    if (!clean) {
+      document.getElementById("fun-git-branch").focus();
+      return;
+    }
+
+    // checkout branch
+    const checkout = await git.commandExec(`git checkout ${dest}`);
+    if (checkout === false) {
+      document.getElementById("fun-git-branch").focus();
+      return;
+    }
+    git.branchCurrentPrint();
+    shared.feedback("okay");
+    xml.update();
+  },
+
+  // pull on current branch
+  async commandPull () {
+    // Is the working tree clean?
+    const clean = await git.branchClean();
+    if (!clean) {
+      document.getElementById("fun-git-pull").focus();
+      return;
+    }
+
+    // Do I know the user's password?
+    let { configPass } = git;
+    if (!configPass) {
+      const result = await dialog.open({
+        type: "pass",
+        text: `Passwort für <b>${git.config.user}@git.zdl.org</b>`,
+      });
+      if (!result) {
+        return;
+      }
+      // Passwort auslesen
+      configPass = document.querySelector("#dialog input").value.trim();
+      if (!configPass) {
+        shared.error("kein Passwort eingegeben");
+        return;
+      }
+    }
+
+    // detect remote tracking branches
+    const locales = await git.commandExec("git branch --list");
+    const localBranches = new Set();
+    for (let l of locales.split("\n")) {
+      l = l.trim();
+      l = l.replace("* ", "");
+      localBranches.add(l);
+    }
+    const remotes = await git.commandExec("git branch --remotes");
+    const branches = [];
+    for (let r of remotes.split("\n")) {
+      r = r.trim();
+      r = r.replace(/^origin\/(.+)/, (...args) => args[1]);
+      if (/^HEAD/.test(r) || !localBranches.has(r)) {
+        continue;
+      }
+      branches.push(r);
+    }
+    const current = await git.branchCurrent();
+    branches.splice(branches.indexOf(current), 1);
+    branches.push(current);
+
+    // Okay, let's pull it!
+    for (const branch of branches) {
+      const checkout = await git.commandExec(`git checkout ${branch}`);
+      if (checkout === false) {
+        document.getElementById("fun-git-pull").focus();
+        return;
+      }
+      const pull = await git.commandExec(`git pull https://${git.config.user}:${encodeURIComponent(configPass)}@${git.remote} ${branch}:refs/remotes/origin/${branch}`);
+      if (pull === false) {
+        document.getElementById("fun-git-pull").focus();
+        return;
+      }
+    }
+    git.configPass = configPass;
+    shared.feedback("okay");
+    xml.update();
+  },
+
+  // restore changed files
+  async commandRestore () {
+    // Is the working tree clean?
+    const clean = await git.branchClean(false);
+    if (clean) {
+      dialog.open({
+        type: "alert",
+        text: "Der Branch ist sauber.\nEs können keine Dateien zurückgesetzt werden.",
+      });
+      return;
+    }
+
+    // Are you really going to do this?
+    const confirm = await dialog.open({
+      type: "confirm",
+      text: '<b class="warn">ACHTUNG!</b>\nBeim Zurücksetzen der Dateien werden nicht committete Änderungen im Repository unwiederbringlich gelöscht!\n(Dateien im Unterordner <i>ignore</i> sind davon nicht betroffen.)\nWollen Sie die geänderten Dateien wirklich zurücksetzen?',
+      wait: true,
+    });
+    if (!confirm) {
+      return;
+    }
+
+    // restore known folders and files
+    const folders = [
+      "articles",
+      "resources",
+      "share",
+      "README.md",
+    ];
+    const restore = await git.commandExec(`git restore ${folders.join(" ")}`);
+    if (restore === false) {
+      document.getElementById("fun-git-restore").focus();
+      return;
+    }
+    shared.feedback("okay");
+    xml.update();
+  },
+
+  // execute a Git command
+  //   command = string
+  async commandExec (command) {
+    const result = await bridge.ipc.invoke("command", {
+      cmd: command,
+      wd: git.config.dir,
+    });
+
+    // handle errors
+    if (Array.isArray(result)) {
+      await shared.error(`Fehlercode: ${result[0]}, ${result[1]}`);
+      return false;
+    }
+
+    // return result
+    return result;
+  },
+
+  // fill in preferences
+  fillPrefs () {
+    for (const [ k, v ] of Object.entries(git.config)) {
+      const text = v.replace(/[/\\]/g, m => m + "<wbr>");
+      document.getElementById(`prefs-git-${k}`).innerHTML = text;
+    }
+  },
+};

@@ -108,14 +108,14 @@ a.overlay-close:focus {
 a[href^="http"]::after {
   content: "";
   padding-right: 24px;
-  background-image: url(../img/win/external-link.svg);
+  background-image: url(../img/external-link.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 footer a[href^="http"]::after {
-  background-image: url(../img/win/external-link-white.svg);
+  background-image: url(../img/external-link-white.svg);
 }
 
 code {

@@ -210,7 +210,7 @@
   width: max-content;
   min-width: 80px;
   background-color: var(--colorGreyLight);
-  background-image: url(../../img/win/select-open.svg);
+  background-image: url(../../img/select-open.svg);
   background-position: 5px 2px;
   background-repeat: no-repeat;
   color: var(--text);

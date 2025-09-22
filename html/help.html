@@ -8,14 +8,7 @@
 
     <link rel="stylesheet" href="../css/win/help.css">
 
-    <script src="../js/shared/overlay.js"></script>
-    <script src="../js/shared/popup.js"></script>
-    <script src="../js/shared/shared.js"></script>
-    <script src="../js/shared/tooltip.js"></script>
-
-    <script src="../js/html/help.js"></script>
-    <script src="../js/html/keyboard.js"></script>
-    <script src="../js/html/helpInit.js"></script>
+    <script src="../js/win/helpInit.mjs" type="module"></script>
   </head>
   <body class="help">
     <!-- NAVIGATION -->
@@ -149,7 +142,7 @@
 
       <p id="allgemeines-ergebnisleiste">Die Ergebnisleiste steht nur in den Ansichten <a href="#hinweise"><i>Hinweise</i></a> und <a href="#suche"><i>Suche</i></a> zur Verfügung. Sie wird automatisch eingeblendet, wenn Hinweise angezeigt werden oder eine Suche Treffer produziert. Voraussetzung ist allerdings, dass das Programmfenster breit genug ist.</p>
 
-      <p>Manuell ein- oder ausgeblendet werden kann die Leiste jederzeit über das Rechtsklickmenü oder das Icon <img src="../img/win/sidebar.svg" width="30" height="30" alt=""> im Textfeld der <a href="#allgemeines-kopfleiste">Kopfleiste</a>.</p>
+      <p>Manuell ein- oder ausgeblendet werden kann die Leiste jederzeit über das Rechtsklickmenü oder das Icon <img src="../img/sidebar.svg" width="30" height="30" alt=""> im Textfeld der <a href="#allgemeines-kopfleiste">Kopfleiste</a>.</p>
 
       <p>Sowohl in der Such- als auch in der Hinweiseansicht enthält die Leiste eine <b>Dateiliste</b>, um schnell zu den entsprechenden Treffern navigieren zu können. Die Reihenfolge der Dateien richtet sich nach den Sortiereinstellungen in der Kopfleiste (Hinweise) <abbr title="beziehungsweise">bzw.</abbr> der Gewichtung nach Anzahl der Treffer (Suche).</p>
 
@@ -165,49 +158,49 @@
 
       <p>Das <b>Textfeld</b> am rechten Rand ist ein Pfad-Filter. Mit seiner Hilfe kann die Anzeige auf bestimmte XML-Dateien beschränkt werden. Zum Pfad gehören die Ordner <code>articles</code> <abbr title="beziehungsweise">bzw.</abbr> <code>ignore</code> und der Name der XML-Datei. Am rechten Rand des Textfeldes finden sich je nachdem ein oder zwei Icons:</p>
 
-      <p class="indent-icon"><img src="../img/win/clear-text.svg" width="30" height="30" alt="">Text im Textfeld löschen</p>
+      <p class="indent-icon"><img src="../img/clear-text.svg" width="30" height="30" alt="">Text im Textfeld löschen</p>
 
-      <p class="indent-icon"><img src="../img/win/sidebar.svg" width="30" height="30" alt="">Ergebnisleiste öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen (nur in der Ansicht <i>Hinweise</i>)</p>
+      <p class="indent-icon"><img src="../img/sidebar.svg" width="30" height="30" alt="">Ergebnisleiste öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen (nur in der Ansicht <i>Hinweise</i>)</p>
 
       <p>Die anderen Icons dienen zur Sortierung der XML-Dateien:</p>
 
-      <p class="indent-icon"><img src="../img/win/sort-ascending.svg" width="30" height="30" alt="">Sortierrichtung der Dateien (auf- oder absteigend)</p>
+      <p class="indent-icon"><img src="../img/sort-ascending.svg" width="30" height="30" alt="">Sortierrichtung der Dateien (auf- oder absteigend)</p>
 
-      <p class="indent-icon"><img src="../img/win/open-dir.svg" width="30" height="30" alt="">Dateien im Ordner <code>ignore</code> oben in der Liste anzeigen. Intern werden diese Dateien zwar auch je nach Einstellung auf- oder absteigend sortiert, sie werden bei aktiviertem Icon aber immer vor allen anderen Dateien angezeigt.</p>
+      <p class="indent-icon"><img src="../img/open-dir.svg" width="30" height="30" alt="">Dateien im Ordner <code>ignore</code> oben in der Liste anzeigen. Intern werden diese Dateien zwar auch je nach Einstellung auf- oder absteigend sortiert, sie werden bei aktiviertem Icon aber immer vor allen anderen Dateien angezeigt.</p>
 
-      <p class="indent-icon"><img src="../img/win/alpha.svg" width="30" height="30" alt="">Sortierung nach Namen der XML-Dateien</p>
+      <p class="indent-icon"><img src="../img/alpha.svg" width="30" height="30" alt="">Sortierung nach Namen der XML-Dateien</p>
 
-      <p class="indent-icon"><img src="../img/win/time.svg" width="30" height="30" alt="">Sortierung nach Datum der Erstpublikation</p>
+      <p class="indent-icon"><img src="../img/time.svg" width="30" height="30" alt="">Sortierung nach Datum der Erstpublikation</p>
 
       <h2><span><i>Clusterei</i></span></h2>
 
       <p id="allgemeines-kopfleisteClusterei">Mithilfe der <b>ersten drei Icons</b> lassen sich die drei Ansichten der Clusterei ansteuern:</p>
 
-      <p class="indent-icon"><img src="../img/win/preferences.svg" width="30" height="30" alt="">Sektion zum Modulieren der Cluster</p>
+      <p class="indent-icon"><img src="../img/preferences.svg" width="30" height="30" alt="">Sektion zum Modulieren der Cluster</p>
 
-      <p class="indent-icon"><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">Sektion zum Vergleichen einander ähnlicher Cluster</p>
+      <p class="indent-icon"><img src="../img/clusters-compare.svg" width="30" height="30" alt="">Sektion zum Vergleichen einander ähnlicher Cluster</p>
 
-      <p class="indent-icon"><img src="../img/win/clusters.svg" width="30" height="30" alt="">Sektion zum Überprüfen der Cluster</p>
+      <p class="indent-icon"><img src="../img/clusters.svg" width="30" height="30" alt="">Sektion zum Überprüfen der Cluster</p>
 
       <p>Am rechten Rand werden die <b>aktiven Filter</b> angezeigt, also das Themenfeld und <abbr title="gegebenenfalls">ggf.</abbr> die Initialen der ausgewählten Autor*in.</p>
 
       <p>Davor befinden sich noch zwei Icons:</p>
 
-      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Vorschauansicht umschalten. Ist das Icon aktiv wird es deaktiviert; ist es nicht aktiv erscheint ein <a href="#clusterei-vorschau">Konfigurationsfenster</a>.</p>
+      <p class="indent-icon"><img src="../img/preview.svg" width="30" height="30" alt="">Vorschauansicht umschalten. Ist das Icon aktiv wird es deaktiviert; ist es nicht aktiv erscheint ein <a href="#clusterei-vorschau">Konfigurationsfenster</a>.</p>
 
-      <p class="indent-icon"><img src="../img/win/jump.svg" width="30" height="30" alt="">Zum nächsten neuen oder geänderten Cluster springen. Dieses Icon ist nur in der Sektion <i>Überprüfen</i> sichtbar.</p>
+      <p class="indent-icon"><img src="../img/jump.svg" width="30" height="30" alt="">Zum nächsten neuen oder geänderten Cluster springen. Dieses Icon ist nur in der Sektion <i>Überprüfen</i> sichtbar.</p>
 
       <h2><span><i>Suche</i></span></h2>
 
       <p id="allgemeines-kopfleisteSuche">Die Suche lässt sich über den Button am rechten Rand oder durch <kbd>Enter</kbd> im <b>Suchfeld</b> anstoßen. Die Icons am rechten Rand des Suchfelds haben diese Funktionen:</p>
 
-      <p class="indent-icon"><img src="../img/win/clear-text.svg" width="30" height="30" alt="">Text im Textfeld löschen</p>
+      <p class="indent-icon"><img src="../img/clear-text.svg" width="30" height="30" alt="">Text im Textfeld löschen</p>
 
-      <p class="indent-icon"><img src="../img/win/preferences.svg" width="30" height="30" alt="">Erweiterte Sucheinstellungen öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen</p>
+      <p class="indent-icon"><img src="../img/preferences.svg" width="30" height="30" alt="">Erweiterte Sucheinstellungen öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen</p>
 
-      <p class="indent-icon"><img src="../img/win/sidebar.svg" width="30" height="30" alt="">Ergebnisleiste öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen</p>
+      <p class="indent-icon"><img src="../img/sidebar.svg" width="30" height="30" alt="">Ergebnisleiste öffnen <abbr title="beziehungsweise">bzw.</abbr> schließen</p>
 
-      <p class="indent-icon"><img src="../img/win/help.svg" width="30" height="30" alt="">Hilfe zur Suchsyntax. Ein ausführlicher Tooltip wird angezeigt, wenn die Maus über dem Icon schwebt oder es (mithilfe von <kbd>Tab</kbd>) fokussiert wird.</p>
+      <p class="indent-icon"><img src="../img/help.svg" width="30" height="30" alt="">Hilfe zur Suchsyntax. Ein ausführlicher Tooltip wird angezeigt, wenn die Maus über dem Icon schwebt oder es (mithilfe von <kbd>Tab</kbd>) fokussiert wird.</p>
     </section>
 
     <!-- GIT -->
@@ -376,7 +369,7 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)</pre>
 
-      <p id="git-ignore"><b>Was heißt das alles für Sie in der Praxis?</b> Ganz einfach: Arbeiten Sie niemals in den von Git beobachteten Ordnern! Wenn Sie eine XML-Datei bearbeiten möchten, kopieren Sie diese und legen Sie die Kopie im Ordner <code>ignore</code> ab. In der XML-Ansicht gibt es hierfür mit dem Icon <img src="../img/win/to-folder.svg" width="30" height="30" alt=""> eine <a href="#xml-operationen">Möglichkeit, dies mit einem Klick zu tun</a>. Denn der Ordner <code>ignore</code> und seine Inhalte werden von Git <em>nicht</em> beobachtet. Da er aber im Repository relativ dieselbe Position wie der Ordner <code>articles</code> hat, erreichen die dort befindlichen XML-Dateien trotzdem das Schema, das im Ordner <code>share/rnc</code> liegt. So kann das XML dieser Dateien beim Bearbeiten automatisch validiert werden. Für den Ordner <code>ignore</code> gilt übrigens dasselbe wie für die <q lang="en">untracked files</q>: Der <a href="#git-restore">Befehl <i>restore</i></a> entfaltet in ihm keine Wirkung.</p>
+      <p id="git-ignore"><b>Was heißt das alles für Sie in der Praxis?</b> Ganz einfach: Arbeiten Sie niemals in den von Git beobachteten Ordnern! Wenn Sie eine XML-Datei bearbeiten möchten, kopieren Sie diese und legen Sie die Kopie im Ordner <code>ignore</code> ab. In der XML-Ansicht gibt es hierfür mit dem Icon <img src="../img/to-folder.svg" width="30" height="30" alt=""> eine <a href="#xml-operationen">Möglichkeit, dies mit einem Klick zu tun</a>. Denn der Ordner <code>ignore</code> und seine Inhalte werden von Git <em>nicht</em> beobachtet. Da er aber im Repository relativ dieselbe Position wie der Ordner <code>articles</code> hat, erreichen die dort befindlichen XML-Dateien trotzdem das Schema, das im Ordner <code>share/rnc</code> liegt. So kann das XML dieser Dateien beim Bearbeiten automatisch validiert werden. Für den Ordner <code>ignore</code> gilt übrigens dasselbe wie für die <q lang="en">untracked files</q>: Der <a href="#git-restore">Befehl <i>restore</i></a> entfaltet in ihm keine Wirkung.</p>
 
       <h1><span>Befehle</span></h1>
 
@@ -438,13 +431,13 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
       <ul>
         <li>Ein <b>Klick auf den Dateinamen</b> öffnet die Datei im <a href="#xml-vorschaufenster">Vorschaufenster</a>;</li>
 
-        <li>mit dem Icon <img src="../img/win/to-folder.svg" width="30" height="30" alt=""> können Sie eine Kopie der Datei in den <a href="#git-ignore">Ordner <code>ignore</code></a> legen;</li>
+        <li>mit dem Icon <img src="../img/to-folder.svg" width="30" height="30" alt=""> können Sie eine Kopie der Datei in den <a href="#git-ignore">Ordner <code>ignore</code></a> legen;</li>
 
-        <li>mit dem Icon <img src="../img/win/edit-copy.svg" width="30" height="30" alt=""> können Sie den XML-Quelltext der Datei in die Zwischenablage kopieren;</li>
+        <li>mit dem Icon <img src="../img/edit-copy.svg" width="30" height="30" alt=""> können Sie den XML-Quelltext der Datei in die Zwischenablage kopieren;</li>
 
-        <li>mit dem Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> können Sie sich das Kurz-Gefasst der Datei anzeigen lassen, und zwar in der Form, in der es in den Suchergebnissen von <a href="https://www.zdl.org/">zdl.org</a> erscheint;</li>
+        <li>mit dem Icon <img src="../img/preview.svg" width="30" height="30" alt=""> können Sie sich das Kurz-Gefasst der Datei anzeigen lassen, und zwar in der Form, in der es in den Suchergebnissen von <a href="https://www.zdl.org/">zdl.org</a> erscheint;</li>
 
-        <li>mit dem Icon <img src="../img/win/xml.svg" width="30" height="30" alt=""> können Sie die Datei im Standard-XML-Editor Ihres Betriebssystems öffnen.</li>
+        <li>mit dem Icon <img src="../img/xml.svg" width="30" height="30" alt=""> können Sie die Datei im Standard-XML-Editor Ihres Betriebssystems öffnen.</li>
       </ul>
 
       <h1><span>Vorschaufenster</span></h1>
@@ -455,15 +448,15 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Im Kopf des Vorschaufensters gibt es mehrere Icons, die für die verschiedenen <b>Funktionen</b> des Fensters stehen:</p>
 
-      <p id="xml-vorschaufensterUpdate" class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>F5</kbd>) können Sie die Vorschauansicht neu aufbauen oder, nachdem Sie im Fenster navigiert haben, zur Vorschauansicht zurückkehren. Dabei wird der XML-Code der Datei erneut von Ihrer Festplatte eingelesen und an zdl.org geschickt. Sie bekommen also immer die aktuelle Fassung der Datei angezeigt. Außerdem wird im Hauptfenster der App die Funktion <a href="#allgemeines-update">Update</a> angestoßen. Die Idee hinter dieser Funktion ist, dass Sie parallel das Vorschaufenster und die zugehörige XML-Datei offen haben können. Nehmen Sie Änderungen an der XML-Datei vor, müssen Sie im Vorschaufenster nur noch das XML-Icon klicken und Sie sehen den Artikel in just der Fassung, an der Sie gerade arbeiten. Außerdem werden <span lang="fr">en passant</span> die Daten im Hauptfenster auf dem neusten Stand gehalten.</p>
+      <p id="xml-vorschaufensterUpdate" class="indent-icon"><img src="../img/xml.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>F5</kbd>) können Sie die Vorschauansicht neu aufbauen oder, nachdem Sie im Fenster navigiert haben, zur Vorschauansicht zurückkehren. Dabei wird der XML-Code der Datei erneut von Ihrer Festplatte eingelesen und an zdl.org geschickt. Sie bekommen also immer die aktuelle Fassung der Datei angezeigt. Außerdem wird im Hauptfenster der App die Funktion <a href="#allgemeines-update">Update</a> angestoßen. Die Idee hinter dieser Funktion ist, dass Sie parallel das Vorschaufenster und die zugehörige XML-Datei offen haben können. Nehmen Sie Änderungen an der XML-Datei vor, müssen Sie im Vorschaufenster nur noch das XML-Icon klicken und Sie sehen den Artikel in just der Fassung, an der Sie gerade arbeiten. Außerdem werden <span lang="fr">en passant</span> die Daten im Hauptfenster auf dem neusten Stand gehalten.</p>
 
-      <p class="indent-icon"><img src="../img/win/window-new.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>N</kbd>) können Sie dieselbe Datei in einem weiteren Vorschaufenster öffnen. Dies bietet sich immer dann an, wenn Sie <abbr title="zum Beispiel">z.&nbsp;B.</abbr> in einem Vorschaufenster den Belegtext sehen und im anderen die Belegquelle ansteuern möchten. Mit dem Icon lassen sich beliebig viele Vorschaufenster zu ein und derselben XML-Datei öffnen.</p>
+      <p class="indent-icon"><img src="../img/window-new.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>N</kbd>) können Sie dieselbe Datei in einem weiteren Vorschaufenster öffnen. Dies bietet sich immer dann an, wenn Sie <abbr title="zum Beispiel">z.&nbsp;B.</abbr> in einem Vorschaufenster den Belegtext sehen und im anderen die Belegquelle ansteuern möchten. Mit dem Icon lassen sich beliebig viele Vorschaufenster zu ein und derselben XML-Datei öffnen.</p>
 
       <p>Die anderen Icons dienen zur Navigation:</p>
 
-      <p class="indent-icon"><img src="../img/win/nav-back.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>←</kbd>) navigieren Sie zur vorherigen Seite.</p>
+      <p class="indent-icon"><img src="../img/nav-back.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>←</kbd>) navigieren Sie zur vorherigen Seite.</p>
 
-      <p class="indent-icon"><img src="../img/win/nav-forward.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>→</kbd>) navigieren Sie zur nächsten Seite.</p>
+      <p class="indent-icon"><img src="../img/nav-forward.svg" width="30" height="30" alt="">Mit diesem Icon (oder mit dem Tastaturkürzel <kbd>Alt</kbd>&nbsp;+ <kbd>→</kbd>) navigieren Sie zur nächsten Seite.</p>
 
       <p>Ist ein Icon ausgegraut, kann in die jeweilige Richtung gerade nicht navigiert werden.</p>
     </section>
@@ -479,34 +472,34 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
         <li>Jeder Hinweis beginnt mit einer Nennung des <b class="red">Hinweistyps</b>. Die <a href="#hinweise-typen">Hinweistypen</a> sind mit ihrer Beschreibung im Handbuch verlinkt.</li>
 
-        <li>Der Textblock mit vorangestelltem <img src="../img/win/text-not-okay.svg" width="30" height="30" alt=""> beschreibt einen <b>Fehler</b>.</li>
+        <li>Der Textblock mit vorangestelltem <img src="../img/text-not-okay.svg" width="30" height="30" alt=""> beschreibt einen <b>Fehler</b>.</li>
 
-        <li>Der Textblock mit vorangestelltem <img src="../img/win/text-okay.svg" width="30" height="30" alt=""> gibt einen <b>Korrekturhinweis</b>. Wird korrekter XML-Code vorgeschlagen, kann man diesen durch einfachen Klick automatisch kopieren.</li>
+        <li>Der Textblock mit vorangestelltem <img src="../img/text-okay.svg" width="30" height="30" alt=""> gibt einen <b>Korrekturhinweis</b>. Wird korrekter XML-Code vorgeschlagen, kann man diesen durch einfachen Klick automatisch kopieren.</li>
 
         <li>Einige Hinweise (<abbr title="zum Beispiel">z.&nbsp;B.</abbr> <a href="#hinweise-comment"><i>XML-Kommentar</i></a>) haben keines dieser Icons. Sie sind rein informationeller Natur, sollen ein Phänomen also weder als richtig noch als falsch markieren.</li>
 
-        <li>Das Icon <img src="../img/win/location.svg" width="30" height="30" alt=""> gibt grob den <b>Ort in der XML-Datei</b> an, auf den sich der Hinweis bezieht. So kann man <abbr title="zum Beispiel">z.&nbsp;B.</abbr> sofort sehen, ob sich ein Verweis im Verweisblock oder Text der Wortgeschichte befindet.</li>
+        <li>Das Icon <img src="../img/location.svg" width="30" height="30" alt=""> gibt grob den <b>Ort in der XML-Datei</b> an, auf den sich der Hinweis bezieht. So kann man <abbr title="zum Beispiel">z.&nbsp;B.</abbr> sofort sehen, ob sich ein Verweis im Verweisblock oder Text der Wortgeschichte befindet.</li>
       </ul>
 
       <p>Auch Hinweise, in denen ein Phänomen als fehlerhaft markiert ist, sind nicht notwendigerweise Fehler. Dies ist häufig eine Frage der Auslegung. Auch bei diesen Hinweisen handelt sich zunächst einmal nur um Vorschläge, die bedacht, oder Informationen, die zur Kenntnis genommen werden sollten.</p>
 
       <p>Funktion der <b>Icons unterhalb der</b> <b class="blue">Zeilenangabe</b>:</p>
 
-      <p id="hinweise-markierungen" class="indent-icon"><img src="../img/win/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/win/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/win/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu taggen, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
+      <p id="hinweise-markierungen" class="indent-icon"><img src="../img/mark-unchecked-small.svg" width="30" height="30" alt="">Durch Klick auf dieses Icon kann man den Hinweis markieren. Die <b>Markierung</b> wird gespeichert und beim Neustart des Programms wiederhergestellt. Es gibt zwei verschiedene Markierungen: <img src="../img/button-yes.svg" width="30" height="30" alt=""> und <img src="../img/button-no.svg" width="30" height="30" alt="">. Haben Sie Hinweise markiert, können Sie diese <a href="#allgemeines-filterleisteMarkierungen">mithilfe des entsprechenden Filters</a> wiederfinden. Die Funktion dient primär dazu, Hinweise als <q>geprüft</q> zu taggen, um sie nicht immer wieder aufs Neue überprüfen zu müssen. In den <a href="#einstellungen">Einstellungen</a> gibt es eine Funktion, mit der Sie <a href="#einstellungen-datenMarks">alle Markierungen löschen</a> können.</p>
 
-      <p class="indent-icon"><img src="../img/win/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein. Da die Zeilennummer aber dynamisch ist (weil davor jederzeit Zeilen hinzugefügt oder entfernt werden könnten), kann diese nicht für die Berechnung der Indentifizierung herangezogen werden.</p>
+      <p class="indent-icon"><img src="../img/placeholder.svg" width="30" height="30" alt="">Die einzelnen Hinweise haben keine ID, aber eine Identifizierung. Diese ist zwar in vielen Fällen eindeutig, aber eben nicht immer. Darum kann es sein, das Sie einen der Hinweise markieren, wodurch automatisch andere Hinweise mitmarkiert werden. Dies kann nur passieren, wenn inhaltlich identische Hinweise in ein und derselben XML-Datei zu finden sind. In solchen Fällen kann allein die Zeilennummer der Hinweise abweichend sein. Da die Zeilennummer aber dynamisch ist (weil davor jederzeit Zeilen hinzugefügt oder entfernt werden könnten), kann diese nicht für die Berechnung der Indentifizierung herangezogen werden.</p>
 
-      <p class="indent-icon"><img src="../img/win/context.svg" width="30" height="30" alt="">Ein Klick auf das Icon öffnet ein Popup-Fenster, in dem Sie den Hinweis im <b>Kontext des Originalquellcodes</b> einsehen können, ohne dafür eigens die XML-Datei öffnen zu müssen. Im Popup-Fenster wird der XML-Quelltext zeilenweise dargestellt. Am linken Rand finden Sie die Zeilenzählung. Die Zeile, in der das Element zu finden ist, auf das sich der Hinweis bezieht, ist <b class="blue">blau</b> dargestellt. In vielen Fällen wird sogar die genaue <mark>Stelle im Quelltext</mark> markiert, um die es geht. (Es kann passieren, dass auch andere Stellen mit einem ähnlichen Phänomen hervorgehoben werden.) Der dargestellte Quelltext kann mal mehr, mal weniger umfangreich sein. Findet sich ein Phänomen im Autor*innentext der Wortgeschichte, wird immer ein kompletter Codeblock gedruckt.</p>
+      <p class="indent-icon"><img src="../img/context.svg" width="30" height="30" alt="">Ein Klick auf das Icon öffnet ein Popup-Fenster, in dem Sie den Hinweis im <b>Kontext des Originalquellcodes</b> einsehen können, ohne dafür eigens die XML-Datei öffnen zu müssen. Im Popup-Fenster wird der XML-Quelltext zeilenweise dargestellt. Am linken Rand finden Sie die Zeilenzählung. Die Zeile, in der das Element zu finden ist, auf das sich der Hinweis bezieht, ist <b class="blue">blau</b> dargestellt. In vielen Fällen wird sogar die genaue <mark>Stelle im Quelltext</mark> markiert, um die es geht. (Es kann passieren, dass auch andere Stellen mit einem ähnlichen Phänomen hervorgehoben werden.) Der dargestellte Quelltext kann mal mehr, mal weniger umfangreich sein. Findet sich ein Phänomen im Autor*innentext der Wortgeschichte, wird immer ein kompletter Codeblock gedruckt.</p>
 
       <p>Die Hinweise beziehen sich – natürlich – immer auf eine bestimmte <b>XML-Datei</b>. Der Name der XML-Datei, auf die sich ein Hinweis bezieht, bleibt am oberen Rand der Ansicht sichtbar. Neben dem Dateinamen finden Sie drei <b>Icons</b>:</p>
 
-      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Das Icon schickt den XML-Code der Datei an ein neues Programmfenster. In diesem wird die <b>Vorschau</b> auf zdl.org aufgerufen (<a href="#xml-vorschaufenster">mehr zum Vorschaufenster</a>).</p>
+      <p class="indent-icon"><img src="../img/preview.svg" width="30" height="30" alt="">Das Icon schickt den XML-Code der Datei an ein neues Programmfenster. In diesem wird die <b>Vorschau</b> auf zdl.org aufgerufen (<a href="#xml-vorschaufenster">mehr zum Vorschaufenster</a>).</p>
 
-      <p class="indent-icon"><img src="../img/win/lemmas.svg" width="30" height="30" alt="">Das Icon öffnet ein Popup-Fenster, in dem die <b>Lemmata</b> aufgelistet werden, die in der XML-Datei beschrieben werden. Enthält die Datei einen Wortfeldartikel, werden die Wörter des Wortfeldes aufgelistet.</p>
+      <p class="indent-icon"><img src="../img/lemmas.svg" width="30" height="30" alt="">Das Icon öffnet ein Popup-Fenster, in dem die <b>Lemmata</b> aufgelistet werden, die in der XML-Datei beschrieben werden. Enthält die Datei einen Wortfeldartikel, werden die Wörter des Wortfeldes aufgelistet.</p>
 
-      <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Das Icon öffnet die Datei im Standard-XML-<b>Editor</b> des Betriebsystems.</p>
+      <p class="indent-icon"><img src="../img/xml.svg" width="30" height="30" alt="">Das Icon öffnet die Datei im Standard-XML-<b>Editor</b> des Betriebsystems.</p>
 
-      <p>In dieser Ansicht gibt es eine <b>Export-Funktion</b> für Hinweise, bei denen eine automatisierte, sichere Ersetzung möglich ist. Aufgerufen werden kann sie über das Icon <img src="../img/win/export.svg" width="30" height="30" alt="">, das rechts neben den auch in der XML-Ansicht sichtbaren <a href="#allgemeines-kopfleisteXMLHinweise">Sortier-Icons</a> steht. Exportiert wird eine JSON-Datei mit einer Hinweisliste, die aus Objekten mit selbsterklärenden Werten besteht. Ein Ersetzungsprogramm ist in <i>QS</i> nicht enthalten, muss für diese Liste also eigens geschrieben werden.</p>
+      <p>In dieser Ansicht gibt es eine <b>Export-Funktion</b> für Hinweise, bei denen eine automatisierte, sichere Ersetzung möglich ist. Aufgerufen werden kann sie über das Icon <img src="../img/export.svg" width="30" height="30" alt="">, das rechts neben den auch in der XML-Ansicht sichtbaren <a href="#allgemeines-kopfleisteXMLHinweise">Sortier-Icons</a> steht. Exportiert wird eine JSON-Datei mit einer Hinweisliste, die aus Objekten mit selbsterklärenden Werten besteht. Ein Ersetzungsprogramm ist in <i>QS</i> nicht enthalten, muss für diese Liste also eigens geschrieben werden.</p>
 
       <p>Es werden nur sichtbare Hinweise exportiert und solche, bei denen die Ersetzung zuverlässig funktionieren sollte. Dies trifft derzeit nur auf <a href="#hinweise-quotation_date"><i>Belegdatum korrigieren</i></a> und <a href="#hinweise-quotcluster_helterskelter"><i>Belegreferenzen in falscher Reihenfolge</i></a> zu.</p>
 
@@ -991,11 +984,11 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
       <p id="clusterei-aufbau">Mithilfe der Clusterei können Sie die WGd-Verweiscluster verwalten. Die Ansicht besteht aus drei Sektionen, die über Icons in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> angesteuert werden:</p>
 
       <ul>
-        <li><img src="../img/win/preferences.svg" width="30" height="30" alt="">In der <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> können Sie Clusterzentren modulieren, also ermitteln, welche Verlinkungen in welchen XML-Dateien ergänzt werden müssen, um ein gewünschtes Clusterzentrum zu erhalten.</li>
+        <li><img src="../img/preferences.svg" width="30" height="30" alt="">In der <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> können Sie Clusterzentren modulieren, also ermitteln, welche Verlinkungen in welchen XML-Dateien ergänzt werden müssen, um ein gewünschtes Clusterzentrum zu erhalten.</li>
 
-        <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-vergleichen">Sektion <i>Vergleichen</i></a> werden einander ähnliche Cluster aufgeführt. Die XML-Dateien, die zu den Lemmata der Clusterzentren gehören, können von dort mit einem Klick zur Modulieren-Sektion hinzugefügt werden.</li>
+        <li><img src="../img/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-vergleichen">Sektion <i>Vergleichen</i></a> werden einander ähnliche Cluster aufgeführt. Die XML-Dateien, die zu den Lemmata der Clusterzentren gehören, können von dort mit einem Klick zur Modulieren-Sektion hinzugefügt werden.</li>
 
-        <li><img src="../img/win/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> werden alle Cluster eines Themenfeldes so dargestellt wie in der <a href="https://www.zdl.org/wb/wgd/Artikel">WGd-Artikelübersicht auf zdl.org</a>. Im Unterschied zur Online-Übersicht kann man hier jedoch leicht sehen, welche Cluster sich geändert haben und in welchen neue Lemmata hinzugekommen sind.</li>
+        <li><img src="../img/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> werden alle Cluster eines Themenfeldes so dargestellt wie in der <a href="https://www.zdl.org/wb/wgd/Artikel">WGd-Artikelübersicht auf zdl.org</a>. Im Unterschied zur Online-Übersicht kann man hier jedoch leicht sehen, welche Cluster sich geändert haben und in welchen neue Lemmata hinzugekommen sind.</li>
       </ul>
 
       <h2><span>Sektion Modulieren</span></h2>
@@ -1018,11 +1011,11 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
           <p>Oben im Artikelblock steht der Name der XML-Datei, daneben finden Sie drei Icons:</p>
 
-          <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Öffnet die XML-Datei im <a href="#xml-vorschaufenster">Vorschaufenster</a></p>
+          <p class="indent-icon"><img src="../img/preview.svg" width="30" height="30" alt="">Öffnet die XML-Datei im <a href="#xml-vorschaufenster">Vorschaufenster</a></p>
 
-          <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor Ihres Betriebssystems</p>
+          <p class="indent-icon"><img src="../img/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor Ihres Betriebssystems</p>
 
-          <p class="indent-icon"><img src="../img/win/close.svg" width="30" height="30" alt="">Entfernt den Artikelblock aus der Modulierung</p>
+          <p class="indent-icon"><img src="../img/close.svg" width="30" height="30" alt="">Entfernt den Artikelblock aus der Modulierung</p>
 
           <p>Auf die im Artikelblock alphabetisch aufgelisteten Lemmata wird in der Datei bereits verwiesen. Klicken Sie auf einen der blauen Links, öffnet sich eine Tabelle, in der Sie sehen, in welcher Zeile sich ein Verweis auf das genannte Lemma befindet.</p>
         </li>
@@ -1036,13 +1029,13 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <li>
           <p>Noch bevor Sie die vorgeschlagenen Verweise in den XML-Dateien ergänzen, können Sie sich eine <b>Vorschau berechnen</b> lassen, um zu sehen, ob Ihnen das Ergebnis auch zusagt.</p>
 
-          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modulierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn in der Sektion <i>Modulieren</i> neue Verweise vorgeschlagen werden, sprich: wenn dort irgendwo ein roter Link erscheint. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
+          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modulierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn in der Sektion <i>Modulieren</i> neue Verweise vorgeschlagen werden, sprich: wenn dort irgendwo ein roter Link erscheint. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
         </li>
       </ol>
 
-      <p>Um eine <b>Modulierung zurückzusetzen</b> können Sie auf das Icon <img src="../img/win/cleanup.svg" width="30" height="30" alt=""> im Suchfeld klicken. Es entfernt alle Artikelblöcke aus der Modulierung.</p>
+      <p>Um eine <b>Modulierung zurückzusetzen</b> können Sie auf das Icon <img src="../img/cleanup.svg" width="30" height="30" alt=""> im Suchfeld klicken. Es entfernt alle Artikelblöcke aus der Modulierung.</p>
 
-      <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
+      <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
 
       <p>Clusterzentren können sinnvoll <b>nur in eine Richtung moduliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgen, dass ein Clusterzentrum entsteht. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modulieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
 
@@ -1052,9 +1045,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>In der Sektion werden einander sehr ähnlich Cluster aufgelistet und nebeneinandergestellt. Je ähnlicher sich die Cluster sind, umso eher bieten sie sich zum Verschmelzen an. Der angegebene <b>Prozentwert</b> bezieht sich auf das Verhältnis des kleineren zum größeren Cluster: 100&nbsp;% bedeutet, dass 100&nbsp;% der Lemmata des kleineren Clusters auch im größeren Cluster auftauchen, bei 75&nbsp;% wären dies nur drei Viertel der Lemmata. Die Anzeige hat einen Schwellenwert von 75&nbsp;%. Cluster, die im Vergleich eine geringere Ähnlichkeit haben, werden nicht gelistet.</p>
 
-      <p>Klicken Sie auf das Icon <img src="../img/win/plus.svg" width="30" height="30" alt=""> werden alle XML-Dateien, in denen sich die Hauptlemmata der nebeinander stehenden Cluster finden, zur <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> hinzugefügt. Die hinzugefügten Hauptlemmata werden dann <mark class="color5">blau hinterlegt</mark>. (Nebenlemmata spielen für die Modulierung keine Rolle, weswegen sie in dieser Ansicht ausgegraut sind.)</p>
+      <p>Klicken Sie auf das Icon <img src="../img/plus.svg" width="30" height="30" alt=""> werden alle XML-Dateien, in denen sich die Hauptlemmata der nebeinander stehenden Cluster finden, zur <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> hinzugefügt. Die hinzugefügten Hauptlemmata werden dann <mark class="color5">blau hinterlegt</mark>. (Nebenlemmata spielen für die Modulierung keine Rolle, weswegen sie in dieser Ansicht ausgegraut sind.)</p>
 
-      <p>Das Icon hat sich nun geändert: <img src="../img/win/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modulieren</i> entfernt.</p>
+      <p>Das Icon hat sich nun geändert: <img src="../img/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modulieren</i> entfernt.</p>
 
       <p>Eine weitere Funktion gibt es noch: Wenn Sie ein bestimmtes Lemma interessiert und Sie sehen wollen, in welchen Clustern es sich jeweils befindet, können Sie es anklicken. Es wird dann in allen sichtbaren Clustern <mark>orange hinterlegt</mark>.</p>
 
@@ -1064,7 +1057,7 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>In der Sektion <i>Überprüfen</i> werden die Cluster analog zur <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> aufgelistet. Interessant ist diese Sektion <abbr title="vor allem">v.&nbsp;a.</abbr> im Zusammenhang mit der <a href="#clusterei-vorschau">Funktion zur Berechnung der Vorschau</a>. Haben Sie eine Vorschau berechnet, werden Cluster, die zuvor nicht existiert oder sich verändert haben, rot umrandet. Und Lemmata, die zuvor in keinem Cluster zu finden waren, werden sogar <mark class="color4">rot hinterlegt</mark>.</p>
 
-      <p>Mithilfe des Icons <img src="../img/win/jump.svg" width="30" height="30" alt=""> in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> können Sie durch die geänderten <abbr title="beziehungsweise">bzw.</abbr> neuen Cluster springen. Dieses Icon ist nur sichtbar, wenn die Sektion <i>Überprüfen</i> aktiv ist.</p>
+      <p>Mithilfe des Icons <img src="../img/jump.svg" width="30" height="30" alt=""> in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> können Sie durch die geänderten <abbr title="beziehungsweise">bzw.</abbr> neuen Cluster springen. Dieses Icon ist nur sichtbar, wenn die Sektion <i>Überprüfen</i> aktiv ist.</p>
 
       <p>Mitunter werden Sie auf <b>rot umrandete Cluster</b> stoßen, bei denen Sie keine visuelle Differenz zu einem bereits zuvor bestehenden Cluster erkennen können. Dies liegt daran, dass der Unterschied sehr subtiler Natur ist. In einem solchen Fall hat sich nämlich die Anzahl der Clusterpunkte geändert, mit deren Hilfe die Lemmata im Cluster gewichtet und sortiert werden. Die Änderung hatte dann aber einen so geringen Umfang, dass sie für die Visualisierung des Clusters keine Rolle spielte.</p>
 
@@ -1074,11 +1067,11 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="clusterei-vorschau">Normalerweise arbeitet die Clusterei mit den WGd-Verweisclustern, wie sie in der aktuellen Version der Datei <a href="#allgemeines-artikelJSON">Artikel.json</a> zu finden sind. Dazu wird die Artikel.json aus dem <a href="#git-dateien">Repository</a> eingelesen. Die in ihr zu findenden Cluster werden dann für die Darstellung in der Clusterei genutzt.</p>
 
-      <p>Mithilfe des Icons <img src="../img/win/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie sich aber eine Cluster-Vorschau berechnen lassen, auf die dann in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> zurückgegriffen wird. (Für die Sektion <i>Modulieren</i> spielen die bestehenden Cluster keine Rolle. In ihr geht es nur darum, was wirklich in den XML-Dateien steht.)</p>
+      <p>Mithilfe des Icons <img src="../img/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie sich aber eine Cluster-Vorschau berechnen lassen, auf die dann in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> zurückgegriffen wird. (Für die Sektion <i>Modulieren</i> spielen die bestehenden Cluster keine Rolle. In ihr geht es nur darum, was wirklich in den XML-Dateien steht.)</p>
 
       <p>Bei der Berechnung werden die Lemmata aller XML-Dateien, von denen <i>QS</i> derzeit Kenntnis hat, mit einbezogen. Das heißt, dass auch Dateien berücksichtigt werden, die im <a href="#git-ignore">Ordner <code>ignore</code></a> liegen.</p>
 
-      <p>Klicken Sie auf das Icon <img src="../img/win/preview.svg" width="30" height="30" alt=""> erscheint ein Popup-Fenster, in dem Sie die Berechnung durch ein paar Einstellungen beeinflussen können:</p>
+      <p>Klicken Sie auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> erscheint ein Popup-Fenster, in dem Sie die Berechnung durch ein paar Einstellungen beeinflussen können:</p>
 
       <p id="clusterei-vorschauOptionModulierung" class="option">Modulierung mit einbeziehen</p>
 
@@ -1107,9 +1100,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <h1><span>Erweiterte Suche</span></h1>
 
-      <p id="suche-erweitert">Die erweiterte Suche können Sie mit dem Icon <img src="../img/win/preferences.svg" width="30" height="30" alt=""> rechts im Suchfeld öffnen (<abbr title="siehe">s.</abbr> zu den anderen Icons den Abschnitt <a href="#allgemeines-kopfleisteSuche">Kopfleiste</a>). Die Einstellungen für die erweitere Suche öffnen sich außerdem automatisch, wenn Sie das globale Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>F</kbd> benutzen. Sobald Sie eine Suche anstoßen, schließen sich die erweiterten Einstellungen.</p>
+      <p id="suche-erweitert">Die erweiterte Suche können Sie mit dem Icon <img src="../img/preferences.svg" width="30" height="30" alt=""> rechts im Suchfeld öffnen (<abbr title="siehe">s.</abbr> zu den anderen Icons den Abschnitt <a href="#allgemeines-kopfleisteSuche">Kopfleiste</a>). Die Einstellungen für die erweitere Suche öffnen sich außerdem automatisch, wenn Sie das globale Tastaturkürzel <kbd>Strg</kbd>&nbsp;+ <kbd>F</kbd> benutzen. Sobald Sie eine Suche anstoßen, schließen sich die erweiterten Einstellungen.</p>
 
-      <p>Die vorgenommenen Einstellungen werden gespeichert und nach dem Neustart des Programms wiederhergestellt. Sind Einstellungen aktiv, die zu einer Verringerung der Trefferzahl führen, wird das Icon zum Öffnen der erweiterten Suche rot dargestellt: <img src="../img/win/preferences-red.svg" width="30" height="30" alt="">.</p>
+      <p>Die vorgenommenen Einstellungen werden gespeichert und nach dem Neustart des Programms wiederhergestellt. Sind Einstellungen aktiv, die zu einer Verringerung der Trefferzahl führen, wird das Icon zum Öffnen der erweiterten Suche rot dargestellt: <img src="../img/preferences-red.svg" width="30" height="30" alt="">.</p>
 
       <p>Die <b>Einstellungen</b>:</p>
 
@@ -1180,13 +1173,13 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p class="indent-hint"><i>QS</i> kann diese Datei zwar erzeugen, aber anders als ihre übrigen Inhalte können die Zeitstrahldaten nicht von der App berechnet werden. Wird die Datei ohne Zeitstrahldaten exportiert, kann auf der Webseite kein <a href="https://www.zdl.org/wb/wgd/Artikel?ansicht=Zeitstrahl">Zeitstrahl</a> angezeigt werden.</p>
 
-      <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
+      <p class="indent-hint">Die Zeitstrahldaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Zeitstrahl\<wbr>data\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
 
       <p id="einstellungen-datenRessourcen" class="option">Ressourcendaten</p>
 
       <p class="indent-hint">Für die Ressourcendaten gilt dasselbe wie für die Zeitstrahldaten: Sie werden allein für den <a href="#publikation-artikelJSON">Export der Artikel.json</a> benötigt. Ebenso wie die Zeitstrahldaten können auch die Ressourcendaten von der App nicht berechnet werden.</p>
 
-      <p class="indent-hint">Die Ressourcendaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Ressourcen\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
+      <p class="indent-hint">Die Ressourcendaten liegen auf dem Netzlaufwerk. Unter Windows wäre das unter <code>W:\Software\<wbr>Entwicklungsumgebung WGd\<wbr>wgd.local\<wbr>scr\<wbr>Ressourcen\<wbr>data.json</code>. Sie müssen einfach nur auf das Icon <img src="../img/open-file.svg" width="30" height="30" alt=""> klicken und die Datei auswählen.</p>
 
       <p id="einstellungen-datenZDL" class="option">ZDL-Repository</p>
 
@@ -1478,9 +1471,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>Über dem XML-Code gibt zwei <b>Icons</b>:</p>
 
-      <p class="indent-icon"><img src="../img/win/preview.svg" width="30" height="30" alt="">Zeigt das Kurz-Gefasst in der gerenderten HTML-Fassung an</p>
+      <p class="indent-icon"><img src="../img/preview.svg" width="30" height="30" alt="">Zeigt das Kurz-Gefasst in der gerenderten HTML-Fassung an</p>
 
-      <p class="indent-icon"><img src="../img/win/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor des Betriebssystems</p>
+      <p class="indent-icon"><img src="../img/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor des Betriebssystems</p>
 
       <h1><span>Hilfe-Menü</span></h1>
 
@@ -1496,9 +1489,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="verschiedenes-fehlerlog">Das Fehlerlog ist persistent, es wird also nicht bei jedem Programmstart neu erstellt, sondern immer weiter gefüllt. Tritt ein Programmfehler auf, der keine explizite Meldung für die Benutzer*in auslöst, wird dieser im Log protokolliert. Stoßen Sie auf einen Fehler, benötigt die Techniker*in genauere Informationen, um ihn zu beheben. Das Log stellt diese unter Umständen bereit.</p>
 
-      <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/win/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
+      <p>Der Text im Log kann ausgewählt und kopiert werden. Alternativ können Sie mit dem Icon <img src="../img/open-file.svg" width="30" height="30" alt=""> auch das ganze Log im Standard-Editor Ihres Betriebssystem öffnen, die Datei an einem beliebigen Ort speichern und komplett verschicken.</p>
 
-      <p>Mit dem Icon <img src="../img/win/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
+      <p>Mit dem Icon <img src="../img/delete.svg" width="30" height="30" alt=""> löschen Sie das Log.</p>
 
       <h1><span>Command-Line Interface (CLI)</span></h1>
 
@@ -1669,11 +1662,11 @@ $ git push</pre>
     <!-- SEARCH BAR -->
     <div id="search-bar" class="invisible"
       ><input type="text" value="" placeholder="Suchtext" id="search-field"
-      ><a href="#" id="search-up" class="icon"><img src="../img/win/search-up.svg" width="30" height="30" alt=""></a
-      ><a href="#" id="search-down" class="icon"><img src="../img/win/search-down.svg" width="30" height="30" alt=""></a
+      ><a href="#" id="search-up" class="icon"><img src="../img/search-up.svg" width="30" height="30" alt=""></a
+      ><a href="#" id="search-down" class="icon"><img src="../img/search-down.svg" width="30" height="30" alt=""></a
       ><input type="checkbox" id="search-global"><label for="search-global">in allen Kapiteln suchen</label
       ><span id="search-results"></span
-      ><a href="#" id="search-close" class="icon"><img src="../img/win/close.svg" width="30" height="30" alt=""></a
+      ><a href="#" id="search-close" class="icon"><img src="../img/close.svg" width="30" height="30" alt=""></a
     ></div>
   </body>
 </html>

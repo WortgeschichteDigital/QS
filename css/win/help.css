@@ -163,18 +163,18 @@ p.scope,
 p.tag,
 p.option {
   padding-left: 40px;
-  background-image: url(../../img/win/location.svg);
+  background-image: url(../../img/location.svg);
   background-position: bottom left;
   background-repeat: no-repeat;
   background-size: 30px 30px;
 }
 
 p.tag {
-  background-image: url(../../img/win/xml.svg);
+  background-image: url(../../img/xml.svg);
 }
 
 p.option {
-  background-image: url(../../img/win/preferences.svg);
+  background-image: url(../../img/preferences.svg);
   font-style: italic;
 }
 
@@ -230,14 +230,14 @@ pre.correct::before {
   left: -15px;
   width: 30px;
   height: 30px;
-  background-image: url(../../img/win/button-no.svg);
+  background-image: url(../../img/button-no.svg);
   background-position: top left;
   background-repeat: no-repeat;
   background-size: 30px 30px;
 }
 
 pre.correct::before {
-  background-image: url(../../img/win/button-yes.svg);
+  background-image: url(../../img/button-yes.svg);
 }
 
 table {

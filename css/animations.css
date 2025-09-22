@@ -23,31 +23,31 @@
 }
 
 .type-copied {
-  background-image: url(../img/win/edit-copy.svg);
+  background-image: url(../img/edit-copy.svg);
 }
 
 .type-error {
-  background-image: url(../img/win/button-no.svg);
+  background-image: url(../img/button-no.svg);
 }
 
 .type-okay {
-  background-image: url(../img/win/button-yes.svg);
+  background-image: url(../img/button-yes.svg);
 }
 
 .type-reached-bottom {
-  background-image: url(../img/win/reached-bottom.svg);
+  background-image: url(../img/reached-bottom.svg);
 }
 
 .type-reached-left {
-  background-image: url(../img/win/reached-left.svg);
+  background-image: url(../img/reached-left.svg);
 }
 
 .type-reached-right {
-  background-image: url(../img/win/reached-right.svg);
+  background-image: url(../img/reached-right.svg);
 }
 
 .type-reached-top {
-  background-image: url(../img/win/reached-top.svg);
+  background-image: url(../img/reached-top.svg);
 }
 
 

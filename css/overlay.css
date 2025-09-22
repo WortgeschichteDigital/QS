@@ -76,7 +76,7 @@
   top: 80px;
   border-radius: 10px;
   padding-left: 82px;
-  background-image: url(../img/win/dialog-alert.svg);
+  background-image: url(../img/dialog-alert.svg);
   background-position: 5px 5px;
   background-repeat: no-repeat;
   background-size: 72px 72px;
@@ -87,7 +87,7 @@
 }
 
 #dialog[data-type="confirm"].overlay > div {
-  background-image: url(../img/win/dialog-confirm.svg);
+  background-image: url(../img/dialog-confirm.svg);
 }
 
 #dialog > div > a {

@@ -98,7 +98,7 @@
   border-radius: 5px;
   width: 100%;
   height: 24px;
-  background-image: url(../../img/win/toggle-down.svg);
+  background-image: url(../../img/toggle-down.svg);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 24px 24px;
@@ -106,7 +106,7 @@
 }
 
 .open div.file-block-toggle a {
-  background-image: url(../../img/win/toggle-up.svg);
+  background-image: url(../../img/toggle-up.svg);
 }
 
 .file-block-toggle a:is(:hover, :focus) {

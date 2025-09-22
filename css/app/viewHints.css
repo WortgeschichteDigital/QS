@@ -82,7 +82,7 @@
   position: relative;
   margin-top: 10px;
   padding-left: 35px;
-  background-image: url(../../img/win/text-okay.svg);
+  background-image: url(../../img/text-okay.svg);
   background-position: top left;
   background-repeat: no-repeat;
   background-size: 30px 30px;
@@ -91,7 +91,7 @@
 }
 
 .hint .text-erroneous {
-  background-image: url(../../img/win/text-not-okay.svg);
+  background-image: url(../../img/text-not-okay.svg);
 }
 
 .hint .text-hint {
@@ -135,7 +135,7 @@
 .hint .scope {
   margin-top: 10px;
   padding-left: 35px;
-  background-image: url(../../img/win/location-grey.svg);
+  background-image: url(../../img/location-grey.svg);
   background-position: top left;
   background-repeat: no-repeat;
   background-size: 30px 30px;

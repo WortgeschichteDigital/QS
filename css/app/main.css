@@ -51,7 +51,7 @@ header a.view-button {
   margin: 0 5px;
   border-radius: 10px;
   padding: 0 10px 0 40px;
-  background-image: url(../../img/win/xml-white.svg);
+  background-image: url(../../img/xml-white.svg);
   background-position: 5px 0;
   background-repeat: no-repeat;
   background-size: 30px 30px;
@@ -68,46 +68,46 @@ header #view a.view-button:nth-child(3) {
 
 header a.view-button.active {
   background-color: #fff;
-  background-image: url(../../img/win/xml.svg);
+  background-image: url(../../img/xml.svg);
   color: var(--text);
 }
 
 header a#view-hints.view-button {
-  background-image: url(../../img/win/info-white.svg);
+  background-image: url(../../img/info-white.svg);
 }
 
 header a#view-hints.view-button.active {
-  background-image: url(../../img/win/info.svg);
+  background-image: url(../../img/info.svg);
 }
 
 header a#view-clusters.view-button {
-  background-image: url(../../img/win/clusters-white.svg);
+  background-image: url(../../img/clusters-white.svg);
 }
 
 header a#view-clusters.view-button.active {
-  background-image: url(../../img/win/clusters.svg);
+  background-image: url(../../img/clusters.svg);
 }
 
 header a#view-search.view-button {
-  background-image: url(../../img/win/search-white.svg);
+  background-image: url(../../img/search-white.svg);
 }
 
 header a#view-search.view-button.active {
-  background-image: url(../../img/win/search.svg);
+  background-image: url(../../img/search.svg);
 }
 
 header a#fun-filters.view-button {
-  background-image: url(../../img/win/filter-white.svg);
+  background-image: url(../../img/filter-white.svg);
 }
 
 header a#fun-filters.view-button.active {
-  background-image: url(../../img/win/filter.svg);
+  background-image: url(../../img/filter.svg);
 }
 
 header a#fun-filters.active-filters.view-button,
 header a#fun-filters.active-filters.view-button.active {
   background-color: #fff;
-  background-image: url(../../img/win/filter-red.svg);
+  background-image: url(../../img/filter-red.svg);
   color: var(--colorRed);
 }
 
