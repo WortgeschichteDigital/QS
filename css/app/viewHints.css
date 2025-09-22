@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 
 /* cf. viewSearch.css */
 
@@ -175,7 +175,7 @@
   min-width: 200px;
 }
 
-@media (max-width: 800px) {
+@media (width <= 800px) {
   .hints-popup.context-popup {
     max-width: calc(100vw - 130px);
   }
@@ -190,7 +190,7 @@
   max-width: 500px;
 }
 
-@media (max-width: 750px) {
+@media (width <= 750px) {
   .hints-popup.comment-popup,
   .hints-popup.fixed.comment-popup {
     max-width: unset;

@@ -1,63 +1,63 @@
-@charset "utf-8";
+@charset "UTF-8";
 
 /* FONTS ---------------------------------------- */
 
 @font-face {
   font-family: "Noto Sans";
-  src: url(../../fonts/NotoSans-Regular.woff2) format("woff2");
+  src: url(../fonts/NotoSans-Regular.woff2) format("woff2");
 }
 
 @font-face {
   font-family: "Noto Sans";
-  src: url(../../fonts/NotoSans-Italic.woff2) format("woff2");
+  src: url(../fonts/NotoSans-Italic.woff2) format("woff2");
   font-style: italic;
 }
 
 @font-face {
   font-family: "Noto Sans";
-  src: url(../../fonts/NotoSans-Bold.woff2) format("woff2");
+  src: url(../fonts/NotoSans-Bold.woff2) format("woff2");
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Noto Sans";
-  src: url(../../fonts/NotoSans-BoldItalic.woff2) format("woff2");
+  src: url(../fonts/NotoSans-BoldItalic.woff2) format("woff2");
   font-style: italic;
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Noto Serif";
-  src: url(../../fonts/NotoSerif-Regular.woff2) format("woff2");
+  src: url(../fonts/NotoSerif-Regular.woff2) format("woff2");
 }
 
 @font-face {
   font-family: "Noto Serif";
-  src: url(../../fonts/NotoSerif-Italic.woff2) format("woff2");
+  src: url(../fonts/NotoSerif-Italic.woff2) format("woff2");
   font-style: italic;
 }
 
 @font-face {
   font-family: "Noto Serif";
-  src: url(../../fonts/NotoSerif-Bold.woff2) format("woff2");
+  src: url(../fonts/NotoSerif-Bold.woff2) format("woff2");
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Noto Serif";
-  src: url(../../fonts/NotoSerif-BoldItalic.woff2) format("woff2");
+  src: url(../fonts/NotoSerif-BoldItalic.woff2) format("woff2");
   font-style: italic;
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Noto Sans Mono";
-  src: url(../../fonts/NotoSansMono-Regular.woff2) format("woff2");
+  src: url(../fonts/NotoSansMono-Regular.woff2) format("woff2");
 }
 
 @font-face {
   font-family: "Noto Sans Mono";
-  src: url(../../fonts/NotoSansMono-Bold.woff2) format("woff2");
+  src: url(../fonts/NotoSansMono-Bold.woff2) format("woff2");
   font-weight: bold;
 }
 
@@ -66,8 +66,7 @@
 
 body {
   margin: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   background-color: #fff;
   color: var(--text);
   font-family: "Noto Sans", sans-serif;
@@ -109,14 +108,14 @@ a.overlay-close:focus {
 a[href^="http"]::after {
   content: "";
   padding-right: 24px;
-  background-image: url(../../img/win/external-link.svg);
+  background-image: url(../img/win/external-link.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 footer a[href^="http"]::after {
-  background-image: url(../../img/win/external-link-white.svg);
+  background-image: url(../img/win/external-link-white.svg);
 }
 
 code {

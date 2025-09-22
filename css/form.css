@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 
 input[type="text"],
 input[type="password"] {
@@ -21,7 +21,7 @@ input[type="button"] {
   padding: 0 10px 0 35px;
   width: auto;
   background-color: var(--colorGreyLight);
-  background-image: url(../../img/win/button-yes.svg);
+  background-image: url(../img/win/button-yes.svg);
   background-repeat: no-repeat;
   background-size: 30px 30px;
   color: var(--text);
@@ -32,44 +32,44 @@ input[type="button"] {
 
 input[type="button"]:disabled {
   color: var(--textGrey);
-  background-image: url(../../img/win/button-yes-grey.svg);
+  background-image: url(../img/win/button-yes-grey.svg);
   pointer-events: none;
 }
 
 input[type="button"][value="Exportieren"] {
-  background-image: url(../../img/win/export.svg);
+  background-image: url(../img/win/export.svg);
 }
 
 input[type="button"][value="Importieren"] {
-  background-image: url(../../img/win/import.svg);
+  background-image: url(../img/win/import.svg);
 }
 
 input[type="button"][value="Konfiguration"] {
-  background-image: url(../../img/win/preferences.svg);
+  background-image: url(../img/win/preferences.svg);
 }
 
 input[type="button"][value$="Laden"] {
-  background-image: url(../../img/win/open-file.svg);
+  background-image: url(../img/win/open-file.svg);
 }
 
 input[type="button"][value="Löschen"] {
-  background-image: url(../../img/win/cleanup.svg);
+  background-image: url(../img/win/cleanup.svg);
 }
 
 input[type="button"][value="Nein"] {
-  background-image: url(../../img/win/button-no.svg);
+  background-image: url(../img/win/button-no.svg);
 }
 
 input[type="button"][value="Suchen"] {
-  background-image: url(../../img/win/search.svg);
+  background-image: url(../img/win/search.svg);
 }
 
 input[type="button"][value$="Transformieren"] {
-  background-image: url(../../img/win/transform.svg);
+  background-image: url(../img/win/transform.svg);
 }
 
 input[type="button"][value="Vorschau"] {
-  background-image: url(../../img/win/preview.svg);
+  background-image: url(../img/win/preview.svg);
 }
 
 label + input[type="text"] {

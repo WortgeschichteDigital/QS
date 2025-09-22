@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 
 /* ARTIKEL.JSON + OVERVIEW ---------------------- */
 
@@ -143,8 +143,7 @@
 
 #error pre {
   margin: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
   overscroll-behavior: contain;
   padding: 10px;
   max-height: 330px;

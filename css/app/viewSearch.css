@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 
 #search,
 #hints {
@@ -8,6 +8,7 @@
 :is(#search, #hints) .nothing {
   margin-top: 45px;
 }
+
 
 /* RESULTS -------------------------------------- */
 
