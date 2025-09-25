@@ -13,6 +13,8 @@ const term = {
   //         typ    = ""  paragraph type:
   //                        bsp-kurz = example for popup + overview page
   //                        bsp-lang = example for overview page only
+  //                        liste-(ol|ul|blind)-kurz = list item for popup + overview page
+  //                        liste-(ol|ul|blind)-list = list for overview page only
   //                        txt-kurz = explanatory text for popup + overview page
   //                        txt-lang = explanotory text for overview page only
   //         html   = ""  text content (formatted in HTML)
@@ -291,9 +293,40 @@ const term = {
       block.push(" ".repeat(2) + "<div itemprop='articleBody'>");
       for (let i = 0, len = val.text.length; i < len; i++) {
         const item = val.text[i];
-        let p = "";
+
+        // list
+        if (/^liste-/.test(item.typ)) {
+          // open list
+          let listType = item.typ.match(/^liste-(.+?)-/)[1];
+          if (listType === "blind") {
+            listType = "ul";
+          }
+          let open = " ".repeat(4) + "<" + listType;
+          if (/^liste-blind/.test(item.typ)) {
+            open += " class='wgd-term-blind-list'";
+          }
+          open += ">";
+          block.push(open);
+
+          // fill in list items
+          let nextItem;
+          for (let l = i; l < len; l++) {
+            const listItem = val.text[l];
+            if (!/^liste-/.test(listItem.typ)) {
+              break;
+            }
+            block.push(" ".repeat(6) + `<li>${listItem.html}</li>`);
+            nextItem = l;
+          }
+
+          // close list
+          block.push(" ".repeat(4) + `</${listType}>`);
+          i = nextItem;
+          continue;
+        }
 
         // label for examples
+        let p = "";
         if (/^bsp/.test(item.typ) &&
             !/^bsp/.test(val.text[i - 1].typ) &&
             !val.text[i - 1].label) {
