@@ -422,9 +422,7 @@ const xml = {
     xml.files = data.files;
     xml.gitDir = data.gitDir;
     xml.updateErrors = [];
-    const { changed } = data;
-    const { untracked } = data;
-    const { xmlFiles } = data;
+    const { changed, untracked, xmlFiles } = data;
 
     // get XML files
     const files = xmlFiles || await bridge.ipc.invoke("xml-files", xml.gitDir);
@@ -486,6 +484,34 @@ const xml = {
       await hints.glean();
       xml.data.date = new Date().toISOString();
       await xml.writeCache();
+    }
+
+    // reset the status of files that are neither changed nor untracked anymore
+    x: for (const [ file, values ] of Object.entries(xml.data.files)) {
+      // no need to check this file because
+      //   - it has been known and was unchanged
+      //   - it has already been updated
+      if (!values.status || updated.includes(file)) {
+        continue;
+      }
+
+      // check whether the file is still changed or untracked
+      const reg = new RegExp("/" + RegExp.escape(file) + "$");
+      const cu = [ changed, untracked ];
+      for (let i = 1; i <= 2; i++) {
+        const current = cu[i - 1];
+        for (const f of current) {
+          if (reg.test(f)) {
+            if (values.status !== i) {
+              values.status = i;
+              xml.data.date = new Date().toISOString();
+            }
+            continue x;
+          }
+        }
+      }
+      values.status = 0;
+      xml.data.date = new Date().toISOString();
     }
 
     // send data to main window
