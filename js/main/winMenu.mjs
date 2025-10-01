@@ -10,7 +10,7 @@ import dd from "./dd.mjs";
 import pv from "./pv.mjs";
 import win from "./win.mjs";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = import.meta.dirname;
 
 export { winMenu as default };
 

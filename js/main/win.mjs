@@ -13,7 +13,7 @@ import prefs from "./prefs.mjs";
 import pv from "./pv.mjs";
 import winMenu from "./winMenu.mjs";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = import.meta.dirname;
 
 export { win as default };
 

@@ -8,7 +8,7 @@ import path from "node:path";
 
 import winMenu from "./winMenu.mjs";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = import.meta.dirname;
 
 const items = {
   close: {

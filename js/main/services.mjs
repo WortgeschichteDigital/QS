@@ -3,7 +3,7 @@ import { dialog } from "electron";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = import.meta.dirname;
 
 let svg = [];
 

@@ -7,7 +7,7 @@ import services from "./services.mjs";
 import win from "./win.mjs";
 import xml from "./xml.mjs";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = import.meta.dirname;
 
 export { pv as default };
 

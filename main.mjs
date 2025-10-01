@@ -18,7 +18,7 @@ import services from "./js/main/services.mjs";
 import win from "./js/main/win.mjs";
 import xml from "./js/main/xml.mjs";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = import.meta.dirname;
 
 
 /* ERRORS --------------------------------------- */
