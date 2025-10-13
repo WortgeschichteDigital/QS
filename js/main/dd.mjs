@@ -29,5 +29,5 @@ const dd = {
   },
 
   // app is in developer mode
-  dev: !app.isPackaged,
+  dev: process.argv.includes("--dev") || !app.isPackaged,
 };

@@ -3,6 +3,8 @@ import { app } from "electron";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import dd from "./dd.mjs";
+
 export { error as default };
 
 const error = {
@@ -21,6 +23,11 @@ const error = {
     e += "main.mjs\n";
     e += err.stack + "\n";
     error.log(e);
+
+    // print the error to the console if the app runs in dev mode
+    if (dd.dev) {
+      console.log(`\x1b[47m\x1b[31m${err.stack}\x1b[0m`);
+    }
   },
 
   // log variables
