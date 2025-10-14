@@ -341,7 +341,7 @@ ipcMain.handle("command", async (evt, data) => {
     /^git ls-files /,
     /^git pull /,
     /^git restore /,
-    /^git status /,
+    /^git status$/,
   ];
   let allowed = false;
   for (const i of validCommands) {
