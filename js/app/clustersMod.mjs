@@ -1,4 +1,5 @@
 
+import misc from "./misc.mjs";
 import viewClusters from "./viewClusters.mjs";
 import xml from "./xml.mjs";
 
@@ -238,7 +239,12 @@ const clustersMod = {
       a.addEventListener("click", function (evt) {
         evt.preventDefault();
         const { file } = this.closest("div").dataset;
-        window[this.dataset.obj][this.dataset.fun](file, this);
+        const { obj, fun } = this.dataset;
+        if (obj === "misc") {
+          misc[fun](file);
+        } else if (obj === "clustersMod") {
+          clustersMod[fun](file, this);
+        }
       });
     }
 
