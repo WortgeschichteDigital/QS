@@ -192,7 +192,7 @@ const artikel = {
 
     // start the calculation
     const workerData = viewClusters.gleanWorkerData({
-      addModulation: false,
+      addModelling: false,
       noNewFiles: noNew,
       removeTypeCluster: false,
     });

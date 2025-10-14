@@ -278,7 +278,7 @@ section.trans-linear {
 .clear-text-field,
 #search-advanced-toggle,
 #hints-bar,
-#clusters-modulate-reset,
+#clusters-model-reset,
 #search-bar,
 #search-help {
   position: relative;
@@ -294,7 +294,7 @@ section.trans-linear {
   margin-left: -59px;
 }
 
-#clusters-modulate-form .clear-text-field {
+#clusters-model-form .clear-text-field {
   margin-left: -59px;
 }
 
@@ -305,7 +305,7 @@ section.trans-linear {
 .clear-text-field:focus,
 #search-advanced-toggle:focus,
 #hints-bar:focus,
-#clusters-modulate-reset:focus,
+#clusters-model-reset:focus,
 #search-bar:focus,
 #search-help:focus {
   outline: 2px solid var(--outline);
@@ -343,7 +343,7 @@ a.icon#hint-export {
   font-weight: normal;
 }
 
-#clusters-modulate-reset {
+#clusters-model-reset {
   margin-left: 5px;
 }
 

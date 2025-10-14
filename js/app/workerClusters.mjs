@@ -18,7 +18,7 @@ const clusters = {
     //     hl           = ""  main lemmas (clone of xml.data.files[FILENAME].hlJoined)
     //     nl           = ""  sub lemmas (clone of xml.data.files[FILENAME].nlJoined)
     //     links        = []  clone of xml.data.files[FILENAME].links; important keys as follows
-    //                        (links added from the modulation only contain the keys mentioned below)
+    //                        (links added from the modelling only contain the keys mentioned below)
     //       lemma      = {}
     //         file     = ""  XML file name
     //         spelling = ""  spelling als in "hl" or "nl";

@@ -62,7 +62,7 @@ window.addEventListener("load", async () => {
       viewClusters.switchSection(this);
     });
   });
-  const clustersSearch = document.getElementById("clusters-modulate-search");
+  const clustersSearch = document.getElementById("clusters-model-search");
   let clustersSearchTimeout;
   clustersSearch.addEventListener("input", () => {
     clearTimeout(clustersSearchTimeout);
@@ -73,7 +73,7 @@ window.addEventListener("load", async () => {
     if (!m && evt.key === "Escape") {
       clustersMod.searchOff();
     } else if (!m && evt.key === "Enter") {
-      const popup = document.getElementById("clusters-modulate-popup");
+      const popup = document.getElementById("clusters-model-popup");
       if (!popup) {
         return;
       }
@@ -91,7 +91,7 @@ window.addEventListener("load", async () => {
     clearTimeout(clustersSearchTimeout);
     clustersSearchTimeout = setTimeout(() => clustersMod.searchOff(), 200);
   });
-  document.getElementById("clusters-modulate-reset").addEventListener("click", evt => {
+  document.getElementById("clusters-model-reset").addEventListener("click", evt => {
     evt.preventDefault();
     clustersMod.reset();
   });

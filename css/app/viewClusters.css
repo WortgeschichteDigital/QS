@@ -5,25 +5,25 @@
 }
 
 
-/* MODULATE ------------------------------------- */
+/* MODEL ---------------------------------------- */
 
-#clusters-modulate-form {
+#clusters-model-form {
   position: relative;
   margin: 0 auto 20px;
   width: 400px;
   height: 30px;
 }
 
-#clusters-modulate-form input {
+#clusters-model-form input {
   vertical-align: top;
   width: calc(100% - 12px - 63px);
   padding-right: 63px;
 }
 
 
-/* MODULATE CENTER ------------------------------ */
+/* MODEL CENTER --------------------------------- */
 
-#clusters-modulate-center {
+#clusters-model-center {
   margin: 0 auto 20px;
   border-radius: 10px;
   padding: 10px;
@@ -34,24 +34,24 @@
   text-align: center;
 }
 
-#clusters-modulate-center:empty {
+#clusters-model-center:empty {
   margin: 0;
   padding: 0;
 }
 
-#clusters-modulate-center div + div {
+#clusters-model-center div + div {
   margin-top: 15px;
 }
 
-#clusters-modulate-center span {
+#clusters-model-center span {
   display: inline-block;
   margin: 0 15px;
 }
 
 
-/* MODULATE FILES ------------------------------- */
+/* MODEL FILES ---------------------------------- */
 
-#clusters-modulate-files {
+#clusters-model-files {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -196,19 +196,19 @@
   color: var(--colorRed);
 }
 
-:is(#clusters-modulate, #clusters-compare, #clusters-check) .fa {
+:is(#clusters-model, #clusters-compare, #clusters-check) .fa {
   font-variant: small-caps;
   letter-spacing: 1px;
 }
 
-#clusters-modulate .nl {
+#clusters-model .nl {
   font-style: italic;
 }
 
 
-/* MODULATE POPUP ------------------------------- */
+/* MODEL POPUP ---------------------------------- */
 
-#clusters-modulate-popup {
+#clusters-model-popup {
   position: absolute;
   top: 37px;
   left: 0;
@@ -221,7 +221,7 @@
   transition: opacity .3s ease-out;
 }
 
-#clusters-modulate-popup :is(a, div) {
+#clusters-model-popup :is(a, div) {
   display: block;
   outline: none;
   border-bottom: 1px solid var(--line);
@@ -233,18 +233,18 @@
   white-space: nowrap;
 }
 
-#clusters-modulate-popup a:first-child {
+#clusters-model-popup a:first-child {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
 }
 
-#clusters-modulate-popup a:last-child {
+#clusters-model-popup a:last-child {
   border-bottom: none;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 
-#clusters-modulate-popup a span {
+#clusters-model-popup a span {
   display: inline-block;
   margin-left: 10px;
   color: var(--textGreyLight);
@@ -253,15 +253,15 @@
   letter-spacing: 0;
 }
 
-#clusters-modulate-popup :is(a:hover, a.active) {
+#clusters-model-popup :is(a:hover, a.active) {
   background-color: var(--bgActive);
 }
 
-#clusters-modulate-popup :is(a:hover, a.active) span {
+#clusters-model-popup :is(a:hover, a.active) span {
   color: var(--text);
 }
 
-#clusters-modulate-popup div {
+#clusters-model-popup div {
   border-bottom: 0;
   text-align: center;
 }
@@ -352,7 +352,7 @@
     color .3s linear;
 }
 
-.cluster span.in-modulation {
+.cluster span.in-modelling {
   background-color: var(--bgHighlight);
   color: #fff;
 }
@@ -478,11 +478,11 @@
   text-align: center;
 }
 
-p#clusters-preview-modulate {
+p#clusters-preview-model {
   margin-top: 30px;
 }
 
-p#clusters-preview-modulate + p {
+p#clusters-preview-model + p {
   margin-bottom: 35px;
 }
 

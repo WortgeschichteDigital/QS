@@ -24,7 +24,7 @@ const clustersMod = {
 
   // search lemmas or XML files
   search () {
-    const input = document.getElementById("clusters-modulate-search");
+    const input = document.getElementById("clusters-model-search");
     const text = input.value.trim();
     if (!text) {
       clustersMod.searchOff();
@@ -72,13 +72,13 @@ const clustersMod = {
     shared.sortModeForLemmas = false;
 
     // fill popup
-    let popup = document.getElementById("clusters-modulate-popup");
+    let popup = document.getElementById("clusters-model-popup");
     if (popup) {
       popup.replaceChildren();
     } else {
       popup = document.createElement("div");
       input.parentNode.appendChild(popup);
-      popup.id = "clusters-modulate-popup";
+      popup.id = "clusters-model-popup";
     }
     for (let i = 0, len = results.length; i < len; i++) {
       if (i === 10) {
@@ -111,7 +111,7 @@ const clustersMod = {
   // navigate through search results
   //   up = boolean
   searchNav (up) {
-    const popup = document.getElementById("clusters-modulate-popup");
+    const popup = document.getElementById("clusters-model-popup");
     if (!popup) {
       clustersMod.search();
       return;
@@ -147,7 +147,7 @@ const clustersMod = {
 
   // turn off search popup
   searchOff () {
-    const popup = document.getElementById("clusters-modulate-popup");
+    const popup = document.getElementById("clusters-model-popup");
     if (!popup ||
         !popup.classList.contains("visible")) {
       return;
@@ -158,7 +158,7 @@ const clustersMod = {
     popup.classList.remove("visible");
   },
 
-  // add file to the modulation
+  // add file to the modelling
   //   file = string (XML file name)
   add (file) {
     clustersMod.data.files[file] = new Set();
@@ -168,7 +168,7 @@ const clustersMod = {
     clustersMod.fileToggles();
   },
 
-  // update the whole modulation
+  // update the whole modelling
   update () {
     // remove files that do not exist anymore
     for (const file of Object.keys(clustersMod.data.files)) {
@@ -178,7 +178,7 @@ const clustersMod = {
     }
 
     // build center and file blocks
-    document.getElementById("clusters-modulate-files").replaceChildren();
+    document.getElementById("clusters-model-files").replaceChildren();
     for (const file of Object.keys(clustersMod.data.files)) {
       clustersMod.filePrint(file);
     }
@@ -205,7 +205,7 @@ const clustersMod = {
       obj: "clustersMod",
       fun: "fileRemove",
       icon: "close.svg",
-      title: "Datei aus der Modulierung entfernen",
+      title: "Datei aus der Modellierung entfernen",
     },
   ],
 
@@ -214,7 +214,7 @@ const clustersMod = {
   filePrint (file) {
     // create block
     const block = document.createElement("div");
-    document.getElementById("clusters-modulate-files").appendChild(block);
+    document.getElementById("clusters-model-files").appendChild(block);
     block.classList.add("file-block");
     block.dataset.file = file;
 
@@ -339,7 +339,7 @@ const clustersMod = {
     tooltip.init(block);
   },
 
-  // remove a specific file form the modulation
+  // remove a specific file form the modelling
   //   file = string (XML file name)
   //   a = node
   //   bulkRemove = true | undefined
@@ -394,7 +394,7 @@ const clustersMod = {
   // construct a cluster center based on the main lemmas of the added files
   // and make proposals of which links should be added to achieve a cluster like that
   center () {
-    const center = document.getElementById("clusters-modulate-center");
+    const center = document.getElementById("clusters-model-center");
     center.replaceChildren();
 
     // update center object
@@ -544,14 +544,14 @@ const clustersMod = {
     return xml;
   },
 
-  // reset the clusters' modulation
+  // reset the clusters' modelling
   reset () {
     clustersMod.data.center = {};
     clustersMod.data.files = {};
     for (const i of [ "center", "files" ]) {
-      document.getElementById(`clusters-modulate-${i}`).replaceChildren();
+      document.getElementById(`clusters-model-${i}`).replaceChildren();
     }
-    const search = document.getElementById("clusters-modulate-search");
+    const search = document.getElementById("clusters-model-search");
     search.value = "";
     search.focus();
   },

@@ -110,7 +110,7 @@ const viewClusters = {
     }
     clustersMod.update();
 
-    // focus search field in modulation section
+    // focus search field in the modelling section
     viewClusters.focusSearchField();
   },
 
@@ -142,10 +142,10 @@ const viewClusters = {
     }
   },
 
-  // focus search field in modulation section
+  // focus search field in the modelling section
   focusSearchField () {
-    if (!document.querySelector("#clusters-modulate.off")) {
-      document.getElementById("clusters-modulate-search").select();
+    if (!document.querySelector("#clusters-model.off")) {
+      document.getElementById("clusters-model-search").select();
     }
   },
 
@@ -189,8 +189,8 @@ const viewClusters = {
 
     // update add images in comparison section
     if (newSection === "compare" &&
-        oldSection === "modulate") {
-      clustersComp.adaptToModulate();
+        oldSection === "model") {
+      clustersComp.adaptToModel();
     }
 
     // toggle visibility of jump icon
@@ -201,7 +201,7 @@ const viewClusters = {
       jump.classList.add("off");
     }
 
-    // focus search field in modulation section
+    // focus search field in modelling section
     viewClusters.focusSearchField();
   },
 
@@ -325,9 +325,9 @@ const viewClusters = {
 
   // build a cluster
   //   idx = number
-  //   checkModulate = true | undefined (check whether a lemma was added to "modulate")
+  //   checkModel = true | undefined (check whether a lemma was added to "modelling")
   //   markLemma = string | undefined (lemma to be marked)
-  buildCluster ({ idx, checkModulate = false, markLemma = "" }) {
+  buildCluster ({ idx, checkModel = false, markLemma = "" }) {
     const { data } = viewClusters;
     const cluster = data[data.active][viewClusters.filters["select-domains"]][idx];
     const cont = document.createElement("div");
@@ -415,10 +415,10 @@ const viewClusters = {
         const span = document.createElement("span");
         cont.appendChild(span);
         span.dataset.lemma = lemma;
-        // lemma was added to "modulate"
-        if (checkModulate &&
+        // lemma was added to "modelling"
+        if (checkModel &&
             clustersMod.data.center[lemma]) {
-          span.classList.add("in-modulation");
+          span.classList.add("in-modelling");
         }
         // mark lemma
         if (lemma === markLemma) {
@@ -506,8 +506,8 @@ const viewClusters = {
       oldPreview.checked = true;
       newPreview.checked = false;
     }
-    const mod = document.getElementById("clusters-preview-modulate-check");
-    if (document.querySelector("#clusters-modulate-files .proposals a")) {
+    const mod = document.getElementById("clusters-preview-model-check");
+    if (document.querySelector("#clusters-model-files .proposals a")) {
       mod.checked = true;
     } else {
       mod.checked = false;
@@ -559,9 +559,9 @@ const viewClusters = {
     // prepare data
     viewClusters.data.previewStatsStart = new Date();
     const removeTypeCluster = document.querySelector("#clusters-preview-no-type-cluster:checked") !== null;
-    const addModulation = document.getElementById("clusters-preview-modulate-check").checked;
+    const addModelling = document.getElementById("clusters-preview-model-check").checked;
     const workerData = viewClusters.gleanWorkerData({
-      addModulation,
+      addModelling,
       noNewFiles: false,
       removeTypeCluster,
     });
@@ -588,7 +588,7 @@ const viewClusters = {
 
   // preview: adapt the form elements to the choosen option
   previewPopupState () {
-    const mod = document.getElementById("clusters-preview-modulate-check");
+    const mod = document.getElementById("clusters-preview-model-check");
     if (document.querySelector("#clusters-preview-choose-old:checked")) {
       mod.disabled = true;
     } else {
@@ -619,10 +619,10 @@ const viewClusters = {
   },
 
   // glean data for the cluster worker
-  //   addModulation = boolean
+  //   addModelling = boolean
   //   noNewFiles = boolean
   //   removeTypeCluster = boolean
-  gleanWorkerData ({ addModulation, noNewFiles, removeTypeCluster }) {
+  gleanWorkerData ({ addModelling, noNewFiles, removeTypeCluster }) {
     // collect domains
     const domains = [];
     for (const v of Object.values(bars.filtersData.domains)) {
@@ -651,9 +651,9 @@ const viewClusters = {
       }
     }
 
-    // add links proposed in the modulation (if requested)
-    if (addModulation) {
-      document.querySelectorAll("#clusters-modulate-files .file-block").forEach(block => {
+    // add links proposed in the modelling (if requested)
+    if (addModelling) {
+      document.querySelectorAll("#clusters-model-files .file-block").forEach(block => {
         const { file } = block.dataset;
         block.querySelectorAll(".proposals a").forEach(link => {
           const { lemma } = link.dataset;

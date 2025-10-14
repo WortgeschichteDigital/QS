@@ -31,7 +31,7 @@
     <section id="allgemeines">
       <h1><span>Aufgabe der App</span></h1>
 
-      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wgd/Artikel?ansicht=Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch moduliert werden.</p>
+      <p id="allgemeines-aufgabe"><i>QS</i> ist ein Tool zur <b>Q</b>ualitäts-<b>S</b>icherung für <a href="https://www.zdl.org/wb/wortgeschichten/">Wortgeschichte digital</a> (WGd). Es hat zwei Kernfunktionen: Zum einen scannt es die von WGd erstellten XML-Dateien auf Fehler und Verlinkungsvorschläge, wobei es hier nur Aufgaben übernimmt, die durch das von WGd verwendete RelaxNG-Schema nicht abzudecken sind. Zum anderen können mit ihr die <a href="https://www.zdl.org/wb/wgd/Artikel?ansicht=Cluster">WGd-Verweiscluster</a> analysiert und <abbr title="vor allem">v.&nbsp;a.</abbr> auch modelliert werden.</p>
 
       <p id="allgemeines-artikelJSON">Über allem steht dabei das Ziel, dass die Mitarbeiter*innen des Projekts ihre XML-Dateien möglichst eigenständig und ohne Reibungsverluste für die Publikation vorbereiten können. Da mithilfe von <i>QS</i> die Datendatei <a href="#publikation-artikelJSON">Artikel.json</a> von jedermann mit nur ein paar Klicks erstellt werden kann, stellt <i>QS</i> zugleich sicher, dass die Publikation neuer Wortgeschichten auch ohne technische Spezialist*innen möglich bleibt. Denn ohne die Neuberechnung dieser Datendatei ist eine Publikation von Wortgeschichten gleichsam undenkbar, da sie auf der Webseite zahlreiche Funktionen füttert:</p>
 
@@ -176,7 +176,7 @@
 
       <p id="allgemeines-kopfleisteClusterei">Mithilfe der <b>ersten drei Icons</b> lassen sich die drei Ansichten der Clusterei ansteuern:</p>
 
-      <p class="indent-icon"><img src="../img/preferences.svg" width="30" height="30" alt="">Sektion zum Modulieren der Cluster</p>
+      <p class="indent-icon"><img src="../img/preferences.svg" width="30" height="30" alt="">Sektion zum Modellieren der Cluster</p>
 
       <p class="indent-icon"><img src="../img/clusters-compare.svg" width="30" height="30" alt="">Sektion zum Vergleichen einander ähnlicher Cluster</p>
 
@@ -984,20 +984,20 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
       <p id="clusterei-aufbau">Mithilfe der Clusterei können Sie die WGd-Verweiscluster verwalten. Die Ansicht besteht aus drei Sektionen, die über Icons in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> angesteuert werden:</p>
 
       <ul>
-        <li><img src="../img/preferences.svg" width="30" height="30" alt="">In der <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> können Sie Clusterzentren modulieren, also ermitteln, welche Verlinkungen in welchen XML-Dateien ergänzt werden müssen, um ein gewünschtes Clusterzentrum zu erhalten.</li>
+        <li><img src="../img/preferences.svg" width="30" height="30" alt="">In der <a href="#clusterei-modellieren">Sektion <i>Modellieren</i></a> können Sie Clusterzentren modellieren, also ermitteln, welche Verlinkungen in welchen XML-Dateien ergänzt werden müssen, um ein gewünschtes Clusterzentrum zu erhalten.</li>
 
-        <li><img src="../img/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-vergleichen">Sektion <i>Vergleichen</i></a> werden einander ähnliche Cluster aufgeführt. Die XML-Dateien, die zu den Lemmata der Clusterzentren gehören, können von dort mit einem Klick zur Modulieren-Sektion hinzugefügt werden.</li>
+        <li><img src="../img/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-vergleichen">Sektion <i>Vergleichen</i></a> werden einander ähnliche Cluster aufgeführt. Die XML-Dateien, die zu den Lemmata der Clusterzentren gehören, können von dort mit einem Klick zur Modellieren-Sektion hinzugefügt werden.</li>
 
         <li><img src="../img/clusters-compare.svg" width="30" height="30" alt="">In der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> werden alle Cluster eines Themenfeldes so dargestellt wie in der <a href="https://www.zdl.org/wb/wgd/Artikel">WGd-Artikelübersicht auf zdl.org</a>. Im Unterschied zur Online-Übersicht kann man hier jedoch leicht sehen, welche Cluster sich geändert haben und in welchen neue Lemmata hinzugekommen sind.</li>
       </ul>
 
-      <h2><span>Sektion Modulieren</span></h2>
+      <h2><span>Sektion Modellieren</span></h2>
 
-      <p id="clusterei-modulieren">Diese Sektion ist auch ohne <a href="#allgemeines-filterleiste">Filter</a> voll nutzbar. Werden Filter ausgewählt, beziehen sich diese nur auf das Suchformular. Die zum Suchwort passenden Ergebnisse werden dann nach Autor*in und/oder Themenfeld gefiltert.</p>
+      <p id="clusterei-modellieren">Diese Sektion ist auch ohne <a href="#allgemeines-filterleiste">Filter</a> voll nutzbar. Werden Filter ausgewählt, beziehen sich diese nur auf das Suchformular. Die zum Suchwort passenden Ergebnisse werden dann nach Autor*in und/oder Themenfeld gefiltert.</p>
 
       <p>Das <b>Grundprinzip</b> eines jeden Clusterzentrums ist, dass die in ihm stehenden Hauptlemmata eine rekursive Beziehung zueinander haben: Jedes Lemma muss auf jedes andere Lemma im selben Zentrum verweisen. Nur wenn dies der Fall ist, bildet sich ein Clusterzentrum. Um den Saum und das Umfeld müssen Sie sich nicht kümmern; schauen Sie nur auf das Clusterzentrum!</p>
 
-      <p>Wenn Sie ein <b>Zentrum modulieren</b> wollen, gehen Sie wie folgt vor:</p>
+      <p>Wenn Sie ein <b>Zentrum modellieren</b> wollen, gehen Sie wie folgt vor:</p>
 
       <ol>
         <li>Über das Suchfeld <b>suchen Sie die Lemmata</b>, die dem Zentrum angehören sollen.</li>
@@ -1005,9 +1005,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <li>Klicken Sie auf die passenden Vorschläge in der <b>Trefferliste</b>.</li>
 
         <li>
-          <p>Unter der Vorschau des Zentrums sammeln sich nun nach und nach <b>Artikelblöcke</b> an. Denn das, was Sie zur Modulieren-Ansicht hinzufügen, sind nicht etwa Lemmata, sondern XML-Dateien. Alle in ihnen behandelten Hauptlemmata werden für die Modulierung herangezogen.</p>
+          <p>Unter der Vorschau des Zentrums sammeln sich nun nach und nach <b>Artikelblöcke</b> an. Denn das, was Sie zur Modellieren-Ansicht hinzufügen, sind nicht etwa Lemmata, sondern XML-Dateien. Alle in ihnen behandelten Hauptlemmata werden für die Modellierung herangezogen.</p>
 
-          <p>(Nebenlemmata spielen für die Modulierung keine Rolle, da sie keine rekursiven Verweise erzeugen können. Man kann zwar auf Nebenlemmata verweisen, aber nicht von Nebenlemmata zu anderen Lemmata.)</p>
+          <p>(Nebenlemmata spielen für die Modellierung keine Rolle, da sie keine rekursiven Verweise erzeugen können. Man kann zwar auf Nebenlemmata verweisen, aber nicht von Nebenlemmata zu anderen Lemmata.)</p>
 
           <p>Oben im Artikelblock steht der Name der XML-Datei, daneben finden Sie drei Icons:</p>
 
@@ -1015,13 +1015,13 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
           <p class="indent-icon"><img src="../img/xml.svg" width="30" height="30" alt="">Öffnet die XML-Datei im Standard-XML-Editor Ihres Betriebssystems</p>
 
-          <p class="indent-icon"><img src="../img/close.svg" width="30" height="30" alt="">Entfernt den Artikelblock aus der Modulierung</p>
+          <p class="indent-icon"><img src="../img/close.svg" width="30" height="30" alt="">Entfernt den Artikelblock aus der Modellierung</p>
 
           <p>Auf die im Artikelblock alphabetisch aufgelisteten Lemmata wird in der Datei bereits verwiesen. Klicken Sie auf einen der blauen Links, öffnet sich eine Tabelle, in der Sie sehen, in welcher Zeile sich ein Verweis auf das genannte Lemma befindet.</p>
         </li>
 
         <li>
-          <p>Im Kopf der Artikelblöcke werden sich nach und nach <b>rote Links</b> sammeln. Befinden sich in einem Artikelblock rote Links, wird auch der Dateiname dieses Blocks in einen roten Link verwandelt. Diese roten Links stehen für die Lemmata, die in der XML-Datei ergänzt werden müssen, um das Clusterzentrum zu erhalten, das Sie gerade modulieren.</p>
+          <p>Im Kopf der Artikelblöcke werden sich nach und nach <b>rote Links</b> sammeln. Befinden sich in einem Artikelblock rote Links, wird auch der Dateiname dieses Blocks in einen roten Link verwandelt. Diese roten Links stehen für die Lemmata, die in der XML-Datei ergänzt werden müssen, um das Clusterzentrum zu erhalten, das Sie gerade modellieren.</p>
 
           <p>Durch Klick auf einen roten Link, wird der XML-Code des Verweises in die Zwischenablage kopiert. Sie können den Code dann direkt in die XML-Datei unterhalb von <code>&lt;Verweise <span class="xml-attr-key">Typ=</span><span class="xml-attr-val">&quot;Wortfeld&quot;</span>&gt;</code> einfügen. Klicken Sie auf den roten Link in der Überschrift, werden alle für den Artikel vorgeschlagenen Verweise <span lang="fr">en bloc</span> kopiert.</p>
         </li>
@@ -1029,15 +1029,15 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
         <li>
           <p>Noch bevor Sie die vorgeschlagenen Verweise in den XML-Dateien ergänzen, können Sie sich eine <b>Vorschau berechnen</b> lassen, um zu sehen, ob Ihnen das Ergebnis auch zusagt.</p>
 
-          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modulierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn in der Sektion <i>Modulieren</i> neue Verweise vorgeschlagen werden, sprich: wenn dort irgendwo ein roter Link erscheint. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
+          <p>Klicken Sie in der <a href="#allgemeines-kopfleiste">Kopfleiste</a> auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> und wählen Sie <i>neue Berechnung starten</i> aus. Die Option <i>Modellierung mit einbeziehen</i> wurde von <i>QS</i> bereits automatisch angestellt, wenn in der Sektion <i>Modellieren</i> neue Verweise vorgeschlagen werden, sprich: wenn dort irgendwo ein roter Link erscheint. Klicken Sie auf den Button <i>Vorschau</i> und die Cluster werden berechnet. Das Ergebnis können Sie sich dann in der <a href="#clusterei-ueberpruefen">Sektion <i>Überprüfen</i></a> ansehen.</p>
         </li>
       </ol>
 
-      <p>Um eine <b>Modulierung zurückzusetzen</b> können Sie auf das Icon <img src="../img/cleanup.svg" width="30" height="30" alt=""> im Suchfeld klicken. Es entfernt alle Artikelblöcke aus der Modulierung.</p>
+      <p>Um eine <b>Modellierung zurückzusetzen</b> können Sie auf das Icon <img src="../img/cleanup.svg" width="30" height="30" alt=""> im Suchfeld klicken. Es entfernt alle Artikelblöcke aus der Modellierung.</p>
 
       <p>Haben Sie sich eine Vorschau berechnen lassen, bleibt diese jedoch aktiv. Durch Klick auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie die <b>Vorschau ausstellen</b>. Danach arbeitet <i>QS</i> wieder mit den Clustern, die aktuell in der <a href="https://www.zdl.org/wb/wgd/Artikel">Artikelübersicht auf zdl.org</a> angezeigt werden.</p>
 
-      <p>Clusterzentren können sinnvoll <b>nur in eine Richtung moduliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgen, dass ein Clusterzentrum entsteht. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modulieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
+      <p>Clusterzentren können sinnvoll <b>nur in eine Richtung modelliert</b> werden: Sie können kleinere Zentren leicht zu größeren verschmelzen. Der umgekehrte Weg geht zwar theoretisch auch, dafür müssten Sie aber Verweise streichen. Und da es ja einmal einen Grund gab, aus dem heraus Sie diese Verweise gesetzt haben, sollten Sie diesen Weg normalerweise nicht beschreiten. Wollen Sie es dennoch versuchen, müssten Sie diejenigen rekursiven Verweisbeziehungen rückgängig machen, die dafür sorgen, dass ein Clusterzentrum entsteht. Dazu müssen Sie wissen, in welchen Artikeln auf welche Lemmata verwiesen wird. Die Sektion <i>Modellieren</i> kann Ihnen hierbei helfen: Die blauen Links in den Artikelblöcken öffnen eine kleine Tabelle, in  der steht, in welchen Zeilen der XML-Datei auf das genannte Lemma verlinkt wird. So finden Sie die Verweise, die Sie streichen müssen. Das Ergebnis dieser mühsamen Arbeit wird aber nur sein, dass Sie viele, einander sehr ähnliche Cluster bekommen. Fangen Sie damit gar nicht erst an!</p>
 
       <h2><span>Sektion Vergleichen</span></h2>
 
@@ -1045,9 +1045,9 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p>In der Sektion werden einander sehr ähnlich Cluster aufgelistet und nebeneinandergestellt. Je ähnlicher sich die Cluster sind, umso eher bieten sie sich zum Verschmelzen an. Der angegebene <b>Prozentwert</b> bezieht sich auf das Verhältnis des kleineren zum größeren Cluster: 100&nbsp;% bedeutet, dass 100&nbsp;% der Lemmata des kleineren Clusters auch im größeren Cluster auftauchen, bei 75&nbsp;% wären dies nur drei Viertel der Lemmata. Die Anzeige hat einen Schwellenwert von 75&nbsp;%. Cluster, die im Vergleich eine geringere Ähnlichkeit haben, werden nicht gelistet.</p>
 
-      <p>Klicken Sie auf das Icon <img src="../img/plus.svg" width="30" height="30" alt=""> werden alle XML-Dateien, in denen sich die Hauptlemmata der nebeinander stehenden Cluster finden, zur <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> hinzugefügt. Die hinzugefügten Hauptlemmata werden dann <mark class="color5">blau hinterlegt</mark>. (Nebenlemmata spielen für die Modulierung keine Rolle, weswegen sie in dieser Ansicht ausgegraut sind.)</p>
+      <p>Klicken Sie auf das Icon <img src="../img/plus.svg" width="30" height="30" alt=""> werden alle XML-Dateien, in denen sich die Hauptlemmata der nebeinander stehenden Cluster finden, zur <a href="#clusterei-modellieren">Sektion <i>Modellieren</i></a> hinzugefügt. Die hinzugefügten Hauptlemmata werden dann <mark class="color5">blau hinterlegt</mark>. (Nebenlemmata spielen für die Modellierung keine Rolle, weswegen sie in dieser Ansicht ausgegraut sind.)</p>
 
-      <p>Das Icon hat sich nun geändert: <img src="../img/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modulieren</i> entfernt.</p>
+      <p>Das Icon hat sich nun geändert: <img src="../img/button-yes.svg" width="30" height="30" alt="">. Klicken Sie es erneut an, wird der Vorgang umgekehrt – was nicht notwendigerweise gleichbedeutend mit rückgängig machen ist! Denn nun werden alle XML-Dateien, die zu den Lemmata in den nebeneinanderstehenden Clusterzentren gehören, aus der Sektion <i>Modellieren</i> entfernt.</p>
 
       <p>Eine weitere Funktion gibt es noch: Wenn Sie ein bestimmtes Lemma interessiert und Sie sehen wollen, in welchen Clustern es sich jeweils befindet, können Sie es anklicken. Es wird dann in allen sichtbaren Clustern <mark>orange hinterlegt</mark>.</p>
 
@@ -1067,19 +1067,19 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 
       <p id="clusterei-vorschau">Normalerweise arbeitet die Clusterei mit den WGd-Verweisclustern, wie sie in der aktuellen Version der Datei <a href="#allgemeines-artikelJSON">Artikel.json</a> zu finden sind. Dazu wird die Artikel.json aus dem <a href="#git-dateien">Repository</a> eingelesen. Die in ihr zu findenden Cluster werden dann für die Darstellung in der Clusterei genutzt.</p>
 
-      <p>Mithilfe des Icons <img src="../img/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie sich aber eine Cluster-Vorschau berechnen lassen, auf die dann in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> zurückgegriffen wird. (Für die Sektion <i>Modulieren</i> spielen die bestehenden Cluster keine Rolle. In ihr geht es nur darum, was wirklich in den XML-Dateien steht.)</p>
+      <p>Mithilfe des Icons <img src="../img/preview.svg" width="30" height="30" alt=""> in der Kopfleiste können Sie sich aber eine Cluster-Vorschau berechnen lassen, auf die dann in den Sektionen <i>Vergleichen</i> und <i>Überprüfen</i> zurückgegriffen wird. (Für die Sektion <i>Modellieren</i> spielen die bestehenden Cluster keine Rolle. In ihr geht es nur darum, was wirklich in den XML-Dateien steht.)</p>
 
       <p>Bei der Berechnung werden die Lemmata aller XML-Dateien, von denen <i>QS</i> derzeit Kenntnis hat, mit einbezogen. Das heißt, dass auch Dateien berücksichtigt werden, die im <a href="#git-ignore">Ordner <code>ignore</code></a> liegen.</p>
 
       <p>Klicken Sie auf das Icon <img src="../img/preview.svg" width="30" height="30" alt=""> erscheint ein Popup-Fenster, in dem Sie die Berechnung durch ein paar Einstellungen beeinflussen können:</p>
 
-      <p id="clusterei-vorschauOptionModulierung" class="option">Modulierung mit einbeziehen</p>
+      <p id="clusterei-vorschauOptionModellierung" class="option">Modellierung mit einbeziehen</p>
 
-      <p class="indent-hint">Ist diese Einstellung aktiv, tut <i>QS</i> so, als hätten Sie die rot eingefärbten Lemmata, die in der <a href="#clusterei-modulieren">Sektion <i>Modulieren</i></a> vorgeschlagen werden, bereits in den XML-Dateien ergänzt. Für die Verweise wird dabei von einem Gewicht von 3 Punkten ausgegangen. Bei der Berechnung wird also simuliert, dass die Verweise bereits zu den Wortinformationen hinzugefügt wurden.</p>
+      <p class="indent-hint">Ist diese Einstellung aktiv, tut <i>QS</i> so, als hätten Sie die rot eingefärbten Lemmata, die in der <a href="#clusterei-modellieren">Sektion <i>Modellieren</i></a> vorgeschlagen werden, bereits in den XML-Dateien ergänzt. Für die Verweise wird dabei von einem Gewicht von 3 Punkten ausgegangen. Bei der Berechnung wird also simuliert, dass die Verweise bereits zu den Wortinformationen hinzugefügt wurden.</p>
 
       <p id="clusterei-vorschauOptionClusterVerweise" class="option">Cluster-Verweise ignorieren</p>
 
-      <p class="indent-hint">Ist diese Einstellung aktiv, werden in allen XML-Dateien die Verweise mit dem Attribut <code>@Typ=&quot;Cluster&quot;</code> bei der Berechnung der Vorschau ignoriert. Mit dieser Option können Sie also bereits vorgenommene Modulierungen temporär zurücksetzen. Ob das sinnvoll ist, steht auf einem anderen Blatt.</p>
+      <p class="indent-hint">Ist diese Einstellung aktiv, werden in allen XML-Dateien die Verweise mit dem Attribut <code>@Typ=&quot;Cluster&quot;</code> bei der Berechnung der Vorschau ignoriert. Mit dieser Option können Sie also bereits vorgenommene Modellierung temporär zurücksetzen. Ob das sinnvoll ist, steht auf einem anderen Blatt.</p>
 
       <p>Die Berechnung der Cluster-Vorschau ist trotz diverser Optimierungen im Programmcode ziemlich rechenintensiv. Darum können Sie zwischen der Cluster-Vorschau und den im Repository zu findenden Clustern hin und her schalten, ohne jedes Mal eine Neuberechnung anstoßen zu müssen. Wählen Sie hierfür diese Option aus:</p>
 

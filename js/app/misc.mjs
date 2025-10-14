@@ -38,7 +38,7 @@ const misc = {
     const input = clear.previousSibling;
     input.value = "";
     input.focus();
-    if (/sorting-filter|clusters-modulate-search/.test(input.id)) {
+    if (/sorting-filter|clusters-model-search/.test(input.id)) {
       input.dispatchEvent(new Event("input"));
     }
   },

@@ -121,7 +121,7 @@ const clustersComp = {
       tr.appendChild(left);
       left.appendChild(viewClusters.buildCluster({
         idx: item.left,
-        checkModulate: true,
+        checkModel: true,
         markLemma: clustersComp.marked,
       }));
 
@@ -132,7 +132,7 @@ const clustersComp = {
       const a = document.createElement("a");
       similarity.appendChild(a);
       a.href = "#";
-      a.title = "alle Dateien mit Hauptlemmata der Cluster-Zentren zur Modulierung hinzufügen";
+      a.title = "alle Dateien mit Hauptlemmata der Cluster-Zentren zur Modellierung hinzufügen";
       const img = document.createElement("img");
       a.appendChild(img);
       img.src = "img/plus.svg";
@@ -149,7 +149,7 @@ const clustersComp = {
       tr.appendChild(right);
       right.appendChild(viewClusters.buildCluster({
         idx: item.right,
-        checkModulate: true,
+        checkModel: true,
         markLemma: clustersComp.marked,
       }));
 
@@ -174,7 +174,7 @@ const clustersComp = {
     tooltip.init(table);
   },
 
-  // add all main lemmas of the clusters' center regions to "modulate"
+  // add all main lemmas of the clusters' center regions to "modelling"
   //   row = node
   toggleAdd (row) {
     // collect files for this row
@@ -198,7 +198,7 @@ const clustersComp = {
       }
     }
 
-    // add or remove files from "modulate"
+    // add or remove files from "modelling"
     for (let i = 0, len = files.length; i < len; i++) {
       const file = files[i];
       if (add) {
@@ -207,12 +207,12 @@ const clustersComp = {
         clustersMod.fileRemove(file, null, i !== len - 1);
       }
     }
-    clustersComp.adaptToModulate();
+    clustersComp.adaptToModel();
   },
 
   // update add image of the given row
   // (detect whether the main lemmas of the clusters' center regions
-  // in a row are all added to "modulate")
+  // in a row are all added to "modelling")
   //   row = node
   updateAddImg (row) {
     const lemmas = new Set();
@@ -245,16 +245,16 @@ const clustersComp = {
     }
   },
 
-  // adapt to the files (and lemmas) that are currently added to the modulation
-  adaptToModulate () {
-    // highlight all lemmas that were added to the modulation
+  // adapt to the files (and lemmas) that are currently added to the modelling
+  adaptToModel () {
+    // highlight all lemmas that were added to the modelling
     const { center } = clustersMod.data;
     document.querySelectorAll("#clusters-compare span").forEach(i => {
       const { lemma } = i.dataset;
       if (center[lemma]) {
-        i.classList.add("in-modulation");
+        i.classList.add("in-modelling");
       } else {
-        i.classList.remove("in-modulation");
+        i.classList.remove("in-modelling");
       }
     });
 

@@ -92,13 +92,13 @@ const tooltip = {
   // insert titel for search help
   addLongHelp () {
     const help = {
-      "clusters-preview-help-modulate": `
-        <p>Bei der Berechnung der Cluster wird so getan, als wären die rot eingefärbten Verweise, die in der Modulierung zur Ergänzung vorgeschlagen werden, bereits gesetzt.</p>
+      "clusters-preview-help-model": `
+        <p>Bei der Berechnung der Cluster wird so getan, als wären die rot eingefärbten Verweise, die in der Modellierung zur Ergänzung vorgeschlagen werden, bereits gesetzt.</p>
         <p>Die Verweise werden mit einem Gewicht von 3 Punkten ergänzt, was der Punktzahl eines Verweises in den Wortinformationen entspricht.</p>
       `,
       "clusters-preview-help-type": `
         <p>Alle Verweise, die ein Typ-Attribut mit dem Wert „Cluster“ haben, werden für die Berechnung der Vorschau ignoriert.</p>
-        <p>Mit dieser Option können Sie also bereits vorgenommene Modulierungen temporär zurücksetzen.</p>
+        <p>Mit dieser Option können Sie also bereits vorgenommene Modellierung temporär zurücksetzen.</p>
       `,
       "prefs-help-data": `
         Die Einstellungen können exportiert werden, um sie auf einem anderen Rechner wieder zu importieren. Sie umfassen auch die in der Ansicht <i>Hinweise</i> gesetzten Markierungen. Vom Export ausgenommen sind die Git-Konfiguration und die Pfad zu den Zeitstrahl- und Ressourcendaten.

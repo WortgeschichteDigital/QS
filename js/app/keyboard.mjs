@@ -84,7 +84,7 @@ const keyboard = {
       }
       buttons[idx].focus();
     } else if (!m && /^Arrow(Down|Up)$/.test(evt.key) &&
-        active.id === "clusters-modulate-search") {
+        active.id === "clusters-model-search") {
       evt.preventDefault();
       clustersMod.searchNav(evt.key === "ArrowUp");
     } else if (m === "Alt" && /^Arrow(Left|Right)$/.test(evt.key)) {
