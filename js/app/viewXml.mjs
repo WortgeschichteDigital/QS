@@ -272,8 +272,9 @@ const viewXml = {
 
   // copy file to "ignore"
   //   a = node (clicked link)
-  async funCopyToFolder (a) {
-    const { file } = a.closest("tr").dataset;
+  //   fileArg = string
+  async funCopyToFolder (a, fileArg = "") {
+    const file = fileArg || a.closest("tr").dataset.file;
     const pathSrc = await bridge.ipc.invoke("path-join", git.config.dir, "articles", file);
     const pathDest = await bridge.ipc.invoke("path-join", git.config.dir, "ignore", file);
     try {
@@ -287,9 +288,13 @@ const viewXml = {
         xml: xml.files[file],
       };
       await xml.update(xmlFiles);
-      shared.feedback("okay");
+      if (!fileArg) {
+        shared.feedback("okay");
+      }
+      return true;
     } catch (err) {
       shared.error(`${err.name}: ${err.message} (${shared.errorReduceStack(err.stack)})`);
+      return false;
     }
   },
 

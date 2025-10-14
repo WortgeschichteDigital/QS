@@ -239,11 +239,33 @@ const misc = {
   // open file in editor
   //   file = string (XML file name)
   async openEditor (file) {
-    const data = xml.data.files[file];
+    // check if the file still exists
+    let data = xml.data.files[file];
     if (!data) {
       shared.error(`Datei „${file}“ nicht mehr gefunden`);
       return;
     }
+
+    // propose to open files only after they were copied to "ignore"
+    if (data.dir === "articles") {
+      const response = await dialog.open({
+        type: "confirm",
+        text: `Die Datei „${file}“ liegt noch im Ordner „articles“.\nSoll nicht lieber eine Kopie im Ordner „ignore“ erstellt und diese geöffnet werden?`,
+      });
+      if (response === null) {
+        // do nothing
+        return;
+      } else if (response) {
+        // copy file to ignore and open it from there
+        const copied = await viewXml.funCopyToFolder(null, file);
+        if (!copied) {
+          return;
+        }
+        data = xml.data.files[file];
+      }
+    }
+
+    // open file
     const path = await bridge.ipc.invoke("path-join", git.config.dir, data.dir, file);
     const result = await bridge.ipc.invoke("open-path", path);
     if (result) {
