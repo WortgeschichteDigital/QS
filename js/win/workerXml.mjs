@@ -30,6 +30,7 @@ const xml = {
           file,
           err: "XML not well-formed",
         });
+        delete xml.data.files[file];
         continue;
       }
 
