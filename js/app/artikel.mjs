@@ -519,5 +519,32 @@ const artikel = {
         }
       }
     }
+
+    // purge clusters
+    // (ensure that there is only one cluster for every field article)
+    const fieldArticles = {};
+    for (let i = 0, len = v.le.length; i < len; i++) {
+      if (/ \(Wortfeld\)$/.test(v.le[i])) {
+        fieldArticles["_" + i] = false;
+      }
+    }
+
+    for (const clusters of Object.values(ct)) {
+      const remove = [];
+
+      for (let i = 0, len = clusters.length; i < len; i++) {
+        const [ firstKey ] = Object.keys(clusters[i].z);
+        if (typeof fieldArticles[firstKey] !== "undefined") {
+          if (fieldArticles[firstKey]) {
+            remove.push(i);
+          }
+          fieldArticles[firstKey] = true;
+        }
+      }
+
+      for (let i = remove.length - 1; i >= 0; i--) {
+        clusters.splice(remove[i], 1);
+      }
+    }
   },
 };
