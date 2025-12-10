@@ -21,6 +21,8 @@ const win = {
   // data of currently open windows; filled with objects:
   //   bw = object (browser or base window)
   //   id = integer (window ID)
+  //   contentsIds = array (filled with integers of webContents IDs that are
+  //                        open in this browser or base window)
   //   type = string (about | app | cli | help | pv | worker)
   //   wvBase = object (null | in "pv" windows: web contents with header)
   //   wvWeb = object (null | in "pv" windows: web contents with XML preview)
@@ -105,6 +107,7 @@ const win = {
     let bw;
     let wvBase = null;
     let wvWeb = null;
+    const contentsIds = [];
     if (type === "pv") {
       // if this is the n-th preview window => let the system decide how to place it
       const pvWin = win.data.filter(i => i.type === "pv");
@@ -133,6 +136,7 @@ const win = {
       });
       bw.contentView.addChildView(wvBase);
       wvBase.webContents.loadFile(path.join(__dirname, "..", "..", "html", "pv.html"));
+      contentsIds.push(wvBase.webContents.id);
 
       // create web contents: web
       wvWeb = new WebContentsView();
@@ -169,6 +173,7 @@ const win = {
       });
     } else {
       bw = new BrowserWindow(bwOptions);
+      contentsIds.push(bw.webContents.id);
     }
 
     // maximize window?
@@ -180,6 +185,7 @@ const win = {
     win.data.push({
       bw,
       id: bw.id,
+      contentsIds,
       type,
       wvBase,
       wvWeb,

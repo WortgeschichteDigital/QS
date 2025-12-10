@@ -75,6 +75,7 @@ const worker = {
       win.data.push({
         bw,
         id: bw.id,
+        contentsIds: [ bw.webContents.id ],
         type: "worker",
         wvBase: null,
         wvWeb: null,
@@ -258,6 +259,13 @@ if (cliCommandFound || !locked) {
 
 // Security: ensure that WebContents, which sent a request, have loaded a local file
 function validSender (evt) {
+  let validIds = [];
+  for (const i of Object.values(win.data)) {
+    validIds = validIds.concat(i.contentsIds);
+  }
+  if (!validIds.includes(evt.sender.id)) {
+    return false;
+  }
   try {
     const validURL = new URL(evt.senderFrame.url);
     if (validURL.protocol !== "file:") {
