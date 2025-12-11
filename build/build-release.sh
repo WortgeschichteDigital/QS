@@ -72,42 +72,9 @@ updateCopyright() {
 # make release notes
 #   $1 = version number
 makeReleaseNotes() {
-  local output="# Release Notes v$1\n"
-
-  # glean commits
-  declare -A clCommits
-  j=0
-  while read z; do
-    clCommits[$j]="$z"
-    (( j++ ))
-  done < <(git log -E --grep="^\[\[(removal|feature|change|update|fix)\]\] " --format="%s" $(git describe --abbrev=0)..HEAD)
-
-  # sort commits
-  declare -A clH
-  clH[removal]="Entfernte Funktionen"
-  clH[feature]="Neue Funktionen"
-  clH[change]="Verbesserungen"
-  clH[update]="Updates"
-  clH[fix]="Behobene Fehler"
-  local commitTypes=(removal feature change update fix)
-  for type in ${!commitTypes[@]}; do
-    local newType=1
-    for commit in ${!clCommits[@]}; do
-      local message=${clCommits[$commit]}
-      local currentType=${commitTypes[$type]}
-      if echo "$message" | egrep -q "^\[\[${currentType}\]\]"; then
-        if (( newType > 0 )); then
-          newType=0;
-          output+="\n## ${clH[${commitTypes[$type]}]}\n\n"
-        fi
-        message=$(echo "$message" | sed -r 's/^.+?\]\s//')
-        output+="* $message\n"
-      fi
-    done
-  done
-
-  # save release notes
-  echo -en "$output" > "../releases/v${1}.md"
+  cd "./build"
+  node build-notes.mjs $1 > "../../releases/v${1}.md"
+  cd ".."
 }
 
 # prepare release
@@ -161,10 +128,9 @@ prepare() {
   # tag release
   read -p "  Next Job \"Tag release\" (press Enter) . . ."
   echo -e "\n  \033[1;32m*\033[0m Tag release\n"
-  types[1]="Feature release v${version}"
-  types[2]="Release v${version}, fixes"
-  types[3]="Release v${version}, Electron update"
-  types[4]="Release v${version}, Electron update und fixes"
+  types[1]="Feature-Release v${version}"
+  types[2]="Maintenance-Release v${version}"
+  types[3]="Bug-Fix-Release v${version}"
   local j
   for j in ${!types[@]}; do
     echo " [${j}] ${types[$j]}"
