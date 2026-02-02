@@ -791,7 +791,7 @@ const hints = {
           });
           // detect whether the lemma was already linked in the current block
           const inBlock = hints.detectVerweisInBlock(i, target);
-          if (linkCount && inBlock.link && inBlock.block !== "Illustration") {
+          if (linkCount && inBlock.link && !/^(BedVis|Illustration)$/.test(inBlock.block)) {
             continue;
           }
           // add hint
@@ -1755,7 +1755,7 @@ const hints = {
   detectVerweisInBlock (ele, target) {
     let container;
     let blockType;
-    for (const b of [ "Textblock", "Blockzitat", "Illustration", "Liste", "Verweise" ]) {
+    for (const b of [ "Textblock", "Blockzitat", "Illustration", "BedVis", "Liste", "Verweise" ]) {
       container = ele.closest(b);
       if (container) {
         blockType = b;
