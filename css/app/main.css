@@ -143,9 +143,13 @@ header .label {
 }
 
 #fun-git-branch {
+  vertical-align: top;
   display: inline-block;
+  overflow: hidden;
   width: 80px;
   text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #fun-git .label {
