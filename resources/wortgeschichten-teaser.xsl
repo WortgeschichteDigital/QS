@@ -16,6 +16,8 @@
   <xsl:apply-templates select="z:Wortgeschichte_kompakt"/>
 </xsl:template>
 
+<xsl:template match="z:BedVis"/>
+
 <xsl:template match="z:Ueberschrift"/>
 
 <xsl:template match="z:Textblock">
