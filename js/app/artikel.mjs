@@ -299,10 +299,9 @@ const artikel = {
       }
 
       // values.nl
-      for (let nl of file.nlJoined) {
+      for (const nl of file.nlJoined) {
         const idx = v.le.indexOf(nl);
-        [ nl ] = nl.split("/");
-        v.nl[idx] = file.nlTargets[nl];
+        v.nl[idx] = 1;
       }
 
       // values.on

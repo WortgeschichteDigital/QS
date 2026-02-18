@@ -95,7 +95,6 @@ const xml = {
   //       nl             = []  //Artikel/Lemma[@Typ = "Nebenlemma"]/Schreibung;
   //                              the @hidx is suffixed in parens: " (n)" (n = number)
   //       nlJoined       = []  same as "nl", but the spellings of each lemma are joined with a slash
-  //       nlTargets      = {}  each slot in "nl" is a key in "nlTargets"
   //         [NEBENLEMMA] = ""  //Artikel/Lemma[@Typ = "Nebenlemma"]/Textreferenz/@Ziel
   //       status         = 1   file status
   //                              0 = file is known and unchanged

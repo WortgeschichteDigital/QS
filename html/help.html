@@ -587,20 +587,6 @@ nothing added to commit but untracked files present (use "git add" to track)</pr
 &lt;/Verweis&gt;</pre>
         </div>
 
-        <div class="item">
-          <p><i>Nebenlemma anstelle von Hauptlemma</i><br>In <code>&lt;Verweisziel&gt;</code> steht ein Nebenlemma, was nicht korrekt ist. Denn Verweise auf Nebenlemmata werden korrektweise so konstruiert: 1.&nbsp;Schreibung des 1.&nbsp;Hauptlemmas + # + Sprungziel des Nebenlemmas. (Das Sprungziel kann in der XML-Datei aus dem Attribut <code>@Ziel</code> der <code>&lt;Textreferenz&gt;</code>, die zum entsprechenden Nebenlemma gehört, ausgelesen werden.) Arbeitspraktisch ist es ein gutes Vorgehen, während des Artikelschreibens erst einmal nur die Nebenlemmata anzugeben. Vor der Publikation der Wortgeschichte muss dies aber unbedingt korrigiert werden. Im Hinweis wird das korrekte <code>&lt;Verweisziel&gt;</code> angegeben, das mit einem Klick kopiert werden kann.</p>
-
-          <pre class="bogus">&lt;Verweis&gt;
-  &lt;Verweistext&gt;&lt;erwaehntes_Zeichen&gt;Normalverbraucher&lt;/erwaehntes_Zeichen&gt;&lt;/Verweistext&gt;
-  &lt;Verweisziel&gt;<b class="red">Normalverbraucher</b>&lt;/Verweisziel&gt;
-&lt;/Verweis&gt;</pre>
-
-          <pre class="correct">&lt;Verweis&gt;
-  &lt;Verweistext&gt;&lt;erwaehntes_Zeichen&gt;Normalverbraucher&lt;/erwaehntes_Zeichen&gt;&lt;/Verweistext&gt;
-  &lt;Verweisziel&gt;<b class="green">Otto Normalverbraucher#Der_Normalverbraucher_in_der_Kriegs-_und_Nachkriegswirtschaft</b>&lt;/Verweisziel&gt;
-&lt;/Verweis&gt;</pre>
-        </div>
-
       <p id="hinweise-tr_error" class="hint">Textreferenz korrigieren</p>
 
         <p class="scope"><i>Skopus:</i><code>&lt;Artikel&gt;</code></p>

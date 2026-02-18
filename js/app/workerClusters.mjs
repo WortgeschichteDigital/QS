@@ -7,11 +7,14 @@ const clusters = {
     // set of cluster centers that were already checked
     // (this is vital to speed up the calculation)
     checked: new Set(),
+
     // set of cluster centers that were already detected
     // (this is vital to speed up the calculation)
     detected: new Set(),
+
     // list of currently available domains
     domains: [],
+
     // file data for calculation
     //   [FILENAME]     = {}
     //     domains      = []  domains of this article)
@@ -21,25 +24,30 @@ const clusters = {
     //                        (links added from the modelling only contain the keys mentioned below)
     //       lemma      = {}
     //         file     = ""  XML file name
-    //         spelling = ""  spelling als in "hl" or "nl";
+    //         spelling = ""  spelling as in "hl" or "nl";
     //                        converted by clusters.convertSpelling
     //       points     = 1   cluster points for this link
     files: {},
+
     // mappers for quick detection of sub lemmas and corresponding domains
     mappers: {
       // structure "domains":
       //   [LEMMA] = set  clone of data.files[FILENAME].domains;
       //                  (contains all lemmas, main and sub lemmas alike)
       domains: {},
+
       // structure "files"
       //   [LEMMA] = ""  XML file name
       files: {},
+
       // set with all sub lemmas
       nl: new Set(),
     },
+
     // calculation result
     // (same data structure as viewClusters.data.repo)
     result: {},
+
     // link targets
     //   [TARGETED LEMMA]  = {}  lemma as in data.files.hl|nl
     //     [LINKING LEMMA] = 1   lemma as in data.files.hl|nl = cluster points
@@ -160,7 +168,7 @@ const clusters = {
       const c = [];
 
       for (const [ target, lemmas ] of Object.entries(d.targets)) {
-        // ignore sub lemmas at all and main lemms if they are from a different topic domain
+        // ignore sub lemmas at all and main lemmas if they are from a different topic domain
         if (d.mappers.nl[target] ||
             !d.mappers.domains[target].has(domain)) {
           continue;

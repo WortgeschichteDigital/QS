@@ -304,31 +304,6 @@ const hints = {
             type: "link_error",
           });
 
-        // LINK_ERROR: <Verweisziel> contains a sub lemma
-        } else if (i.lemma.spelling === i.verweisziel &&
-            xml.data.files[i.lemma.file].nl.includes(i.verweisziel)) {
-          const targetData = xml.data.files[i.lemma.file];
-          const hidx = hints.hidxAttribute(i.verweisziel);
-          await hints.add(data.hints, file, {
-            line: i.line,
-            linkCount: 0,
-            scope: i.scope,
-            textErr: [
-              {
-                text: "Nebenlemma anstelle von Hauptlemma",
-                type: "hint_text",
-              },
-              `<Verweisziel${hidx}>${shared.hidxClear(i.verweisziel)}</Verweisziel>`,
-            ],
-            textHint: [
-              {
-                text: `<Verweisziel${hidx}>${targetData.hl[0]}#${targetData.nlTargets[i.verweisziel]}</Verweisziel>`,
-                type: "copy",
-              },
-            ],
-            type: "link_error",
-          });
-
         // SEMANTIC_TYPE: propose to add semantic types
         } else if (i.type.length) {
           // hint for the same article
@@ -1728,12 +1703,6 @@ const hints = {
         const target = shared.hidxClear(l);
         if (target === lemma) {
           const hidx = l.match(/ \(([1-9])\)$/)?.[1] || "";
-          if (lemmaType === "nl") {
-            return {
-              hidx,
-              target: data.hl[0] + "#" + data.nlTargets[l],
-            };
-          }
           return {
             hidx,
             target,

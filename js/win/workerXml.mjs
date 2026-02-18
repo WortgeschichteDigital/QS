@@ -80,7 +80,6 @@ const xml = {
         // sub lemmas
         data.nl = [];
         data.nlJoined = [];
-        data.nlTargets = {};
         doc.querySelectorAll('Artikel > Lemma[Typ="Nebenlemma"]').forEach(i => {
           const schreibungen = [];
           i.querySelectorAll("Schreibung").forEach(s => {
@@ -93,11 +92,6 @@ const xml = {
           });
           data.nl = data.nl.concat(schreibungen);
           data.nlJoined.push(schreibungen.join("/"));
-          // ascertain target
-          const target = i.querySelector("Textreferenz").getAttribute("Ziel");
-          for (const s of schreibungen) {
-            data.nlTargets[s] = target;
-          }
         });
 
         // diasystemic information
@@ -286,63 +280,14 @@ const xml = {
     if (/ \([1-9]\)$/.test(hash)) {
       // this hashed lemma has an @hidx
       const hidx = hash.match(/ \(([1-9])\)$/)[1];
-      hash = shared.hidxClear(hash);
-      // dirty hack: if <Verweisziel> addresses a main lemma and the purpose of the hash
-      // is solely to jump to a certain position, the @hidx must at any rate be added to "lemma";
-      // on the other hand, if <Verweisziel> adresse a sub lemma, the @hidx must never be added
-      // to "lemma"; and that is the whole purpose of this loop (which is of course prone to misdetections)
-      let hashPointsToNl = false;
-      for (const values of Object.values(xml.data.files)) {
-        if (Object.values(values.nlTargets).includes(hash)) {
-          hashPointsToNl = true;
-          break;
-        }
-      }
-      if (!hashPointsToNl) {
-        lemma += ` (${hidx})`;
-      }
+      lemma += ` (${hidx})`;
     }
     if (/^Wortfeld-/.test(lemma)) {
       lemma = lemma.replace(/^Wortfeld-/, "");
       lemma += " (Wortfeld)";
     }
     for (const [ file, values ] of Object.entries(xml.data.files)) {
-      if (values.nl.includes(lemma)) {
-        // erroneous usage of sub lemma as link target
-        return {
-          file,
-          spelling: lemma,
-        };
-      } else if (values.hl.includes(lemma)) {
-        // the link might point to a sub lemma
-        if (hash) {
-          let possibleLemma = "";
-          for (const [ nl, target ] of Object.entries(values.nlTargets)) {
-            if (target === hash) {
-              // quite often several sub lemmas share the same target =>
-              // we need to detect which sub lemma the link actually points to
-              const similarCount = Object.values(values.nlTargets).filter(i => i === hash).length;
-              if (similarCount > 1) {
-                const reg = new RegExp(shared.escapeRegExp(shared.hidxClear(nl)));
-                if (reg.test(vt)) {
-                  possibleLemma = "";
-                  lemma = nl;
-                  break;
-                }
-                // check if there is a better match, otherwise we accept this lemma
-                possibleLemma = nl;
-              // there is only one target that matches the hash => lemma detected
-              } else {
-                lemma = nl;
-                break;
-              }
-            }
-          }
-          // if reg.test() never returns a result => take the first possible match
-          if (possibleLemma) {
-            lemma = possibleLemma;
-          }
-        }
+      if (values.hl.includes(lemma) || values.nl.includes(lemma)) {
         return {
           file,
           spelling: lemma,
