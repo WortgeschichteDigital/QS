@@ -78,7 +78,6 @@ const win = {
       minWidth: 700,
       height,
       minHeight: 700,
-      useContentSize: type === "about",
       show: false,
       webPreferences: {
         backgroundThrottling: false,
