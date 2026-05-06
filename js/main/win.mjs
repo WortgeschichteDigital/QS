@@ -92,6 +92,7 @@ const win = {
     };
     if (type === "about") {
       bwOptions.parent = win.data.find(i => i.type === "app").bw;
+      bwOptions.minHeight = 405;
       bwOptions.modal = true;
       bwOptions.center = true;
       bwOptions.resizable = false;
